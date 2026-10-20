@@ -784,6 +784,7 @@ armorbreak_analyze capability=live.http_probe taskId=<id> options={"url":"http:/
 | v1.1.0 Stage C/D/E（分支） | DAG/后台任务/恢复 + 只读工作台 + CI/E2E | 依赖图、队列、取消/恢复、任务/工具路由、三页签状态卡、Docker CI job、mock-model E2E；174 测试 |
 | v1.1.0 Stage D2（分支） | 工作台写操作/证据/报告/工具探测 | L0 新建/取消/重试/恢复、证据中心、报告预览、工具版本探测；177 测试 |
 | **v1.1.0（发布）** | Research Workbench | A/B/C/D/D2 全部合并；会话级工作区绑定（首次工具调用后生效）；178 测试；真实模型 GUI/浏览器视觉验证未完成 |
+| v1.1.1（发布） | 热修复 | 修复状态卡 TDZ 崩溃与 external 分析器诊断；真实模型 GUI 验证 armorbreak_health 成功；178 测试 |
 
 ### 13.2 当前规划（v1.1）
 

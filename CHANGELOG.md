@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 1.1.1 — 2026-10-20
+
+真实 GUI + 真实模型 E2E 发现的热修复：
+
+- 修复状态卡渲染期 TDZ 崩溃（postAction 依赖 load 过早求值）——状态卡恢复渲染。
+- 修复 external 分析器诊断告警：适配器移至 lib/analyzers/sast/external-adapters.js（由 sast manifest 注册），registry 恢复 41 capabilities / 8 domains / 0 diagnostics。
+- 验证：真实桌面 GUI 中破甲模式会话调用 armorbreak_health 成功；178/178 测试。
+
 ## 1.1.0 — 2026-10-20
 
 Research Workbench release（Stage A–D/D2，具体交付见 docs/releases/v1.1.0.md）：

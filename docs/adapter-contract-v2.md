@@ -53,7 +53,7 @@ interface ExternalToolAdapter {
 
 | 项 | 状态 | 证据 |
 |---|---|---|
-| `sast.semgrep` capability | ✅ 实现（L0/directory） | `lib/analyzers/external/adapters.js`、`tests/external-adapters.test.mjs` |
+| `sast.semgrep` capability | ✅ 实现（L0/directory） | `lib/analyzers/sast/external-adapters.js`、`tests/external-adapters.test.mjs` |
 | Semgrep JSON 归一化 | ✅ 测试通过（夹具） | results[] → severity/confidence/hypothesis/location/sourceRule/evidence |
 | `sast.trivy` capability | ✅ 实现（L0/directory，默认 `--skip-db-update`） | 同上 |
 | Trivy JSON 归一化 | ✅ 测试通过（夹具） | Vulnerabilities/Secrets/Misconfigurations 三类 |

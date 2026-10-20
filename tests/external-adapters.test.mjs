@@ -7,7 +7,7 @@ import assert from 'node:assert/strict'
 import { execFileSync } from 'node:child_process'
 import test from 'node:test'
 
-import { parseSemgrepReport, parseTrivyReport, semgrepCapability, trivyCapability } from '../lib/analyzers/external/adapters.js'
+import { parseSemgrepReport, parseTrivyReport, semgrepCapability, trivyCapability } from '../lib/analyzers/sast/external-adapters.js'
 
 function hasCommand(command) {
   try {

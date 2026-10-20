@@ -192,7 +192,10 @@ window.__ModuleLoader__.load({
           setActionError(String(cause && cause.message ? cause.message : cause))
           return null
         }
-      }, [load])
+      // `load` is declared below (a stable useCallback with no deps); postAction
+      // only runs from user events, so referencing it in the body is safe. Keep
+      // the dependency list empty to avoid a render-time TDZ crash.
+      }, [])
 
       const load = useCallback(async () => {
         setBusy(true)
