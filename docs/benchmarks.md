@@ -1,4 +1,4 @@
-# Benchmarks — ArmorBreak v1.0.2
+# Benchmarks — ArmorBreak v1.0.3
 
 > All numbers in this document are **measured on the reference machine below**
 > by [`benchmarks/bench.mjs`](../benchmarks/bench.mjs), not estimated. The raw
@@ -16,7 +16,7 @@
 | RAM | 63.68 GiB |
 | Runtime | Node.js v24.16.0 |
 | Harness | DeepSeek Harness Desktop 0.2.1-rc.2 (not required for the benchmark: core runtime is host-independent) |
-| ArmorBreak | v1.0.2, 39 capabilities / 8 domains |
+| ArmorBreak | v1.0.3, 39 capabilities / 8 domains |
 | Benchmark tool | `benchmarks/bench.mjs` (zero dependencies, `performance.now()`) |
 | Iterations | 1–80 per row after one warm-up pass |
 | Sample | `notepad.exe` — 360,448 bytes, PE32+ x86-64 |
@@ -127,6 +127,7 @@ the tool version pinned and the measurement method committed.
 | v1.0.0 | 128 | 84.9% | baseline runner/evidence pipeline |
 | v1.0.1 | 132 | 85.0% | lossless-JSON sanitizer + session-workspace resolution |
 | v1.0.2 | **145** | **85.6%** | per-file mutex serialization (adds lock acquisition ~µs), realpath checks, directory-target routing; `runner.js` 88.55% → 93.65% |
+| v1.0.3 | **146** | **85.6%** | optional `excludePaths` for SAST file enumeration (no effect on parser hot paths) |
 
 The v1.0.2 concurrency and realpath hardening add negligible cost relative to
 file I/O: lock acquisition happens once per append, on a promise queue.

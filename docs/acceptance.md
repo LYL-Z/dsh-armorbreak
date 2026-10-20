@@ -1,4 +1,4 @@
-# 验收报告 —— ArmorBreak「破甲模式」v1.0.2
+# 验收报告 —— ArmorBreak「破甲模式」v1.0.3
 
 - 验收时间：2026-10-20（America/Los_Angeles）
 - 目标运行时：DeepSeek Harness Desktop **0.2.1-rc.2**（Cordis 4.0.x，Node 24.21 / 系统 Node v24.16）
@@ -19,7 +19,7 @@
 | 5 | 工具适配器 | `lib/analyzers/{binary,forensics,android,network,web,sast,ctf,live}/` 共 **39 个能力** | ✅ |
 | 6 | 工作流实现 | `lib/core/workflows.js`（9 个模板）+ `lib/core/runner.js` | ✅ |
 | 7 | 安全策略实现 | `lib/core/scope.js` + `runner.js`（L0-L3、审批、路径、网络、限速） | ✅ |
-| 8 | 测试代码及实际结果 | `tests/`（16 个文件，**145 用例全部通过**） | ✅ 见 §3 |
+| 8 | 测试代码及实际结果 | `tests/`（16 个文件，**146 用例全部通过**） | ✅ 见 §3 |
 | 9 | 安装/卸载说明 | [installation.md](installation.md) | ✅ 含实际生命周期验证 |
 | 10 | 使用文档 | [usage.md](usage.md) + [README](../README.md) | ✅ |
 | 11 | 架构文档 | [architecture.md](architecture.md) | ✅ |
@@ -106,15 +106,15 @@ node --test
 | 指标 | 数值 |
 |---|---|
 | 测试文件 | 16 |
-| 用例总数 | **145** |
-| 通过 | **145** |
+| 用例总数 | **146** |
+| 通过 | **146** |
 | 失败 | **0** |
 | 跳过 | 0 |
 | 总耗时 | ≈ 4.1 s |
 
-分域用例：binary 16、forensics 12、android 18、network 15、web 11、sast 10、ctf 10、
+分域用例：binary 16、forensics 12、android 18、network 15、web 11、sast 11、ctf 10、
 core-policy 9、core-runtime 10、tools-integration 8、tools-lossless 4、acceptance 5、runner-gates 4、
-core-concurrency 3、runner-directory 5、hardening 5（合计 145）。
+core-concurrency 3、runner-directory 5、hardening 5（合计 146）。
 
 关键测试覆盖内容：
 
@@ -126,7 +126,7 @@ core-concurrency 3、runner-directory 5、hardening 5（合计 145）。
 
 | 范围 | 行覆盖 | 分支 | 函数 |
 |---|---:|---:|---:|
-| 全部文件 | **85.58%** | 62.74% | 86.13% |
+| 全部文件 | **85.60%** | 62.77% | 86.16% |
 | `lib/core/` 核心模块 | 平均 **92.5%**（最低 health 80.21%） | — | — |
 | runner.js | 93.65% | 74.22% | 88.89% |
 | runtime.js | 100% | 84.62% | 100% |
@@ -139,7 +139,7 @@ core-concurrency 3、runner-directory 5、hardening 5（合计 145）。
 > “关键权限判断分支 100%”未用工具单独计量：主要权限分支（L0 允许/越界/敏感路径、L1 隔离缺失/审批拒绝/审批通过、
 > L2 无授权/无审批/不匹配/限速、L3 拒绝）均有直接用例；整体分支覆盖 61.91%，剩余分支主要是错误处理与探测辅助路径。
 > 不把 61.91% 描述为 100%。
-> （v1.0.2 后整体分支覆盖为 **62.74%**，核心模块平均行覆盖 **92.5%**；见上表。）
+> （v1.0.3 后整体分支覆盖为 **62.77%**，核心模块平均行覆盖 **92.5%**；见上表。）
 
 ### 真实数据验证（非伪造）
 
@@ -167,7 +167,7 @@ core-concurrency 3、runner-directory 5、hardening 5（合计 145）。
 | 11 | 任务支持超时和取消 | ✅ | TIMEOUT 用例 + AbortSignal 取消用例（步骤/任务 CANCELLED） |
 | 12 | 运行日志不泄露敏感凭据 | ✅ | 审计/证据脱敏测试（token/API key 原文不出现）；报告脱敏 |
 | 13 | 不影响标准/创造模式 | ✅ | 未覆盖任何既有行；§2.4 卸载后 shipped preset 完整 |
-| 14 | 所有关键功能均有自动化测试 | ✅ | 145 用例，覆盖策略/运行时/工具/8 个分析域 |
+| 14 | 所有关键功能均有自动化测试 | ✅ | 146 用例，覆盖策略/运行时/工具/8 个分析域 |
 | 15 | 不存在已知权限绕过路径 | ✅（在本模型范围内） | 已修复审计出的 2 个真实 bug（CIDR 匹配、授权签名校验）；拒绝分支全覆盖；L3 无通道；剩余限制见 known-issues |
 | 16 | 完整安装/使用/卸载/排障文档 | ✅ | docs/ 全部文档 |
 
@@ -200,9 +200,12 @@ core-concurrency 3、runner-directory 5、hardening 5（合计 145）。
 13. **（v1.0.2）YAML 解析器深度/原型键**：flow 递归无上限、危险键可改原型。修复：深度上限 + 危险键拒绝 + 测试。
 14. **（v1.0.2）状态卡信息误导**：隔离不可用显示 docker、任务数 0（工作区默认 cwd）。修复：隔离标签与
     “最近使用的工作区”（MRU）状态快照。
+15. **（v1.0.3）扫描噪声无配置出口**：真实会话重跑源码目录审计后，27 条发现中 26 条为规则自匹配/测试夹具/文档示例。
+    新增可选的 `excludePaths`（路径子串、大小写不敏感）到 `sast.scan/secrets/deps/sbom`，用于排除已知噪声文件；
+    排除只影响枚举，不降低其他文件覆盖；有测试覆盖（含规则文件/测试夹具/真实源码的混合目录）。
 
-> **安装后的代码更新说明**：v1.0.2 修复已落在 `link:` 的 bundle 源码中，但**运行中的 Harness 进程已加载
-> 旧模块代际**；需要完全退出并重开 Desktop（或新开会话宿主进程）后生效。工具 schema 与能力清单未变。
+> **安装后的代码更新说明**：v1.0.3 修复已落在 `link:` 的 bundle 源码中，但**运行中的 Harness 进程已加载
+> 旧模块代际**；需要完全退出并重开 Desktop（或新开会话宿主进程）后生效。v1.0.3 仅新增可选参数，向后兼容。
 
 ## 6. 未验证 / 未实现（与 known-issues 一致）
 
@@ -217,7 +220,7 @@ core-concurrency 3、runner-directory 5、hardening 5（合计 145）。
 
 ```powershell
 cd D:\dsh-ABM\armorbreak
-node --test                                   # 145/145
+node --test                                   # 146/146
 node --test --experimental-test-coverage      # 覆盖率报告
 node scripts/file-changes.mjs                 # 重新生成文件清单
 node scripts/clean-temp.mjs                   # 清理测试在 OS 临时目录留下的 abm-*/dbg-* 目录

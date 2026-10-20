@@ -1,4 +1,4 @@
-# 已知问题与限制（v1.0.2）
+# 已知问题与限制（v1.0.3）
 
 > 本清单只记录**已确认**的限制；未验证/未实现的项目不会写成已完成。
 
@@ -54,8 +54,11 @@
     但替换已安装包的 JS 文件需要重启 Harness 才会加载新模块代际。
 23. **扫描自身仓库时的规则自匹配/夹具误报**：`sast.scan` 会命中 `rules.js` 中规则定义自身的字符串
     （如 `eval`/`new Function` 标题），`sast.secrets` 会命中测试夹具里的公开示例密钥（如 `AKIAIOSFODNN7EXAMPLE`、
-    占位 PEM）。这些在报告中保持 `hypothesis`/`observed` 并需人工复核，不属于可利用漏洞；如需降噪，
-    可在后续版本加入“规则文件/测试夹具排除”选项。
+    占位 PEM）。这些在报告中保持 `hypothesis`/`observed` 并需人工复核，不属于可利用漏洞。
+    **v1.0.3 起**可用可选参数 `excludePaths`（路径子串、大小写不敏感）排除规则文件/测试夹具/文档示例，
+    且不降低其他文件覆盖，例如
+    `options: { excludePaths: ["tests/", "lib/analyzers/sast/rules.js", "docs/known-issues.md"] }`。
+    更通用的 allowlist（按内容/值）仍在路线图中。
 24. **PDF 报告不是纯只读分析**：`armorbreak_report format=pdf` 会调用本地 LibreOffice（`soffice`）做格式转换，
     属报告生成阶段的本机进程调用（离线、无网络、参数固定无 shell）；`soffice` 缺失时会明确报错并提供其他格式。
 25. **磁盘空间与清理**：测试会在 OS 临时目录留下 `abm-*`/`dbg-*` 目录（已提供 `scripts/clean-temp.mjs`）；

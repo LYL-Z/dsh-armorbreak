@@ -19,7 +19,7 @@ const PURPOSE = {
   'tools.js': 'preset 子插件：注册 8 个模型工具并桥接平台审批',
   'skills.js': 'preset 子插件：注册 7 个内置技能',
   'README.md': '项目总览、安装、能力与安全模型摘要',
-  'CHANGELOG.md': '变更记录（1.0.2）',
+  'CHANGELOG.md': '变更记录（1.0.3）',
   'LICENSE': 'MIT 许可证',
   'SECURITY.md': '安全政策与漏洞披露流程',
   'CONTRIBUTING.md': '贡献指南与能力适配器开发流程',
@@ -120,7 +120,7 @@ for (const domain of domainEntries) {
   }
 }
 
-const content = `# 完整文件变更清单（v1.0.2）
+const content = `# 完整文件变更清单（v1.0.3）
 
 - 生成方式：\`node scripts/file-changes.mjs\`（遍历交付目录，排除 node_modules/.armorbreak）
 - 文件总数：**${files.length}**

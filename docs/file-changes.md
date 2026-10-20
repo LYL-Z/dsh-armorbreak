@@ -1,9 +1,9 @@
-# 完整文件变更清单（v1.0.2）
+# 完整文件变更清单（v1.0.3）
 
 - 生成方式：`node scripts/file-changes.mjs`（遍历交付目录，排除 node_modules/.armorbreak）
-- 文件总数：**132**
-- 总大小：**1849.9 KiB**
-- 总行数：**39045**（含注释/文档）
+- 文件总数：**133**
+- 总大小：**1857.6 KiB**
+- 总行数：**39189**（含注释/文档）
 - 运行时依赖：**0**（仅 Node 内置模块；无构建步骤）
 
 ## 能力清单（由 lib/analyzers/*/manifest.js 自动统计）
@@ -27,25 +27,26 @@
 | `.gitignore` | 394 | 19 |  |
 | `benchmarks/bench.mjs` | 12112 | 265 | 零依赖可复现微基准脚本 |
 | `benchmarks/results.json` | 4174 | 177 | 参考主机基准原始数据 |
-| `CHANGELOG.md` | 8125 | 103 | 变更记录（1.0.2） |
+| `CHANGELOG.md` | 8935 | 119 | 变更记录（1.0.3） |
 | `client.js` | 10058 | 234 | 浏览器半：composer 状态卡（能力/隔离/策略/任务摘要） |
 | `CODE_OF_CONDUCT.md` | 1478 | 35 | 社区行为准则 |
 | `CONTRIBUTING.md` | 3078 | 69 | 贡献指南与能力适配器开发流程 |
 | `cordis.patch.yml` | 6821 | 109 | 组合包 patch：Host 行 + preset-armorbreak 模式声明 |
-| `docs/acceptance.md` | 15653 | 232 | 验收报告（含实际测试与验证结果） |
+| `docs/acceptance.md` | 16105 | 235 | 验收报告（含实际测试与验证结果） |
 | `docs/architecture.md` | 7139 | 112 | 架构设计（分层、Cordis 组合、执行管线、数据模型） |
 | `docs/audit/environment-audit.md` | 11323 | 118 | Phase 0 环境与架构审计报告 |
-| `docs/benchmarks.md` | 7636 | 153 | 性能基准：环境、数据、方法、复现 |
+| `docs/benchmarks.md` | 7753 | 154 | 性能基准：环境、数据、方法、复现 |
 | `docs/compatibility-matrix.md` | 4965 | 71 | 运行时/API/外部工具/平台兼容性 |
 | `docs/CONTRACT.md` | 7935 | 141 | 分析能力/适配器开发契约 |
 | `docs/installation.md` | 4482 | 78 | 安装/启用/卸载/故障排查 |
-| `docs/known-issues.md` | 6495 | 64 | 已知问题与限制（诚实清单） |
+| `docs/known-issues.md` | 6756 | 67 | 已知问题与限制（诚实清单） |
 | `docs/marketplace.md` | 5589 | 104 | DeepSeek Harness 生态、插件市场与分发指引 |
 | `docs/media/report-deliverables.webp` | 125032 | 438 | 报告交付物真实截图 |
 | `docs/media/status-card.png` | 96465 | 355 | 模式状态卡真实截图 |
 | `docs/releases/v1.0.0.md` | 1884 | 41 | v1.0.0 发布说明 |
 | `docs/releases/v1.0.1.md` | 1463 | 36 | v1.0.1 发布说明 |
 | `docs/releases/v1.0.2.md` | 3370 | 62 | v1.0.2 发布说明 |
+| `docs/releases/v1.0.3.md` | 1765 | 51 |  |
 | `docs/roadmap.md` | 2770 | 38 | 后续扩展路线图 |
 | `docs/security-model.md` | 5950 | 78 | 四级能力控制、授权/审批、路径与命令、隔离、审计 |
 | `docs/usage.md` | 4092 | 87 | 使用指南与场景 |
@@ -95,9 +96,9 @@
 | `lib/analyzers/network/pcapng.js` | 11204 | 315 | 分析能力实现（按域） |
 | `lib/analyzers/network/tls.js` | 18058 | 461 | 分析能力实现（按域） |
 | `lib/analyzers/network/util.js` | 13594 | 365 | 分析能力实现（按域） |
-| `lib/analyzers/sast/common.js` | 13984 | 386 | 分析能力实现（按域） |
+| `lib/analyzers/sast/common.js` | 14910 | 404 | 分析能力实现（按域） |
 | `lib/analyzers/sast/deps.js` | 26481 | 626 | 分析能力实现（按域） |
-| `lib/analyzers/sast/manifest.js` | 24874 | 537 | 分析能力实现（按域） |
+| `lib/analyzers/sast/manifest.js` | 26246 | 557 | 分析能力实现（按域） |
 | `lib/analyzers/sast/patch.js` | 15759 | 303 | 分析能力实现（按域） |
 | `lib/analyzers/sast/rules.js` | 19545 | 591 | 分析能力实现（按域） |
 | `lib/analyzers/sast/sbom.js` | 5851 | 157 | 分析能力实现（按域） |
@@ -126,7 +127,7 @@
 | `locale/en.json` | 228 | 7 | 插件显示元数据（英文） |
 | `locale/zh.json` | 195 | 7 | 插件显示元数据（中文） |
 | `package.json` | 1783 | 79 | Bundle 清单（dsh.bundle.patch + dsh.client + 零依赖声明） |
-| `README.md` | 58914 | 1034 | 项目总览、安装、能力与安全模型摘要 |
+| `README.md` | 59672 | 1045 | 项目总览、安装、能力与安全模型摘要 |
 | `scripts/clean-temp.mjs` | 1714 | 59 | 清理测试临时目录脚本 |
 | `scripts/file-changes.mjs` | 6569 | 153 | 文件清单生成脚本 |
 | `SECURITY.md` | 2049 | 54 | 安全政策与漏洞披露流程 |
@@ -150,7 +151,7 @@
 | `tests/network.test.mjs` | 49114 | 1099 | 自动化测试（node:test） |
 | `tests/runner-directory.test.mjs` | 8208 | 184 | 自动化测试（node:test） |
 | `tests/runner-gates.test.mjs` | 7568 | 142 | 自动化测试（node:test） |
-| `tests/sast.test.mjs` | 17394 | 395 | 自动化测试（node:test） |
+| `tests/sast.test.mjs` | 18829 | 416 | 自动化测试（node:test） |
 | `tests/tools-integration.test.mjs` | 8353 | 172 | 自动化测试（node:test） |
 | `tests/tools-lossless.test.mjs` | 5644 | 129 | 自动化测试（node:test） |
 | `tests/web.test.mjs` | 17832 | 434 | 自动化测试（node:test） |

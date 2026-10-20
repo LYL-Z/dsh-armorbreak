@@ -11,8 +11,8 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-0ea5e9)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%E2%89%A522-339933?logo=node.js&logoColor=white)](package.json)
 [![DeepSeek Harness](https://img.shields.io/badge/DeepSeek%20Harness-0.2.1--rc.2-4D6BFE)](docs/compatibility-matrix.md)
-[![Tests](https://img.shields.io/badge/tests-145%20passing-2ea44f)](docs/acceptance.md)
-[![Coverage](https://img.shields.io/badge/coverage-85.58%25-yellowgreen)](docs/acceptance.md)
+[![Tests](https://img.shields.io/badge/tests-146%20passing-2ea44f)](docs/acceptance.md)
+[![Coverage](https://img.shields.io/badge/coverage-85.60%25-yellowgreen)](docs/acceptance.md)
 [![Runtime deps](https://img.shields.io/badge/runtime%20dependencies-0-blueviolet)](package.json)
 [![Security policy](https://img.shields.io/badge/security-policy-blue)](SECURITY.md)
 [![Stars](https://img.shields.io/github/stars/LYL-Z/dsh-armorbreak?style=social)](https://github.com/LYL-Z/dsh-armorbreak/stargazers)
@@ -87,8 +87,8 @@ ArmorBreak 的设计目标因此不是「再加一个安全 AI」，而是：
 | 模型可见工具 | **8**（工具目录而非 39 个适配器逐一暴露） | `tools.js` |
 | 内置技能 | **7** | `skills.js` |
 | 可复用工作流模板 | **9** | `lib/core/workflows.js` |
-| 自动化测试 | **145 / 145 通过**（16 个测试文件） | `node --test` |
-| 代码覆盖率 | 行 **85.58%** / 分支 62.74% / 函数 86.13%；核心最低模块行覆盖 ≥80% | `node --test --experimental-test-coverage` |
+| 自动化测试 | **146 / 146 通过**（16 个测试文件） | `node --test` |
+| 代码覆盖率 | 行 **85.60%** / 分支 62.77% / 函数 86.16%；核心最低模块行覆盖 ≥80% | `node --test --experimental-test-coverage` |
 | 运行时依赖 | **0**（`node:*` only） | `package.json` |
 | 360 KiB PE 静态解析（p50） | `binary.identify` **1.72 ms** / `forensics.hash` **0.84 ms** | [benchmarks](docs/benchmarks.md) |
 | PCAP 解析吞吐 | **≈ 0.54–0.64 M packets/s**（5,000 包 p50 7.8–9.6 ms） | 同上 |
@@ -411,7 +411,7 @@ ArmorBreak 不是分布式服务；它的一致性模型是**单 Host 进程内�
 
 ### 5.3 安全审计与合规
 
-- 代码审计：`node --test`（145 用例）覆盖策略允许/拒绝、路径逃逸、并发链、脱敏、YAML 原型污染；
+- 代码审计：`node --test`（146 用例）覆盖策略允许/拒绝、路径逃逸、并发链、脱敏、YAML 原型污染；
 - 依赖漏洞：**零运行时依赖**，无第三方供应链面；
 - 数据合规：全部数据留在本机工作区，不上传；报告可导出；
 - 参考标准映射：OWASP ASVS（输入校验/访问控制/日志）、CWE 映射、CVSS 4.0 评分依据、SARIF 2.1.0 输出；
@@ -508,7 +508,7 @@ armorbreak_workflow action=run taskId=task_...
 ### 8.1 测试环境
 
 Intel Core Ultra 9 290HX Plus（24C/24T，2.70 GHz）· 63.68 GiB RAM · Windows 11 x64 ·
-Node v24.16.0 · ArmorBreak v1.0.2（39 capabilities / 8 domains）·
+Node v24.16.0 · ArmorBreak v1.0.3（39 capabilities / 8 domains）·
 样本 `notepad.exe` 360,448 B · 合成 PCAP 5,000 包/700,024 B · 合成 JS 项目 200 文件。
 
 ### 8.2 核心结果（p50，parser 级）
@@ -536,7 +536,7 @@ Node v24.16.0 · ArmorBreak v1.0.2（39 capabilities / 8 domains）·
 ### 8.4 横向与纵向对比
 
 - **横向**：本机未安装 Ghidra/Semgrep/TShark 等外部工具，因此只做**架构维度定性对比**（依赖、离线默认、证据链、策略、可移植性），**不伪造性能数字**；见 benchmarks 文档 §5。
-- **纵向**：v1.0.0 → v1.0.2 测试 128→145，核心覆盖率 84.9%→85.6%，runner 覆盖率 88.55%→93.65%，并发互斥引入的额外开销为每次 append 一次 promise 队列（µs 级，低于文件 I/O 抖动）。
+- **纵向**：v1.0.0 → v1.0.3 测试 128→146，核心覆盖率 84.9%→85.6%，runner 覆盖率 88.55%→93.65%，并发互斥引入的额外开销为每次 append 一次 promise 队列（µs 级，低于文件 I/O 抖动）。
 
 ### 8.5 复现
 
@@ -679,6 +679,16 @@ git clone https://github.com/LYL-Z/dsh-armorbreak.git D:\tools\dsh-armorbreak
 | `WebAPIReview` | file | 2 | OpenAPI/HAR |
 | `SecurityReportGeneration` | none | 0 | 报告生成 |
 
+> **扫描降噪（v1.0.3+）**：`sast.scan` / `sast.secrets` / `sast.deps` / `sast.sbom` 支持可选
+> `excludePaths`（按路径子串、大小写不敏感），用于排除规则文件、测试夹具、文档示例等已知噪声，例如：
+>
+> ```json
+> { "capability": "sast.scan", "target": "D:\\repo", "workspace": "D:\\work",
+>   "options": { "excludePaths": ["tests/", "lib/analyzers/sast/rules.js", "docs/known-issues.md"] } }
+> ```
+>
+> 排除只影响文件枚举，不改变规则、不降低其他文件的覆盖；被排除数量可在结果 `data.excludedCount` 核对。
+
 ### 11.3 典型场景
 
 <details>
@@ -766,6 +776,7 @@ armorbreak_analyze capability=live.http_probe taskId=<id> options={"url":"http:/
 | v1.0.0 | 最小可用模式 + 离线能力核心 | bundle/preset/工具/技能/39 能力/策略/证据/报告/状态卡；128 测试 |
 | v1.0.1 | 真实会话缺陷修复 | 无损 JSON、会话工作区解析；132 测试 |
 | v1.0.2 | 目录路由 + 并发 + 加固 | 目录工作流可用、targetKind 规划校验、哈希链并发安全、UTF-8/realpath/端口/YAML 加固；145 测试 |
+| v1.0.3 | 扫描降噪 | `sast.*` 新增可选 `excludePaths`（按路径子串排除规则文件/测试夹具/文档示例）；146 测试，向后兼容 |
 
 ### 13.2 当前规划（v1.1）
 
@@ -1002,7 +1013,7 @@ dsh-armorbreak/
 ├── docs/                     # 审计/架构/安全模型/验收/兼容性/已知问题/路线图/市场/基准
 ├── benchmarks/               # 可复现基准脚本与结果
 ├── scripts/                  # 文件清单生成、测试临时目录清理
-├── tests/                    # 145 个 node:test 用例
+├── tests/                    # 146 个 node:test 用例
 └── .github/workflows/ci.yml  # 双平台 CI
 ```
 
@@ -1011,7 +1022,7 @@ dsh-armorbreak/
 | [环境与架构审计](docs/audit/environment-audit.md) | 0.2.1-rc.2 实测 API 基线、兼容性事实 |
 | [架构设计](docs/architecture.md) | 分层、Cordis 组合、执行管线、数据模型 |
 | [安全模型](docs/security-model.md) | L0–L3、授权/审批、路径/命令、隔离、审计 |
-| [验收报告](docs/acceptance.md) | 145 测试、覆盖率、安装/运行实测、验收标准逐条对照 |
+| [验收报告](docs/acceptance.md) | 146 测试、覆盖率、安装/运行实测、验收标准逐条对照 |
 | [兼容性矩阵](docs/compatibility-matrix.md) | 运行时/API/平台/外部工具 |
 | [已知问题](docs/known-issues.md) | 25 条已确认限制与运营注意事项 |
 | [性能基准](docs/benchmarks.md) | 环境、数据、方法、复现、限制 |
@@ -1019,7 +1030,7 @@ dsh-armorbreak/
 | [使用指南](docs/usage.md) | 工具/工作流/场景/证据约定 |
 | [市场与生态](docs/marketplace.md) | DSH 生态、市场提交、版本策略 |
 | [适配器契约](docs/CONTRACT.md) | 新增能力的接口与测试要求 |
-| [版本说明](docs/releases/) | v1.0.0 / v1.0.1 / v1.0.2 里程碑 |
+| [版本说明](docs/releases/) | v1.0.0 / v1.0.1 / v1.0.2 / v1.0.3 里程碑 |
 | [贡献指南](CONTRIBUTING.md) · [安全政策](SECURITY.md) | 贡献流程、漏洞披露 |
 | [变更记录](CHANGELOG.md) · [文件清单](docs/file-changes.md) | 版本变更、全量文件 |
 

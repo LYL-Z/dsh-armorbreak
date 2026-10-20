@@ -392,3 +392,24 @@ test('sast helpers: entropy is bounded and deterministic', () => {
   assert.ok(shannonEntropy('abcdefgh') <= 3.0001);
   assert.ok(shannonEntropy(Buffer.from([0, 1, 2, 3])) <= 2.0001);
 });
+
+test('sast.scan excludePaths removes rule/fixture noise from the file set', async () => {
+  const files = {
+    [`${PROJECT}/lib/analyzers/sast/rules.js`]: "export const RULES = [{ title: 'eval(' }];\nconst ruleProbe = eval(input)\n",
+    [`${PROJECT}/tests/fixture.js`]: 'const fixtureProbe = eval(input)\n',
+    [`${PROJECT}/src/app.js`]: 'export function run(userInput) { return eval(userInput) }\n',
+  };
+  const unfiltered = await runCapability('sast.scan', { env: makeEnv(files) });
+  const allTargets = unfiltered.findings.map((finding) => finding.target ?? '');
+  assert.ok(allTargets.some((target) => target.includes('rules.js')), 'baseline scan must see the rules file');
+  assert.ok(allTargets.some((target) => target.includes('tests/fixture.js')), 'baseline scan must see the fixture');
+
+  const filtered = await runCapability('sast.scan', {
+    env: makeEnv(files),
+    options: { excludePaths: ['lib/analyzers/sast/rules.js', 'tests/'] },
+  });
+  const filteredTargets = filtered.findings.map((finding) => finding.target ?? '');
+  assert.equal(filteredTargets.some((target) => target.includes('rules.js')), false, 'excluded rule file must not be scanned');
+  assert.equal(filteredTargets.some((target) => target.includes('tests/fixture.js')), false, 'excluded test fixture must not be scanned');
+  assert.ok(filteredTargets.some((target) => target.includes('src/app.js')), 'real source file must still be scanned');
+});
