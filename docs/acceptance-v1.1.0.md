@@ -125,3 +125,23 @@ Stage B 新增 7 个适配器测试：Semgrep/Trivy 正常 JSON 归一化、seve
 - Gate B 本轮新增/修改：`scripts/verify-gate-b.mjs`、`fixtures/gate-b-sample/`、`fixtures/gate-b-rules/armorbreak-local.yml`、`docs/acceptance/gate-b-{summary,findings,task}.json` + `gate-b-report.md`；修复 `lib/analyzers/external/adapters.js`（子进程环境白名单）与 `lib/core/health.js`（版本探测超时）。
 - 合并后回归：main 上 `node --test` → 160 用例，159 通过、0 失败、1 跳过。
 - 后续：B–E 阶段继续在分支/新分支迭代。
+
+
+## 6. Stage C/D/E 增量验收（分支 feature/armorbreak-v1.1.0-stage-cde）
+
+### 实际执行
+
+- `node --test` → **174/174 通过**（新增 workflow-dag 5、task-queue 3、ui-api 5、e2e-tool-flow 1）。
+- DAG：独立步骤并发、依赖等待、失败隔离（失败步骤的依赖方 SKIPPED，独立步骤 DONE，任务 PARTIAL_SUCCESS）。
+- 队列：并发上限、WAITING/RUNNING、取消后任务落 CANCELLED、重启恢复（RUNNING→PENDING，RECOVERABLE→resume→COMPLETED）。
+- 工作台路由：loopback-only、GET/HEAD、拒绝 workspace 枚举、任务详情不泄露 finding description/excerpt。
+- mock-model E2E：health → workflow start → run_async → status 轮询 → evidence chain valid → report 文件存在且包含任务标题。
+- CI 增加 live-docker job（真实 Docker daemon + digest-pinned busybox）运行 L1 验证脚本。
+
+### 仍未完成 / 未验证
+
+- 真实 DeepSeek 模型桌面 GUI 端到端（无桌面模型凭据；mock-model 不等于真实模型）。
+- 工作台写操作（创建/取消/重试/工具安装引导）与浏览器视觉验证（无浏览器控制）；当前为只读概览/任务/工具三页签。
+- 会话级工作区绑定（仍为进程 MRU，UI 已明确标注）。
+- 工具中心外部工具仅列名并标记“未探测”，未展示真实版本/兼容性。
+- Ghidra/JADX/TShark/Syft、Stage D 完整工作台、Stage E 正式发布（tag/Release 未创建，等待合并批准）。

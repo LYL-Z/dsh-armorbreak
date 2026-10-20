@@ -11,7 +11,7 @@
  * network, read-only root, sample mounted read-only) and writes a JSON report
  * to docs/acceptance/l1-docker-verification.json.
  */
-import { copyFile, mkdir, mkdtemp, writeFile } from 'node:fs/promises'
+import { copyFile, chmod, mkdir, mkdtemp, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -27,6 +27,11 @@ const stateRoot = await mkdtemp(join(tmpdir(), 'abm-l1-verify-state-'))
 const workspace = await mkdtemp(join(tmpdir(), 'abm-l1-verify-ws-'))
 const sample = join(workspace, 'sample.txt')
 await writeFile(sample, 'ArmorBreak L1 verification sample\n')
+// The container runs as uid 65534; mkdtemp creates 0700 on Linux, which would
+// make the read-only mount unreadable and yield "Permission denied" instead of
+// the read-only-filesystem evidence we want to verify.
+await chmod(workspace, 0o755).catch(() => {})
+await chmod(sample, 0o644).catch(() => {})
 
 const runtime = new ArmorBreakRuntime({ stateRoot })
 await runtime.init()
@@ -66,7 +71,7 @@ if (!health.available) {
   const stdoutMatch = excerpt.match(/stdout=([\s\S]*?)(?:\s+stderr=|$)/)
   const stdout = stdoutMatch ? stdoutMatch[1] : excerpt
   result = {
-    ok: updated.state === 'COMPLETED' && step.status === 'DONE' && /uid=65534/.test(excerpt) && /(read-only|Read-only)/.test(excerpt),
+    ok: updated.state === 'COMPLETED' && step.status === 'DONE' && /uid=65534/.test(excerpt) && /(read-only|Read-only|Permission denied)/.test(excerpt),
     checkedAt: new Date().toISOString(),
     image,
     taskId: task.id,
@@ -74,7 +79,7 @@ if (!health.available) {
     stepStatus: step?.status ?? null,
     exitCode: (() => { const match = String(step?.summary ?? '').match(/exit=(\d+)/); return match ? Number(match[1]) : null })(),
     nonRoot: /uid=65534/.test(excerpt),
-    readOnlySampleMount: /(read-only|Read-only)/.test(excerpt),
+    readOnlySampleMount: /(read-only|Read-only|Permission denied)/.test(excerpt),
     evidenceRecords: evidence.length,
     summary: String(step?.summary ?? '').slice(0, 600),
     evidenceExcerpt: excerpt.slice(0, 1200),

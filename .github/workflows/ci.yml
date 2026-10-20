@@ -47,3 +47,34 @@ jobs:
 
       - name: Text files are valid UTF-8
         run: node --test tests/hardening.test.mjs
+
+  live-docker:
+    name: L1 Docker integration (real daemon)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Pull a digest-pinned image
+        run: |
+          docker pull busybox:1.36
+          IMAGE="busybox@$(docker inspect --format='{{index .RepoDigests 0}}' busybox:1.36 | cut -d@ -f2)"
+          echo "ARMORBREAK_L1_IMAGE=$IMAGE" >> "$GITHUB_ENV"
+          echo "using $IMAGE"
+
+      - name: Verify hardened container execution path
+        run: node scripts/verify-l1.mjs --image "$ARMORBREAK_L1_IMAGE"
+
+      - name: Upload L1 verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: l1-docker-verification
+          path: docs/acceptance/l1-docker-verification.json
+          if-no-files-found: warn
+
