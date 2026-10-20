@@ -13,7 +13,12 @@ import {
   taskRows,
   toolsPresentation,
 } from '../lib/core/presentation.js'
-import { createStateHandler, createTasksHandler, createToolsHandler } from '../index.js'
+import { mkdtemp, mkdir, writeFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+
+import { ArmorBreakRuntime } from '../lib/core/runtime.js'
+import { createActionHandler, createEvidenceHandler, createReportHandler, createStateHandler, createTasksHandler, createToolsHandler } from '../index.js'
 
 function fakeResponse() {
   const captured = { status: null, headers: null, body: '', json: null }
@@ -83,6 +88,31 @@ function req(url, options = {}) {
   return { method: options.method ?? 'GET', url, socket: { remoteAddress: options.remoteAddress ?? '127.0.0.1' } }
 }
 
+function actionReq(body, options = {}) {
+  const chunks = [Buffer.from(JSON.stringify(body))]
+  return {
+    method: options.method ?? 'POST',
+    url: options.url ?? '/armorbreak/actions',
+    headers: options.headers ?? { 'content-type': 'application/json', 'x-armorbreak-ui': '1' },
+    socket: { remoteAddress: options.remoteAddress ?? '127.0.0.1' },
+    async *[Symbol.asyncIterator]() {
+      for (const chunk of chunks) yield chunk
+    },
+  }
+}
+
+async function realWorkspaceRuntime() {
+  const stateRoot = await mkdtemp(join(tmpdir(), 'abm-ui-state-'))
+  const workspace = await mkdtemp(join(tmpdir(), 'abm-ui-ws-'))
+  await mkdir(join(workspace, 'src'), { recursive: true })
+  await writeFile(join(workspace, 'package.json'), JSON.stringify({ name: 'ui-fixture', dependencies: { lodash: '4.17.20' } }))
+  await writeFile(join(workspace, 'src', 'app.js'), 'export function run(input) { return eval(input) }\n')
+  const runtime = new ArmorBreakRuntime({ stateRoot })
+  await runtime.init()
+  runtime.lastWorkspace = workspace
+  return { runtime, workspace }
+}
+
 test('isolation labels never claim verified isolation without a self-test', () => {
   const available = isolationPresentation({ available: true, provider: 'docker' })
   assert.equal(available.state, 'DaemonReady')
@@ -148,4 +178,64 @@ test('all workbench routes enforce loopback, GET/HEAD and reject workspace enume
     await handler(req('/armorbreak/tasks?workspace=C%3A%5CWindows'), enumAttempt)
     assert.equal(enumAttempt.captured.status, 403)
   }
+})
+
+test('workbench create action is loopback-only and requires the local UI header', async () => {
+  const { runtime, workspace } = await realWorkspaceRuntime()
+  const handler = createActionHandler(runtime)
+  const noHeader = fakeResponse()
+  await handler(req('/armorbreak/actions', { method: 'POST' }), noHeader)
+  assert.equal(noHeader.captured.status, 403)
+  const remote = fakeResponse()
+  await handler(actionReq({ action: 'create', workflow: 'DependencyAudit', target: workspace }, { remoteAddress: '10.1.2.3' }), remote)
+  assert.equal(remote.captured.status, 403)
+  const get = fakeResponse()
+  await handler(req('/armorbreak/actions'), get)
+  assert.equal(get.captured.status, 405)
+})
+
+test('workbench creates an L0 task, exposes evidence, previews report and cancels', async () => {
+  const { runtime, workspace } = await realWorkspaceRuntime()
+  const action = createActionHandler(runtime)
+  const created = fakeResponse()
+  await action(actionReq({ action: 'create', workflow: 'DependencyAudit', target: workspace, title: 'UI dependency audit' }), created)
+  assert.equal(created.captured.status, 200)
+  const taskId = created.captured.json.task.id
+  assert.match(taskId, /^task_/)
+
+  const evidenceRes = fakeResponse()
+  await createEvidenceHandler(runtime)(req(`/armorbreak/evidence?taskId=${taskId}`), evidenceRes)
+  assert.equal(evidenceRes.captured.status, 200)
+  assert.equal(evidenceRes.captured.json.task.id, taskId)
+  assert.equal(evidenceRes.captured.json.chain.valid, true)
+
+  const store = runtime.workspace(workspace).taskStore
+  await runtime.runner.runWorkflow(await store.get(taskId), { generateReport: true })
+  const report = fakeResponse()
+  await createReportHandler(runtime)(req(`/armorbreak/report?taskId=${taskId}&format=markdown`), report)
+  assert.equal(report.captured.status, 200)
+  assert.match(report.captured.json.text, /DependencyAudit|依赖/)
+  assert.equal(typeof report.captured.json.sha256, 'string')
+
+  const second = fakeResponse()
+  await action(actionReq({ action: 'create', workflow: 'DependencyAudit', target: workspace, title: 'cancel me' }), second)
+  const cancelId = second.captured.json.task.id
+  const cancelled = fakeResponse()
+  await action(actionReq({ action: 'cancel', taskId: cancelId }), cancelled)
+  assert.equal(cancelled.captured.status, 200)
+  assert.equal(cancelled.captured.json.task.state, 'CANCELLED')
+
+  const filt = fakeResponse()
+  await createEvidenceHandler(runtime)(req(`/armorbreak/evidence?taskId=${taskId}&severity=high&verification=hypothesis`), filt)
+  assert.equal(filt.captured.status, 200)
+  assert.ok(Array.isArray(filt.captured.json.findings))
+})
+
+test('workbench rejects unknown workflows with an actionable error', async () => {
+  const { runtime, workspace } = await realWorkspaceRuntime()
+  const handler = createActionHandler(runtime)
+  const response = fakeResponse()
+  await handler(actionReq({ action: 'create', workflow: 'NoSuchWorkflow', target: workspace }), response)
+  assert.equal(response.captured.status, 400)
+  assert.match(response.captured.json.error, /unknown workflow/)
 })

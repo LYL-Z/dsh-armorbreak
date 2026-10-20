@@ -14,6 +14,8 @@
  * @module dsh-armorbreak
  */
 import { getRuntime } from './lib/core/runtime.js'
+import { getWorkflow, listWorkflows } from './lib/core/workflows.js'
+import { readFile } from 'node:fs/promises'
 
 export const inject = ['webServer']
 
@@ -145,7 +147,7 @@ export function createTasksHandler(runtime) {
 
 /**
  * Read-only tool center: capability domains and isolation state. External tools
- * are listed as names only; they are NOT reported as installed without a probe.
+ * are listed as names only unless `?probe=1` performs a bounded health probe.
  * @param {import('./lib/core/runtime.js').ArmorBreakRuntime} runtime
  */
 export function createToolsHandler(runtime) {
@@ -158,15 +160,219 @@ export function createToolsHandler(runtime) {
         return
       }
       const state = await runtime.stateSummary()
+      const probe = url.searchParams.get('probe') === '1'
+      const tools = probe ? await runtime.health.toolMatrix() : null
       sendJson(res, 200, {
         workspace: state.workspace,
         isolation: state.ui.isolation,
         domains: state.ui.tools.domains,
         environment: state.environment,
+        workflows: listWorkflows(),
+        externalTools: tools,
+        probed: Boolean(tools),
         route: '/armorbreak/tools',
       })
     } catch (error) {
       sendError(res, error)
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Stage D write actions (loopback + explicit same-origin UI header)
+// ---------------------------------------------------------------------------
+
+/** @param {import('node:http').IncomingMessage} req @param {number} [limit] */
+async function readJsonBody(req, limit = 64 * 1024) {
+  const chunks = []
+  let total = 0
+  for await (const chunk of req) {
+    total += chunk.length
+    if (total > limit) throw new Error('request body exceeds 64 KiB')
+    chunks.push(chunk)
+  }
+  if (chunks.length === 0) return {}
+  try {
+    return JSON.parse(Buffer.concat(chunks).toString('utf8'))
+  } catch {
+    throw new Error('request body is not valid JSON')
+  }
+}
+
+/** @param {any[]} steps @param {import('./lib/core/runtime.js').ArmorBreakRuntime} runtime */
+function planRiskMax(steps, runtime) {
+  let riskMax = 'L0'
+  const order = { L0: 0, L1: 1, L2: 2, L3: 3 }
+  for (const step of steps) {
+    const capability = runtime.registry.get(step.capabilityId)
+    if (!capability) throw new Error(`unknown capability in workflow: ${step.capabilityId}`)
+    if (order[capability.riskLevel] > order[riskMax]) riskMax = capability.riskLevel
+  }
+  return riskMax
+}
+
+/**
+ * Task actions initiated from the local workbench: create an L0 task, cancel,
+ * retry failed steps, or resume an interrupted task. Requires loopback peer,
+ * POST, `x-armorbreak-ui: 1` and application/json (same-origin local UI only).
+ * L1/L2 workflows are rejected here because a browser has no platform approval
+ * channel; they must run through the conversation tools.
+ * @param {import('./lib/core/runtime.js').ArmorBreakRuntime} runtime
+ */
+export function createActionHandler(runtime) {
+  return async function handleAction(req, res) {
+    if (!isLoopbackPeer(req)) {
+      denied(res, 'route is loopback-only')
+      return
+    }
+    if (req.method !== 'POST') {
+      res.writeHead(405, { 'content-type': 'application/json; charset=utf-8', allow: 'POST' })
+      res.end(JSON.stringify({ error: 'method not allowed' }))
+      return
+    }
+    if (String(req.headers?.['x-armorbreak-ui'] ?? '') !== '1' || !String(req.headers?.['content-type'] ?? '').includes('application/json')) {
+      denied(res, 'write actions require the local UI header x-armorbreak-ui: 1 and application/json')
+      return
+    }
+    try {
+      const body = await readJsonBody(req)
+      const action = String(body.action ?? '')
+      const workspaceRoot = runtime.lastWorkspace ?? runtime.defaultWorkspace()
+      const ctx = runtime.workspace(workspaceRoot)
+      if (action === 'create') {
+        const workflow = getWorkflow(String(body.workflow ?? ''))
+        const target = body.target ? String(body.target) : null
+        if (workflow.targetKind !== 'none' && !target) throw new Error('target path is required for this workflow')
+        const riskMax = planRiskMax(workflow.steps, runtime)
+        if (riskMax !== 'L0') throw new Error(`workbench creation supports L0 workflows only; ${workflow.id} is ${riskMax}. Use the conversation tools with platform approval.`)
+        const task = await ctx.taskStore.create({
+          title: String(body.title ?? `${workflow.title}${target ? ` — ${target.split(/[\\/]/).pop()}` : ''}`),
+          objective: workflow.description,
+          workflowId: workflow.id,
+          targetPath: target,
+          targetKind: workflow.targetKind,
+          steps: workflow.steps,
+        })
+        await runtime.runner.prepareTask(task)
+        sendJson(res, 200, { ok: true, action, workspace: workspaceRoot, task: ctx.taskStore.summary(task, { includeSteps: true }) })
+        return
+      }
+      const taskId = String(body.taskId ?? '')
+      if (!taskId) throw new Error('taskId is required')
+      const task = await ctx.taskStore.get(taskId)
+      if (action === 'cancel') {
+        const result = await runtime.queue.cancel(taskId, { reason: 'cancelled from workbench' })
+        sendJson(res, 200, { ok: true, action, result, task: ctx.taskStore.summary(await ctx.taskStore.get(taskId).catch(() => task)) })
+        return
+      }
+      if (action === 'retry') {
+        if (planRiskMax(task.steps, runtime) !== 'L0') throw new Error('workbench retry supports L0 tasks only; use the conversation tools for L1/L2 approval')
+        await ctx.taskStore.resetFailedSteps(task)
+        await runtime.queue.start(task, { maxSteps: 50, concurrency: 2 })
+        sendJson(res, 200, { ok: true, action, queue: runtime.queue.status(taskId), task: ctx.taskStore.summary(await ctx.taskStore.get(taskId)) })
+        return
+      }
+      if (action === 'resume') {
+        if (planRiskMax(task.steps, runtime) !== 'L0') throw new Error('workbench resume supports L0 tasks only')
+        await runtime.queue.recover(workspaceRoot)
+        const latest = await ctx.taskStore.get(taskId)
+        if (!['RECOVERABLE', 'INTERRUPTED', 'PAUSED'].includes(latest.state)) throw new Error(`task is not resumable (${latest.state})`)
+        await runtime.queue.resume(latest, { maxSteps: 50, concurrency: 2 })
+        sendJson(res, 200, { ok: true, action, queue: runtime.queue.status(taskId), task: ctx.taskStore.summary(latest) })
+        return
+      }
+      throw new Error(`unsupported action: ${action}`)
+    } catch (error) {
+      sendJson(res, 400, { error: String(error?.message ?? error) })
+    }
+  }
+}
+
+/**
+ * Evidence explorer data for one task: bounded evidence metadata + finding rows,
+ * optional severity/verification filters, and evidence hash-chain status.
+ * @param {import('./lib/core/runtime.js').ArmorBreakRuntime} runtime
+ */
+export function createEvidenceHandler(runtime) {
+  return async function handleEvidence(req, res) {
+    if (!guard(req, res)) return
+    try {
+      const url = new URL(String(req.url ?? '/armorbreak/evidence'), 'http://127.0.0.1')
+      if (url.searchParams.has('workspace')) {
+        denied(res, 'workspace parameter is not accepted')
+        return
+      }
+      const taskId = String(url.searchParams.get('taskId') ?? '')
+      if (!taskId) throw new Error('taskId is required')
+      const workspaceRoot = runtime.lastWorkspace ?? runtime.defaultWorkspace()
+      const ctx = runtime.workspace(workspaceRoot)
+      const task = await ctx.taskStore.get(taskId)
+      const evidenceStore = ctx.taskStore.evidenceStore(taskId)
+      const evidence = await evidenceStore.readEvidence(1000)
+      const { findings } = await evidenceStore.readFindings()
+      const severity = url.searchParams.get('severity')
+      const verification = url.searchParams.get('verification')
+      const filtered = findings.filter((finding) => (!severity || finding.severity === severity) && (!verification || finding.verification === verification))
+      const chain = await evidenceStore.verifyChain()
+      sendJson(res, 200, {
+        workspace: workspaceRoot,
+        task: ctx.taskStore.summary(task),
+        chain,
+        evidence: evidence.slice(0, 200).map((record) => ({ id: record.id, title: String(record.title ?? '').slice(0, 200), kind: record.kind ?? 'observation', at: record.at ?? null, excerpt: String(record.excerpt ?? '').slice(0, 300) })),
+        findings: filtered.slice(0, 200).map((finding) => ({
+          id: finding.id,
+          title: String(finding.title ?? '').slice(0, 200),
+          severity: finding.severity,
+          verification: finding.verification,
+          cwe: finding.cwe ?? null,
+          target: finding.target ? String(finding.target).slice(0, 200) : null,
+          description: String(finding.description ?? '').slice(0, 500),
+        })),
+        counts: { evidence: evidence.length, findings: findings.length, filteredFindings: filtered.length },
+        truncated: evidence.length > 200 || filtered.length > 200,
+        route: '/armorbreak/evidence',
+      })
+    } catch (error) {
+      sendJson(res, 400, { error: String(error?.message ?? error) })
+    }
+  }
+}
+
+/**
+ * Report preview for one task (bounded markdown/html text). HTML is returned as
+ * text and must never be injected as HTML by the client (XSS boundary).
+ * @param {import('./lib/core/runtime.js').ArmorBreakRuntime} runtime
+ */
+export function createReportHandler(runtime) {
+  return async function handleReport(req, res) {
+    if (!guard(req, res)) return
+    try {
+      const url = new URL(String(req.url ?? '/armorbreak/report'), 'http://127.0.0.1')
+      if (url.searchParams.has('workspace')) {
+        denied(res, 'workspace parameter is not accepted')
+        return
+      }
+      const taskId = String(url.searchParams.get('taskId') ?? '')
+      if (!taskId) throw new Error('taskId is required')
+      const requestedFormat = String(url.searchParams.get('format') ?? 'markdown')
+      if (!['markdown', 'html'].includes(requestedFormat)) throw new Error('format must be markdown or html')
+      const workspaceRoot = runtime.lastWorkspace ?? runtime.defaultWorkspace()
+      const ctx = runtime.workspace(workspaceRoot)
+      const task = await ctx.taskStore.get(taskId)
+      if (!task.report?.path) throw new Error('task has no generated report yet')
+      const text = await readFile(task.report.path, 'utf8')
+      sendJson(res, 200, {
+        taskId,
+        path: task.report.path,
+        format: task.report.format,
+        sha256: task.report.sha256,
+        bytes: Buffer.byteLength(text),
+        text: text.slice(0, 256 * 1024),
+        truncated: text.length > 256 * 1024,
+        route: '/armorbreak/report',
+      })
+    } catch (error) {
+      sendJson(res, 400, { error: String(error?.message ?? error) })
     }
   }
 }
@@ -186,6 +392,9 @@ export function apply(ctx) {
       { path: STATE_PATH, handler: createStateHandler(runtime) },
       { path: '/armorbreak/tasks', handler: createTasksHandler(runtime) },
       { path: '/armorbreak/tools', handler: createToolsHandler(runtime) },
+      { path: '/armorbreak/actions', handler: createActionHandler(runtime) },
+      { path: '/armorbreak/evidence', handler: createEvidenceHandler(runtime) },
+      { path: '/armorbreak/report', handler: createReportHandler(runtime) },
     ]
     const disposers = routes.map((route) => ctx.webServer.register({ kind: 'exact', path: route.path, handler: route.handler }))
     dispose = () => {

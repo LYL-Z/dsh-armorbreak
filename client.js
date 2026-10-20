@@ -54,6 +54,23 @@ window.__ModuleLoader__.load({
         noFindings: 'No findings recorded.',
         loadingDetail: 'Loading task…',
         workspaceBinding: 'Workspace binding',
+        createTask: 'New L0 task',
+        workflow: 'Workflow',
+        targetPath: 'Target path (absolute)',
+        taskTitle: 'Title (optional)',
+        submit: 'Create task',
+        cancel: 'Cancel task',
+        retry: 'Retry failed steps',
+        resume: 'Resume task',
+        evidenceExplorer: 'Evidence',
+        loadEvidence: 'Load evidence',
+        reportPreview: 'Report preview',
+        loadReport: 'Load report',
+        actionFailed: 'Action failed',
+        probe: 'Probe tools',
+        probing: 'Probing…',
+        toolsProbed: 'External tools',
+        closePreview: 'Close',
       },
       zh: {
         title: '破甲模式',
@@ -96,6 +113,23 @@ window.__ModuleLoader__.load({
         noFindings: '尚未记录发现。',
         loadingDetail: '正在读取任务…',
         workspaceBinding: '工作区绑定',
+        createTask: '新建 L0 任务',
+        workflow: '工作流',
+        targetPath: '目标路径（绝对路径）',
+        taskTitle: '标题（可选）',
+        submit: '创建任务',
+        cancel: '取消任务',
+        retry: '重试失败步骤',
+        resume: '恢复任务',
+        evidenceExplorer: '证据',
+        loadEvidence: '加载证据',
+        reportPreview: '报告预览',
+        loadReport: '加载报告',
+        actionFailed: '操作失败',
+        probe: '探测工具',
+        probing: '探测中…',
+        toolsProbed: '外部工具',
+        closePreview: '关闭',
       },
     }
 
@@ -132,6 +166,32 @@ window.__ModuleLoader__.load({
       const [busy, setBusy] = useState(false)
       const [detail, setDetail] = useState(null)
       const [detailError, setDetailError] = useState(null)
+      const [workflows, setWorkflows] = useState([])
+      const [form, setForm] = useState({ workflow: '', target: '', title: '' })
+      const [actionError, setActionError] = useState(null)
+      const [evidence, setEvidence] = useState(null)
+      const [report, setReport] = useState(null)
+      const [toolProbe, setToolProbe] = useState(null)
+      const [probing, setProbing] = useState(false)
+
+      const postAction = useCallback(async (payload) => {
+        setActionError(null)
+        try {
+          const response = await fetch('/armorbreak/actions', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json', 'x-armorbreak-ui': '1' },
+            credentials: 'same-origin',
+            body: JSON.stringify(payload),
+          })
+          const data = await response.json().catch(() => ({}))
+          if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`)
+          await load()
+          return data
+        } catch (cause) {
+          setActionError(String(cause && cause.message ? cause.message : cause))
+          return null
+        }
+      }, [load])
 
       const load = useCallback(async () => {
         setBusy(true)
@@ -175,6 +235,8 @@ window.__ModuleLoader__.load({
       const loadDetail = useCallback(async (taskId) => {
         setDetailError(null)
         setDetail({ loading: true })
+        setEvidence(null)
+        setReport(null)
         try {
           const response = await fetch(`/armorbreak/tasks?id=${encodeURIComponent(taskId)}`, { headers: { accept: 'application/json' }, credentials: 'same-origin' })
           if (!response.ok) throw new Error(`HTTP ${response.status}`)
@@ -184,6 +246,44 @@ window.__ModuleLoader__.load({
           setDetailError(String(cause && cause.message ? cause.message : cause))
         }
       }, [])
+
+      const loadEvidence = useCallback(async (taskId) => {
+        try {
+          const response = await fetch(`/armorbreak/evidence?taskId=${encodeURIComponent(taskId)}`, { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+          const data = await response.json().catch(() => ({}))
+          if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`)
+          setEvidence(data)
+        } catch (cause) {
+          setActionError(String(cause && cause.message ? cause.message : cause))
+        }
+      }, [])
+
+      const loadReport = useCallback(async (taskId) => {
+        setReport({ loading: true })
+        try {
+          const response = await fetch(`/armorbreak/report?taskId=${encodeURIComponent(taskId)}&format=markdown`, { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+          const data = await response.json().catch(() => ({}))
+          if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`)
+          setReport(data)
+        } catch (cause) {
+          setReport({ error: String(cause && cause.message ? cause.message : cause) })
+        }
+      }, [])
+
+      const loadWorkflows = useCallback(async () => {
+        try {
+          const response = await fetch('/armorbreak/tools', { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+          if (!response.ok) return
+          const data = await response.json()
+          if (Array.isArray(data.workflows)) setWorkflows(data.workflows)
+        } catch {
+          /* workflow list is optional */
+        }
+      }, [])
+
+      useEffect(() => {
+        if (open) void loadWorkflows()
+      }, [open, loadWorkflows])
 
       const capabilityCount = state && state.registry ? state.registry.capabilities : 0
       const taskCount = state && Array.isArray(state.tasks) ? state.tasks.length : 0
@@ -270,6 +370,31 @@ window.__ModuleLoader__.load({
             h('div', { style: { fontWeight: 600 } }, `${task.title} · ${task.state}`),
             h('div', { style: muted }, `${t.evidence} ${task.stats?.evidence ?? 0} · ${t.findings} ${task.stats?.findings ?? 0} · ${t.risk} ${task.riskMax ?? '-'}`),
             h('div', { style: muted }, `${t.report}: ${task.report ? shortPath(task.report.path) : t.noReport}`),
+            h('div', { style: { display: 'flex', gap: 6, flexWrap: 'wrap' } },
+              h('button', { type: 'button', style: tabStyle(false), onClick: () => void postAction({ action: 'cancel', taskId: task.id }) }, t.cancel),
+              h('button', { type: 'button', style: tabStyle(false), onClick: () => void postAction({ action: 'retry', taskId: task.id }) }, t.retry),
+              ['RECOVERABLE', 'INTERRUPTED', 'PAUSED'].includes(task.state)
+                ? h('button', { type: 'button', style: tabStyle(false), onClick: () => void postAction({ action: 'resume', taskId: task.id }) }, t.resume)
+                : null,
+              task.stats?.evidence > 0 ? h('button', { type: 'button', style: tabStyle(false), onClick: () => void loadEvidence(task.id) }, t.loadEvidence) : null,
+              task.report ? h('button', { type: 'button', style: tabStyle(false), onClick: () => void loadReport(task.id) }, t.loadReport) : null,
+            ),
+            actionError ? h('div', { style: { color: 'var(--dsw-alias-state-error-primary)' } }, `${t.actionFailed}: ${actionError}`) : null,
+            evidence
+              ? h('div', { style: { display: 'grid', gap: 2 } },
+                  h('div', { style: sectionTitle }, `${t.evidenceExplorer} · ${evidence.counts?.evidence ?? 0}`),
+                  h('div', { style: muted }, `chain: ${evidence.chain?.valid ? 'verified' : 'BROKEN'} · findings ${evidence.counts?.findings ?? 0}`),
+                  ...(evidence.findings ?? []).slice(0, 15).map((finding) => h('div', { key: finding.id, style: { borderLeft: `2px solid ${severityColor(finding.severity)}`, paddingLeft: 8, ...muted, fontSize: 11.5 } }, `[${finding.severity}/${finding.verification}] ${finding.title}`)),
+                )
+              : null,
+            report
+              ? h('div', { style: { display: 'grid', gap: 2 } },
+                  h('div', { style: sectionTitle }, t.reportPreview),
+                  report.error
+                    ? h('div', { style: { color: 'var(--dsw-alias-state-error-primary)' } }, report.error)
+                    : h('pre', { style: { whiteSpace: 'pre-wrap', maxHeight: 180, overflow: 'auto', margin: 0, font: '11px/1.4 ui-monospace,Consolas,monospace', ...muted } }, String(report.text ?? '').slice(0, 4000)),
+                )
+              : null,
             h('div', { style: sectionTitle }, t.steps),
             ...(Array.isArray(task.steps) ? task.steps : []).map((step) => h('div', { key: step.id, style: { ...muted, fontSize: 11.5 } }, `${step.status.padEnd(8)} ${step.capability} · ${step.durationMs ?? '-'} ms${step.error ? ` · ${step.error}` : ''}`)),
             h('div', { style: sectionTitle }, t.findingsTitle),
@@ -280,6 +405,27 @@ window.__ModuleLoader__.load({
         return h(
           'div',
           { style: { display: 'grid', gap: 6 } },
+          h(
+            'div',
+            { style: { display: 'grid', gap: 4, borderTop: '1px solid var(--dsw-alias-border-l1)', paddingTop: 6 } },
+            h('div', { style: { fontWeight: 600 } }, t.createTask),
+            h('select', {
+              value: form.workflow,
+              onChange: (event) => setForm({ ...form, workflow: event.target.value }),
+              style: { font: 'inherit', padding: '2px 4px' },
+            }, h('option', { value: '' }, '—'), ...workflows.map((workflow) => h('option', { key: workflow.id, value: workflow.id }, `${workflow.id} (${workflow.steps} steps)`))),
+            h('input', { value: form.target, placeholder: t.targetPath, onChange: (event) => setForm({ ...form, target: event.target.value }), style: { font: 'inherit', padding: '2px 4px' } }),
+            h('input', { value: form.title, placeholder: t.taskTitle, onChange: (event) => setForm({ ...form, title: event.target.value }), style: { font: 'inherit', padding: '2px 4px' } }),
+            h('button', {
+              type: 'button',
+              style: tabStyle(false),
+              onClick: async () => {
+                const result = await postAction({ action: 'create', workflow: form.workflow, target: form.target || null, title: form.title || undefined })
+                if (result && result.task) void loadDetail(result.task.id)
+              },
+            }, t.submit),
+            actionError ? h('div', { style: { color: 'var(--dsw-alias-state-error-primary)' } }, `${t.actionFailed}: ${actionError}`) : null,
+          ),
           taskRows.length === 0 ? h('div', { style: muted }, t.noTasks) : null,
           ...taskRows.slice(0, 20).map((task) => h(
             'button',
@@ -301,6 +447,30 @@ window.__ModuleLoader__.load({
           { style: { display: 'grid', gap: 6 } },
           h('div', { style: muted }, `${t.isolation}: ${isolation ? isolation.label : t.unavailable}`),
           isolation && isolation.state ? h('div', { style: muted }, `${t.status}: ${isolation.state}${isolation.selfTested ? '' : ` · ${t.notProbed}`}`) : null,
+          h('div', { style: { display: 'flex', gap: 6 } },
+            h('button', {
+              type: 'button',
+              style: tabStyle(false),
+              disabled: probing,
+              onClick: async () => {
+                setProbing(true)
+                try {
+                  const response = await fetch('/armorbreak/tools?probe=1', { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+                  if (response.ok) setToolProbe(await response.json())
+                } catch {
+                  /* keep previous probe result */
+                } finally {
+                  setProbing(false)
+                }
+              },
+            }, probing ? t.probing : t.probe),
+          ),
+          toolProbe && Array.isArray(toolProbe.externalTools)
+            ? h('div', { style: { display: 'grid', gap: 2 } },
+                h('div', { style: sectionTitle }, t.toolsProbed),
+                ...toolProbe.externalTools.map((tool) => h('div', { key: tool.name, style: { ...muted, fontSize: 11.5 } }, `${tool.found ? '✅' : '—'} ${tool.name}${tool.version ? ` · ${tool.version}` : ''}${tool.path ? ` · ${shortPath(tool.path)}` : ''}`)),
+              )
+            : null,
           ...domains.map((domain) => h(
             'div',
             { key: domain.domain, style: { borderTop: '1px solid var(--dsw-alias-border-l1)', paddingTop: 4 } },

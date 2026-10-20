@@ -145,3 +145,20 @@ Stage B 新增 7 个适配器测试：Semgrep/Trivy 正常 JSON 归一化、seve
 - 会话级工作区绑定（仍为进程 MRU，UI 已明确标注）。
 - 工具中心外部工具仅列名并标记“未探测”，未展示真实版本/兼容性。
 - Ghidra/JADX/TShark/Syft、Stage D 完整工作台、Stage E 正式发布（tag/Release 未创建，等待合并批准）。
+
+
+## 7. Stage D2 增量验收（分支 feature/armorbreak-v1.1.0-stage-d2）
+
+### 实际执行
+
+- `node --test` → **177/177 通过**（ui-api 新增 3 个写操作/边界用例）。
+- 写操作边界：非 loopback 403、无 `x-armorbreak-ui` 403、GET 405、未知工作流 400。
+- 真实流程：通过 /armorbreak/actions 创建 DependencyAudit L0 任务 → 执行 → 证据路由返回 chain.valid=true → 报告路由返回 markdown 文本与 sha256 → 取消第二个任务成功落 CANCELLED；筛选 severity/verification 生效。
+- 工具探测与报告/证据均只读任务已有产物；不读取任意外部路径。
+
+### 仍未完成 / 未验证
+
+- 浏览器真实渲染与交互（无浏览器控制；只做语法检查与路由/展示逻辑测试）。
+- 会话级工作区绑定（仍为进程 MRU；UI 明确标注）。
+- 工作台写操作仅 L0（浏览器无平台审批通道，L1/L2 必须走对话工具）。
+- 真实 DeepSeek 模型 GUI E2E、Windows 桌面安装/卸载复测、正式 v1.1.0 tag/Release（等待合并批准）。

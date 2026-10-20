@@ -2,8 +2,8 @@
 
 - 生成方式：`node scripts/file-changes.mjs`（遍历交付目录，排除 node_modules/.armorbreak）
 - 文件总数：**168**
-- 总大小：**2301.5 KiB**
-- 总行数：**48880**（含注释/文档）
+- 总大小：**2329.1 KiB**
+- 总行数：**49398**（含注释/文档）
 - 运行时依赖：**0**（仅 Node 内置模块；无构建步骤）
 
 ## 能力清单（由 lib/analyzers/*/manifest.js 自动统计）
@@ -28,12 +28,12 @@
 | `.gitignore` | 394 | 19 |  |
 | `benchmarks/bench.mjs` | 12112 | 265 | 零依赖可复现微基准脚本 |
 | `benchmarks/results.json` | 4174 | 177 | 参考主机基准原始数据 |
-| `CHANGELOG.md` | 14791 | 171 | 变更记录（1.0.4） |
-| `client.js` | 17931 | 372 | 浏览器半：composer 状态卡（能力/隔离/策略/任务摘要） |
+| `CHANGELOG.md` | 16435 | 183 | 变更记录（1.0.4） |
+| `client.js` | 27137 | 542 | 浏览器半：composer 状态卡（能力/隔离/策略/任务摘要） |
 | `CODE_OF_CONDUCT.md` | 1478 | 35 | 社区行为准则 |
 | `CONTRIBUTING.md` | 3078 | 69 | 贡献指南与能力适配器开发流程 |
 | `cordis.patch.yml` | 6517 | 95 | 组合包 patch：Host 行 + preset-armorbreak 模式声明 |
-| `docs/acceptance-v1.1.0.md` | 10934 | 148 |  |
+| `docs/acceptance-v1.1.0.md` | 12003 | 165 |  |
 | `docs/acceptance.md` | 16196 | 235 | 验收报告（含实际测试与验证结果） |
 | `docs/acceptance/gate-b-findings.json` | 97583 | 2757 |  |
 | `docs/acceptance/gate-b-report.md` | 107463 | 1579 |  |
@@ -41,14 +41,14 @@
 | `docs/acceptance/gate-b-task.json` | 9160 | 296 |  |
 | `docs/acceptance/l1-docker-verification.json` | 1411 | 16 |  |
 | `docs/adapter-contract-v2.md` | 5317 | 76 |  |
-| `docs/architecture.md` | 8124 | 121 | 架构设计（分层、Cordis 组合、执行管线、数据模型） |
+| `docs/architecture.md` | 8825 | 130 | 架构设计（分层、Cordis 组合、执行管线、数据模型） |
 | `docs/audit/environment-audit.md` | 11323 | 118 | Phase 0 环境与架构审计报告 |
 | `docs/benchmarks.md` | 7753 | 154 | 性能基准：环境、数据、方法、复现 |
 | `docs/compatibility-matrix.md` | 4965 | 71 | 运行时/API/外部工具/平台兼容性 |
 | `docs/CONTRACT.md` | 7935 | 141 | 分析能力/适配器开发契约 |
 | `docs/installation.md` | 4482 | 78 | 安装/启用/卸载/故障排查 |
 | `docs/isolation-providers.md` | 2321 | 50 |  |
-| `docs/known-issues.md` | 7892 | 69 | 已知问题与限制（诚实清单） |
+| `docs/known-issues.md` | 8532 | 73 | 已知问题与限制（诚实清单） |
 | `docs/marketplace.md` | 5589 | 104 | DeepSeek Harness 生态、插件市场与分发指引 |
 | `docs/media/report-deliverables.webp` | 125032 | 438 | 报告交付物真实截图 |
 | `docs/media/status-card.png` | 96465 | 355 | 模式状态卡真实截图 |
@@ -74,7 +74,7 @@
 | `fixtures/gate-b-sample/src/config.js` | 352 | 9 |  |
 | `fixtures/gate-b-sample/src/crypto.js` | 301 | 12 |  |
 | `icon.svg` | 787 | 14 | 插件图标 |
-| `index.js` | 7716 | 223 | Host 半：只读状态路由 /armorbreak/state，webServer 注入 |
+| `index.js` | 17847 | 432 | Host 半：只读状态路由 /armorbreak/state，webServer 注入 |
 | `lib/analyzers/android/axml.js` | 18654 | 498 | 分析能力实现（按域） |
 | `lib/analyzers/android/dex.js` | 12033 | 324 | 分析能力实现（按域） |
 | `lib/analyzers/android/manifest.js` | 69922 | 1533 | 分析能力实现（按域） |
@@ -155,11 +155,11 @@
 | `locale/en.json` | 228 | 7 | 插件显示元数据（英文） |
 | `locale/zh.json` | 195 | 7 | 插件显示元数据（中文） |
 | `package.json` | 1783 | 79 | Bundle 清单（dsh.bundle.patch + dsh.client + 零依赖声明） |
-| `README.md` | 60964 | 1054 | 项目总览、安装、能力与安全模型摘要 |
+| `README.md` | 61141 | 1055 | 项目总览、安装、能力与安全模型摘要 |
 | `scripts/clean-temp.mjs` | 1714 | 59 | 清理测试临时目录脚本 |
 | `scripts/file-changes.mjs` | 6569 | 153 | 文件清单生成脚本 |
 | `scripts/verify-gate-b.mjs` | 13314 | 276 | 开发/交付脚本 |
-| `scripts/verify-l1.mjs` | 4042 | 90 | 开发/交付脚本 |
+| `scripts/verify-l1.mjs` | 4389 | 95 | 开发/交付脚本 |
 | `SECURITY.md` | 2049 | 54 | 安全政策与漏洞披露流程 |
 | `skills.js` | 3861 | 84 | preset 子插件：注册 7 个内置技能 |
 | `skills/android-apk-audit.md` | 1826 | 27 | 内置技能正文 |
@@ -188,9 +188,9 @@
 | `tests/task-queue.test.mjs` | 4702 | 111 | 自动化测试（node:test） |
 | `tests/tools-integration.test.mjs` | 9723 | 198 | 自动化测试（node:test） |
 | `tests/tools-lossless.test.mjs` | 5690 | 130 | 自动化测试（node:test） |
-| `tests/ui-api.test.mjs` | 6721 | 152 | 自动化测试（node:test） |
+| `tests/ui-api.test.mjs` | 11125 | 242 | 自动化测试（node:test） |
 | `tests/web.test.mjs` | 17832 | 434 | 自动化测试（node:test） |
-| `tests/workflow-dag.test.mjs` | 6163 | 127 | 自动化测试（node:test） |
+| `tests/workflow-dag.test.mjs` | 6076 | 128 | 自动化测试（node:test） |
 | `tools.js` | 56298 | 953 | preset 子插件：注册 8 个模型工具并桥接平台审批 |
 
 ## 说明
