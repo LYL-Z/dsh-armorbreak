@@ -1,6 +1,6 @@
 # ArmorBreak · 破甲模式
 
-> **DeepSeek Harness 原生「授权逆向工程与安全研究」Agent 模式**：41 个真实可执行的离线分析能力、L0–L3 代码级权限引擎、逐任务证据哈希链与可复核报告。以 Cordis Bundle + Agent preset 形式嵌入 DeepSeek Harness，**不修改 Harness 核心**。
+> **DeepSeek Harness 原生「授权逆向工程与安全研究」Agent 模式**：42 个真实可执行的离线分析能力、L0–L3 代码级权限引擎、逐任务证据哈希链与可复核报告。以 Cordis Bundle + Agent preset 形式嵌入 DeepSeek Harness，**不修改 Harness 核心**。
 
 **Authorized Reverse Engineering & Security Research Agent — a native Agent preset for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) / Cordis.**
 
@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-0ea5e9)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%E2%89%A522-339933?logo=node.js&logoColor=white)](package.json)
 [![DeepSeek Harness](https://img.shields.io/badge/DeepSeek%20Harness-0.2.1--rc.2-4D6BFE)](docs/compatibility-matrix.md)
-[![Tests](https://img.shields.io/badge/tests-178%20passing-2ea44f)](docs/acceptance-v1.1.0.md)
+[![Tests](https://img.shields.io/badge/tests-182%20passing-2ea44f)](docs/acceptance-v1.1.0.md)
 [![Coverage](https://img.shields.io/badge/coverage-85.82%25-yellowgreen)](docs/acceptance-v1.1.0.md)
 [![Runtime deps](https://img.shields.io/badge/runtime%20dependencies-0-blueviolet)](package.json)
 [![Security policy](https://img.shields.io/badge/security-policy-blue)](SECURITY.md)
@@ -83,11 +83,11 @@ ArmorBreak 的设计目标因此不是「再加一个安全 AI」，而是：
 
 | 指标 | 数值 | 来源 |
 |---|---:|---|
-| 真实可执行能力（capabilities） | **41**（8 个域） | `armorbreak_capabilities` / `registry.list()` |
-| 模型可见工具 | **8**（工具目录而非 39 个适配器逐一暴露） | `tools.js` |
+| 真实可执行能力（capabilities） | **42**（8 个域） | `armorbreak_capabilities` / `registry.list()` |
+| 模型可见工具 | **10**（工具目录而非 42 个适配器逐一暴露） | `tools.js` |
 | 内置技能 | **7** | `skills.js` |
 | 可复用工作流模板 | **9** | `lib/core/workflows.js` |
-| 自动化测试 | **178 / 178 通过**（21 个测试文件） | `node --test` |
+| 自动化测试 | **182 / 182 通过**（23 个测试文件） | `node --test` |
 | 代码覆盖率 | 行 **85.82%** / 分支 62.27% / 函数 85.88%；外部适配器行覆盖 99.41% | `node --test --experimental-test-coverage` |
 | 运行时依赖 | **0**（`node:*` only） | `package.json` |
 | 360 KiB PE 静态解析（p50） | `binary.identify` **1.72 ms** / `forensics.hash` **0.84 ms** | [benchmarks](docs/benchmarks.md) |
@@ -118,7 +118,7 @@ ArmorBreak 的设计目标因此不是「再加一个安全 AI」，而是：
                  │      └─ standard fs/shell/compaction tooling                            │
                  │                                                                        │
                  │  Host row: armorbreak ──► 运行时单例                                     │
-                 │     ├─ Capability Registry (41, contract-validated)                     │
+                 │     ├─ Capability Registry (42, contract-validated)                     │
                  │     ├─ Scope Policy (L0–L3, approvals, allowlists, rate limit)          │
                  │     ├─ Execution Runner (bounded I/O, timeout, evidence, audit)         │
                  │     ├─ Task Engine (15 states, 9 workflows)                             │
@@ -173,9 +173,9 @@ ArmorBreak 的设计目标因此不是「再加一个安全 AI」，而是：
 |---|---|---|---|
 | **L-Agent Persona** | `cordis.patch.yml` → `@deepseek-ai/dsh-persona` | 身份、硬边界、证据纪律、工作方法 | system prompt sections |
 | **L-Skills** | `skills.js` + `skills/*.md` | 7 个专业领域方法论，按需加载 | `ctx.skills.register` |
-| **L-Tools** | `tools.js` | 9 个模型工具：参数校验、审批桥、结果渲染 | `ctx.tools.register` |
+| **L-Tools** | `tools.js` | 10 个模型工具：参数校验、审批桥、结果渲染 | `ctx.tools.register` |
 | **L-Core** | `lib/core/*` | 能力注册、策略、任务状态机、执行、证据、报告、健康 | 纯 JS API（无 Cordis 依赖） |
-| **L-Analyzers** | `lib/analyzers/<domain>/manifest.js` | 39 个能力实现，统一 `run(input)` 契约 | 进程内函数调用 |
+| **L-Analyzers** | `lib/analyzers/<domain>/manifest.js` | 42 个能力实现，统一 `run(input)` 契约 | 进程内函数调用 |
 | **L-Host** | `index.js` | 运行时单例接线 + 只读状态路由 | `ctx.webServer.register` |
 | **L-UI** | `client.js` | 状态卡（能力/隔离/策略/任务） | `window.__ModuleLoader__` + Slot |
 | **L-Storage** | 工作区 `.armorbreak/` | 任务、证据、发现、报告、审计 | 原子写 + JSONL |

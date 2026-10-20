@@ -946,9 +946,52 @@ export function apply(ctx) {
       },
     }),
   )
-}
 
-/** @param {string} level */
+  ctx.tools.register(
+    tool({
+      name: 'armorbreak_environment',
+      description:
+        'Diagnose isolated-execution providers (Docker, Podman, WSL2) without enabling or installing them: CLI presence, daemon usability, self-test status, recommended provider and installation guidance. Detection is not isolation: only a successful self-test yields IsolationVerified, and WSL2 is not treated as a security sandbox. Use this instead of assuming a container runtime is usable.',
+      parameters: {
+        type: 'object',
+        properties: {
+          action: { type: 'string', enum: ['diagnose', 'providers', 'verify', 'installation_guide'], description: 'diagnose: all providers with recommended/L1 status; providers: same provider matrix; verify: run the injected self-test for one provider; installation_guide: official install links.' },
+          provider: { type: 'string', enum: ['docker', 'podman', 'wsl2'], description: 'verify/installation_guide: provider id.' },
+          fresh: { type: 'boolean', description: 'diagnose: bypass the in-process probe cache. Default false.' },
+        },
+        required: ['action'],
+        additionalProperties: false,
+      },
+      async run(args) {
+        const runtime = getRuntime()
+        await runtime.init()
+        const manager = runtime.isolationProviders
+        if (args.action === 'installation_guide') {
+          const guides = manager.installationGuide(args.provider)
+          return {
+            text: ['# 隔离提供者安装指引', '', ...guides.map((guide) => `- **${guide.title}**（${guide.isolation}）：${guide.installUrl}${guide.note ? ` — ${guide.note}` : ''}`), '', '安装后仍需 daemon 可用 + 自检通过，才可能获得 L1 执行许可；WSL2 默认不作为安全沙箱。'].join('\n'),
+            data: { guides },
+          }
+        }
+        if (args.action === 'verify') {
+          if (!args.provider) throw new Error('verify needs provider (docker/podman/wsl2)')
+          const result = await manager.verify(String(args.provider))
+          return {
+            text: `隔离自检（${result.provider}）：${result.verified ? '✅ 通过' : '⛔ 未通过'} — ${result.reason}`,
+            data: result,
+          }
+        }
+        const diagnosis = await manager.diagnose({ fresh: args.fresh === true })
+        const lines = ['# 隔离提供者诊断', '']
+        for (const provider of diagnosis.providers) {
+          lines.push(`- **${provider.title}**：${provider.state} — ${provider.reason}${provider.version ? `（${provider.version}）` : ''}`)
+        }
+        lines.push('', `建议提供者：${diagnosis.recommended ?? '无'}`, `L1 状态：${diagnosis.l1.available ? '可用（已自检）' : `未就绪（${diagnosis.l1.state}）`} — ${diagnosis.l1.reason}`, '', diagnosis.wsl2Note)
+        return { text: lines.join('\n'), data: diagnosis }
+      },
+    }),
+  )
+}
 function riskHelp(level) {
   if (level === 'L0') return '离线只读分析，工作区内默认允许'
   if (level === 'L1') return '本地动态分析：需要隔离提供者 + 平台审批'

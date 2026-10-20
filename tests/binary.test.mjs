@@ -427,7 +427,7 @@ test('binary manifest: shape, ids, risk levels and params schema follow CONTRACT
   assert.ok(Array.isArray(manifest.capabilities));
   const ids = manifest.capabilities.map((c) => c.id);
   assert.deepEqual(ids.sort(), [
-    'binary.entropy', 'binary.headers', 'binary.identify', 'binary.strings', 'binary.structure',
+    'binary.behavior', 'binary.entropy', 'binary.headers', 'binary.identify', 'binary.strings', 'binary.structure',
   ]);
   for (const cap of manifest.capabilities) {
     assert.match(cap.id, /^binary\.[a-z0-9-]+$/);
@@ -779,4 +779,21 @@ test('binary: helper parsers agree with container detection and never throw on g
   assert.doesNotThrow(() => parseElf(garbage));
   assert.doesNotThrow(() => parseMachO(garbage));
   assert.equal(detectContainer(garbage).format, 'unknown');
+});
+
+test('binary.behavior: aggregates suspicious API categories and stays hypothesis-level', async () => {
+  const pe = buildPe();
+  const result = await runCap('binary.behavior', inputFor(pe));
+  assert.equal(result.data.format, 'pe');
+  assert.equal(result.data.verification, 'hypothesis');
+  assert.ok(result.data.categoryCount >= 1, 'fixture exposes at least one suspicious API category');
+  assert.ok(result.data.categories['file-collection']?.some((name) => /CreateFileW/i.test(name)));
+  assert.ok(result.data.score > 0);
+  assert.ok(result.findings.length >= 1);
+  assert.equal(result.findings[0].verification, 'hypothesis');
+  assert.ok(Array.isArray(result.data.limitations) && result.data.limitations.length >= 2);
+  const again = await runCap('binary.behavior', inputFor(pe));
+  assert.deepEqual(again.data.categories, result.data.categories);
+  assert.equal(again.data.score, result.data.score);
+  await assert.rejects(() => runCap('binary.behavior', inputFor(Buffer.alloc(0))));
 });

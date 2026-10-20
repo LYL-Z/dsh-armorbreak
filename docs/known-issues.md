@@ -70,3 +70,9 @@
 31. **Stage D2 工作台仍有限制**：写操作仅支持 L0 工作流/任务（浏览器无平台审批通道），新建/取消/重试/恢复仅在同一进程内队列有效；证据/报告/工具探测路由只读且 loopback-only，但浏览器真实视觉与交互尚未验证。
 32. **会话级工作区绑定为“首次工具调用后生效”**：状态卡/路由通过 `?session=` 使用该会话实际记录的工作区（仅来自 ArmorBreak 工具执行，不接受任意路径）；会话尚未调用任何工具时回退到进程 MRU 工作区，UI 会显示 sessionBound=false。未知/非法 session 一律回退 MRU，不能被用于枚举目录。
 33. **报告预览是文本渲染**：Markdown/HTML 报告以纯文本展示（HTML 不注入 DOM），不提供富文本/PDF 预览；HTML 预览可能包含原始标签文本。
+
+## v1.2.0-alpha.1 (2026-10-20)
+
+- 34. 隔离提供者 manager 目前只用于 `armorbreak_environment` 诊断，runner 的 L1 门仍由 HealthService 的 Docker-only 检测控制；Podman/WSL2 不会因此获得执行许可。
+- 35. `binary.behavior` 是静态导入/结构启发式，评分不代表恶意或漏洞；加壳/动态解析会降低覆盖。
+- 36. 本增量未包含 Ghidra/JADX/TShark/Syft 适配器、UI 环境页与证据筛选；这些仍是 v1.2.0 的未完成项。

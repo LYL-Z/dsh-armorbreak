@@ -90,6 +90,7 @@ test('every ArmorBreak tool returns lossless JSON data', async () => {
     ['armorbreak_capabilities', {}],
     ['armorbreak_capabilities', { probeDependencies: true }],
     ['armorbreak_scope', { action: 'list' }],
+    ['armorbreak_environment', { action: 'providers' }],
     ['armorbreak_files', { action: 'list' }],
     ['armorbreak_task', { action: 'list' }],
     ['armorbreak_workflow', { action: 'list' }],
