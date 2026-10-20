@@ -688,17 +688,18 @@ export function apply(ctx) {
     tool({
       name: 'armorbreak_workflow',
       description:
-        'Start, run, inspect or cancel a reusable multi-step analysis workflow (BinaryStaticAnalysis, AndroidAPKReview, WebCodeSecurityReview, PCAPInvestigation, DependencyAudit, CTFArtifactAnalysis, ForensicFileReview, WebAPIReview, SecurityReportGeneration). Steps are executed sequentially with scope checks and approvals; a failed step is preserved and remaining independent steps still run, ending in PARTIAL_SUCCESS. Evidence and a default report are kept even when a later step fails.',
+        'Start, run (sync or background), inspect, resume or cancel a reusable multi-step analysis workflow (BinaryStaticAnalysis, AndroidAPKReview, WebCodeSecurityReview, PCAPInvestigation, DependencyAudit, CTFArtifactAnalysis, ForensicFileReview, WebAPIReview, SecurityReportGeneration). Steps form a DAG: independent steps may run concurrently, dependents are skipped when a dependency fails, and retry/timeout/failure policy can be declared per step. Use action=run_async for long workflows so one model call does not block until completion, then action=status to poll. A failed step is preserved; evidence and a default report are kept.',
       parameters: {
         type: 'object',
         properties: {
-          action: { type: 'string', enum: ['list', 'start', 'run', 'status', 'cancel'], description: 'list available workflows; start creates a task; run executes pending steps; status shows a task; cancel stops it.' },
+          action: { type: 'string', enum: ['list', 'start', 'run', 'run_async', 'status', 'cancel', 'resume', 'retry'], description: 'list workflows; start creates a task; run executes synchronously; run_async executes in the background; status includes queue state; cancel aborts; resume recovers an interrupted task; retry resets failed/skipped steps and runs in the background.' },
           workflow: { type: 'string', description: 'start: workflow id from action=list (exact case).' },
           target: { type: 'string', description: 'start: absolute path of the file or directory to analyze (required unless the workflow needs no target).' },
           workspace: { type: 'string', description: 'Absolute workspace directory for task/evidence storage.' },
-          taskId: { type: 'string', description: 'run/status/cancel: exact task id.' },
+          taskId: { type: 'string', description: 'run/run_async/status/cancel/resume/retry: exact task id.' },
           title: { type: 'string', description: 'start: optional human title for the task.' },
-          maxSteps: { type: 'number', description: 'run: maximum steps to execute in this call (1-50, default 50). Use a smaller value to stream progress on long workflows.' },
+          maxSteps: { type: 'number', description: 'run/run_async: maximum steps per execution window (1-50, default 50).' },
+          concurrency: { type: 'number', description: 'run/run_async/retry: maximum independent steps (or none) executed concurrently, 1-4. Default 1 for synchronous run, 2 for background.' },
         },
         required: ['action'],
         additionalProperties: false,
@@ -735,19 +736,62 @@ export function apply(ctx) {
             '- 计划：',
             ...task.steps.map((step, index) => `  ${index + 1}. \`${step.capabilityId}\` — ${step.title}`),
             '',
-            `下一步：\`armorbreak_workflow action=run taskId=${task.id}\`。`,
+            '下一步：',
+            `- 同步执行：\`armorbreak_workflow action=run taskId=${task.id}\`（受单次工具超时约束）`,
+            `- 后台执行：\`armorbreak_workflow action=run_async taskId=${task.id}\`，随后用 action=status 轮询。`,
           ].join('\n')
           return { text, data: store.summary(task, { includeSteps: true }) }
         }
         const { task, workspace } = await loadTask(runtime, args)
+        const store = runtime.workspace(workspace).taskStore
         if (args.action === 'cancel') {
-          await runtime.workspace(workspace).taskStore.cancel(task, 'cancelled via armorbreak_workflow')
-          return { text: `工作流任务 \`${task.id}\` 已取消。`, data: runtime.workspace(workspace).taskStore.summary(task) }
+          const result = await runtime.queue.cancel(task.id, { reason: 'cancelled via armorbreak_workflow' })
+          return { text: `工作流任务 \`${task.id}\` 已取消（queue: ${result.queueState ?? 'n/a'}）。`, data: { ...store.summary(await store.get(task.id).catch(() => task)), queue: runtime.queue.status(task.id) } }
+        }
+        if (args.action === 'run_async') {
+          const concurrency = Math.max(1, Math.min(Number(args.concurrency ?? 2), 4))
+          if (!['EXECUTING', 'COLLECTING_EVIDENCE'].includes(task.state)) {
+            await runtime.runner.prepareTask(task, { requestApproval: approvalBridge(ctx, exec), approvalTarget: task.targetPath, signal: exec.signal })
+          }
+          await runtime.queue.start(task, {
+            requestApproval: approvalBridge(ctx, exec),
+            maxSteps: Math.max(1, Math.min(Number(args.maxSteps ?? 50), 50)),
+            concurrency,
+            signal: exec.signal,
+          })
+          const text = [
+            `## 工作流已在后台启动：${taskLine(task)}`,
+            '',
+            '后台队列使用进程内租约；L0 工作流可安全异步执行。L1/L2 步骤若在后台执行时无法获得当前会话的平台审批，会 fail-closed 记录失败，请在审批窗口内用同步 run。',
+            '',
+            `下一步：\`armorbreak_workflow action=status taskId=${task.id}\` 轮询；\`action=cancel\` 取消。`,
+          ].join('\n')
+          return { text, data: { summary: store.summary(task, { includeSteps: true }), queue: runtime.queue.status(task.id) } }
+        }
+        if (args.action === 'resume') {
+          await runtime.queue.recover(workspace)
+          const latest = await store.get(task.id)
+          await runtime.queue.resume(latest, {
+            requestApproval: approvalBridge(ctx, exec),
+            maxSteps: Math.max(1, Math.min(Number(args.maxSteps ?? 50), 50)),
+            concurrency: Math.max(1, Math.min(Number(args.concurrency ?? 2), 4)),
+          })
+          return { text: `已恢复任务 \`${task.id}\`（后台执行，状态 ${(await store.get(task.id)).state}）。`, data: runtime.queue.status(task.id) }
+        }
+        if (args.action === 'retry') {
+          const latest = await store.get(task.id)
+          await store.resetFailedSteps(latest)
+          await runtime.queue.start(latest, {
+            requestApproval: approvalBridge(ctx, exec),
+            maxSteps: Math.max(1, Math.min(Number(args.maxSteps ?? 50), 50)),
+            concurrency: Math.max(1, Math.min(Number(args.concurrency ?? 2), 4)),
+          })
+          return { text: `已重置失败/跳过步骤并提交后台重试：任务 \`${task.id}\`。`, data: runtime.queue.status(task.id) }
         }
         if (args.action === 'status') {
           return {
-            text: [`## ${taskLine(task)}`, '', taskStepsTable(task)].join('\n'),
-            data: runtime.workspace(workspace).taskStore.summary(task, { includeSteps: true }),
+            text: [`## ${taskLine(task)}`, '', taskStepsTable(task), '', `后台队列：${runtime.queue.status(task.id) ? JSON.stringify(runtime.queue.status(task.id)) : '无活动/历史条目（进程重启后需 action=resume）'}`].join('\n'),
+            data: { summary: store.summary(task, { includeSteps: true }), queue: runtime.queue.status(task.id) },
           }
         }
         if (args.action === 'run') {
@@ -757,8 +801,8 @@ export function apply(ctx) {
             requestApproval: approvalBridge(ctx, exec),
             signal: exec.signal,
             generateReport: true,
+            concurrency: Math.max(1, Math.min(Number(args.concurrency ?? 1), 4)),
           })
-          const store = runtime.workspace(workspace).taskStore
           const report = updated.report ? `报告：\`${updated.report.path}\`` : '报告：待全部步骤完成后生成'
           const text = [
             `## 工作流执行：${taskLine(updated)}`,

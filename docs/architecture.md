@@ -109,3 +109,12 @@ armorbreak_analyze / armorbreak_workflow / runner.runCapability
 - **状态路由无鉴权**：`/armorbreak/state` 只在本机 loopback 上提供**脱敏只读**快照（无摘录/无凭据）；
   这不是权限边界，真正的权限边界在 runner/scope 内。
 - **工作区默认值**：缺省为进程 cwd；跨目录分析必须显式传 `workspace` 参数（工具描述已说明）。
+
+
+## Stage C/D/E additions (branch)
+
+- **DAG scheduler** (`lib/core/dag.js`): steps with `dependsOn`; implicit sequential chain when omitted; fail-fast / continue-independent / skip-dependent / retry-transient; step timeout; bounded concurrency.
+- **Background queue** (`lib/core/taskQueue.js`): in-process leases, bounded concurrency, cancellation via AbortSignal, wait/status, restart recovery (INTERRUPTED/RECOVERABLE), resume.
+- **Task states**: WAITING / PAUSED / INTERRUPTED / RECOVERABLE added; stale RUNNING steps from a previous process are reset to PENDING.
+- **Workbench routes** (loopback-only, read-only): `/armorbreak/state`, `/armorbreak/tasks` (list + `?id=` detail), `/armorbreak/tools`; presentation model in `lib/core/presentation.js`, browser card in `client.js` (overview/tasks/tools tabs).
+- **E2E**: `tests/e2e-tool-flow.test.mjs` drives the mock-model tool sequence; `scripts/verify-l1.mjs` validates the real Docker path; CI has a dedicated `live-docker` job.

@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-0ea5e9)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%E2%89%A522-339933?logo=node.js&logoColor=white)](package.json)
 [![DeepSeek Harness](https://img.shields.io/badge/DeepSeek%20Harness-0.2.1--rc.2-4D6BFE)](docs/compatibility-matrix.md)
-[![Tests](https://img.shields.io/badge/tests-160%20passing-2ea44f)](docs/acceptance-v1.1.0.md)
+[![Tests](https://img.shields.io/badge/tests-174%20passing-2ea44f)](docs/acceptance-v1.1.0.md)
 [![Coverage](https://img.shields.io/badge/coverage-85.82%25-yellowgreen)](docs/acceptance-v1.1.0.md)
 [![Runtime deps](https://img.shields.io/badge/runtime%20dependencies-0-blueviolet)](package.json)
 [![Security policy](https://img.shields.io/badge/security-policy-blue)](SECURITY.md)
@@ -87,7 +87,7 @@ ArmorBreak 的设计目标因此不是「再加一个安全 AI」，而是：
 | 模型可见工具 | **8**（工具目录而非 39 个适配器逐一暴露） | `tools.js` |
 | 内置技能 | **7** | `skills.js` |
 | 可复用工作流模板 | **9** | `lib/core/workflows.js` |
-| 自动化测试 | **160 / 160 通过**（18 个测试文件） | `node --test` |
+| 自动化测试 | **174 / 174 通过**（21 个测试文件） | `node --test` |
 | 代码覆盖率 | 行 **85.82%** / 分支 62.27% / 函数 85.88%；外部适配器行覆盖 99.41% | `node --test --experimental-test-coverage` |
 | 运行时依赖 | **0**（`node:*` only） | `package.json` |
 | 360 KiB PE 静态解析（p50） | `binary.identify` **1.72 ms** / `forensics.hash` **0.84 ms** | [benchmarks](docs/benchmarks.md) |
@@ -781,6 +781,7 @@ armorbreak_analyze capability=live.http_probe taskId=<id> options={"url":"http:/
 | v1.0.3 | 扫描降噪 | `sast.*` 新增可选 `excludePaths`（按路径子串排除规则文件/测试夹具/文档示例）；146 测试，向后兼容 |
 | v1.0.4 | **安全维护（Stage A）** | 移除绕过 L0–L3 的通用工具、新增策略内 `armorbreak_files`、授权 request→平台审批→activate、HTTP 固定 IP/流式截断、容器镜像 digest/allowlist、状态接口 loopback-only；153 测试 |
 | v1.1.0 Stage B（分支） | 外部工具适配器首批 | `sast.semgrep` / `sast.trivy` JSON 归一化；L1 Docker 真机验证通过（busybox digest，非 root/只读/无网络）；160 测试 |
+| v1.1.0 Stage C/D/E（分支） | DAG/后台任务/恢复 + 只读工作台 + CI/E2E | 依赖图、队列、取消/恢复、任务/工具路由、三页签状态卡、Docker CI job、mock-model E2E；174 测试 |
 
 ### 13.2 当前规划（v1.1）
 
@@ -1017,7 +1018,7 @@ dsh-armorbreak/
 ├── docs/                     # 审计/架构/安全模型/验收/兼容性/已知问题/路线图/市场/基准
 ├── benchmarks/               # 可复现基准脚本与结果
 ├── scripts/                  # 文件清单生成、测试临时目录清理
-├── tests/                    # 160 个 node:test 用例
+├── tests/                    # 174 个 node:test 用例
 └── .github/workflows/ci.yml  # 双平台 CI
 ```
 

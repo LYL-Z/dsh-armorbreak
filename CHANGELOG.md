@@ -1,5 +1,29 @@
 # CHANGELOG
 
+## Unreleased — v1.1.0 Stage C/D/E（分支 feature/armorbreak-v1.1.0-stage-cde）
+
+### Workflow engine (Stage C)
+
+- 依赖图执行：新增 `lib/core/dag.js`；步骤可声明 `dependsOn`（缺省沿用上一版顺序链，向后兼容）、`failurePolicy`（fail-fast / continue-independent / skip-dependent）、`retryPolicy`（retry-transient，最多 5 次）、`timeoutMs`。独立步骤在 `concurrency` 内并发；依赖未完成/失败时不执行，依赖失败的步骤标记 SKIPPED。
+- 后台任务队列：新增 `lib/core/taskQueue.js`。`start/status/wait/cancel/recover/resume`，进程内租约与并发上限（默认 2），取消会 abort runner 并等待 settle 后落 CANCELLED。
+- 可靠取消与恢复：新增任务状态 `WAITING / PAUSED / INTERRUPTED / RECOVERABLE`；进程重启后，未在队列中的 EXECUTING/COLLECTING_EVIDENCE 任务被标记 INTERRUPTED，RUNNING 步骤回到 PENDING，无法恢复时显式失败。
+- 工具层：`armorbreak_workflow` 新增 `run_async / resume / retry`，status 返回队列状态；`concurrency` 参数。
+- 新增测试：`tests/workflow-dag.test.mjs`（5）、`tests/task-queue.test.mjs`（3）。
+
+### Workbench / API (Stage D)
+
+- 新增只读工作台路由：`/armorbreak/tasks`（列表/任务详情：步骤、finding 元数据、报告指针）、`/armorbreak/tools`（能力域、隔离状态；外部工具不谎报已安装）；全部 loopback-only、GET/HEAD、拒绝 workspace 枚举。
+- 新增 `lib/core/presentation.js`：状态文案（L2 显示“无授权目标”而非 0；隔离显示 DaemonReady 且标注未自检）、任务/发现/工具投影。
+- 浏览器状态卡升级为三页签只读工作台（概览/任务/工具，可查看任务步骤与 finding 摘要）；不提供新建/取消（写操作仍走对话工具）。
+- 工作区绑定明确标注“最近使用工作区；会话级绑定未实现”。
+
+### Verification / CI (Stage E)
+
+- 新增 `tests/ui-api.test.mjs`（5）、`tests/e2e-tool-flow.test.mjs`（mock-model 工具链 E2E：health → start → run_async → status → evidence chain → report）。
+- CI 新增 `live-docker` job：拉取 digest-pinned busybox 并运行 `scripts/verify-l1.mjs`（真实 daemon）。
+- 全套测试 **174/174 通过**（原 160 + 14）。
+- 未完成/未验证：真实模型 GUI E2E、完整工作台写操作与工具安装引导、session 级工作区绑定、Ghidra/JADX/TShark/Syft、macOS/Linux 真机桌面。
+
 ## Unreleased — v1.1.0 Stage B（已合并 main，`8d3a8d5`；分支 `feature/armorbreak-v1.1.0-stage-b` 保留）
 
 - **外部工具适配器首批**：新增 `sast.semgrep`、`sast.trivy`（L0，目录目标）。JSON 归一化到统一 findings/evidence（severity/confidence/verification 分离、位置/规则/证据引用、默认 hypothesis、输出上限、畸形 JSON 拒绝、缺失工具返回安装指引；不自动下载规则/漏洞库）。

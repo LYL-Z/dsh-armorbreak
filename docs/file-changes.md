@@ -1,9 +1,9 @@
 # 完整文件变更清单（v1.0.4）
 
 - 生成方式：`node scripts/file-changes.mjs`（遍历交付目录，排除 node_modules/.armorbreak）
-- 文件总数：**146**
-- 总大小：**1958.2 KiB**
-- 总行数：**41102**（含注释/文档）
+- 文件总数：**168**
+- 总大小：**2301.5 KiB**
+- 总行数：**48880**（含注释/文档）
 - 运行时依赖：**0**（仅 Node 内置模块；无构建步骤）
 
 ## 能力清单（由 lib/analyzers/*/manifest.js 自动统计）
@@ -28,23 +28,27 @@
 | `.gitignore` | 394 | 19 |  |
 | `benchmarks/bench.mjs` | 12112 | 265 | 零依赖可复现微基准脚本 |
 | `benchmarks/results.json` | 4174 | 177 | 参考主机基准原始数据 |
-| `CHANGELOG.md` | 11463 | 145 | 变更记录（1.0.4） |
-| `client.js` | 10058 | 234 | 浏览器半：composer 状态卡（能力/隔离/策略/任务摘要） |
+| `CHANGELOG.md` | 14791 | 171 | 变更记录（1.0.4） |
+| `client.js` | 17931 | 372 | 浏览器半：composer 状态卡（能力/隔离/策略/任务摘要） |
 | `CODE_OF_CONDUCT.md` | 1478 | 35 | 社区行为准则 |
 | `CONTRIBUTING.md` | 3078 | 69 | 贡献指南与能力适配器开发流程 |
 | `cordis.patch.yml` | 6517 | 95 | 组合包 patch：Host 行 + preset-armorbreak 模式声明 |
-| `docs/acceptance-v1.1.0.md` | 4643 | 75 |  |
-| `docs/acceptance.md` | 16105 | 235 | 验收报告（含实际测试与验证结果） |
+| `docs/acceptance-v1.1.0.md` | 10934 | 148 |  |
+| `docs/acceptance.md` | 16196 | 235 | 验收报告（含实际测试与验证结果） |
+| `docs/acceptance/gate-b-findings.json` | 97583 | 2757 |  |
+| `docs/acceptance/gate-b-report.md` | 107463 | 1579 |  |
+| `docs/acceptance/gate-b-summary.json` | 5038 | 180 |  |
+| `docs/acceptance/gate-b-task.json` | 9160 | 296 |  |
 | `docs/acceptance/l1-docker-verification.json` | 1411 | 16 |  |
-| `docs/adapter-contract-v2.md` | 4102 | 68 |  |
-| `docs/architecture.md` | 7139 | 112 | 架构设计（分层、Cordis 组合、执行管线、数据模型） |
+| `docs/adapter-contract-v2.md` | 5317 | 76 |  |
+| `docs/architecture.md` | 8124 | 121 | 架构设计（分层、Cordis 组合、执行管线、数据模型） |
 | `docs/audit/environment-audit.md` | 11323 | 118 | Phase 0 环境与架构审计报告 |
 | `docs/benchmarks.md` | 7753 | 154 | 性能基准：环境、数据、方法、复现 |
 | `docs/compatibility-matrix.md` | 4965 | 71 | 运行时/API/外部工具/平台兼容性 |
 | `docs/CONTRACT.md` | 7935 | 141 | 分析能力/适配器开发契约 |
 | `docs/installation.md` | 4482 | 78 | 安装/启用/卸载/故障排查 |
 | `docs/isolation-providers.md` | 2321 | 50 |  |
-| `docs/known-issues.md` | 6739 | 63 | 已知问题与限制（诚实清单） |
+| `docs/known-issues.md` | 7892 | 69 | 已知问题与限制（诚实清单） |
 | `docs/marketplace.md` | 5589 | 104 | DeepSeek Harness 生态、插件市场与分发指引 |
 | `docs/media/report-deliverables.webp` | 125032 | 438 | 报告交付物真实截图 |
 | `docs/media/status-card.png` | 96465 | 355 | 模式状态卡真实截图 |
@@ -59,8 +63,18 @@
 | `docs/security-model.md` | 5950 | 78 | 四级能力控制、授权/审批、路径与命令、隔离、审计 |
 | `docs/usage.md` | 4092 | 87 | 使用指南与场景 |
 | `docs/workflow-engine-v2.md` | 2454 | 50 |  |
+| `fixtures/gate-b-rules/armorbreak-local.yml` | 1757 | 65 |  |
+| `fixtures/gate-b-sample/.env` | 192 | 4 |  |
+| `fixtures/gate-b-sample/Dockerfile` | 168 | 7 |  |
+| `fixtures/gate-b-sample/package-lock.json` | 34766 | 925 |  |
+| `fixtures/gate-b-sample/package.json` | 447 | 18 |  |
+| `fixtures/gate-b-sample/README.md` | 1997 | 34 |  |
+| `fixtures/gate-b-sample/requirements.txt` | 144 | 6 |  |
+| `fixtures/gate-b-sample/src/app.js` | 810 | 28 |  |
+| `fixtures/gate-b-sample/src/config.js` | 352 | 9 |  |
+| `fixtures/gate-b-sample/src/crypto.js` | 301 | 12 |  |
 | `icon.svg` | 787 | 14 | 插件图标 |
-| `index.js` | 4120 | 118 | Host 半：只读状态路由 /armorbreak/state，webServer 注入 |
+| `index.js` | 7716 | 223 | Host 半：只读状态路由 /armorbreak/state，webServer 注入 |
 | `lib/analyzers/android/axml.js` | 18654 | 498 | 分析能力实现（按域） |
 | `lib/analyzers/android/dex.js` | 12033 | 324 | 分析能力实现（按域） |
 | `lib/analyzers/android/manifest.js` | 69922 | 1533 | 分析能力实现（按域） |
@@ -83,7 +97,7 @@
 | `lib/analyzers/ctf/flagscan.js` | 4985 | 137 | 分析能力实现（按域） |
 | `lib/analyzers/ctf/hash_id.js` | 10973 | 284 | 分析能力实现（按域） |
 | `lib/analyzers/ctf/manifest.js` | 22537 | 501 | 分析能力实现（按域） |
-| `lib/analyzers/external/adapters.js` | 17474 | 341 | 分析能力实现（按域） |
+| `lib/analyzers/external/adapters.js` | 17501 | 341 | 分析能力实现（按域） |
 | `lib/analyzers/forensics/filetype.js` | 18532 | 295 | 分析能力实现（按域） |
 | `lib/analyzers/forensics/formats.js` | 15383 | 369 | 分析能力实现（按域） |
 | `lib/analyzers/forensics/hashes.js` | 2415 | 55 | 分析能力实现（按域） |
@@ -123,24 +137,28 @@
 | `lib/analyzers/web/yaml-lite.js` | 17529 | 557 | 分析能力实现（按域） |
 | `lib/core/audit.js` | 3450 | 105 | 核心运行时模块 |
 | `lib/core/capabilities.js` | 7148 | 179 | 核心运行时模块 |
+| `lib/core/dag.js` | 5880 | 139 | 核心运行时模块 |
 | `lib/core/evidence.js` | 7789 | 181 | 核心运行时模块 |
 | `lib/core/files.js` | 8638 | 219 | 核心运行时模块 |
-| `lib/core/health.js` | 14951 | 284 | 核心运行时模块 |
+| `lib/core/health.js` | 15282 | 287 | 核心运行时模块 |
 | `lib/core/help.js` | 1019 | 19 | 核心运行时模块 |
+| `lib/core/presentation.js` | 4598 | 107 | 核心运行时模块 |
 | `lib/core/reports.js` | 21027 | 413 | 核心运行时模块 |
-| `lib/core/runner.js` | 34883 | 754 | 核心运行时模块 |
-| `lib/core/runtime.js` | 5125 | 151 | 核心运行时模块 |
+| `lib/core/runner.js` | 39617 | 856 | 核心运行时模块 |
+| `lib/core/runtime.js` | 6030 | 166 | 核心运行时模块 |
 | `lib/core/scope.js` | 27752 | 689 | 核心运行时模块 |
-| `lib/core/tasks.js` | 9364 | 298 | 核心运行时模块 |
+| `lib/core/taskQueue.js` | 8195 | 238 | 核心运行时模块 |
+| `lib/core/tasks.js` | 12977 | 388 | 核心运行时模块 |
 | `lib/core/util.js` | 12247 | 402 | 核心运行时模块 |
-| `lib/core/workflows.js` | 7104 | 152 | 核心运行时模块 |
+| `lib/core/workflows.js` | 7194 | 152 | 核心运行时模块 |
 | `LICENSE` | 1062 | 22 | MIT 许可证 |
 | `locale/en.json` | 228 | 7 | 插件显示元数据（英文） |
 | `locale/zh.json` | 195 | 7 | 插件显示元数据（中文） |
 | `package.json` | 1783 | 79 | Bundle 清单（dsh.bundle.patch + dsh.client + 零依赖声明） |
-| `README.md` | 60750 | 1053 | 项目总览、安装、能力与安全模型摘要 |
+| `README.md` | 60964 | 1054 | 项目总览、安装、能力与安全模型摘要 |
 | `scripts/clean-temp.mjs` | 1714 | 59 | 清理测试临时目录脚本 |
 | `scripts/file-changes.mjs` | 6569 | 153 | 文件清单生成脚本 |
+| `scripts/verify-gate-b.mjs` | 13314 | 276 | 开发/交付脚本 |
 | `scripts/verify-l1.mjs` | 4042 | 90 | 开发/交付脚本 |
 | `SECURITY.md` | 2049 | 54 | 安全政策与漏洞披露流程 |
 | `skills.js` | 3861 | 84 | preset 子插件：注册 7 个内置技能 |
@@ -158,6 +176,7 @@
 | `tests/core-policy.test.mjs` | 7974 | 152 | 自动化测试（node:test） |
 | `tests/core-runtime.test.mjs` | 13332 | 298 | 自动化测试（node:test） |
 | `tests/ctf.test.mjs` | 14890 | 309 | 自动化测试（node:test） |
+| `tests/e2e-tool-flow.test.mjs` | 3940 | 88 | 自动化测试（node:test） |
 | `tests/external-adapters.test.mjs` | 6810 | 175 | 自动化测试（node:test） |
 | `tests/forensics.test.mjs` | 36002 | 835 | 自动化测试（node:test） |
 | `tests/hardening.test.mjs` | 4197 | 83 | 自动化测试（node:test） |
@@ -166,10 +185,13 @@
 | `tests/runner-gates.test.mjs` | 7568 | 142 | 自动化测试（node:test） |
 | `tests/sast.test.mjs` | 18859 | 416 | 自动化测试（node:test） |
 | `tests/security-boundary.test.mjs` | 9395 | 182 | 自动化测试（node:test） |
+| `tests/task-queue.test.mjs` | 4702 | 111 | 自动化测试（node:test） |
 | `tests/tools-integration.test.mjs` | 9723 | 198 | 自动化测试（node:test） |
 | `tests/tools-lossless.test.mjs` | 5690 | 130 | 自动化测试（node:test） |
+| `tests/ui-api.test.mjs` | 6721 | 152 | 自动化测试（node:test） |
 | `tests/web.test.mjs` | 17832 | 434 | 自动化测试（node:test） |
-| `tools.js` | 52859 | 909 | preset 子插件：注册 8 个模型工具并桥接平台审批 |
+| `tests/workflow-dag.test.mjs` | 6163 | 127 | 自动化测试（node:test） |
+| `tools.js` | 56298 | 953 | preset 子插件：注册 8 个模型工具并桥接平台审批 |
 
 ## 说明
 
