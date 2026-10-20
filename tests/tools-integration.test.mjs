@@ -37,12 +37,13 @@ function mockExec(signal) {
   return { agent: undefined, callId: 'call_test_0001', signal: signal ?? new AbortController().signal }
 }
 
-test('tools.js registers nine model-facing tools with valid JSON schemas', async () => {
+test('tools.js registers ten model-facing tools with valid JSON schemas', async () => {
   const { defs } = await loadTools()
   const expected = [
     'armorbreak_health',
     'armorbreak_capabilities',
     'armorbreak_scope',
+    'armorbreak_environment',
     'armorbreak_files',
     'armorbreak_task',
     'armorbreak_analyze',
@@ -68,7 +69,7 @@ test('armorbreak_health reports environment, isolation denial and capability cou
   const workspace = await mkdtemp(join(tmpdir(), 'abm-tool-ws-'))
   const value = await defs.get('armorbreak_health').execute({ workspace }, mockExec())
   assert.match(value.text, /环境健康|ArmorBreak/)
-  assert.equal(value.data.version, '1.1.1')
+  assert.equal(value.data.version, '1.2.0-alpha.1')
   assert.ok(value.data.registry.capabilities > 0)
   assert.equal(typeof value.data.isolation.available, 'boolean')
   assert.ok(Array.isArray(value.data.capabilities))

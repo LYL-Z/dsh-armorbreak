@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 1.2.0-alpha.1 — Advanced Research（进行中）
+
+第一增量：隔离提供者抽象与行为级分析。
+
+- 新增 `armorbreak_environment`（第 10 个模型工具）：Docker/Podman/WSL2 检测、daemon 状态、自检状态与安装指引；检测不等于隔离，WSL2 默认不作为安全沙箱。
+- 新增 `binary.behavior`（第 42 个能力）：导入表敏感 API 类别、预定义高风险组合、0-100 启发式评分与证据锚点；全部结论默认 hypothesis，不执行样本。
+- 工作区持久化：最近工作区写入 stateRoot，进程重启后不再回退 profile 目录；绑定文案改为“调用一次工具后绑定会话”。
+- 测试：182/182（新增 environment/binary.behavior 测试）。
+- 本增量**尚未完成** v1.2.0 全部目标：隔离提供者尚未接入 L1 执行门、Ghidra/JADX/TShark/Syft 适配器、UI 环境页与证据筛选仍待后续增量。
+
 ## 1.1.1 — 2026-10-20
 
 真实 GUI + 真实模型 E2E 发现的热修复：
