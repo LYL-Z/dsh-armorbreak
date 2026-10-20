@@ -1,0 +1,45 @@
+{
+  "generatedAt": "2026-10-20T15:54:06.856Z",
+  "tools": {
+    "tshark": "4.6.9",
+    "syft": "1.54.1",
+    "jadx": "1.5.6",
+    "java": "D:\\AndroidSdk\\jdk17\\bin\\java.exe"
+  },
+  "tshark": {
+    "summary": "TShark：2 个报文，6 类协议，HTTP 请求 1，DNS 查询 1，畸形 0。\n明文 HTTP 主机样本：example.com\n结论来自抓包观测，不等同于漏洞确认；如需复现应使用相同抓包/时间窗。",
+    "packets": 2,
+    "http": 1,
+    "dns": 1,
+    "findings": 1
+  },
+  "syft": {
+    "summary": "Syft SBOM：94 个组件（返回 50，已截断），类型 library:92, file:2。\n2 个组件缺少版本，依赖追溯需补齐。\n仅组件盘点，不代表存在漏洞；CVE 结论需要独立的离线漏洞库。",
+    "components": 94,
+    "types": {
+      "library": 92,
+      "file": 2
+    },
+    "findings": 1
+  },
+  "jadx": {
+    "summary": "JADX：扫描 1 个源文件，1 个包、1 个类、2 个方法；敏感 API 2 类。源码未回传，仅保留计数与位置样本。",
+    "files": 1,
+    "classes": 1,
+    "methods": 2,
+    "apis": [
+      "Runtime.exec",
+      "ProcessBuilder"
+    ]
+  },
+  "ghidra": {
+    "summary": "Ghidra：notepad.exe，函数 853 个（导出 500），敏感名称 0 类。调用图与函数体未回传。",
+    "functionCount": 853,
+    "emitted": 500,
+    "suspiciousNames": [],
+    "findings": 1,
+    "target": "C:\\Windows\\System32\\notepad.exe",
+    "targetSha256": "468ffe129c395abf6b21a09efdf261910a95fb98aa982ead73caa7b2b684577e",
+    "elapsedMs": 247142
+  }
+}

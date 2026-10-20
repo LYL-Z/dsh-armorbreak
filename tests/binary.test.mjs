@@ -427,7 +427,7 @@ test('binary manifest: shape, ids, risk levels and params schema follow CONTRACT
   assert.ok(Array.isArray(manifest.capabilities));
   const ids = manifest.capabilities.map((c) => c.id);
   assert.deepEqual(ids.sort(), [
-    'binary.behavior', 'binary.entropy', 'binary.headers', 'binary.identify', 'binary.strings', 'binary.structure',
+    'binary.behavior', 'binary.entropy', 'binary.ghidra', 'binary.headers', 'binary.identify', 'binary.strings', 'binary.structure',
   ]);
   for (const cap of manifest.capabilities) {
     assert.match(cap.id, /^binary\.[a-z0-9-]+$/);

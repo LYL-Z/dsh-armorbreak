@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-10-20T16:07:55.258Z",
+  "provider": "docker",
+  "selfTest": {
+    "provider": "docker",
+    "verified": true,
+    "reason": "harmless container self-test passed (network none, non-root, read-only)"
+  },
+  "diagnosisAfter": {
+    "id": "docker",
+    "title": "Docker",
+    "state": "IsolationVerified",
+    "reason": "隔离自检已通过（本进程记录）",
+    "version": "Docker version 29.8.1, build 4a63305",
+    "server": "29.8.1",
+    "isolation": "container",
+    "installUrl": "https://docs.docker.com/engine/install/",
+    "note": null
+  },
+  "task": {
+    "id": "task_mvgvn876_03e7147e",
+    "state": "COMPLETED",
+    "step": "DONE",
+    "error": null
+  },
+  "evidenceCount": 2,
+  "isolationMeta": null,
+  "containerData": null
+}

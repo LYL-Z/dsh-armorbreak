@@ -78,3 +78,36 @@ test('default verify is explicit about not being a self-test; guide lists offici
   assert.ok(guides.some((guide) => guide.id === 'docker' && /docker.com/.test(guide.installUrl)))
   assert.ok(guides.some((guide) => guide.id === 'wsl2' && /wsl/.test(guide.installUrl)))
 })
+
+test('selfTest runs a harmless pinned container and only records IsolationVerified on success', async () => {
+  const runLog = []
+  const exec = async (command, args) => {
+    if (args[0] === '--version') return { stdout: command + ' version 27.0.0', stderr: '' }
+    if (args[0] === 'info') return { stdout: '27.0.0', stderr: '' }
+    if (args[0] === 'run') { runLog.push(args.join(' ')); return { stdout: '', stderr: '' } }
+    throw new Error('unexpected ' + command + ' ' + args.join(' '))
+  }
+  const manager = new IsolationProviderManager({ exec })
+  const result = await manager.selfTest('docker')
+  assert.equal(result.verified, true)
+  assert.equal(runLog.length, 1)
+  assert.match(runLog[0], /--network=none/)
+  assert.match(runLog[0], /--read-only/)
+  assert.match(runLog[0], /--user=65534:65534/)
+  assert.match(runLog[0], /@sha256:[a-f0-9]{64}/)
+  const diagnosis = await manager.diagnose({ fresh: true })
+  assert.equal(diagnosis.providers.find((p) => p.id === 'docker').state, 'IsolationVerified')
+
+  const failing = new IsolationProviderManager({
+    exec: async (command, args) => {
+      if (args[0] === '--version') return { stdout: 'docker version', stderr: '' }
+      if (args[0] === 'info') return { stdout: '27.0.0', stderr: '' }
+      throw new Error('container run failed')
+    },
+  })
+  const failed = await failing.selfTest('docker')
+  assert.equal(failed.verified, false)
+  assert.match(failed.reason, /self-test failed/)
+  const failedDiagnosis = await failing.diagnose({ fresh: true })
+  assert.notEqual(failedDiagnosis.providers.find((p) => p.id === 'docker').state, 'IsolationVerified')
+})

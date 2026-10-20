@@ -23,8 +23,13 @@ async function gateRuntime(opts = {}) {
   const workspace = await tempDir('abm-gate-ws-')
   const runtime = new ArmorBreakRuntime({ stateRoot })
   await runtime.init()
-  if (opts.isolationAvailable) {
-    runtime.health.isolation = async () => ({ available: true, provider: 'test-container', reason: null, tool: { found: true } })
+  runtime.isolationProviders = {
+    diagnose: async () => opts.isolationAvailable
+      ? { providers: [{ id: 'test-container', state: 'DaemonReady' }], recommended: 'test-container', l1: { available: true, verified: false, provider: 'test-container', state: 'DaemonReady', reason: 'test provider daemon ready' } }
+      : { providers: [], recommended: null, l1: { available: false, verified: false, provider: null, state: 'Unavailable', reason: 'no test provider' } },
+    selfTest: async () => opts.selfTestOk === false
+      ? { provider: 'test-container', verified: false, reason: 'injected self-test failure' }
+      : { provider: 'test-container', verified: true, reason: 'injected self-test success' },
   }
   runtime.registry.registerManifest('gate', {
     domain: 'gate',
@@ -138,4 +143,17 @@ test('approval rejected at the workflow gate becomes REJECTED without execution'
   assert.equal(task.state, 'REJECTED')
   const evidence = await store.evidenceStore(task.id).readEvidence(100)
   assert.equal(evidence.length, 0, 'nothing may be collected when approval is rejected')
+})
+
+test('L1 fails closed when the isolation self-test fails after approval', async () => {
+  const { runtime, workspace } = await gateRuntime({ isolationAvailable: true, selfTestOk: false })
+  const store = runtime.workspace(workspace).taskStore
+  const sample = join(workspace, 'sample.bin')
+  await writeFile(sample, 'MZ-sample')
+  const task = await store.create({ title: 'self-test failure task', targetPath: sample, targetKind: 'file', steps: [{ id: 'exec', title: 'exec', capabilityId: 'gate.exec', options: {} }] })
+  const updated = await runtime.runner.runWorkflow(task, { requestApproval: approvalGranting() })
+  assert.equal(updated.state, 'FAILED')
+  assert.match(updated.steps[0].error, /ISOLATION_SELFTEST_FAILED/)
+  const evidence = await store.evidenceStore(task.id).readEvidence(100)
+  assert.equal(evidence.length, 0, 'no evidence when the self-test fails')
 })

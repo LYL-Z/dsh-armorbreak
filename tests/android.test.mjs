@@ -760,9 +760,10 @@ test('android: capability 清单符合契约（id/riskLevel/params schema）', (
   assert.equal(androidManifest.domain, 'android');
   assert.deepEqual(
     androidManifest.capabilities.map((c) => c.id),
-    ['android.apk_structure', 'android.manifest', 'android.dex', 'android.signing', 'android.findings'],
+    ['android.apk_structure', 'android.manifest', 'android.dex', 'android.signing', 'android.findings', 'android.jadx'],
   );
   for (const capability of androidManifest.capabilities) {
+    if (capability.id === 'android.jadx') continue; // external JADX + APK; covered by external-adapters-v2.test.mjs / Gate B
     assert.equal(capability.riskLevel, 'L0', `${capability.id} 必须是离线只读`);
     assert.equal(typeof capability.run, 'function');
     assert.ok(capability.title.length > 0);
@@ -1113,6 +1114,7 @@ test('android: Result 契约（summary/data 体积/meta 与全部 capability 可
   const { apk } = buildV2V3Apk();
   const input = makeInput(apk);
   for (const capability of androidManifest.capabilities) {
+    if (capability.id === 'android.jadx') continue; // external JADX + APK; covered by external-adapters-v2.test.mjs / Gate B
     const result = await capability.run(input);
     assert.equal(typeof result.summary, 'string', `${capability.id} summary 必须是字符串`);
     assert.ok(result.summary.length > 0 && result.summary.length <= 4000, `${capability.id} summary 长度为 1..4000`);

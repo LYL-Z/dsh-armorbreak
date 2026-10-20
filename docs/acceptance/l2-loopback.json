@@ -1,0 +1,12 @@
+{
+  "generatedAt": "2026-10-20T16:08:09.488Z",
+  "target": "127.0.0.1:53671",
+  "task": {
+    "id": "task_mvgvnkie_29c3125f",
+    "state": "COMPLETED",
+    "step": "DONE",
+    "error": null
+  },
+  "evidenceCount": 2,
+  "summary": "HTTP GET http://127.0.0.1:53671/proof?x=1 → 200 OK（18 ms，响应体 70 字节）"
+}

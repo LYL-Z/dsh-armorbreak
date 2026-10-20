@@ -975,7 +975,7 @@ export function apply(ctx) {
         }
         if (args.action === 'verify') {
           if (!args.provider) throw new Error('verify needs provider (docker/podman/wsl2)')
-          const result = await manager.verify(String(args.provider))
+          const result = await manager.selfTest(String(args.provider))
           return {
             text: `隔离自检（${result.provider}）：${result.verified ? '✅ 通过' : '⛔ 未通过'} — ${result.reason}`,
             data: result,

@@ -429,9 +429,11 @@ test('network: capability 清单符合契约', () => {
       'network.http',
       'network.iocs',
       'network.anomalies',
+      'network.tshark',
     ],
   );
   for (const capability of networkManifest.capabilities) {
+    if (capability.id === 'network.tshark') continue; // external tool + capture; covered by external-adapters-v2.test.mjs / Gate B
     assert.equal(capability.riskLevel, 'L0');
     assert.equal(capability.params.type, 'object');
     assert.equal(capability.params.additionalProperties, false);
@@ -1030,6 +1032,7 @@ test('network: Result 契约（summary/data 体积/meta 与全部 capability 可
   const pcap = buildPcap([...dnsRecords, ...httpConversation, ...tlsConversation]);
   const input = makeInput(pcap);
   for (const capability of networkManifest.capabilities) {
+    if (capability.id === 'network.tshark') continue; // external tool + capture; covered by external-adapters-v2.test.mjs / Gate B
     const result = await capability.run(input);
     assert.equal(typeof result.summary, 'string', `${capability.id} summary 必须是字符串`);
     assert.ok(result.summary.length > 0 && result.summary.length <= 4000, `${capability.id} summary 长度为 1..4000`);
