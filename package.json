@@ -1,0 +1,78 @@
+{
+  "name": "dsh-armorbreak",
+  "version": "1.0.2",
+  "type": "module",
+  "description": "ArmorBreak (破甲模式): an authorized reverse-engineering and security-research agent preset for DeepSeek Harness — 39 offline capabilities, L0–L3 policy engine, evidence-chain reports",
+  "icon": "./icon.svg",
+  "author": {
+    "name": "LYL-Z",
+    "url": "https://github.com/LYL-Z"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LYL-Z/dsh-armorbreak.git"
+  },
+  "homepage": "https://github.com/LYL-Z/dsh-armorbreak#readme",
+  "bugs": {
+    "url": "https://github.com/LYL-Z/dsh-armorbreak/issues"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "dsh-bundle",
+    "cordis",
+    "agent-preset",
+    "reverse-engineering",
+    "security-research",
+    "dfir",
+    "static-analysis",
+    "malware-analysis",
+    "ctf"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./tools": "./tools.js",
+    "./skills": "./skills.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "tools.js",
+    "skills.js",
+    "client.js",
+    "cordis.patch.yml",
+    "lib",
+    "skills",
+    "locale",
+    "icon.svg",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "SECURITY.md",
+    "CONTRIBUTING.md",
+    "docs"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true
+    }
+  },
+  "scripts": {
+    "test": "node --test",
+    "bench": "node benchmarks/bench.mjs",
+    "inventory": "node scripts/file-changes.mjs",
+    "clean-temp": "node scripts/clean-temp.mjs"
+  }
+}

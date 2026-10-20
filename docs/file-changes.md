@@ -1,0 +1,163 @@
+# 完整文件变更清单（v1.0.2）
+
+- 生成方式：`node scripts/file-changes.mjs`（遍历交付目录，排除 node_modules/.armorbreak）
+- 文件总数：**132**
+- 总大小：**1849.9 KiB**
+- 总行数：**39045**（含注释/文档）
+- 运行时依赖：**0**（仅 Node 内置模块；无构建步骤）
+
+## 能力清单（由 lib/analyzers/*/manifest.js 自动统计）
+
+| 域 | 能力 |
+|---|---|
+| android | 5：`android.apk_structure`、`android.manifest`、`android.dex`、`android.signing`、`android.findings` |
+| binary | 5：`binary.identify`、`binary.strings`、`binary.entropy`、`binary.headers`、`binary.structure` |
+| ctf | 5：`ctf.classify`、`ctf.decode`、`ctf.hash_id`、`ctf.crypto_basics`、`ctf.flag_scan` |
+| forensics | 6：`forensics.hash`、`forensics.metadata`、`forensics.timeline`、`forensics.ioc`、`forensics.yara_lite`、`forensics.filetype` |
+| live | 2：`live.http_probe`、`live.container_exec` |
+| network | 7：`network.pcap_overview`、`network.flows`、`network.dns`、`network.tls`、`network.http`、`network.iocs`、`network.anomalies` |
+| sast | 5：`sast.scan`、`sast.secrets`、`sast.deps`、`sast.sbom`、`sast.patch_suggestion` |
+| web | 4：`web.har`、`web.openapi`、`web.headers`、`web.http_message` |
+
+## 文件清单
+
+| 路径 | 字节 | 行数 | 说明 |
+|---|---:|---:|---|
+| `.gitattributes` | 167 | 11 |  |
+| `.gitignore` | 394 | 19 |  |
+| `benchmarks/bench.mjs` | 12112 | 265 | 零依赖可复现微基准脚本 |
+| `benchmarks/results.json` | 4174 | 177 | 参考主机基准原始数据 |
+| `CHANGELOG.md` | 8125 | 103 | 变更记录（1.0.2） |
+| `client.js` | 10058 | 234 | 浏览器半：composer 状态卡（能力/隔离/策略/任务摘要） |
+| `CODE_OF_CONDUCT.md` | 1478 | 35 | 社区行为准则 |
+| `CONTRIBUTING.md` | 3078 | 69 | 贡献指南与能力适配器开发流程 |
+| `cordis.patch.yml` | 6821 | 109 | 组合包 patch：Host 行 + preset-armorbreak 模式声明 |
+| `docs/acceptance.md` | 15653 | 232 | 验收报告（含实际测试与验证结果） |
+| `docs/architecture.md` | 7139 | 112 | 架构设计（分层、Cordis 组合、执行管线、数据模型） |
+| `docs/audit/environment-audit.md` | 11323 | 118 | Phase 0 环境与架构审计报告 |
+| `docs/benchmarks.md` | 7636 | 153 | 性能基准：环境、数据、方法、复现 |
+| `docs/compatibility-matrix.md` | 4965 | 71 | 运行时/API/外部工具/平台兼容性 |
+| `docs/CONTRACT.md` | 7935 | 141 | 分析能力/适配器开发契约 |
+| `docs/installation.md` | 4482 | 78 | 安装/启用/卸载/故障排查 |
+| `docs/known-issues.md` | 6495 | 64 | 已知问题与限制（诚实清单） |
+| `docs/marketplace.md` | 5589 | 104 | DeepSeek Harness 生态、插件市场与分发指引 |
+| `docs/media/report-deliverables.webp` | 125032 | 438 | 报告交付物真实截图 |
+| `docs/media/status-card.png` | 96465 | 355 | 模式状态卡真实截图 |
+| `docs/releases/v1.0.0.md` | 1884 | 41 | v1.0.0 发布说明 |
+| `docs/releases/v1.0.1.md` | 1463 | 36 | v1.0.1 发布说明 |
+| `docs/releases/v1.0.2.md` | 3370 | 62 | v1.0.2 发布说明 |
+| `docs/roadmap.md` | 2770 | 38 | 后续扩展路线图 |
+| `docs/security-model.md` | 5950 | 78 | 四级能力控制、授权/审批、路径与命令、隔离、审计 |
+| `docs/usage.md` | 4092 | 87 | 使用指南与场景 |
+| `icon.svg` | 787 | 14 | 插件图标 |
+| `index.js` | 2863 | 88 | Host 半：只读状态路由 /armorbreak/state，webServer 注入 |
+| `lib/analyzers/android/axml.js` | 18654 | 498 | 分析能力实现（按域） |
+| `lib/analyzers/android/dex.js` | 12033 | 324 | 分析能力实现（按域） |
+| `lib/analyzers/android/manifest.js` | 69922 | 1533 | 分析能力实现（按域） |
+| `lib/analyzers/android/signature.js` | 19901 | 522 | 分析能力实现（按域） |
+| `lib/analyzers/android/util.js` | 6534 | 180 | 分析能力实现（按域） |
+| `lib/analyzers/android/zip.js` | 14373 | 367 | 分析能力实现（按域） |
+| `lib/analyzers/binary/elf.js` | 24688 | 556 | 分析能力实现（按域） |
+| `lib/analyzers/binary/entropy.js` | 6029 | 160 | 分析能力实现（按域） |
+| `lib/analyzers/binary/identify.js` | 22475 | 485 | 分析能力实现（按域） |
+| `lib/analyzers/binary/macho.js` | 23829 | 553 | 分析能力实现（按域） |
+| `lib/analyzers/binary/manifest.js` | 30927 | 575 | 分析能力实现（按域） |
+| `lib/analyzers/binary/pe.js` | 35841 | 836 | 分析能力实现（按域） |
+| `lib/analyzers/binary/strings.js` | 8719 | 168 | 分析能力实现（按域） |
+| `lib/analyzers/binary/structure.js` | 13946 | 292 | 分析能力实现（按域） |
+| `lib/analyzers/binary/util.js` | 15569 | 400 | 分析能力实现（按域） |
+| `lib/analyzers/ctf/common.js` | 5732 | 159 | 分析能力实现（按域） |
+| `lib/analyzers/ctf/crypto-basics.js` | 13640 | 326 | 分析能力实现（按域） |
+| `lib/analyzers/ctf/encoding.js` | 13418 | 342 | 分析能力实现（按域） |
+| `lib/analyzers/ctf/filetype.js` | 20490 | 483 | 分析能力实现（按域） |
+| `lib/analyzers/ctf/flagscan.js` | 4985 | 137 | 分析能力实现（按域） |
+| `lib/analyzers/ctf/hash_id.js` | 10973 | 284 | 分析能力实现（按域） |
+| `lib/analyzers/ctf/manifest.js` | 22537 | 501 | 分析能力实现（按域） |
+| `lib/analyzers/forensics/filetype.js` | 18532 | 295 | 分析能力实现（按域） |
+| `lib/analyzers/forensics/formats.js` | 15383 | 369 | 分析能力实现（按域） |
+| `lib/analyzers/forensics/hashes.js` | 2415 | 55 | 分析能力实现（按域） |
+| `lib/analyzers/forensics/ioc.js` | 11443 | 243 | 分析能力实现（按域） |
+| `lib/analyzers/forensics/manifest.js` | 16029 | 332 | 分析能力实现（按域） |
+| `lib/analyzers/forensics/metadata.js` | 21317 | 446 | 分析能力实现（按域） |
+| `lib/analyzers/forensics/timeline.js` | 12028 | 303 | 分析能力实现（按域） |
+| `lib/analyzers/forensics/util.js` | 6113 | 148 | 分析能力实现（按域） |
+| `lib/analyzers/forensics/yara-lite.js` | 11222 | 274 | 分析能力实现（按域） |
+| `lib/analyzers/forensics/zip.js` | 12978 | 307 | 分析能力实现（按域） |
+| `lib/analyzers/live/manifest.js` | 10133 | 200 | 分析能力实现（按域） |
+| `lib/analyzers/network/anomalies.js` | 11829 | 269 | 分析能力实现（按域） |
+| `lib/analyzers/network/capture.js` | 6682 | 157 | 分析能力实现（按域） |
+| `lib/analyzers/network/dns.js` | 14844 | 381 | 分析能力实现（按域） |
+| `lib/analyzers/network/flows.js` | 11619 | 303 | 分析能力实现（按域） |
+| `lib/analyzers/network/http.js` | 14696 | 367 | 分析能力实现（按域） |
+| `lib/analyzers/network/manifest.js` | 34045 | 732 | 分析能力实现（按域） |
+| `lib/analyzers/network/packets.js` | 16313 | 484 | 分析能力实现（按域） |
+| `lib/analyzers/network/pcap.js` | 4909 | 125 | 分析能力实现（按域） |
+| `lib/analyzers/network/pcapng.js` | 11204 | 315 | 分析能力实现（按域） |
+| `lib/analyzers/network/tls.js` | 18058 | 461 | 分析能力实现（按域） |
+| `lib/analyzers/network/util.js` | 13594 | 365 | 分析能力实现（按域） |
+| `lib/analyzers/sast/common.js` | 13984 | 386 | 分析能力实现（按域） |
+| `lib/analyzers/sast/deps.js` | 26481 | 626 | 分析能力实现（按域） |
+| `lib/analyzers/sast/manifest.js` | 24874 | 537 | 分析能力实现（按域） |
+| `lib/analyzers/sast/patch.js` | 15759 | 303 | 分析能力实现（按域） |
+| `lib/analyzers/sast/rules.js` | 19545 | 591 | 分析能力实现（按域） |
+| `lib/analyzers/sast/sbom.js` | 5851 | 157 | 分析能力实现（按域） |
+| `lib/analyzers/sast/scanner.js` | 6265 | 174 | 分析能力实现（按域） |
+| `lib/analyzers/sast/secrets.js` | 12526 | 379 | 分析能力实现（按域） |
+| `lib/analyzers/web/common.js` | 15455 | 439 | 分析能力实现（按域） |
+| `lib/analyzers/web/har.js` | 23825 | 630 | 分析能力实现（按域） |
+| `lib/analyzers/web/headers.js` | 27955 | 728 | 分析能力实现（按域） |
+| `lib/analyzers/web/httpmsg.js` | 15429 | 397 | 分析能力实现（按域） |
+| `lib/analyzers/web/manifest.js` | 8035 | 188 | 分析能力实现（按域） |
+| `lib/analyzers/web/openapi.js` | 25876 | 615 | 分析能力实现（按域） |
+| `lib/analyzers/web/yaml-lite.js` | 17529 | 557 | 分析能力实现（按域） |
+| `lib/core/audit.js` | 3450 | 105 | 核心运行时模块 |
+| `lib/core/capabilities.js` | 7148 | 179 | 核心运行时模块 |
+| `lib/core/evidence.js` | 7789 | 181 | 核心运行时模块 |
+| `lib/core/health.js` | 14951 | 284 | 核心运行时模块 |
+| `lib/core/help.js` | 1019 | 19 | 核心运行时模块 |
+| `lib/core/reports.js` | 21027 | 413 | 核心运行时模块 |
+| `lib/core/runner.js` | 34435 | 741 | 核心运行时模块 |
+| `lib/core/runtime.js` | 5125 | 151 | 核心运行时模块 |
+| `lib/core/scope.js` | 19806 | 508 | 核心运行时模块 |
+| `lib/core/tasks.js` | 9364 | 298 | 核心运行时模块 |
+| `lib/core/util.js` | 12247 | 402 | 核心运行时模块 |
+| `lib/core/workflows.js` | 7104 | 152 | 核心运行时模块 |
+| `LICENSE` | 1062 | 22 | MIT 许可证 |
+| `locale/en.json` | 228 | 7 | 插件显示元数据（英文） |
+| `locale/zh.json` | 195 | 7 | 插件显示元数据（中文） |
+| `package.json` | 1783 | 79 | Bundle 清单（dsh.bundle.patch + dsh.client + 零依赖声明） |
+| `README.md` | 58914 | 1034 | 项目总览、安装、能力与安全模型摘要 |
+| `scripts/clean-temp.mjs` | 1714 | 59 | 清理测试临时目录脚本 |
+| `scripts/file-changes.mjs` | 6569 | 153 | 文件清单生成脚本 |
+| `SECURITY.md` | 2049 | 54 | 安全政策与漏洞披露流程 |
+| `skills.js` | 3861 | 84 | preset 子插件：注册 7 个内置技能 |
+| `skills/android-apk-audit.md` | 1826 | 27 | 内置技能正文 |
+| `skills/binary-static-analysis.md` | 2013 | 26 | 内置技能正文 |
+| `skills/ctf-arena.md` | 1550 | 23 | 内置技能正文 |
+| `skills/forensics-triage.md` | 1371 | 23 | 内置技能正文 |
+| `skills/pcap-investigation.md` | 1721 | 25 | 内置技能正文 |
+| `skills/report-writing.md` | 1936 | 32 | 内置技能正文 |
+| `skills/sast-code-review.md` | 1630 | 24 | 内置技能正文 |
+| `tests/acceptance.test.mjs` | 10527 | 228 | 自动化测试（node:test） |
+| `tests/android.test.mjs` | 47302 | 1177 | 自动化测试（node:test） |
+| `tests/binary.test.mjs` | 34393 | 783 | 自动化测试（node:test） |
+| `tests/core-concurrency.test.mjs` | 3522 | 71 | 自动化测试（node:test） |
+| `tests/core-policy.test.mjs` | 7974 | 152 | 自动化测试（node:test） |
+| `tests/core-runtime.test.mjs` | 13332 | 298 | 自动化测试（node:test） |
+| `tests/ctf.test.mjs` | 14890 | 309 | 自动化测试（node:test） |
+| `tests/forensics.test.mjs` | 36002 | 835 | 自动化测试（node:test） |
+| `tests/hardening.test.mjs` | 4197 | 83 | 自动化测试（node:test） |
+| `tests/network.test.mjs` | 49114 | 1099 | 自动化测试（node:test） |
+| `tests/runner-directory.test.mjs` | 8208 | 184 | 自动化测试（node:test） |
+| `tests/runner-gates.test.mjs` | 7568 | 142 | 自动化测试（node:test） |
+| `tests/sast.test.mjs` | 17394 | 395 | 自动化测试（node:test） |
+| `tests/tools-integration.test.mjs` | 8353 | 172 | 自动化测试（node:test） |
+| `tests/tools-lossless.test.mjs` | 5644 | 129 | 自动化测试（node:test） |
+| `tests/web.test.mjs` | 17832 | 434 | 自动化测试（node:test） |
+| `tools.js` | 43893 | 791 | preset 子插件：注册 8 个模型工具并桥接平台审批 |
+
+## 说明
+
+- 本清单覆盖交付源码、测试、文档与开发期 overlay；不含测试运行时产生的 `.armorbreak/` 数据。
+- `dev/*.yml` 仅用于开发/验收期挂载测试，不随 bundle 安装生效。
+- 未在此清单中的文件（如用户工作区里的 `.armorbreak/tasks/*`）是运行时产物，不是交付物。

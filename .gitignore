@@ -1,0 +1,18 @@
+# dependencies are zero by design; keep stray installs and generated state out
+node_modules/
+.pnpm-store/
+
+# ArmorBreak runtime data (task workspaces are user assets, never committed)
+.armorbreak/
+*.armorbreak.tmp
+
+# editor / OS noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.log
+
+# local benchmark output beyond the committed reference run
+benchmarks/results.local.json

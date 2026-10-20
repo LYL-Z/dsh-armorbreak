@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Node ${{ matrix.node }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [24]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Environment facts
+        run: node --version && node -e "console.log(process.platform, process.arch)"
+
+      # The bundle is intentionally dependency-free: no install step is required.
+      - name: Full test suite
+        run: node --test
+
+      - name: Coverage
+        if: matrix.os == 'ubuntu-latest'
+        run: node --test --experimental-test-coverage
+
+      - name: Reproducible micro-benchmarks
+        if: matrix.os == 'ubuntu-latest'
+        run: node benchmarks/bench.mjs --out benchmarks/results.ci.json
+
+      - name: Text files are valid UTF-8
+        run: node --test tests/hardening.test.mjs
