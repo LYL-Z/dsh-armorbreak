@@ -211,6 +211,36 @@ export function createToolsHandler(runtime) {
 }
 
 // ---------------------------------------------------------------------------
+// v1.2.0 environment/provider diagnostics (read-only)
+// ---------------------------------------------------------------------------
+
+/** @param {import('./lib/core/runtime.js').ArmorBreakRuntime} runtime */
+export function createEnvironmentHandler(runtime) {
+  return async function handleEnvironment(req, res) {
+    if (!guard(req, res)) return
+    try {
+      const url = new URL(String(req.url ?? '/armorbreak/environment'), 'http://127.0.0.1')
+      if (url.searchParams.has('workspace')) {
+        denied(res, 'workspace parameter is not accepted; environment diagnostics are process-scoped')
+        return
+      }
+      const fresh = url.searchParams.get('fresh') === '1'
+      const diagnosis = await runtime.isolationProviders.diagnose({ fresh })
+      const session = resolveSessionWorkspace(runtime, req, '/armorbreak/environment')
+      sendJson(res, 200, {
+        ...diagnosis,
+        workspace: runtime.lastWorkspace ?? null,
+        session: session.sessionId,
+        sessionBound: Boolean(session.workspace),
+        route: '/armorbreak/environment',
+      })
+    } catch (error) {
+      sendError(res, error)
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Stage D write actions (loopback + explicit same-origin UI header)
 // ---------------------------------------------------------------------------
 
@@ -426,6 +456,7 @@ export function apply(ctx) {
       { path: STATE_PATH, handler: createStateHandler(runtime) },
       { path: '/armorbreak/tasks', handler: createTasksHandler(runtime) },
       { path: '/armorbreak/tools', handler: createToolsHandler(runtime) },
+      { path: '/armorbreak/environment', handler: createEnvironmentHandler(runtime) },
       { path: '/armorbreak/actions', handler: createActionHandler(runtime) },
       { path: '/armorbreak/evidence', handler: createEvidenceHandler(runtime) },
       { path: '/armorbreak/report', handler: createReportHandler(runtime) },

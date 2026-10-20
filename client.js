@@ -66,6 +66,14 @@ window.__ModuleLoader__.load({
         loadEvidence: 'Load evidence',
         reportPreview: 'Report preview',
         loadReport: 'Load report',
+        environment: 'Environment',
+        environmentHint: 'Isolation providers (detection is not isolation)',
+        refreshEnvironment: 'Refresh environment',
+        loadingEnvironment: 'Loading providers…',
+        severity: 'Severity',
+        verification: 'Verification',
+        all: 'All',
+        reportFormat: 'Format',
         actionFailed: 'Action failed',
         probe: 'Probe tools',
         probing: 'Probing…',
@@ -125,6 +133,14 @@ window.__ModuleLoader__.load({
         loadEvidence: '加载证据',
         reportPreview: '报告预览',
         loadReport: '加载报告',
+        environment: '隔离环境',
+        environmentHint: '隔离提供者诊断（检测到 ≠ 已隔离）',
+        refreshEnvironment: '刷新环境',
+        loadingEnvironment: '正在探测提供者…',
+        severity: '严重度',
+        verification: '验证级别',
+        all: '全部',
+        reportFormat: '格式',
         actionFailed: '操作失败',
         probe: '探测工具',
         probing: '探测中…',
@@ -173,6 +189,11 @@ window.__ModuleLoader__.load({
       const [report, setReport] = useState(null)
       const [toolProbe, setToolProbe] = useState(null)
       const [probing, setProbing] = useState(false)
+      const [environment, setEnvironment] = useState(null)
+      const [environmentLoading, setEnvironmentLoading] = useState(false)
+      const [evidenceSeverity, setEvidenceSeverity] = useState('')
+      const [evidenceVerification, setEvidenceVerification] = useState('')
+      const [reportFormat, setReportFormat] = useState('markdown')
       const withSession = useCallback((url) => (sessionId ? `${url}${url.includes('?') ? '&' : '?'}session=${encodeURIComponent(String(sessionId))}` : url), [sessionId])
 
       const postAction = useCallback(async (payload) => {
@@ -251,28 +272,51 @@ window.__ModuleLoader__.load({
         }
       }, [])
 
-      const loadEvidence = useCallback(async (taskId) => {
+      const loadEvidence = useCallback(async (taskId, filters = {}) => {
+        const severity = filters.severity ?? evidenceSeverity
+        const verification = filters.verification ?? evidenceVerification
+        const params = new URLSearchParams({ taskId: String(taskId) })
+        if (severity) params.set('severity', severity)
+        if (verification) params.set('verification', verification)
         try {
-          const response = await fetch(withSession(`/armorbreak/evidence?taskId=${encodeURIComponent(taskId)}`), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+          const response = await fetch(withSession(`/armorbreak/evidence?${params.toString()}`), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
           const data = await response.json().catch(() => ({}))
           if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`)
           setEvidence(data)
         } catch (cause) {
           setActionError(String(cause && cause.message ? cause.message : cause))
         }
-      }, [])
+      }, [withSession, evidenceSeverity, evidenceVerification])
 
-      const loadReport = useCallback(async (taskId) => {
+      const applyEvidenceFilters = useCallback((taskId, severity, verification) => {
+        setEvidenceSeverity(severity)
+        setEvidenceVerification(verification)
+        void loadEvidence(taskId, { severity, verification })
+      }, [loadEvidence])
+
+      const loadReport = useCallback(async (taskId, format = reportFormat) => {
         setReport({ loading: true })
         try {
-          const response = await fetch(withSession(`/armorbreak/report?taskId=${encodeURIComponent(taskId)}&format=markdown`), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+          const response = await fetch(withSession(`/armorbreak/report?taskId=${encodeURIComponent(taskId)}&format=${encodeURIComponent(format)}`), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
           const data = await response.json().catch(() => ({}))
           if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`)
           setReport(data)
         } catch (cause) {
           setReport({ error: String(cause && cause.message ? cause.message : cause) })
         }
-      }, [])
+      }, [withSession, reportFormat])
+
+      const loadEnvironment = useCallback(async () => {
+        setEnvironmentLoading(true)
+        try {
+          const response = await fetch(withSession('/armorbreak/environment'), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+          if (response.ok) setEnvironment(await response.json())
+        } catch {
+          /* keep previous provider snapshot */
+        } finally {
+          setEnvironmentLoading(false)
+        }
+      }, [withSession])
 
       const loadWorkflows = useCallback(async () => {
         try {
@@ -288,6 +332,10 @@ window.__ModuleLoader__.load({
       useEffect(() => {
         if (open) void loadWorkflows()
       }, [open, loadWorkflows])
+
+      useEffect(() => {
+        if (open && tab === 'tools') void loadEnvironment()
+      }, [open, tab, loadEnvironment])
 
       const capabilityCount = state && state.registry ? state.registry.capabilities : 0
       const taskCount = state && Array.isArray(state.tasks) ? state.tasks.length : 0
@@ -383,6 +431,33 @@ window.__ModuleLoader__.load({
               task.stats?.evidence > 0 ? h('button', { type: 'button', style: tabStyle(false), onClick: () => void loadEvidence(task.id) }, t.loadEvidence) : null,
               task.report ? h('button', { type: 'button', style: tabStyle(false), onClick: () => void loadReport(task.id) }, t.loadReport) : null,
             ),
+            h('div', { style: { display: 'flex', gap: 4, flexWrap: 'wrap', alignItems: 'center' } },
+              h('span', { style: muted }, `${t.severity}:`),
+              ...['', 'critical', 'high', 'medium', 'low'].map((value) => h('button', {
+                key: value || 'all',
+                type: 'button',
+                style: tabStyle(evidenceSeverity === value),
+                onClick: () => applyEvidenceFilters(task.id, value, evidenceVerification),
+              }, value || t.all)),
+            ),
+            h('div', { style: { display: 'flex', gap: 4, flexWrap: 'wrap', alignItems: 'center' } },
+              h('span', { style: muted }, `${t.verification}:`),
+              ...['', 'observed', 'hypothesis'].map((value) => h('button', {
+                key: value || 'all',
+                type: 'button',
+                style: tabStyle(evidenceVerification === value),
+                onClick: () => applyEvidenceFilters(task.id, evidenceSeverity, value),
+              }, value || t.all)),
+            ),
+            task.report ? h('div', { style: { display: 'flex', gap: 4, flexWrap: 'wrap', alignItems: 'center' } },
+              h('span', { style: muted }, `${t.reportFormat}:`),
+              ...['markdown', 'html'].map((format) => h('button', {
+                key: format,
+                type: 'button',
+                style: tabStyle(reportFormat === format),
+                onClick: () => { setReportFormat(format); void loadReport(task.id, format) },
+              }, format)),
+            ) : null,
             actionError ? h('div', { style: { color: 'var(--dsw-alias-state-error-primary)' } }, `${t.actionFailed}: ${actionError}`) : null,
             evidence
               ? h('div', { style: { display: 'grid', gap: 2 } },
@@ -451,6 +526,19 @@ window.__ModuleLoader__.load({
           { style: { display: 'grid', gap: 6 } },
           h('div', { style: muted }, `${t.isolation}: ${isolation ? isolation.label : t.unavailable}`),
           isolation && isolation.state ? h('div', { style: muted }, `${t.status}: ${isolation.state}${isolation.selfTested ? '' : ` · ${t.notProbed}`}`) : null,
+          h('div', { style: { display: 'grid', gap: 2, borderTop: '1px solid var(--dsw-alias-border-l1)', paddingTop: 6 } },
+            h('div', { style: { display: 'flex', gap: 6, alignItems: 'center' } },
+              h('div', { style: sectionTitle }, t.environment),
+              h('button', { type: 'button', style: tabStyle(false), disabled: environmentLoading, onClick: () => void loadEnvironment() }, environmentLoading ? t.loadingEnvironment : t.refreshEnvironment),
+            ),
+            environment
+              ? h('div', { style: { display: 'grid', gap: 2 } },
+                  ...(environment.providers ?? []).map((provider) => h('div', { key: provider.id, style: { ...muted, fontSize: 11.5 } }, `${provider.title}: ${provider.state}${provider.version ? ` · ${provider.version}` : ''} — ${provider.reason}`)),
+                  h('div', { style: { ...muted, fontSize: 11.5 } }, `L1: ${environment.l1?.available ? '可用（已自检）' : `未就绪（${environment.l1?.state ?? 'unavailable'}）`} — ${environment.l1?.reason ?? ''}`),
+                  environment.wsl2Note ? h('div', { style: { ...muted, fontSize: 11 } }, environment.wsl2Note) : null,
+                )
+              : h('div', { style: muted }, t.environmentHint),
+          ),
           h('div', { style: { display: 'flex', gap: 6 } },
             h('button', {
               type: 'button',

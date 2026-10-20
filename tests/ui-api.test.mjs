@@ -18,7 +18,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 import { ArmorBreakRuntime } from '../lib/core/runtime.js'
-import { createActionHandler, createEvidenceHandler, createReportHandler, createStateHandler, createTasksHandler, createToolsHandler } from '../index.js'
+import { createActionHandler, createEnvironmentHandler, createEvidenceHandler, createReportHandler, createStateHandler, createTasksHandler, createToolsHandler } from '../index.js'
 
 function fakeResponse() {
   const captured = { status: null, headers: null, body: '', json: null }
@@ -71,6 +71,15 @@ function fakeRuntime(overrides = {}) {
     lastWorkspace: 'C:/work',
     defaultWorkspace: () => 'C:/work',
     stateSummary: async () => state,
+    isolationProviders: {
+      diagnose: async () => ({
+        generatedAt: '2026-10-20T00:00:00.000Z',
+        providers: [{ id: 'docker', title: 'Docker', state: 'DaemonReady', reason: 'daemon up, not self-tested', version: '27.0.0', isolation: 'container' }],
+        recommended: 'docker',
+        l1: { available: false, verified: false, provider: 'docker', state: 'DaemonReady', reason: 'not self-tested' },
+        wsl2Note: 'WSL2 is not a security sandbox.',
+      }),
+    },
     queue: { status: () => null, snapshot: () => [] },
     workspace: () => ({
       taskStore: {
@@ -163,11 +172,18 @@ test('task and tool routes return read-only JSON for loopback callers', async ()
   assert.equal(toolsRes.captured.status, 200)
   assert.equal(toolsRes.captured.json.domains[0].domain, 'sast')
   assert.equal(toolsRes.captured.json.isolation.selfTested, false)
+
+  const environmentRes = fakeResponse()
+  await createEnvironmentHandler(runtime)(req('/armorbreak/environment'), environmentRes)
+  assert.equal(environmentRes.captured.status, 200)
+  assert.equal(environmentRes.captured.json.providers[0].state, 'DaemonReady')
+  assert.equal(environmentRes.captured.json.l1.available, false, 'daemon-ready is not verified isolation')
+  assert.equal(environmentRes.captured.json.route, '/armorbreak/environment')
 })
 
 test('all workbench routes enforce loopback, GET/HEAD and reject workspace enumeration', async () => {
   const { runtime } = fakeRuntime()
-  for (const handler of [createStateHandler(runtime), createTasksHandler(runtime), createToolsHandler(runtime)]) {
+  for (const handler of [createStateHandler(runtime), createTasksHandler(runtime), createToolsHandler(runtime), createEnvironmentHandler(runtime)]) {
     const remote = fakeResponse()
     await handler(req('/armorbreak/tasks', { remoteAddress: '10.0.0.9' }), remote)
     assert.equal(remote.captured.status, 403)

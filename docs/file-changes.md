@@ -2,8 +2,8 @@
 
 - 生成方式：`node scripts/file-changes.mjs`（遍历交付目录，排除 node_modules/.armorbreak）
 - 文件总数：**179**
-- 总大小：**3322.4 KiB**
-- 总行数：**54045**（含注释/文档）
+- 总大小：**3330.4 KiB**
+- 总行数：**54185**（含注释/文档）
 - 运行时依赖：**0**（仅 Node 内置模块；无构建步骤）
 
 ## 能力清单（由 lib/analyzers/*/manifest.js 自动统计）
@@ -27,13 +27,13 @@
 | `.gitignore` | 394 | 19 |  |
 | `benchmarks/bench.mjs` | 12112 | 265 | 零依赖可复现微基准脚本 |
 | `benchmarks/results.json` | 4174 | 177 | 参考主机基准原始数据 |
-| `CHANGELOG.md` | 18680 | 212 | 变更记录（1.0.4） |
-| `client.js` | 27626 | 546 | 浏览器半：composer 状态卡（能力/隔离/策略/任务摘要） |
+| `CHANGELOG.md` | 18849 | 213 | 变更记录（1.0.4） |
+| `client.js` | 32777 | 634 | 浏览器半：composer 状态卡（能力/隔离/策略/任务摘要） |
 | `CODE_OF_CONDUCT.md` | 1478 | 35 | 社区行为准则 |
 | `CONTRIBUTING.md` | 3078 | 69 | 贡献指南与能力适配器开发流程 |
 | `cordis.patch.yml` | 6517 | 95 | 组合包 patch：Host 行 + preset-armorbreak 模式声明 |
 | `docs/acceptance-v1.1.0.md` | 12622 | 172 |  |
-| `docs/acceptance-v1.2.0.md` | 907 | 20 |  |
+| `docs/acceptance-v1.2.0.md` | 1231 | 22 |  |
 | `docs/acceptance.md` | 16196 | 235 | 验收报告（含实际测试与验证结果） |
 | `docs/acceptance/gate-b-findings.json` | 97583 | 2757 |  |
 | `docs/acceptance/gate-b-report.md` | 107463 | 1579 |  |
@@ -52,7 +52,7 @@
 | `docs/CONTRACT.md` | 7935 | 141 | 分析能力/适配器开发契约 |
 | `docs/installation.md` | 4482 | 78 | 安装/启用/卸载/故障排查 |
 | `docs/isolation-providers.md` | 2321 | 50 |  |
-| `docs/known-issues.md` | 9230 | 79 | 已知问题与限制（诚实清单） |
+| `docs/known-issues.md` | 9263 | 79 | 已知问题与限制（诚实清单） |
 | `docs/marketplace.md` | 5589 | 104 | DeepSeek Harness 生态、插件市场与分发指引 |
 | `docs/media/report-deliverables.webp` | 125032 | 438 | 报告交付物真实截图 |
 | `docs/media/status-card.png` | 96465 | 355 | 模式状态卡真实截图 |
@@ -64,7 +64,7 @@
 | `docs/releases/v1.0.4.md` | 2561 | 33 |  |
 | `docs/releases/v1.1.0.md` | 2029 | 22 |  |
 | `docs/releases/v1.1.1.md` | 2478 | 50 |  |
-| `docs/releases/v1.2.0-alpha.1.md` | 1641 | 34 |  |
+| `docs/releases/v1.2.0-alpha.1.md` | 1815 | 36 |  |
 | `docs/roadmap.md` | 2770 | 38 | 后续扩展路线图 |
 | `docs/security-boundary-review.md` | 6464 | 53 |  |
 | `docs/security-model.md` | 5950 | 78 | 四级能力控制、授权/审批、路径与命令、隔离、审计 |
@@ -81,7 +81,7 @@
 | `fixtures/gate-b-sample/src/config.js` | 352 | 9 |  |
 | `fixtures/gate-b-sample/src/crypto.js` | 301 | 12 |  |
 | `icon.svg` | 787 | 14 | 插件图标 |
-| `index.js` | 19669 | 466 | Host 半：只读状态路由 /armorbreak/state，webServer 注入 |
+| `index.js` | 20979 | 497 | Host 半：只读状态路由 /armorbreak/state，webServer 注入 |
 | `lib/analyzers/android/axml.js` | 18654 | 498 | 分析能力实现（按域） |
 | `lib/analyzers/android/dex.js` | 12033 | 324 | 分析能力实现（按域） |
 | `lib/analyzers/android/manifest.js` | 69922 | 1533 | 分析能力实现（按域） |
@@ -198,7 +198,7 @@
 | `tests/task-queue.test.mjs` | 4702 | 111 | 自动化测试（node:test） |
 | `tests/tools-integration.test.mjs` | 9760 | 199 | 自动化测试（node:test） |
 | `tests/tools-lossless.test.mjs` | 5747 | 131 | 自动化测试（node:test） |
-| `tests/ui-api.test.mjs` | 12866 | 284 | 自动化测试（node:test） |
+| `tests/ui-api.test.mjs` | 13860 | 300 | 自动化测试（node:test） |
 | `tests/web.test.mjs` | 17832 | 434 | 自动化测试（node:test） |
 | `tests/workflow-dag.test.mjs` | 6076 | 128 | 自动化测试（node:test） |
 | `tools.js` | 59543 | 1005 | preset 子插件：注册 8 个模型工具并桥接平台审批 |

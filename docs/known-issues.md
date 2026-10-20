@@ -75,4 +75,4 @@
 
 - 34. 隔离提供者 manager 目前只用于 `armorbreak_environment` 诊断，runner 的 L1 门仍由 HealthService 的 Docker-only 检测控制；Podman/WSL2 不会因此获得执行许可。
 - 35. `binary.behavior` 是静态导入/结构启发式，评分不代表恶意或漏洞；加壳/动态解析会降低覆盖。
-- 36. 本增量未包含 Ghidra/JADX/TShark/Syft 适配器、UI 环境页与证据筛选；这些仍是 v1.2.0 的未完成项。
+- 36. 本增量未包含 Ghidra/JADX/TShark/Syft 适配器；UI 环境页/证据筛选/报告格式已接入但尚未在重启后的真实桌面做视觉复验。
