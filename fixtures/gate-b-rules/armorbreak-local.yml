@@ -1,0 +1,64 @@
+# Local Semgrep rule set for ArmorBreak Gate B.
+# ArmorBreak never downloads rules: this file is passed via options.config.
+# Rules are intentionally small and match the local gate-b-sample fixture.
+rules:
+  - id: armorbreak.js.eval-dynamic
+    languages:
+      - javascript
+    severity: ERROR
+    message: Dynamic eval() executes user-controlled code (CWE-95).
+    metadata:
+      cwe:
+        - CWE-95
+      category: injection
+    patterns:
+      - pattern: eval($X)
+      - pattern-not: eval("...")
+
+  - id: armorbreak.js.child-process-concat
+    languages:
+      - javascript
+    severity: ERROR
+    message: child_process.exec() with a concatenated command string allows command injection (CWE-78).
+    metadata:
+      cwe:
+        - CWE-78
+      category: injection
+    pattern-either:
+      - pattern: exec($A + $B, ...)
+      - pattern: execSync($A + $B, ...)
+
+  - id: armorbreak.js.sql-concat
+    languages:
+      - javascript
+    severity: WARNING
+    message: SQL query built by string concatenation allows SQL injection (CWE-89).
+    metadata:
+      cwe:
+        - CWE-89
+      category: injection
+    pattern: $DB.query($A + $B)
+
+  - id: armorbreak.js.weak-hash-md5
+    languages:
+      - javascript
+    severity: WARNING
+    message: MD5 is a weak hash and must not be used for security decisions (CWE-327).
+    metadata:
+      cwe:
+        - CWE-327
+      category: cryptography
+    pattern-either:
+      - pattern: $CRYPTO.createHash("md5")
+      - pattern: $CRYPTO.createHash('md5')
+
+  - id: armorbreak.secret.aws-access-key
+    languages:
+      - javascript
+    severity: WARNING
+    message: Hardcoded AWS access key ID (CWE-798).
+    metadata:
+      cwe:
+        - CWE-798
+      category: secrets
+    pattern-regex: 'AKIA[0-9A-Z]{16}'

@@ -3,10 +3,12 @@
 ## Unreleased — v1.1.0 Stage B（分支 `feature/armorbreak-v1.1.0-stage-b`）
 
 - **外部工具适配器首批**：新增 `sast.semgrep`、`sast.trivy`（L0，目录目标）。JSON 归一化到统一 findings/evidence（severity/confidence/verification 分离、位置/规则/证据引用、默认 hypothesis、输出上限、畸形 JSON 拒绝、缺失工具返回安装指引；不自动下载规则/漏洞库）。
-- **测试**：新增 `tests/external-adapters.test.mjs`（7 用例）；全套 **160/160 通过**；适配器行覆盖 99.41%。
+- **Gate B 真实运行通过**：本机安装 Semgrep 1.181.0（`D:\dsh-tools\semgrep-venv`）与 Trivy 0.76.0（`D:\dsh-tools\trivy`，漏洞库约 1.56 GB 在 D:），`node scripts/verify-gate-b.mjs` 真实扫描 `fixtures/gate-b-sample`：capability 层 6 + 67 findings，runner 层任务 COMPLETED、证据链 150 条 verified；产物 `docs/acceptance/gate-b-*`，详见 `docs/acceptance-v1.1.0.md` §2.2。
+- **修复（Gate B 实测发现）**：外部工具子进程环境白名单补 `LOCALAPPDATA`/`APPDATA`（否则 Trivy 在适配器内无法定位本地漏洞库）；`HealthService` 新增独立 `versionTimeoutMs`（默认 5s，Semgrep Python 冷启动不再被 1.5s 探活超时误判）。
+- **测试**：新增 `tests/external-adapters.test.mjs`（7 用例）；全套 **160 用例：159 通过 + 1 跳过**（“缺失工具”路径在 Semgrep 已安装时按设计跳过；安装前 160/160）；适配器行覆盖 99.41%。
 - **L1 Docker 真机验证**：`scripts/verify-l1.mjs` 在 Docker 29.8.1 + busybox digest 上验证 exit=0、`uid=65534`、`/sample` 只读、容器无 eth（仅 lo）；证据/报告落盘，结果见 `docs/acceptance/l1-docker-verification.json`。
 - 能力数 39 → **41**（8 域不变）；工具数仍为 9。
-- **未完成**：Gate B 需要真实 Semgrep/Trivy CLI 运行；本机未安装，真实调用未验证。Ghidra/JADX/TShark/Syft 未实现。
+- **未完成**：Ghidra/JADX/TShark/Syft 未实现；Linux/macOS 真实安装未验证。Gate B 已在 Windows 本机通过。
 
 ## 1.0.4 — 2026-10-20
 

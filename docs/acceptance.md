@@ -213,7 +213,7 @@ core-concurrency 3、runner-directory 5、hardening 5（合计 146）。
 - 状态卡在浏览器中的视觉呈现（无浏览器控制；只验证了路由 200、boot 图包含模块）。
 - L1 容器实际执行路径（本机未运行 Docker）；仅验证拒绝分支 + 代码路径 + 注入隔离提供者后的 Logic 测试。
 - L2 真实对外发包（无授权实验室目标）；仅验证策略与实现。
-- 外部工具（Ghidra/JADX/Semgrep/TSHark 等）输出未接入报告（仅探测与指引）。
+- 外部工具：Semgrep/Trivy 已在 v1.1.0 Gate B 真实接入并验证（见 `docs/acceptance-v1.1.0.md` §2.2）；Ghidra/JADX/TShark 输出仍未接入报告（仅探测与指引）。
 - macOS/Linux 真机未实测。
 
 ## 7. 复现方式

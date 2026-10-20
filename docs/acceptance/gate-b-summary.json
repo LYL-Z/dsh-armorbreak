@@ -1,0 +1,179 @@
+{
+  "gate": "B",
+  "version": "v1.1.0-stage-b",
+  "generatedAt": "2026-10-20T13:25:14.606Z",
+  "workspace": "D:/dsh-ABM/armorbreak",
+  "fixture": {
+    "path": "D:/dsh-ABM/armorbreak/fixtures/gate-b-sample",
+    "sha256": {
+      "sha256": "c7d39890f1d8a772767f126d989af515709d340752916493186b3dafbf21a675",
+      "files": [
+        ".env",
+        "Dockerfile",
+        "package-lock.json",
+        "package.json",
+        "requirements.txt",
+        "src/app.js",
+        "src/config.js",
+        "src/crypto.js"
+      ]
+    }
+  },
+  "rules": {
+    "path": "D:/dsh-ABM/armorbreak/fixtures/gate-b-rules/armorbreak-local.yml",
+    "sha256": "cb449ccc8b763b60abec5c87fabd81194749e5981b35cbef1df222b2ad7c8efe"
+  },
+  "tools": {
+    "semgrep": {
+      "found": true,
+      "path": "D:/dsh-tools/semgrep-venv/Scripts/semgrep.exe",
+      "version": "1.181.0"
+    },
+    "trivy": {
+      "found": true,
+      "path": "D:/dsh-tools/trivy/trivy.exe",
+      "version": "Version: 0.76.0"
+    }
+  },
+  "capabilityLayer": {
+    "semgrep": {
+      "summary": "Semgrep（1.181.0）扫描 D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample：6 条结果，归一化 6 条 findings（全部 hypothesis）",
+      "findings": 6,
+      "rules": [
+        "fixtures.gate-b-rules.armorbreak.js.child-process-concat",
+        "fixtures.gate-b-rules.armorbreak.js.eval-dynamic",
+        "fixtures.gate-b-rules.armorbreak.js.sql-concat",
+        "fixtures.gate-b-rules.armorbreak.js.weak-hash-md5",
+        "fixtures.gate-b-rules.armorbreak.secret.aws-access-key"
+      ],
+      "expectedRulesMissing": [],
+      "bySeverity": {
+        "critical": 2,
+        "high": 4
+      },
+      "toolVersion": "1.181.0",
+      "resultCount": 6
+    },
+    "trivy": {
+      "summary": "Trivy 扫描 D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample：3 个结果集，归一化 67 条 findings（scanners=vuln,secret, severity=HIGH,CRITICAL，全部 hypothesis）",
+      "findings": 67,
+      "resultKinds": [
+        "lang-pkgs",
+        "secret"
+      ],
+      "normalizedLocationKinds": [
+        "dependency",
+        "secret"
+      ],
+      "bySeverity": {
+        "high": 53,
+        "critical": 14
+      },
+      "resultCount": 3,
+      "offlineDb": true,
+      "dbDownloadAllowed": false
+    }
+  },
+  "runnerLayer": {
+    "taskId": "task_mvgptyn7_8a3bfeab",
+    "state": "COMPLETED",
+    "targetPath": "D:/dsh-ABM/armorbreak/fixtures/gate-b-sample",
+    "targetKind": "directory",
+    "riskMax": "L0",
+    "stats": {
+      "evidence": 150,
+      "findings": 73,
+      "stepsDone": 2,
+      "stepsFailed": 0
+    },
+    "steps": [
+      {
+        "id": "semgrep",
+        "capabilityId": "sast.semgrep",
+        "status": "DONE",
+        "error": null,
+        "durationMs": 3285,
+        "summary": "Semgrep（1.181.0）扫描 D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample：6 条结果，归一化 6 条 findings（全部 hypothesis）",
+        "evidence": 8,
+        "findings": 6
+      },
+      {
+        "id": "trivy",
+        "capabilityId": "sast.trivy",
+        "status": "DONE",
+        "error": null,
+        "durationMs": 1141,
+        "summary": "Trivy 扫描 D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample：3 个结果集，归一化 67 条 findings（scanners=vuln,secret, severity=HIGH,CRITICAL，全部 hypothesis）",
+        "evidence": 69,
+        "findings": 67
+      }
+    ],
+    "stateHistory": [
+      {
+        "state": "CREATED",
+        "reason": "task created"
+      },
+      {
+        "state": "SCOPE_VALIDATION",
+        "reason": "validating authorization scope"
+      },
+      {
+        "state": "ENVIRONMENT_CHECK",
+        "reason": "scope validated"
+      },
+      {
+        "state": "PLANNING",
+        "reason": "environment checked; riskMax=L0"
+      },
+      {
+        "state": "EXECUTING",
+        "reason": "planned; offline L0 analysis"
+      },
+      {
+        "state": "COLLECTING_EVIDENCE",
+        "reason": "step evidence collected"
+      },
+      {
+        "state": "EXECUTING",
+        "reason": "next step"
+      },
+      {
+        "state": "COLLECTING_EVIDENCE",
+        "reason": "step evidence collected"
+      },
+      {
+        "state": "VERIFYING",
+        "reason": "all steps settled"
+      },
+      {
+        "state": "REPORTING",
+        "reason": "generating report"
+      },
+      {
+        "state": "COMPLETED",
+        "reason": "analysis completed"
+      }
+    ],
+    "report": {
+      "path": "D:/dsh-ABM/armorbreak/.armorbreak/tasks/task_mvgptyn7_8a3bfeab/reports/gate-b-real-semgrep-trivy-cli-through-stage-b-adapters_2026-10-20_13-25-14.md",
+      "sha256": "20ed2697cf798abe72903f529253fc0166b9f4a4e0cb73ecddefbc3abaf5c0f2"
+    },
+    "evidence": {
+      "chainValid": true,
+      "records": 150,
+      "brokenAt": null
+    }
+  },
+  "findings": {
+    "total": 73,
+    "storedByRunner": 73
+  },
+  "artifacts": {
+    "gate-b-report.md": {
+      "sha256": "20ed2697cf798abe72903f529253fc0166b9f4a4e0cb73ecddefbc3abaf5c0f2",
+      "bytes": 107463
+    }
+  },
+  "problems": [],
+  "result": "PASS"
+}
