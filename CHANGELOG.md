@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## Unreleased — v1.1.0 Stage D2（分支 feature/armorbreak-v1.1.0-stage-d2）
+
+### 工作台补全（Stage D）
+
+- **写操作 API**：`POST /armorbreak/actions`，支持 `create / cancel / retry / resume`。仅 loopback、仅 POST、要求 `x-armorbreak-ui: 1` + `application/json`（同源本地 UI 边界），body ≤ 64 KiB；浏览器没有平台审批通道，因此只允许 L0 工作流/任务，L1/L2 一律拒绝并提示用对话工具。
+- **任务详情 UI**：新建任务表单（工作流/目标路径/标题）、取消/重试/恢复按钮、证据加载、报告预览（纯文本渲染，HTML 不注入 DOM）。
+- **证据中心**：`GET /armorbreak/evidence?taskId=&severity=&verification=` 返回有界证据元数据（标题/kind/at/≤300 字符摘录）、finding 行（含 ≤500 字符描述）、过滤计数、证据哈希链状态；上限 200 条并标记 truncated。
+- **报告预览**：`GET /armorbreak/report?taskId=&format=markdown|html` 返回 ≤256 KiB 文本、sha256 与路径；不提供任意外部路径读取（只读任务已生成的报告）。
+- **工具中心探测**：`GET /armorbreak/tools?probe=1` 复用 HealthService 做有界版本探测，UI 按钮触发并展示 found/version/path；未探测时仍标记“未探测”，不谎报已安装。
+- 测试：ui-api 新增 3 个用例（写操作边界、创建→执行→证据→报告→取消、未知工作流），全套 **177/177 通过**。
+- 未完成/未验证：真实浏览器视觉与交互未验证（无浏览器控制）；会话级工作区绑定仍为 MRU；工作台写操作仅 L0；无真实模型 GUI E2E。
+
 ## Unreleased — v1.1.0 Stage C/D/E（分支 feature/armorbreak-v1.1.0-stage-cde）
 
 ### Workflow engine (Stage C)

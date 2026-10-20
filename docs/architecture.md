@@ -118,3 +118,12 @@ armorbreak_analyze / armorbreak_workflow / runner.runCapability
 - **Task states**: WAITING / PAUSED / INTERRUPTED / RECOVERABLE added; stale RUNNING steps from a previous process are reset to PENDING.
 - **Workbench routes** (loopback-only, read-only): `/armorbreak/state`, `/armorbreak/tasks` (list + `?id=` detail), `/armorbreak/tools`; presentation model in `lib/core/presentation.js`, browser card in `client.js` (overview/tasks/tools tabs).
 - **E2E**: `tests/e2e-tool-flow.test.mjs` drives the mock-model tool sequence; `scripts/verify-l1.mjs` validates the real Docker path; CI has a dedicated `live-docker` job.
+
+
+## Stage D2 additions
+
+- `POST /armorbreak/actions` (create/cancel/retry/resume; loopback + `x-armorbreak-ui: 1` + JSON, L0 only) — the browser has no approval channel, so L1/L2 stay in the conversation tools.
+- `GET /armorbreak/evidence?taskId=&severity=&verification=` — bounded evidence metadata, finding rows, hash-chain status.
+- `GET /armorbreak/report?taskId=&format=markdown|html` — bounded report text for preview (HTML returned as text, never injected).
+- `GET /armorbreak/tools?probe=1` — bounded external-tool version probe; default stays "not probed".
+- Browser workbench: create-task form, cancel/retry/resume, evidence/report preview, tool probe, still MRU workspace binding.
