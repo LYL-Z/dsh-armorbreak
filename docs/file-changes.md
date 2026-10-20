@@ -1,9 +1,9 @@
 # 完整文件变更清单（v1.0.4）
 
 - 生成方式：`node scripts/file-changes.mjs`（遍历交付目录，排除 node_modules/.armorbreak）
-- 文件总数：**169**
-- 总大小：**2338.2 KiB**
-- 总行数：**49562**（含注释/文档）
+- 文件总数：**171**
+- 总大小：**2342.1 KiB**
+- 总行数：**49617**（含注释/文档）
 - 运行时依赖：**0**（仅 Node 内置模块；无构建步骤）
 
 ## 能力清单（由 lib/analyzers/*/manifest.js 自动统计）
@@ -13,7 +13,6 @@
 | android | 5：`android.apk_structure`、`android.manifest`、`android.dex`、`android.signing`、`android.findings` |
 | binary | 5：`binary.identify`、`binary.strings`、`binary.entropy`、`binary.headers`、`binary.structure` |
 | ctf | 5：`ctf.classify`、`ctf.decode`、`ctf.hash_id`、`ctf.crypto_basics`、`ctf.flag_scan` |
-| external | 0： |
 | forensics | 6：`forensics.hash`、`forensics.metadata`、`forensics.timeline`、`forensics.ioc`、`forensics.yara_lite`、`forensics.filetype` |
 | live | 2：`live.http_probe`、`live.container_exec` |
 | network | 7：`network.pcap_overview`、`network.flows`、`network.dns`、`network.tls`、`network.http`、`network.iocs`、`network.anomalies` |
@@ -28,8 +27,8 @@
 | `.gitignore` | 394 | 19 |  |
 | `benchmarks/bench.mjs` | 12112 | 265 | 零依赖可复现微基准脚本 |
 | `benchmarks/results.json` | 4174 | 177 | 参考主机基准原始数据 |
-| `CHANGELOG.md` | 17278 | 194 | 变更记录（1.0.4） |
-| `client.js` | 27398 | 543 | 浏览器半：composer 状态卡（能力/隔离/策略/任务摘要） |
+| `CHANGELOG.md` | 17760 | 202 | 变更记录（1.0.4） |
+| `client.js` | 27626 | 546 | 浏览器半：composer 状态卡（能力/隔离/策略/任务摘要） |
 | `CODE_OF_CONDUCT.md` | 1478 | 35 | 社区行为准则 |
 | `CONTRIBUTING.md` | 3078 | 69 | 贡献指南与能力适配器开发流程 |
 | `cordis.patch.yml` | 6517 | 95 | 组合包 patch：Host 行 + preset-armorbreak 模式声明 |
@@ -40,7 +39,8 @@
 | `docs/acceptance/gate-b-summary.json` | 5038 | 180 |  |
 | `docs/acceptance/gate-b-task.json` | 9160 | 296 |  |
 | `docs/acceptance/l1-docker-verification.json` | 1411 | 16 |  |
-| `docs/adapter-contract-v2.md` | 5317 | 76 |  |
+| `docs/acceptance/v1.1.0-gui-verification.md` | 1631 | 11 |  |
+| `docs/adapter-contract-v2.md` | 5322 | 76 |  |
 | `docs/architecture.md` | 8825 | 130 | 架构设计（分层、Cordis 组合、执行管线、数据模型） |
 | `docs/audit/environment-audit.md` | 11323 | 118 | Phase 0 环境与架构审计报告 |
 | `docs/benchmarks.md` | 7753 | 154 | 性能基准：环境、数据、方法、复现 |
@@ -59,6 +59,7 @@
 | `docs/releases/v1.0.3.md` | 1765 | 51 |  |
 | `docs/releases/v1.0.4.md` | 2561 | 33 |  |
 | `docs/releases/v1.1.0.md` | 2029 | 22 |  |
+| `docs/releases/v1.1.1.md` | 1475 | 32 |  |
 | `docs/roadmap.md` | 2770 | 38 | 后续扩展路线图 |
 | `docs/security-boundary-review.md` | 6464 | 53 |  |
 | `docs/security-model.md` | 5950 | 78 | 四级能力控制、授权/审批、路径与命令、隔离、审计 |
@@ -98,7 +99,6 @@
 | `lib/analyzers/ctf/flagscan.js` | 4985 | 137 | 分析能力实现（按域） |
 | `lib/analyzers/ctf/hash_id.js` | 10973 | 284 | 分析能力实现（按域） |
 | `lib/analyzers/ctf/manifest.js` | 22537 | 501 | 分析能力实现（按域） |
-| `lib/analyzers/external/adapters.js` | 17501 | 341 | 分析能力实现（按域） |
 | `lib/analyzers/forensics/filetype.js` | 18532 | 295 | 分析能力实现（按域） |
 | `lib/analyzers/forensics/formats.js` | 15383 | 369 | 分析能力实现（按域） |
 | `lib/analyzers/forensics/hashes.js` | 2415 | 55 | 分析能力实现（按域） |
@@ -123,7 +123,8 @@
 | `lib/analyzers/network/util.js` | 13594 | 365 | 分析能力实现（按域） |
 | `lib/analyzers/sast/common.js` | 14910 | 404 | 分析能力实现（按域） |
 | `lib/analyzers/sast/deps.js` | 26481 | 626 | 分析能力实现（按域） |
-| `lib/analyzers/sast/manifest.js` | 26368 | 560 | 分析能力实现（按域） |
+| `lib/analyzers/sast/external-adapters.js` | 17501 | 341 | 分析能力实现（按域） |
+| `lib/analyzers/sast/manifest.js` | 26367 | 560 | 分析能力实现（按域） |
 | `lib/analyzers/sast/patch.js` | 15759 | 303 | 分析能力实现（按域） |
 | `lib/analyzers/sast/rules.js` | 19545 | 591 | 分析能力实现（按域） |
 | `lib/analyzers/sast/sbom.js` | 5851 | 157 | 分析能力实现（按域） |
@@ -156,7 +157,7 @@
 | `locale/en.json` | 228 | 7 | 插件显示元数据（英文） |
 | `locale/zh.json` | 195 | 7 | 插件显示元数据（中文） |
 | `package.json` | 1783 | 79 | Bundle 清单（dsh.bundle.patch + dsh.client + 零依赖声明） |
-| `README.md` | 61338 | 1056 | 项目总览、安装、能力与安全模型摘要 |
+| `README.md` | 61494 | 1057 | 项目总览、安装、能力与安全模型摘要 |
 | `scripts/clean-temp.mjs` | 1714 | 59 | 清理测试临时目录脚本 |
 | `scripts/file-changes.mjs` | 6569 | 153 | 文件清单生成脚本 |
 | `scripts/verify-gate-b.mjs` | 13314 | 276 | 开发/交付脚本 |
@@ -178,7 +179,7 @@
 | `tests/core-runtime.test.mjs` | 13332 | 298 | 自动化测试（node:test） |
 | `tests/ctf.test.mjs` | 14890 | 309 | 自动化测试（node:test） |
 | `tests/e2e-tool-flow.test.mjs` | 3940 | 88 | 自动化测试（node:test） |
-| `tests/external-adapters.test.mjs` | 6810 | 175 | 自动化测试（node:test） |
+| `tests/external-adapters.test.mjs` | 6815 | 175 | 自动化测试（node:test） |
 | `tests/forensics.test.mjs` | 36002 | 835 | 自动化测试（node:test） |
 | `tests/hardening.test.mjs` | 4197 | 83 | 自动化测试（node:test） |
 | `tests/network.test.mjs` | 49114 | 1099 | 自动化测试（node:test） |
@@ -189,7 +190,7 @@
 | `tests/task-queue.test.mjs` | 4702 | 111 | 自动化测试（node:test） |
 | `tests/tools-integration.test.mjs` | 9723 | 198 | 自动化测试（node:test） |
 | `tests/tools-lossless.test.mjs` | 5690 | 130 | 自动化测试（node:test） |
-| `tests/ui-api.test.mjs` | 12860 | 284 | 自动化测试（node:test） |
+| `tests/ui-api.test.mjs` | 12866 | 284 | 自动化测试（node:test） |
 | `tests/web.test.mjs` | 17832 | 434 | 自动化测试（node:test） |
 | `tests/workflow-dag.test.mjs` | 6076 | 128 | 自动化测试（node:test） |
 | `tools.js` | 56665 | 962 | preset 子插件：注册 8 个模型工具并桥接平台审批 |
