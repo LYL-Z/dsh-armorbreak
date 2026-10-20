@@ -1,6 +1,6 @@
-# External Tool Adapter Contract v2 (design — not implemented in v1.0.4)
+# External Tool Adapter Contract v2 (first batch implemented)
 
-> 状态：**设计草案**。v1.0.4（Stage A）未实现任何外部工具适配器；现有 39 项能力仍为内置纯 JS 实现，外部工具仅做探测与安装指引。
+> 状态：**部分实现**。v1.1.0 Stage B 首批实现了 Semgrep / Trivy 的 JSON 归一化与 L0 能力（`sast.semgrep` / `sast.trivy`）；本机未安装这两个工具，真实 CLI 执行尚未验证（Gate B 未满足）。Ghidra/JADX/TShark/Syft 仍未实现。
 
 ## 1. 目标
 
@@ -48,3 +48,20 @@ interface ExternalToolAdapter {
 5. SBOM：Syft（CycloneDX JSON）。
 
 每步必须有正常/缺失/畸形输出/超时/取消五类测试，并在 Windows 与 Linux CI 上有明确 job。
+
+## 6. 首批实现状态（Stage B branch）
+
+| 项 | 状态 | 证据 |
+|---|---|---|
+| `sast.semgrep` capability | ✅ 实现（L0/directory） | `lib/analyzers/external/adapters.js`、`tests/external-adapters.test.mjs` |
+| Semgrep JSON 归一化 | ✅ 测试通过（夹具） | results[] → severity/confidence/hypothesis/location/sourceRule/evidence |
+| `sast.trivy` capability | ✅ 实现（L0/directory，默认 `--skip-db-update`） | 同上 |
+| Trivy JSON 归一化 | ✅ 测试通过（夹具） | Vulnerabilities/Secrets/Misconfigurations 三类 |
+| 畸形 JSON / 错误 schema | ✅ 明确拒绝 | `not a Semgrep report` / `not a Trivy report` |
+| 工具缺失 | ✅ 明确安装指引（fail-closed） | `EXTERNAL_TOOL_GUIDANCE` + 测试 |
+| 真实 Semgrep CLI 运行 | ❌ 未验证（未安装） | 需要 `semgrep --version` 与本地规则路径 |
+| 真实 Trivy CLI 运行 | ❌ 未验证（未安装） | 需要 `trivy --version` 与本地漏洞库 |
+| 超时/取消子进程 | ⚠️ 依赖 execFile timeout；未做真实工具取消测试 | 后续补 |
+| Ghidra/JADX/TShark/Syft | ❌ 未实现 | 路线图 |
+
+执行前置条件：`semgrep` / `trivy` 在 PATH；Semgrep 需 `options.config` 本地规则；Trivy 需本地 DB（默认 `--skip-db-update`，除非显式 `downloadDb: true` 且允许联网）。

@@ -79,11 +79,11 @@ const CODE_FILES = {
   [`${PROJECT}/asset.bin`]: Buffer.from([0, 1, 2, 3, 255]),
 };
 
-test('sast manifest shape: 5 offline capabilities with closed params schemas', () => {
+test('sast manifest shape: 7 offline capabilities with closed params schemas', () => {
   assert.equal(sastManifest.domain, 'sast');
   assert.deepEqual(
     sastManifest.capabilities.map((capability) => capability.id),
-    ['sast.scan', 'sast.secrets', 'sast.deps', 'sast.sbom', 'sast.patch_suggestion'],
+    ['sast.scan', 'sast.secrets', 'sast.deps', 'sast.sbom', 'sast.patch_suggestion', 'sast.semgrep', 'sast.trivy'],
   );
   for (const capability of sastManifest.capabilities) {
     assert.equal(capability.riskLevel, 'L0');

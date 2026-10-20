@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Unreleased — v1.1.0 Stage B（分支 `feature/armorbreak-v1.1.0-stage-b`）
+
+- **外部工具适配器首批**：新增 `sast.semgrep`、`sast.trivy`（L0，目录目标）。JSON 归一化到统一 findings/evidence（severity/confidence/verification 分离、位置/规则/证据引用、默认 hypothesis、输出上限、畸形 JSON 拒绝、缺失工具返回安装指引；不自动下载规则/漏洞库）。
+- **测试**：新增 `tests/external-adapters.test.mjs`（7 用例）；全套 **160/160 通过**；适配器行覆盖 99.41%。
+- **L1 Docker 真机验证**：`scripts/verify-l1.mjs` 在 Docker 29.8.1 + busybox digest 上验证 exit=0、`uid=65534`、`/sample` 只读、容器无 eth（仅 lo）；证据/报告落盘，结果见 `docs/acceptance/l1-docker-verification.json`。
+- 能力数 39 → **41**（8 域不变）；工具数仍为 9。
+- **未完成**：Gate B 需要真实 Semgrep/Trivy CLI 运行；本机未安装，真实调用未验证。Ghidra/JADX/TShark/Syft 未实现。
+
 ## 1.0.4 — 2026-10-20
 
 Stage A 安全维护（v1.1.0 Research Workbench 的第一阶段）。只修安全边界，不新增分析能力。

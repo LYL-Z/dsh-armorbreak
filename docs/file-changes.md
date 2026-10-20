@@ -1,9 +1,9 @@
 # 完整文件变更清单（v1.0.4）
 
 - 生成方式：`node scripts/file-changes.mjs`（遍历交付目录，排除 node_modules/.armorbreak）
-- 文件总数：**142**
-- 总大小：**1925.4 KiB**
-- 总行数：**40448**（含注释/文档）
+- 文件总数：**146**
+- 总大小：**1958.2 KiB**
+- 总行数：**41102**（含注释/文档）
 - 运行时依赖：**0**（仅 Node 内置模块；无构建步骤）
 
 ## 能力清单（由 lib/analyzers/*/manifest.js 自动统计）
@@ -13,10 +13,11 @@
 | android | 5：`android.apk_structure`、`android.manifest`、`android.dex`、`android.signing`、`android.findings` |
 | binary | 5：`binary.identify`、`binary.strings`、`binary.entropy`、`binary.headers`、`binary.structure` |
 | ctf | 5：`ctf.classify`、`ctf.decode`、`ctf.hash_id`、`ctf.crypto_basics`、`ctf.flag_scan` |
+| external | 0： |
 | forensics | 6：`forensics.hash`、`forensics.metadata`、`forensics.timeline`、`forensics.ioc`、`forensics.yara_lite`、`forensics.filetype` |
 | live | 2：`live.http_probe`、`live.container_exec` |
 | network | 7：`network.pcap_overview`、`network.flows`、`network.dns`、`network.tls`、`network.http`、`network.iocs`、`network.anomalies` |
-| sast | 5：`sast.scan`、`sast.secrets`、`sast.deps`、`sast.sbom`、`sast.patch_suggestion` |
+| sast | 7：`sast.scan`、`sast.secrets`、`sast.deps`、`sast.sbom`、`sast.patch_suggestion`、`sast.semgrep`、`sast.trivy` |
 | web | 4：`web.har`、`web.openapi`、`web.headers`、`web.http_message` |
 
 ## 文件清单
@@ -27,14 +28,15 @@
 | `.gitignore` | 394 | 19 |  |
 | `benchmarks/bench.mjs` | 12112 | 265 | 零依赖可复现微基准脚本 |
 | `benchmarks/results.json` | 4174 | 177 | 参考主机基准原始数据 |
-| `CHANGELOG.md` | 10449 | 137 | 变更记录（1.0.4） |
+| `CHANGELOG.md` | 11463 | 145 | 变更记录（1.0.4） |
 | `client.js` | 10058 | 234 | 浏览器半：composer 状态卡（能力/隔离/策略/任务摘要） |
 | `CODE_OF_CONDUCT.md` | 1478 | 35 | 社区行为准则 |
 | `CONTRIBUTING.md` | 3078 | 69 | 贡献指南与能力适配器开发流程 |
 | `cordis.patch.yml` | 6517 | 95 | 组合包 patch：Host 行 + preset-armorbreak 模式声明 |
-| `docs/acceptance-v1.1.0.md` | 3646 | 68 |  |
+| `docs/acceptance-v1.1.0.md` | 4643 | 75 |  |
 | `docs/acceptance.md` | 16105 | 235 | 验收报告（含实际测试与验证结果） |
-| `docs/adapter-contract-v2.md` | 2687 | 51 |  |
+| `docs/acceptance/l1-docker-verification.json` | 1411 | 16 |  |
+| `docs/adapter-contract-v2.md` | 4102 | 68 |  |
 | `docs/architecture.md` | 7139 | 112 | 架构设计（分层、Cordis 组合、执行管线、数据模型） |
 | `docs/audit/environment-audit.md` | 11323 | 118 | Phase 0 环境与架构审计报告 |
 | `docs/benchmarks.md` | 7753 | 154 | 性能基准：环境、数据、方法、复现 |
@@ -42,7 +44,7 @@
 | `docs/CONTRACT.md` | 7935 | 141 | 分析能力/适配器开发契约 |
 | `docs/installation.md` | 4482 | 78 | 安装/启用/卸载/故障排查 |
 | `docs/isolation-providers.md` | 2321 | 50 |  |
-| `docs/known-issues.md` | 6756 | 67 | 已知问题与限制（诚实清单） |
+| `docs/known-issues.md` | 6739 | 63 | 已知问题与限制（诚实清单） |
 | `docs/marketplace.md` | 5589 | 104 | DeepSeek Harness 生态、插件市场与分发指引 |
 | `docs/media/report-deliverables.webp` | 125032 | 438 | 报告交付物真实截图 |
 | `docs/media/status-card.png` | 96465 | 355 | 模式状态卡真实截图 |
@@ -81,6 +83,7 @@
 | `lib/analyzers/ctf/flagscan.js` | 4985 | 137 | 分析能力实现（按域） |
 | `lib/analyzers/ctf/hash_id.js` | 10973 | 284 | 分析能力实现（按域） |
 | `lib/analyzers/ctf/manifest.js` | 22537 | 501 | 分析能力实现（按域） |
+| `lib/analyzers/external/adapters.js` | 17474 | 341 | 分析能力实现（按域） |
 | `lib/analyzers/forensics/filetype.js` | 18532 | 295 | 分析能力实现（按域） |
 | `lib/analyzers/forensics/formats.js` | 15383 | 369 | 分析能力实现（按域） |
 | `lib/analyzers/forensics/hashes.js` | 2415 | 55 | 分析能力实现（按域） |
@@ -105,7 +108,7 @@
 | `lib/analyzers/network/util.js` | 13594 | 365 | 分析能力实现（按域） |
 | `lib/analyzers/sast/common.js` | 14910 | 404 | 分析能力实现（按域） |
 | `lib/analyzers/sast/deps.js` | 26481 | 626 | 分析能力实现（按域） |
-| `lib/analyzers/sast/manifest.js` | 26246 | 557 | 分析能力实现（按域） |
+| `lib/analyzers/sast/manifest.js` | 26368 | 560 | 分析能力实现（按域） |
 | `lib/analyzers/sast/patch.js` | 15759 | 303 | 分析能力实现（按域） |
 | `lib/analyzers/sast/rules.js` | 19545 | 591 | 分析能力实现（按域） |
 | `lib/analyzers/sast/sbom.js` | 5851 | 157 | 分析能力实现（按域） |
@@ -135,9 +138,10 @@
 | `locale/en.json` | 228 | 7 | 插件显示元数据（英文） |
 | `locale/zh.json` | 195 | 7 | 插件显示元数据（中文） |
 | `package.json` | 1783 | 79 | Bundle 清单（dsh.bundle.patch + dsh.client + 零依赖声明） |
-| `README.md` | 60544 | 1052 | 项目总览、安装、能力与安全模型摘要 |
+| `README.md` | 60750 | 1053 | 项目总览、安装、能力与安全模型摘要 |
 | `scripts/clean-temp.mjs` | 1714 | 59 | 清理测试临时目录脚本 |
 | `scripts/file-changes.mjs` | 6569 | 153 | 文件清单生成脚本 |
+| `scripts/verify-l1.mjs` | 4042 | 90 | 开发/交付脚本 |
 | `SECURITY.md` | 2049 | 54 | 安全政策与漏洞披露流程 |
 | `skills.js` | 3861 | 84 | preset 子插件：注册 7 个内置技能 |
 | `skills/android-apk-audit.md` | 1826 | 27 | 内置技能正文 |
@@ -154,12 +158,13 @@
 | `tests/core-policy.test.mjs` | 7974 | 152 | 自动化测试（node:test） |
 | `tests/core-runtime.test.mjs` | 13332 | 298 | 自动化测试（node:test） |
 | `tests/ctf.test.mjs` | 14890 | 309 | 自动化测试（node:test） |
+| `tests/external-adapters.test.mjs` | 6810 | 175 | 自动化测试（node:test） |
 | `tests/forensics.test.mjs` | 36002 | 835 | 自动化测试（node:test） |
 | `tests/hardening.test.mjs` | 4197 | 83 | 自动化测试（node:test） |
 | `tests/network.test.mjs` | 49114 | 1099 | 自动化测试（node:test） |
 | `tests/runner-directory.test.mjs` | 8208 | 184 | 自动化测试（node:test） |
 | `tests/runner-gates.test.mjs` | 7568 | 142 | 自动化测试（node:test） |
-| `tests/sast.test.mjs` | 18829 | 416 | 自动化测试（node:test） |
+| `tests/sast.test.mjs` | 18859 | 416 | 自动化测试（node:test） |
 | `tests/security-boundary.test.mjs` | 9395 | 182 | 自动化测试（node:test） |
 | `tests/tools-integration.test.mjs` | 9723 | 198 | 自动化测试（node:test） |
 | `tests/tools-lossless.test.mjs` | 5690 | 130 | 自动化测试（node:test） |

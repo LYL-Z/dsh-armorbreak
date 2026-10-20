@@ -1,15 +1,11 @@
-# 已知问题与限制（v1.0.3）
+# 已知问题与限制（v1.1.0 Stage B 分支）
 
 > 本清单只记录**已确认**的限制；未验证/未实现的项目不会写成已完成。
 
 ## 高优先级（影响功能完整性）
 
-1. **外部工具输出尚未接入分析管线**：Ghidra / JADX / apktool / Semgrep / CodeQL / Trivy / Syft / Gitleaks /
-   TShark / Zeek / Suricata / Volatility3 / capa / FLOSS 目前只做**探测 + 安装指引**，没有把它们的输出
-   解析进 findings/evidence。内置纯 JS 实现覆盖了基础解析（格式/结构/字符串/导入导出/AXML/DEX/PCAP/HAR/SAST 规则等），
-   但深度反编译、CodeQL 数据流、内存取证镜像分析等仍依赖后续适配器。
-2. **L1 动态分析未在本机验证成功路径**：本机未运行 Docker 守护进程，所以只验证了「拒绝」分支
-   （`ISOLATION_UNAVAILABLE`）与容器执行代码的存在；容器实际执行路径未在真机跑通。
+1. **外部工具输出尚未接入分析管线（部分解决）**：Ghidra / JADX / TShark / Syft 等仍未接入；v1.1.0 Stage B 首批已接入 **Semgrep** 与 **Trivy** 的 JSON 归一化（`sast.semgrep` / `sast.trivy`），但本机未安装这两个工具，真实 CLI 执行尚未验证，且语义仍是“工具命中 = hypothesis”，不自动升级为确认漏洞。
+2. **L1 动态分析（Docker）已验证本机成功路径**：`scripts/verify-l1.mjs` 在 Docker 29.8.1 + digest-pinned busybox 上验证了非 root（uid 65534）、样本只读挂载、容器内无 eth 网络、超时/清理参数路径；仍**未**在 CI/其他主机验证，且 Podman/WSL2/VM provider 未实现。
 3. **L2 主动测试未做真实网络验证**：只验证了策略拒绝分支（无授权 → `NETWORK_OUT_OF_SCOPE`，无审批
    → `NETWORK_APPROVAL_REQUIRED`）与 `live.http_probe` 实现；没有对真实授权目标发包（本机无授权实验室）。
 4. **没有模型驱动的端到端会话验证**：CLI headless profile 缺少桌面账号的模型凭据
