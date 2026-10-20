@@ -1,9 +1,9 @@
 # 完整文件变更清单（v1.0.4）
 
 - 生成方式：`node scripts/file-changes.mjs`（遍历交付目录，排除 node_modules/.armorbreak）
-- 文件总数：**171**
-- 总大小：**2342.1 KiB**
-- 总行数：**49617**（含注释/文档）
+- 文件总数：**174**
+- 总大小：**3292.8 KiB**
+- 总行数：**53434**（含注释/文档）
 - 运行时依赖：**0**（仅 Node 内置模块；无构建步骤）
 
 ## 能力清单（由 lib/analyzers/*/manifest.js 自动统计）
@@ -39,7 +39,10 @@
 | `docs/acceptance/gate-b-summary.json` | 5038 | 180 |  |
 | `docs/acceptance/gate-b-task.json` | 9160 | 296 |  |
 | `docs/acceptance/l1-docker-verification.json` | 1411 | 16 |  |
-| `docs/acceptance/v1.1.0-gui-verification.md` | 1631 | 11 |  |
+| `docs/acceptance/screenshots/gui-model-e2e.png` | 320347 | 1450 |  |
+| `docs/acceptance/screenshots/gui-status-card.png` | 394881 | 1418 |  |
+| `docs/acceptance/screenshots/gui-tool-probe.png` | 257301 | 930 |  |
+| `docs/acceptance/v1.1.0-gui-verification.md` | 1666 | 12 |  |
 | `docs/adapter-contract-v2.md` | 5322 | 76 |  |
 | `docs/architecture.md` | 8825 | 130 | 架构设计（分层、Cordis 组合、执行管线、数据模型） |
 | `docs/audit/environment-audit.md` | 11323 | 118 | Phase 0 环境与架构审计报告 |
@@ -59,7 +62,7 @@
 | `docs/releases/v1.0.3.md` | 1765 | 51 |  |
 | `docs/releases/v1.0.4.md` | 2561 | 33 |  |
 | `docs/releases/v1.1.0.md` | 2029 | 22 |  |
-| `docs/releases/v1.1.1.md` | 1475 | 32 |  |
+| `docs/releases/v1.1.1.md` | 2478 | 50 |  |
 | `docs/roadmap.md` | 2770 | 38 | 后续扩展路线图 |
 | `docs/security-boundary-review.md` | 6464 | 53 |  |
 | `docs/security-model.md` | 5950 | 78 | 四级能力控制、授权/审批、路径与命令、隔离、审计 |
