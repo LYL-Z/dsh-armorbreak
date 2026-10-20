@@ -239,3 +239,45 @@ test('workbench rejects unknown workflows with an actionable error', async () =>
   assert.equal(response.captured.status, 400)
   assert.match(response.captured.json.error, /unknown workflow/)
 })
+
+test('state route binds a known session to its recorded workspace without directory enumeration', async () => {
+  const calls = []
+  const runtime = {
+    sessionWorkspace: (id) => (id === 'sess-known' ? 'C:/session-ws' : null),
+    stateSummary: async (workspace) => {
+      calls.push(workspace ?? null)
+      return {
+        version: 'test',
+        workspace: workspace ?? 'C:/mru',
+        workspaceBinding: 'most-recently-used',
+        environment: {},
+        isolation: {},
+        policy: { authorizations: [] },
+        registry: { capabilities: 41, domains: [], diagnostics: [] },
+        capabilities: [],
+        tasks: [],
+        queue: [],
+        ui: { isolation: {}, policy: {}, tasks: [], tools: { domains: [] } },
+      }
+    },
+  }
+  const handler = createStateHandler(runtime)
+  const bound = fakeResponse()
+  await handler(req('/armorbreak/state?session=sess-known'), bound)
+  assert.equal(bound.captured.status, 200)
+  assert.equal(bound.captured.json.workspace, 'C:/session-ws')
+  assert.equal(bound.captured.json.sessionBound, true)
+  assert.equal(bound.captured.json.workspaceBinding, 'session-bound (recorded from tool activity)')
+
+  const unknown = fakeResponse()
+  await handler(req('/armorbreak/state?session=sess-unknown'), unknown)
+  assert.equal(unknown.captured.status, 200)
+  assert.equal(unknown.captured.json.workspace, 'C:/mru')
+  assert.equal(unknown.captured.json.sessionBound, false)
+
+  const invalid = fakeResponse()
+  await handler(req('/armorbreak/state?session=..%2Fetc'), invalid)
+  assert.equal(invalid.captured.status, 200)
+  assert.equal(invalid.captured.json.workspace, 'C:/mru')
+  assert.deepEqual(calls, ['C:/session-ws', null, null], 'only a known session may select a workspace')
+})

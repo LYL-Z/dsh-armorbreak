@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 1.1.0 — 2026-10-20
+
+Research Workbench release（Stage A–D/D2，具体交付见 docs/releases/v1.1.0.md）：
+
+- v1.0.4 安全维护：strict preset、授权 request/activate、网络探测固定 IP、容器 digest/非 root、状态路由 loopback。
+- Stage B：Semgrep 1.181.0 / Trivy 0.76.0 真实适配器与 Gate B（6 + 67 findings，证据链 150 条）。
+- Stage C：DAG 工作流、后台队列、取消/恢复、重启恢复。
+- Stage D/D2：只读+写操作工作台（L0 新建/取消/重试/恢复）、证据中心、报告预览、工具探测；会话级工作区绑定（首次工具调用后生效）。
+- 178 自动化测试；Windows/Ubuntu CI + Docker L1 job。
+- 未验证：真实 DeepSeek 模型桌面 GUI E2E、浏览器视觉/交互、L1/L2 工作台写操作（刻意限制）、Ghidra/JADX/TShark/Syft。
+
 ## Unreleased — v1.1.0 Stage D2（分支 feature/armorbreak-v1.1.0-stage-d2）
 
 ### 工作台补全（Stage D）

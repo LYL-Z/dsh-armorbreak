@@ -107,6 +107,15 @@ function tool(spec) {
     },
     async execute(args, exec) {
       const enriched = await enrichArgs(args, exec)
+      try {
+        const sessionId = exec?.sessionId ?? exec?.agent?.sessionId ?? exec?.agent?.id
+        if (sessionId) {
+          const runtime = getRuntime()
+          runtime.recordSessionWorkspace(String(sessionId), workspaceOf(runtime, enriched))
+        }
+      } catch {
+        /* session binding is best-effort; never fail a tool because of it */
+      }
       const result = await spec.run(enriched, exec)
       return { text: limitText(result.text), data: (toLosslessJson(result.data ?? {}) ?? {}) }
     },

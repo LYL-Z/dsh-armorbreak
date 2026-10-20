@@ -68,7 +68,7 @@ test('armorbreak_health reports environment, isolation denial and capability cou
   const workspace = await mkdtemp(join(tmpdir(), 'abm-tool-ws-'))
   const value = await defs.get('armorbreak_health').execute({ workspace }, mockExec())
   assert.match(value.text, /环境健康|ArmorBreak/)
-  assert.equal(value.data.version, '1.0.4')
+  assert.equal(value.data.version, '1.1.0')
   assert.ok(value.data.registry.capabilities > 0)
   assert.equal(typeof value.data.isolation.available, 'boolean')
   assert.ok(Array.isArray(value.data.capabilities))

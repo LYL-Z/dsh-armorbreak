@@ -173,11 +173,12 @@ window.__ModuleLoader__.load({
       const [report, setReport] = useState(null)
       const [toolProbe, setToolProbe] = useState(null)
       const [probing, setProbing] = useState(false)
+      const withSession = useCallback((url) => (sessionId ? `${url}${url.includes('?') ? '&' : '?'}session=${encodeURIComponent(String(sessionId))}` : url), [sessionId])
 
       const postAction = useCallback(async (payload) => {
         setActionError(null)
         try {
-          const response = await fetch('/armorbreak/actions', {
+          const response = await fetch(withSession('/armorbreak/actions'), {
             method: 'POST',
             headers: { 'content-type': 'application/json', 'x-armorbreak-ui': '1' },
             credentials: 'same-origin',
@@ -196,7 +197,7 @@ window.__ModuleLoader__.load({
       const load = useCallback(async () => {
         setBusy(true)
         try {
-          const response = await fetch('/armorbreak/state', { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+          const response = await fetch(withSession('/armorbreak/state'), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
           if (!response.ok) throw new Error(`HTTP ${response.status}`)
           setState(await response.json())
           setError(null)
@@ -238,7 +239,7 @@ window.__ModuleLoader__.load({
         setEvidence(null)
         setReport(null)
         try {
-          const response = await fetch(`/armorbreak/tasks?id=${encodeURIComponent(taskId)}`, { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+          const response = await fetch(withSession(`/armorbreak/tasks?id=${encodeURIComponent(taskId)}`), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
           if (!response.ok) throw new Error(`HTTP ${response.status}`)
           setDetail(await response.json())
         } catch (cause) {
@@ -249,7 +250,7 @@ window.__ModuleLoader__.load({
 
       const loadEvidence = useCallback(async (taskId) => {
         try {
-          const response = await fetch(`/armorbreak/evidence?taskId=${encodeURIComponent(taskId)}`, { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+          const response = await fetch(withSession(`/armorbreak/evidence?taskId=${encodeURIComponent(taskId)}`), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
           const data = await response.json().catch(() => ({}))
           if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`)
           setEvidence(data)
@@ -261,7 +262,7 @@ window.__ModuleLoader__.load({
       const loadReport = useCallback(async (taskId) => {
         setReport({ loading: true })
         try {
-          const response = await fetch(`/armorbreak/report?taskId=${encodeURIComponent(taskId)}&format=markdown`, { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+          const response = await fetch(withSession(`/armorbreak/report?taskId=${encodeURIComponent(taskId)}&format=markdown`), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
           const data = await response.json().catch(() => ({}))
           if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`)
           setReport(data)
@@ -272,7 +273,7 @@ window.__ModuleLoader__.load({
 
       const loadWorkflows = useCallback(async () => {
         try {
-          const response = await fetch('/armorbreak/tools', { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+          const response = await fetch(withSession('/armorbreak/tools'), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
           if (!response.ok) return
           const data = await response.json()
           if (Array.isArray(data.workflows)) setWorkflows(data.workflows)
@@ -455,7 +456,7 @@ window.__ModuleLoader__.load({
               onClick: async () => {
                 setProbing(true)
                 try {
-                  const response = await fetch('/armorbreak/tools?probe=1', { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+                  const response = await fetch(withSession('/armorbreak/tools?probe=1'), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
                   if (response.ok) setToolProbe(await response.json())
                 } catch {
                   /* keep previous probe result */

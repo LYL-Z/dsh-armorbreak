@@ -31,6 +31,25 @@ export function isLoopbackPeer(req) {
 }
 
 /**
+ * Resolve an optional session parameter to a workspace recorded by actual tool
+ * activity. Unknown/invalid session ids fall back to the MRU workspace; a query
+ * can never name an arbitrary directory.
+ * @param {import('./lib/core/runtime.js').ArmorBreakRuntime} runtime
+ * @param {import('node:http').IncomingMessage} req
+ * @param {string} fallbackUrl
+ */
+function resolveSessionWorkspace(runtime, req, fallbackUrl) {
+  try {
+    const url = new URL(String(req?.url ?? fallbackUrl), 'http://127.0.0.1')
+    const raw = url.searchParams.get('session')
+    if (!raw || !/^[A-Za-z0-9_-]{1,128}$/.test(raw)) return { sessionId: null, workspace: null }
+    return { sessionId: raw, workspace: runtime.sessionWorkspace(raw) }
+  } catch {
+    return { sessionId: null, workspace: null }
+  }
+}
+
+/**
  * Build the state handler. Exported for tests so the access-control behaviour can
  * be asserted without a listener.
  * @param {import('./lib/core/runtime.js').ArmorBreakRuntime} runtime
@@ -48,8 +67,15 @@ export function createStateHandler(runtime) {
         denied(res, 'workspace parameter is not accepted; the route reports only the current MRU workspace')
         return
       }
-      const state = await runtime.stateSummary()
-      sendJson(res, 200, { ...state, route: STATE_PATH })
+      const session = resolveSessionWorkspace(runtime, req, STATE_PATH)
+      const state = await runtime.stateSummary(session.workspace ?? undefined)
+      sendJson(res, 200, {
+        ...state,
+        workspaceBinding: session.workspace ? 'session-bound (recorded from tool activity)' : state.workspaceBinding,
+        session: session.sessionId,
+        sessionBound: Boolean(session.workspace),
+        route: STATE_PATH,
+      })
     } catch (error) {
       sendError(res, error)
     }
@@ -109,18 +135,21 @@ export function createTasksHandler(runtime) {
         return
       }
       const taskId = url.searchParams.get('id')
+      const session = resolveSessionWorkspace(runtime, req, '/armorbreak/tasks')
       if (!taskId) {
-        const state = await runtime.stateSummary()
+        const state = await runtime.stateSummary(session.workspace ?? undefined)
         sendJson(res, 200, {
           workspace: state.workspace,
-          workspaceBinding: state.workspaceBinding,
+          workspaceBinding: session.workspace ? 'session-bound (recorded from tool activity)' : state.workspaceBinding,
+          session: session.sessionId,
+          sessionBound: Boolean(session.workspace),
           queue: state.queue,
           ui: { tasks: state.ui.tasks },
           tasks: state.ui.tasks,
         })
         return
       }
-      const workspaceRoot = runtime.lastWorkspace ?? runtime.defaultWorkspace()
+      const workspaceRoot = session.workspace ?? runtime.lastWorkspace ?? runtime.defaultWorkspace()
       const ctx = runtime.workspace(workspaceRoot)
       const task = await ctx.taskStore.get(taskId)
       const { findings } = await ctx.taskStore.evidenceStore(taskId).readFindings()
@@ -159,7 +188,8 @@ export function createToolsHandler(runtime) {
         denied(res, 'workspace parameter is not accepted; the route reports only the current MRU workspace')
         return
       }
-      const state = await runtime.stateSummary()
+      const session = resolveSessionWorkspace(runtime, req, '/armorbreak/tools')
+      const state = await runtime.stateSummary(session.workspace ?? undefined)
       const probe = url.searchParams.get('probe') === '1'
       const tools = probe ? await runtime.health.toolMatrix() : null
       sendJson(res, 200, {
@@ -170,6 +200,8 @@ export function createToolsHandler(runtime) {
         workflows: listWorkflows(),
         externalTools: tools,
         probed: Boolean(tools),
+        session: session.sessionId,
+        sessionBound: Boolean(session.workspace),
         route: '/armorbreak/tools',
       })
     } catch (error) {
@@ -237,7 +269,8 @@ export function createActionHandler(runtime) {
     try {
       const body = await readJsonBody(req)
       const action = String(body.action ?? '')
-      const workspaceRoot = runtime.lastWorkspace ?? runtime.defaultWorkspace()
+      const session = resolveSessionWorkspace(runtime, req, '/armorbreak/actions')
+      const workspaceRoot = session.workspace ?? runtime.lastWorkspace ?? runtime.defaultWorkspace()
       const ctx = runtime.workspace(workspaceRoot)
       if (action === 'create') {
         const workflow = getWorkflow(String(body.workflow ?? ''))
@@ -304,7 +337,8 @@ export function createEvidenceHandler(runtime) {
       }
       const taskId = String(url.searchParams.get('taskId') ?? '')
       if (!taskId) throw new Error('taskId is required')
-      const workspaceRoot = runtime.lastWorkspace ?? runtime.defaultWorkspace()
+      const session = resolveSessionWorkspace(runtime, req, '/armorbreak/tasks-data')
+      const workspaceRoot = session.workspace ?? runtime.lastWorkspace ?? runtime.defaultWorkspace()
       const ctx = runtime.workspace(workspaceRoot)
       const task = await ctx.taskStore.get(taskId)
       const evidenceStore = ctx.taskStore.evidenceStore(taskId)

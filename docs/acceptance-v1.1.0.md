@@ -162,3 +162,10 @@ Stage B 新增 7 个适配器测试：Semgrep/Trivy 正常 JSON 归一化、seve
 - 会话级工作区绑定（仍为进程 MRU；UI 明确标注）。
 - 工作台写操作仅 L0（浏览器无平台审批通道，L1/L2 必须走对话工具）。
 - 真实 DeepSeek 模型 GUI E2E、Windows 桌面安装/卸载复测、正式 v1.1.0 tag/Release（等待合并批准）。
+
+## 8. v1.1.0 发布记录（2026-10-20）
+
+- 版本：package.json / runtime 1.1.0；测试 178/178。
+- 已合并：Stage A（v1.0.4）→ Stage B（Semgrep/Trivy + Gate B）→ Stage C/D（DAG/队列/工作台）→ Stage D2（写操作/证据/报告/工具探测）→ 会话级工作区绑定。
+- 会话绑定：工具执行时记录 session→workspace；路由 ?session= 仅使用该记录，未知/非法 session 回退 MRU；HTTP 查询无法指定任意目录。
+- 未验证（发布说明已注明）：真实模型桌面 GUI E2E、浏览器视觉与交互、macOS/Linux 桌面、Windows 安装器复测。
