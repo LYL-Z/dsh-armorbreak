@@ -11,8 +11,8 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-0ea5e9)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%E2%89%A522-339933?logo=node.js&logoColor=white)](package.json)
 [![DeepSeek Harness](https://img.shields.io/badge/DeepSeek%20Harness-0.2.1--rc.2-4D6BFE)](docs/compatibility-matrix.md)
-[![Tests](https://img.shields.io/badge/tests-146%20passing-2ea44f)](docs/acceptance.md)
-[![Coverage](https://img.shields.io/badge/coverage-85.60%25-yellowgreen)](docs/acceptance.md)
+[![Tests](https://img.shields.io/badge/tests-153%20passing-2ea44f)](docs/acceptance-v1.1.0.md)
+[![Coverage](https://img.shields.io/badge/coverage-85.69%25-yellowgreen)](docs/acceptance-v1.1.0.md)
 [![Runtime deps](https://img.shields.io/badge/runtime%20dependencies-0-blueviolet)](package.json)
 [![Security policy](https://img.shields.io/badge/security-policy-blue)](SECURITY.md)
 [![Stars](https://img.shields.io/github/stars/LYL-Z/dsh-armorbreak?style=social)](https://github.com/LYL-Z/dsh-armorbreak/stargazers)
@@ -87,8 +87,8 @@ ArmorBreak 的设计目标因此不是「再加一个安全 AI」，而是：
 | 模型可见工具 | **8**（工具目录而非 39 个适配器逐一暴露） | `tools.js` |
 | 内置技能 | **7** | `skills.js` |
 | 可复用工作流模板 | **9** | `lib/core/workflows.js` |
-| 自动化测试 | **146 / 146 通过**（16 个测试文件） | `node --test` |
-| 代码覆盖率 | 行 **85.60%** / 分支 62.77% / 函数 86.16%；核心最低模块行覆盖 ≥80% | `node --test --experimental-test-coverage` |
+| 自动化测试 | **153 / 153 通过**（17 个测试文件） | `node --test` |
+| 代码覆盖率 | 行 **85.69%** / 分支 62.75% / 函数 85.76%；新增 `files.js` 行覆盖 90.37% | `node --test --experimental-test-coverage` |
 | 运行时依赖 | **0**（`node:*` only） | `package.json` |
 | 360 KiB PE 静态解析（p50） | `binary.identify` **1.72 ms** / `forensics.hash` **0.84 ms** | [benchmarks](docs/benchmarks.md) |
 | PCAP 解析吞吐 | **≈ 0.54–0.64 M packets/s**（5,000 包 p50 7.8–9.6 ms） | 同上 |
@@ -173,7 +173,7 @@ ArmorBreak 的设计目标因此不是「再加一个安全 AI」，而是：
 |---|---|---|---|
 | **L-Agent Persona** | `cordis.patch.yml` → `@deepseek-ai/dsh-persona` | 身份、硬边界、证据纪律、工作方法 | system prompt sections |
 | **L-Skills** | `skills.js` + `skills/*.md` | 7 个专业领域方法论，按需加载 | `ctx.skills.register` |
-| **L-Tools** | `tools.js` | 8 个模型工具：参数校验、审批桥、结果渲染 | `ctx.tools.register` |
+| **L-Tools** | `tools.js` | 9 个模型工具：参数校验、审批桥、结果渲染 | `ctx.tools.register` |
 | **L-Core** | `lib/core/*` | 能力注册、策略、任务状态机、执行、证据、报告、健康 | 纯 JS API（无 Cordis 依赖） |
 | **L-Analyzers** | `lib/analyzers/<domain>/manifest.js` | 39 个能力实现，统一 `run(input)` 契约 | 进程内函数调用 |
 | **L-Host** | `index.js` | 运行时单例接线 + 只读状态路由 | `ctx.webServer.register` |
@@ -652,7 +652,7 @@ git clone https://github.com/LYL-Z/dsh-armorbreak.git D:\tools\dsh-armorbreak
 
 ## 十一、使用指南 Usage
 
-### 11.1 8 个模型工具（API 摘要）
+### 11.1 9 个模型工具（API 摘要）
 
 | 工具 | 关键参数 | 行为 |
 |---|---|---|
@@ -718,8 +718,10 @@ armorbreak_report taskId=<id> format=sarif
 <summary><b>场景 C：授权内主动验证（L2）</b></summary>
 
 ```text
-armorbreak_scope action=authorize purpose="authorized lab validation" operator="alice" \
+armorbreak_scope action=request purpose="authorized lab validation" operator="alice" \
   networkTargets=["10.20.0.0/16"] riskCeiling=L2
+# 平台向用户确认并返回 allowed-once 后：
+armorbreak_scope action=activate requestId=<authreq_id>
 armorbreak_analyze capability=live.http_probe taskId=<id> options={"url":"http://10.20.0.5/health"}
 ```
 无授权 → `NETWORK_OUT_OF_SCOPE`；无平台审批 → `NETWORK_APPROVAL_REQUIRED`；超限 → `NETWORK_RATE_LIMITED`。
@@ -777,6 +779,7 @@ armorbreak_analyze capability=live.http_probe taskId=<id> options={"url":"http:/
 | v1.0.1 | 真实会话缺陷修复 | 无损 JSON、会话工作区解析；132 测试 |
 | v1.0.2 | 目录路由 + 并发 + 加固 | 目录工作流可用、targetKind 规划校验、哈希链并发安全、UTF-8/realpath/端口/YAML 加固；145 测试 |
 | v1.0.3 | 扫描降噪 | `sast.*` 新增可选 `excludePaths`（按路径子串排除规则文件/测试夹具/文档示例）；146 测试，向后兼容 |
+| v1.0.4 | **安全维护（Stage A）** | 移除绕过 L0–L3 的通用工具、新增策略内 `armorbreak_files`、授权 request→平台审批→activate、HTTP 固定 IP/流式截断、容器镜像 digest/allowlist、状态接口 loopback-only；153 测试 |
 
 ### 13.2 当前规划（v1.1）
 
@@ -1003,7 +1006,7 @@ dsh-armorbreak/
 ├── cordis.patch.yml          # Host 行 + preset-armorbreak 声明
 ├── index.js                  # Host：/armorbreak/state 只读路由
 ├── client.js                 # 浏览器：composer dock 状态卡
-├── tools.js                  # 8 个模型工具 + 审批桥 + 无损 JSON 出口
+├── tools.js                  # 9 个模型工具 + 审批桥 + 无损 JSON 出口
 ├── skills.js                 # 7 个内置技能注册
 ├── lib/core/                 # 运行时（策略/任务/证据/审计/执行/报告/健康）
 ├── lib/analyzers/            # 8 个域、39 个能力（各自 manifest.js）
@@ -1013,7 +1016,7 @@ dsh-armorbreak/
 ├── docs/                     # 审计/架构/安全模型/验收/兼容性/已知问题/路线图/市场/基准
 ├── benchmarks/               # 可复现基准脚本与结果
 ├── scripts/                  # 文件清单生成、测试临时目录清理
-├── tests/                    # 146 个 node:test 用例
+├── tests/                    # 153 个 node:test 用例
 └── .github/workflows/ci.yml  # 双平台 CI
 ```
 
@@ -1022,7 +1025,11 @@ dsh-armorbreak/
 | [环境与架构审计](docs/audit/environment-audit.md) | 0.2.1-rc.2 实测 API 基线、兼容性事实 |
 | [架构设计](docs/architecture.md) | 分层、Cordis 组合、执行管线、数据模型 |
 | [安全模型](docs/security-model.md) | L0–L3、授权/审批、路径/命令、隔离、审计 |
-| [验收报告](docs/acceptance.md) | 146 测试、覆盖率、安装/运行实测、验收标准逐条对照 |
+| [验收报告](docs/acceptance.md) | v1.0.3 基线：146 测试、覆盖率、安装/运行实测 |
+| [v1.0.4 / Stage A 验收](docs/acceptance-v1.1.0.md) | 153 测试、P0 安全边界修复、未实现项 |
+| [安全边界审计](docs/security-boundary-review.md) | 权限覆盖矩阵、SB-1..6、残余限制 |
+| [迁移 v1.0.3→v1.0.4](docs/migration-v1.0.3-to-v1.1.0.md) | 升级、回滚、兼容性 |
+| [适配器契约 v2](docs/adapter-contract-v2.md) · [工作流 v2](docs/workflow-engine-v2.md) · [隔离提供者](docs/isolation-providers.md) | v1.1.0 B–E 设计（未实现） |
 | [兼容性矩阵](docs/compatibility-matrix.md) | 运行时/API/平台/外部工具 |
 | [已知问题](docs/known-issues.md) | 25 条已确认限制与运营注意事项 |
 | [性能基准](docs/benchmarks.md) | 环境、数据、方法、复现、限制 |
