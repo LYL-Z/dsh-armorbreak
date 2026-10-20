@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased — v1.1.0 Stage B（分支 `feature/armorbreak-v1.1.0-stage-b`）
+## Unreleased — v1.1.0 Stage B（已合并 main，`8d3a8d5`；分支 `feature/armorbreak-v1.1.0-stage-b` 保留）
 
 - **外部工具适配器首批**：新增 `sast.semgrep`、`sast.trivy`（L0，目录目标）。JSON 归一化到统一 findings/evidence（severity/confidence/verification 分离、位置/规则/证据引用、默认 hypothesis、输出上限、畸形 JSON 拒绝、缺失工具返回安装指引；不自动下载规则/漏洞库）。
 - **Gate B 真实运行通过**：本机安装 Semgrep 1.181.0（`D:\dsh-tools\semgrep-venv`）与 Trivy 0.76.0（`D:\dsh-tools\trivy`，漏洞库约 1.56 GB 在 D:），`node scripts/verify-gate-b.mjs` 真实扫描 `fixtures/gate-b-sample`：capability 层 6 + 67 findings，runner 层任务 COMPLETED、证据链 150 条 verified；产物 `docs/acceptance/gate-b-*`，详见 `docs/acceptance-v1.1.0.md` §2.2。

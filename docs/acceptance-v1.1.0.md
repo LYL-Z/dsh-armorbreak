@@ -1,7 +1,7 @@
 # 验收报告 — v1.1.0 Stage A + Stage B（首批）
 
 - 基线：v1.0.3（`97d0628`），146 测试
-- 本次：Stage A 安全维护（v1.0.4，已合并 main）+ Stage B 首批外部适配器（分支）
+- 本次：Stage A 安全维护（v1.0.4，已合并 main）+ Stage B 首批外部适配器（**已合并 main**，merge `8d3a8d5`）
 - **Gate B（真实外部工具）：通过** —— 本机安装 Semgrep 1.181.0 / Trivy 0.76.0 并真实扫描本地示例项目，见 §2.2
 - 测试：`node --test` → **160 用例，159 通过、0 失败、1 跳过**（跳过项为“工具缺失”路径：工具已安装时按设计 skip）
 - v1.1.0 的 C–E 阶段未实现：DAG/异步任务、证据数据迁移、研究工作台 UI
@@ -120,7 +120,8 @@ Stage B 新增 7 个适配器测试：Semgrep/Trivy 正常 JSON 归一化、seve
 
 ## 5. 分支与发布
 
-- 分支：`feature/armorbreak-v1.1.0-stage-b`（Stage A 已合并 main；Stage B 待审阅后合并）
-- 未推送 main、未创建 GitHub Release（任务书要求）。
+- 分支：`feature/armorbreak-v1.1.0-stage-b` → **已合并 main**（merge commit `8d3a8d5`，2026-10-20）；分支保留用于 B–E 后续迭代。
+- 未推送 main、未创建 GitHub Release（任务书要求）；本地 main 领先 `origin/main`。
 - Gate B 本轮新增/修改：`scripts/verify-gate-b.mjs`、`fixtures/gate-b-sample/`、`fixtures/gate-b-rules/armorbreak-local.yml`、`docs/acceptance/gate-b-{summary,findings,task}.json` + `gate-b-report.md`；修复 `lib/analyzers/external/adapters.js`（子进程环境白名单）与 `lib/core/health.js`（版本探测超时）。
-- 建议：先评审 Gate B 证据，再决定是否合并 Stage B 到 main；B–E 阶段继续在该分支迭代。
+- 合并后回归：main 上 `node --test` → 160 用例，159 通过、0 失败、1 跳过。
+- 后续：B–E 阶段继续在分支/新分支迭代。

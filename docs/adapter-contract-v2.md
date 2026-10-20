@@ -49,7 +49,7 @@ interface ExternalToolAdapter {
 
 每步必须有正常/缺失/畸形输出/超时/取消五类测试，并在 Windows 与 Linux CI 上有明确 job。
 
-## 6. 首批实现状态（Stage B branch）
+## 6. 首批实现状态（Stage B，已合并 main）
 
 | 项 | 状态 | 证据 |
 |---|---|---|
