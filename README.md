@@ -1,6 +1,6 @@
 # ArmorBreak · 破甲模式
 
-> **DeepSeek Harness 原生「授权逆向工程与安全研究」Agent 模式**：39 个真实可执行的离线分析能力、L0–L3 代码级权限引擎、逐任务证据哈希链与可复核报告。以 Cordis Bundle + Agent preset 形式嵌入 DeepSeek Harness，**不修改 Harness 核心**。
+> **DeepSeek Harness 原生「授权逆向工程与安全研究」Agent 模式**：41 个真实可执行的离线分析能力、L0–L3 代码级权限引擎、逐任务证据哈希链与可复核报告。以 Cordis Bundle + Agent preset 形式嵌入 DeepSeek Harness，**不修改 Harness 核心**。
 
 **Authorized Reverse Engineering & Security Research Agent — a native Agent preset for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) / Cordis.**
 
@@ -11,8 +11,8 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-0ea5e9)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%E2%89%A522-339933?logo=node.js&logoColor=white)](package.json)
 [![DeepSeek Harness](https://img.shields.io/badge/DeepSeek%20Harness-0.2.1--rc.2-4D6BFE)](docs/compatibility-matrix.md)
-[![Tests](https://img.shields.io/badge/tests-153%20passing-2ea44f)](docs/acceptance-v1.1.0.md)
-[![Coverage](https://img.shields.io/badge/coverage-85.69%25-yellowgreen)](docs/acceptance-v1.1.0.md)
+[![Tests](https://img.shields.io/badge/tests-160%20passing-2ea44f)](docs/acceptance-v1.1.0.md)
+[![Coverage](https://img.shields.io/badge/coverage-85.82%25-yellowgreen)](docs/acceptance-v1.1.0.md)
 [![Runtime deps](https://img.shields.io/badge/runtime%20dependencies-0-blueviolet)](package.json)
 [![Security policy](https://img.shields.io/badge/security-policy-blue)](SECURITY.md)
 [![Stars](https://img.shields.io/github/stars/LYL-Z/dsh-armorbreak?style=social)](https://github.com/LYL-Z/dsh-armorbreak/stargazers)
@@ -83,12 +83,12 @@ ArmorBreak 的设计目标因此不是「再加一个安全 AI」，而是：
 
 | 指标 | 数值 | 来源 |
 |---|---:|---|
-| 真实可执行能力（capabilities） | **39**（8 个域） | `armorbreak_capabilities` / `registry.list()` |
+| 真实可执行能力（capabilities） | **41**（8 个域） | `armorbreak_capabilities` / `registry.list()` |
 | 模型可见工具 | **8**（工具目录而非 39 个适配器逐一暴露） | `tools.js` |
 | 内置技能 | **7** | `skills.js` |
 | 可复用工作流模板 | **9** | `lib/core/workflows.js` |
-| 自动化测试 | **153 / 153 通过**（17 个测试文件） | `node --test` |
-| 代码覆盖率 | 行 **85.69%** / 分支 62.75% / 函数 85.76%；新增 `files.js` 行覆盖 90.37% | `node --test --experimental-test-coverage` |
+| 自动化测试 | **160 / 160 通过**（18 个测试文件） | `node --test` |
+| 代码覆盖率 | 行 **85.82%** / 分支 62.27% / 函数 85.88%；外部适配器行覆盖 99.41% | `node --test --experimental-test-coverage` |
 | 运行时依赖 | **0**（`node:*` only） | `package.json` |
 | 360 KiB PE 静态解析（p50） | `binary.identify` **1.72 ms** / `forensics.hash` **0.84 ms** | [benchmarks](docs/benchmarks.md) |
 | PCAP 解析吞吐 | **≈ 0.54–0.64 M packets/s**（5,000 包 p50 7.8–9.6 ms） | 同上 |
@@ -118,7 +118,7 @@ ArmorBreak 的设计目标因此不是「再加一个安全 AI」，而是：
                  │      └─ standard fs/shell/compaction tooling                            │
                  │                                                                        │
                  │  Host row: armorbreak ──► 运行时单例                                     │
-                 │     ├─ Capability Registry (39, contract-validated)                     │
+                 │     ├─ Capability Registry (41, contract-validated)                     │
                  │     ├─ Scope Policy (L0–L3, approvals, allowlists, rate limit)          │
                  │     ├─ Execution Runner (bounded I/O, timeout, evidence, audit)         │
                  │     ├─ Task Engine (15 states, 9 workflows)                             │
@@ -780,6 +780,7 @@ armorbreak_analyze capability=live.http_probe taskId=<id> options={"url":"http:/
 | v1.0.2 | 目录路由 + 并发 + 加固 | 目录工作流可用、targetKind 规划校验、哈希链并发安全、UTF-8/realpath/端口/YAML 加固；145 测试 |
 | v1.0.3 | 扫描降噪 | `sast.*` 新增可选 `excludePaths`（按路径子串排除规则文件/测试夹具/文档示例）；146 测试，向后兼容 |
 | v1.0.4 | **安全维护（Stage A）** | 移除绕过 L0–L3 的通用工具、新增策略内 `armorbreak_files`、授权 request→平台审批→activate、HTTP 固定 IP/流式截断、容器镜像 digest/allowlist、状态接口 loopback-only；153 测试 |
+| v1.1.0 Stage B（分支） | 外部工具适配器首批 | `sast.semgrep` / `sast.trivy` JSON 归一化；L1 Docker 真机验证通过（busybox digest，非 root/只读/无网络）；160 测试 |
 
 ### 13.2 当前规划（v1.1）
 
@@ -1016,7 +1017,7 @@ dsh-armorbreak/
 ├── docs/                     # 审计/架构/安全模型/验收/兼容性/已知问题/路线图/市场/基准
 ├── benchmarks/               # 可复现基准脚本与结果
 ├── scripts/                  # 文件清单生成、测试临时目录清理
-├── tests/                    # 153 个 node:test 用例
+├── tests/                    # 160 个 node:test 用例
 └── .github/workflows/ci.yml  # 双平台 CI
 ```
 
@@ -1037,7 +1038,7 @@ dsh-armorbreak/
 | [使用指南](docs/usage.md) | 工具/工作流/场景/证据约定 |
 | [市场与生态](docs/marketplace.md) | DSH 生态、市场提交、版本策略 |
 | [适配器契约](docs/CONTRACT.md) | 新增能力的接口与测试要求 |
-| [版本说明](docs/releases/) | v1.0.0 / v1.0.1 / v1.0.2 / v1.0.3 里程碑 |
+| [版本说明](docs/releases/) | v1.0.0 / v1.0.1 / v1.0.2 / v1.0.3 / v1.0.4 里程碑 |
 | [贡献指南](CONTRIBUTING.md) · [安全政策](SECURITY.md) | 贡献流程、漏洞披露 |
 | [变更记录](CHANGELOG.md) · [文件清单](docs/file-changes.md) | 版本变更、全量文件 |
 

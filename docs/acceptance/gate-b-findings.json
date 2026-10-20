@@ -1,0 +1,2756 @@
+{
+  "generatedAt": "2026-10-20T13:25:14.606Z",
+  "semgrep": {
+    "summary": "Semgrep（1.181.0）扫描 D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample：6 条结果，归一化 6 条 findings（全部 hypothesis）",
+    "data": {
+      "tool": "semgrep",
+      "toolVersion": "1.181.0",
+      "resultCount": 6,
+      "reportedFindings": 6,
+      "truncated": false,
+      "errors": 0,
+      "scannedPaths": 3,
+      "target": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample",
+      "stderr": "",
+      "ruleConfig": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-rules\\armorbreak-local.yml"
+    },
+    "findings": [
+      {
+        "title": "[semgrep] Dynamic eval() executes user-controlled code (CWE-95).",
+        "severity": "critical",
+        "description": "Dynamic eval() executes user-controlled code (CWE-95).",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "semgrep rule match (static pattern; no data-flow validation)",
+        "cwe": "CWE-95",
+        "cvss": null,
+        "remediation": "Review the rule match against the actual data flow; do not report as a confirmed vulnerability without independent evidence.",
+        "target": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js:9",
+        "sourceTool": "semgrep",
+        "sourceRule": "fixtures.gate-b-rules.armorbreak.js.eval-dynamic",
+        "location": {
+          "file": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js",
+          "startLine": 9,
+          "endLine": 9
+        },
+        "evidence": [
+          {
+            "title": "semgrep fixtures.gate-b-rules.armorbreak.js.eval-dynamic",
+            "excerpt": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js:9 requires login"
+          }
+        ]
+      },
+      {
+        "title": "[semgrep] child_process.exec() with a concatenated command string allows command injection (CWE-78).",
+        "severity": "critical",
+        "description": "child_process.exec() with a concatenated command string allows command injection (CWE-78).",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "semgrep rule match (static pattern; no data-flow validation)",
+        "cwe": "CWE-78",
+        "cvss": null,
+        "remediation": "Review the rule match against the actual data flow; do not report as a confirmed vulnerability without independent evidence.",
+        "target": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js:14",
+        "sourceTool": "semgrep",
+        "sourceRule": "fixtures.gate-b-rules.armorbreak.js.child-process-concat",
+        "location": {
+          "file": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js",
+          "startLine": 14,
+          "endLine": 16
+        },
+        "evidence": [
+          {
+            "title": "semgrep fixtures.gate-b-rules.armorbreak.js.child-process-concat",
+            "excerpt": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js:14 requires login"
+          }
+        ]
+      },
+      {
+        "title": "[semgrep] SQL query built by string concatenation allows SQL injection (CWE-89).",
+        "severity": "high",
+        "description": "SQL query built by string concatenation allows SQL injection (CWE-89).",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "semgrep rule match (static pattern; no data-flow validation)",
+        "cwe": "CWE-89",
+        "cvss": null,
+        "remediation": "Review the rule match against the actual data flow; do not report as a confirmed vulnerability without independent evidence.",
+        "target": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js:21",
+        "sourceTool": "semgrep",
+        "sourceRule": "fixtures.gate-b-rules.armorbreak.js.sql-concat",
+        "location": {
+          "file": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js",
+          "startLine": 21,
+          "endLine": 21
+        },
+        "evidence": [
+          {
+            "title": "semgrep fixtures.gate-b-rules.armorbreak.js.sql-concat",
+            "excerpt": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js:21 requires login"
+          }
+        ]
+      },
+      {
+        "title": "[semgrep] Hardcoded AWS access key ID (CWE-798).",
+        "severity": "high",
+        "description": "Hardcoded AWS access key ID (CWE-798).",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "semgrep rule match (static pattern; no data-flow validation)",
+        "cwe": "CWE-798",
+        "cvss": null,
+        "remediation": "Review the rule match against the actual data flow; do not report as a confirmed vulnerability without independent evidence.",
+        "target": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js:25",
+        "sourceTool": "semgrep",
+        "sourceRule": "fixtures.gate-b-rules.armorbreak.secret.aws-access-key",
+        "location": {
+          "file": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js",
+          "startLine": 25,
+          "endLine": 25
+        },
+        "evidence": [
+          {
+            "title": "semgrep fixtures.gate-b-rules.armorbreak.secret.aws-access-key",
+            "excerpt": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js:25 requires login"
+          }
+        ]
+      },
+      {
+        "title": "[semgrep] Hardcoded AWS access key ID (CWE-798).",
+        "severity": "high",
+        "description": "Hardcoded AWS access key ID (CWE-798).",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "semgrep rule match (static pattern; no data-flow validation)",
+        "cwe": "CWE-798",
+        "cvss": null,
+        "remediation": "Review the rule match against the actual data flow; do not report as a confirmed vulnerability without independent evidence.",
+        "target": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\config.js:5",
+        "sourceTool": "semgrep",
+        "sourceRule": "fixtures.gate-b-rules.armorbreak.secret.aws-access-key",
+        "location": {
+          "file": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\config.js",
+          "startLine": 5,
+          "endLine": 5
+        },
+        "evidence": [
+          {
+            "title": "semgrep fixtures.gate-b-rules.armorbreak.secret.aws-access-key",
+            "excerpt": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\config.js:5 requires login"
+          }
+        ]
+      },
+      {
+        "title": "[semgrep] MD5 is a weak hash and must not be used for security decisions (CWE-327).",
+        "severity": "high",
+        "description": "MD5 is a weak hash and must not be used for security decisions (CWE-327).",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "semgrep rule match (static pattern; no data-flow validation)",
+        "cwe": "CWE-327",
+        "cvss": null,
+        "remediation": "Review the rule match against the actual data flow; do not report as a confirmed vulnerability without independent evidence.",
+        "target": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\crypto.js:8",
+        "sourceTool": "semgrep",
+        "sourceRule": "fixtures.gate-b-rules.armorbreak.js.weak-hash-md5",
+        "location": {
+          "file": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\crypto.js",
+          "startLine": 8,
+          "endLine": 8
+        },
+        "evidence": [
+          {
+            "title": "semgrep fixtures.gate-b-rules.armorbreak.js.weak-hash-md5",
+            "excerpt": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\crypto.js:8 requires login"
+          }
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "title": "semgrep result 1 (fixtures.gate-b-rules.armorbreak.js.eval-dynamic)",
+        "kind": "external-tool",
+        "excerpt": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js:9-9 severity=ERROR message=Dynamic eval() executes user-controlled code (CWE-95).",
+        "meta": {
+          "tool": "semgrep",
+          "rule": "fixtures.gate-b-rules.armorbreak.js.eval-dynamic",
+          "file": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js",
+          "startLine": 9
+        }
+      },
+      {
+        "title": "semgrep result 2 (fixtures.gate-b-rules.armorbreak.js.child-process-concat)",
+        "kind": "external-tool",
+        "excerpt": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js:14-16 severity=ERROR message=child_process.exec() with a concatenated command string allows command injection (CWE-78).",
+        "meta": {
+          "tool": "semgrep",
+          "rule": "fixtures.gate-b-rules.armorbreak.js.child-process-concat",
+          "file": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js",
+          "startLine": 14
+        }
+      },
+      {
+        "title": "semgrep result 3 (fixtures.gate-b-rules.armorbreak.js.sql-concat)",
+        "kind": "external-tool",
+        "excerpt": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js:21-21 severity=WARNING message=SQL query built by string concatenation allows SQL injection (CWE-89).",
+        "meta": {
+          "tool": "semgrep",
+          "rule": "fixtures.gate-b-rules.armorbreak.js.sql-concat",
+          "file": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js",
+          "startLine": 21
+        }
+      },
+      {
+        "title": "semgrep result 4 (fixtures.gate-b-rules.armorbreak.secret.aws-access-key)",
+        "kind": "external-tool",
+        "excerpt": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js:25-25 severity=WARNING message=Hardcoded AWS access key ID (CWE-798).",
+        "meta": {
+          "tool": "semgrep",
+          "rule": "fixtures.gate-b-rules.armorbreak.secret.aws-access-key",
+          "file": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js",
+          "startLine": 25
+        }
+      },
+      {
+        "title": "semgrep result 5 (fixtures.gate-b-rules.armorbreak.secret.aws-access-key)",
+        "kind": "external-tool",
+        "excerpt": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\config.js:5-5 severity=WARNING message=Hardcoded AWS access key ID (CWE-798).",
+        "meta": {
+          "tool": "semgrep",
+          "rule": "fixtures.gate-b-rules.armorbreak.secret.aws-access-key",
+          "file": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\config.js",
+          "startLine": 5
+        }
+      },
+      {
+        "title": "semgrep result 6 (fixtures.gate-b-rules.armorbreak.js.weak-hash-md5)",
+        "kind": "external-tool",
+        "excerpt": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\crypto.js:8-8 severity=WARNING message=MD5 is a weak hash and must not be used for security decisions (CWE-327).",
+        "meta": {
+          "tool": "semgrep",
+          "rule": "fixtures.gate-b-rules.armorbreak.js.weak-hash-md5",
+          "file": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\crypto.js",
+          "startLine": 8
+        }
+      },
+      {
+        "title": "semgrep invocation",
+        "kind": "external-tool",
+        "excerpt": "command=semgrep scan --json --config D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-rules\\armorbreak-local.yml D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample sha256(stdout)=feb88b9238eec64c349397f0383eb5971d584c1780313f2e89740aac785bee91"
+      }
+    ],
+    "meta": {
+      "capability": "sast.semgrep",
+      "externalTool": "semgrep",
+      "targetKind": "directory",
+      "verificationDefault": "hypothesis"
+    }
+  },
+  "trivy": {
+    "summary": "Trivy 扫描 D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample：3 个结果集，归一化 67 条 findings（scanners=vuln,secret, severity=HIGH,CRITICAL，全部 hypothesis）",
+    "data": {
+      "tool": "trivy",
+      "toolVersion": null,
+      "resultCount": 3,
+      "reportedFindings": 67,
+      "truncated": false,
+      "kinds": {},
+      "target": "D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample",
+      "stderr": "",
+      "scanners": "vuln,secret",
+      "severity": "HIGH,CRITICAL",
+      "dbDownloadAllowed": false
+    },
+    "findings": [
+      {
+        "title": "[trivy] CVE-2021-3749 in axios",
+        "severity": "high",
+        "description": "nodejs-axios: Regular expression denial of service in trim function",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-1333",
+        "cvss": 7.5,
+        "remediation": "Upgrade axios to 0.21.2",
+        "target": "package-lock.json (axios)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2021-3749",
+        "location": {
+          "file": "package-lock.json",
+          "package": "axios",
+          "installedVersion": "0.21.1",
+          "fixedVersion": "0.21.2",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2021-3749 axios 0.21.1"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2025-27152 in axios",
+        "severity": "high",
+        "description": "axios: Possible SSRF and Credential Leakage via Absolute URL in axios Requests",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-918",
+        "cvss": 5.3,
+        "remediation": "Upgrade axios to 1.8.2, 0.30.0",
+        "target": "package-lock.json (axios)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2025-27152",
+        "location": {
+          "file": "package-lock.json",
+          "package": "axios",
+          "installedVersion": "0.21.1",
+          "fixedVersion": "1.8.2, 0.30.0",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2025-27152 axios 0.21.1"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-25639 in axios",
+        "severity": "high",
+        "description": "axios: Axios affected by Denial of Service via __proto__ Key in mergeConfig",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-754",
+        "cvss": 7.5,
+        "remediation": "Upgrade axios to 1.13.5, 0.30.3",
+        "target": "package-lock.json (axios)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-25639",
+        "location": {
+          "file": "package-lock.json",
+          "package": "axios",
+          "installedVersion": "0.21.1",
+          "fixedVersion": "1.13.5, 0.30.3",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-25639 axios 0.21.1"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-42033 in axios",
+        "severity": "high",
+        "description": "axios: Axios: HTTP Transport Hijacking via Prototype Pollution",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-1321",
+        "cvss": 7.4,
+        "remediation": "Upgrade axios to 1.15.1, 0.31.1",
+        "target": "package-lock.json (axios)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-42033",
+        "location": {
+          "file": "package-lock.json",
+          "package": "axios",
+          "installedVersion": "0.21.1",
+          "fixedVersion": "1.15.1, 0.31.1",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-42033 axios 0.21.1"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-42035 in axios",
+        "severity": "high",
+        "description": "axios: Axios: Arbitrary HTTP header injection via prototype pollution",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-113",
+        "cvss": 7.4,
+        "remediation": "Upgrade axios to 1.15.1, 0.31.1",
+        "target": "package-lock.json (axios)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-42035",
+        "location": {
+          "file": "package-lock.json",
+          "package": "axios",
+          "installedVersion": "0.21.1",
+          "fixedVersion": "1.15.1, 0.31.1",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-42035 axios 0.21.1"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-42043 in axios",
+        "severity": "high",
+        "description": "axios: Axios: NO_PROXY bypass via crafted URL",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-183",
+        "cvss": 10,
+        "remediation": "Upgrade axios to 1.15.1, 0.31.1",
+        "target": "package-lock.json (axios)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-42043",
+        "location": {
+          "file": "package-lock.json",
+          "package": "axios",
+          "installedVersion": "0.21.1",
+          "fixedVersion": "1.15.1, 0.31.1",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-42043 axios 0.21.1"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-44486 in axios",
+        "severity": "high",
+        "description": "axios: Axios: Information disclosure of proxy credentials via HTTP redirects",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-200",
+        "cvss": 7.5,
+        "remediation": "Upgrade axios to 1.16.0, 0.32.0",
+        "target": "package-lock.json (axios)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-44486",
+        "location": {
+          "file": "package-lock.json",
+          "package": "axios",
+          "installedVersion": "0.21.1",
+          "fixedVersion": "1.16.0, 0.32.0",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-44486 axios 0.21.1"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-44487 in axios",
+        "severity": "high",
+        "description": "axios: Axios: Information disclosure of proxy credentials via redirect flows",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-201",
+        "cvss": 7.5,
+        "remediation": "Upgrade axios to 1.16.0, 0.32.0",
+        "target": "package-lock.json (axios)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-44487",
+        "location": {
+          "file": "package-lock.json",
+          "package": "axios",
+          "installedVersion": "0.21.1",
+          "fixedVersion": "1.16.0, 0.32.0",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-44487 axios 0.21.1"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-44492 in axios",
+        "severity": "high",
+        "description": "axios: Axios: Proxy bypass via IPv4-mapped IPv6 address non-normalization",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-918",
+        "cvss": 8.6,
+        "remediation": "Upgrade axios to 1.16.0, 0.32.0",
+        "target": "package-lock.json (axios)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-44492",
+        "location": {
+          "file": "package-lock.json",
+          "package": "axios",
+          "installedVersion": "0.21.1",
+          "fixedVersion": "1.16.0, 0.32.0",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-44492 axios 0.21.1"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-44495 in axios",
+        "severity": "high",
+        "description": "axios: Axios: Information disclosure due to prototype pollution vulnerability",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-94",
+        "cvss": 7.7,
+        "remediation": "Upgrade axios to 1.15.2, 0.31.1",
+        "target": "package-lock.json (axios)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-44495",
+        "location": {
+          "file": "package-lock.json",
+          "package": "axios",
+          "installedVersion": "0.21.1",
+          "fixedVersion": "1.15.2, 0.31.1",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-44495 axios 0.21.1"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-44496 in axios",
+        "severity": "high",
+        "description": "axios: Axios: Client-side Denial of Service via unescaped regex metacharacters in XSRF cookie name",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-400",
+        "cvss": 7.5,
+        "remediation": "Upgrade axios to 1.16.0, 0.32.0",
+        "target": "package-lock.json (axios)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-44496",
+        "location": {
+          "file": "package-lock.json",
+          "package": "axios",
+          "installedVersion": "0.21.1",
+          "fixedVersion": "1.16.0, 0.32.0",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-44496 axios 0.21.1"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2024-45590 in body-parser",
+        "severity": "high",
+        "description": "body-parser: Denial of Service Vulnerability in body-parser",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-405",
+        "cvss": 7.5,
+        "remediation": "Upgrade body-parser to 1.20.3",
+        "target": "package-lock.json (body-parser)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2024-45590",
+        "location": {
+          "file": "package-lock.json",
+          "package": "body-parser",
+          "installedVersion": "1.18.2",
+          "fixedVersion": "1.20.3",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2024-45590 body-parser 1.18.2"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2022-29078 in ejs",
+        "severity": "critical",
+        "description": "ejs: server-side template injection in outputFunctionName",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-94",
+        "cvss": 9.8,
+        "remediation": "Upgrade ejs to 3.1.7",
+        "target": "package-lock.json (ejs)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2022-29078",
+        "location": {
+          "file": "package-lock.json",
+          "package": "ejs",
+          "installedVersion": "3.1.6",
+          "fixedVersion": "3.1.7",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2022-29078 ejs 3.1.6"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2022-23539 in jsonwebtoken",
+        "severity": "high",
+        "description": "jsonwebtoken: Unrestricted key type could lead to legacy keys usagen",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-327",
+        "cvss": 8.1,
+        "remediation": "Upgrade jsonwebtoken to 9.0.0",
+        "target": "package-lock.json (jsonwebtoken)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2022-23539",
+        "location": {
+          "file": "package-lock.json",
+          "package": "jsonwebtoken",
+          "installedVersion": "8.5.1",
+          "fixedVersion": "9.0.0",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2022-23539 jsonwebtoken 8.5.1"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2020-8203 in lodash",
+        "severity": "high",
+        "description": "nodejs-lodash: prototype pollution in zipObjectDeep function",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-770",
+        "cvss": 7.4,
+        "remediation": "Upgrade lodash to 4.17.19",
+        "target": "package-lock.json (lodash)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2020-8203",
+        "location": {
+          "file": "package-lock.json",
+          "package": "lodash",
+          "installedVersion": "4.17.15",
+          "fixedVersion": "4.17.19",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2020-8203 lodash 4.17.15"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2021-23337 in lodash",
+        "severity": "high",
+        "description": "nodejs-lodash: command injection via template",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-94",
+        "cvss": 7.2,
+        "remediation": "Upgrade lodash to 4.17.21",
+        "target": "package-lock.json (lodash)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2021-23337",
+        "location": {
+          "file": "package-lock.json",
+          "package": "lodash",
+          "installedVersion": "4.17.15",
+          "fixedVersion": "4.17.21",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2021-23337 lodash 4.17.15"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-4800 in lodash",
+        "severity": "high",
+        "description": "lodash: lodash: Arbitrary code execution via untrusted input in template imports",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-94",
+        "cvss": 9.8,
+        "remediation": "Upgrade lodash to 4.18.0",
+        "target": "package-lock.json (lodash)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-4800",
+        "location": {
+          "file": "package-lock.json",
+          "package": "lodash",
+          "installedVersion": "4.17.15",
+          "fixedVersion": "4.18.0",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-4800 lodash 4.17.15"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] NSWG-ECO-516 in lodash",
+        "severity": "high",
+        "description": "Allocation of Resources Without Limits or Throttling",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": null,
+        "cvss": null,
+        "remediation": "Upgrade lodash to >=4.17.19",
+        "target": "package-lock.json (lodash)",
+        "sourceTool": "trivy",
+        "sourceRule": "NSWG-ECO-516",
+        "location": {
+          "file": "package-lock.json",
+          "package": "lodash",
+          "installedVersion": "4.17.15",
+          "fixedVersion": ">=4.17.19",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "NSWG-ECO-516 lodash 4.17.15"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2021-44906 in minimist",
+        "severity": "critical",
+        "description": "minimist: prototype pollution",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-1321",
+        "cvss": 9.8,
+        "remediation": "Upgrade minimist to 1.2.6, 0.2.4",
+        "target": "package-lock.json (minimist)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2021-44906",
+        "location": {
+          "file": "package-lock.json",
+          "package": "minimist",
+          "installedVersion": "1.2.5",
+          "fixedVersion": "1.2.6, 0.2.4",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2021-44906 minimist 1.2.5"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2022-0235 in node-fetch",
+        "severity": "high",
+        "description": "node-fetch: exposure of sensitive information to an unauthorized actor",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-200",
+        "cvss": 6.1,
+        "remediation": "Upgrade node-fetch to 3.1.1, 2.6.7",
+        "target": "package-lock.json (node-fetch)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2022-0235",
+        "location": {
+          "file": "package-lock.json",
+          "package": "node-fetch",
+          "installedVersion": "2.6.0",
+          "fixedVersion": "3.1.1, 2.6.7",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2022-0235 node-fetch 2.6.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2024-45296 in path-to-regexp",
+        "severity": "high",
+        "description": "path-to-regexp: Backtracking regular expressions cause ReDoS",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-1333",
+        "cvss": 5.3,
+        "remediation": "Upgrade path-to-regexp to 1.9.0, 0.1.10, 8.0.0, 3.3.0, 6.3.0",
+        "target": "package-lock.json (path-to-regexp)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2024-45296",
+        "location": {
+          "file": "package-lock.json",
+          "package": "path-to-regexp",
+          "installedVersion": "0.1.7",
+          "fixedVersion": "1.9.0, 0.1.10, 8.0.0, 3.3.0, 6.3.0",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2024-45296 path-to-regexp 0.1.7"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2024-52798 in path-to-regexp",
+        "severity": "high",
+        "description": "path-to-regexp: path-to-regexp Unpatched `path-to-regexp` ReDoS in 0.1.x",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-1333",
+        "cvss": 5.3,
+        "remediation": "Upgrade path-to-regexp to 0.1.12",
+        "target": "package-lock.json (path-to-regexp)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2024-52798",
+        "location": {
+          "file": "package-lock.json",
+          "package": "path-to-regexp",
+          "installedVersion": "0.1.7",
+          "fixedVersion": "0.1.12",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2024-52798 path-to-regexp 0.1.7"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-4867 in path-to-regexp",
+        "severity": "high",
+        "description": "path-to-regexp: path-to-regexp: Denial of Service via catastrophic backtracking from malformed URL parameters",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-1333",
+        "cvss": 5.3,
+        "remediation": "Upgrade path-to-regexp to 0.1.13",
+        "target": "package-lock.json (path-to-regexp)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-4867",
+        "location": {
+          "file": "package-lock.json",
+          "package": "path-to-regexp",
+          "installedVersion": "0.1.7",
+          "fixedVersion": "0.1.13",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-4867 path-to-regexp 0.1.7"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2022-24999 in qs",
+        "severity": "high",
+        "description": "express: \"qs\" prototype poisoning causes the hang of the node process",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-1321",
+        "cvss": 7.5,
+        "remediation": "Upgrade qs to 6.10.3, 6.9.7, 6.8.3, 6.7.3, 6.6.1, 6.5.3, 6.4.1, 6.3.3, 6.2.4",
+        "target": "package-lock.json (qs)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2022-24999",
+        "location": {
+          "file": "package-lock.json",
+          "package": "qs",
+          "installedVersion": "6.5.1",
+          "fixedVersion": "6.10.3, 6.9.7, 6.8.3, 6.7.3, 6.6.1, 6.5.3, 6.4.1, 6.3.3, 6.2.4",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2022-24999 qs 6.5.1"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-59873 in tar",
+        "severity": "critical",
+        "description": "tar: node-tar: Denial of Service via crafted gzip bomb",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-770",
+        "cvss": 7.5,
+        "remediation": "Upgrade tar to 7.5.19",
+        "target": "package-lock.json (tar)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-59873",
+        "location": {
+          "file": "package-lock.json",
+          "package": "tar",
+          "installedVersion": "4.4.13",
+          "fixedVersion": "7.5.19",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-59873 tar 4.4.13"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2021-32803 in tar",
+        "severity": "high",
+        "description": "nodejs-tar: Insufficient symlink protection allowing arbitrary file creation and overwrite",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-22",
+        "cvss": 8.1,
+        "remediation": "Upgrade tar to 3.2.3, 4.4.15, 5.0.7, 6.1.2",
+        "target": "package-lock.json (tar)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2021-32803",
+        "location": {
+          "file": "package-lock.json",
+          "package": "tar",
+          "installedVersion": "4.4.13",
+          "fixedVersion": "3.2.3, 4.4.15, 5.0.7, 6.1.2",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2021-32803 tar 4.4.13"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2021-32804 in tar",
+        "severity": "high",
+        "description": "nodejs-tar: Insufficient absolute path sanitization allowing arbitrary file creation and overwrite",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-22",
+        "cvss": 8.1,
+        "remediation": "Upgrade tar to 3.2.2, 4.4.14, 5.0.6, 6.1.1",
+        "target": "package-lock.json (tar)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2021-32804",
+        "location": {
+          "file": "package-lock.json",
+          "package": "tar",
+          "installedVersion": "4.4.13",
+          "fixedVersion": "3.2.2, 4.4.14, 5.0.6, 6.1.1",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2021-32804 tar 4.4.13"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2021-37701 in tar",
+        "severity": "high",
+        "description": "nodejs-tar: Insufficient symlink protection due to directory cache poisoning using symbolic links allowing arbitrary file creation and overwrite",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-22",
+        "cvss": 8.6,
+        "remediation": "Upgrade tar to 4.4.16, 5.0.8, 6.1.7",
+        "target": "package-lock.json (tar)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2021-37701",
+        "location": {
+          "file": "package-lock.json",
+          "package": "tar",
+          "installedVersion": "4.4.13",
+          "fixedVersion": "4.4.16, 5.0.8, 6.1.7",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2021-37701 tar 4.4.13"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2021-37712 in tar",
+        "severity": "high",
+        "description": "nodejs-tar: Insufficient symlink protection due to directory cache poisoning using symbolic links allowing arbitrary file creation and overwrite",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-22",
+        "cvss": 8.6,
+        "remediation": "Upgrade tar to 4.4.18, 5.0.10, 6.1.9",
+        "target": "package-lock.json (tar)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2021-37712",
+        "location": {
+          "file": "package-lock.json",
+          "package": "tar",
+          "installedVersion": "4.4.13",
+          "fixedVersion": "4.4.18, 5.0.10, 6.1.9",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2021-37712 tar 4.4.13"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2021-37713 in tar",
+        "severity": "high",
+        "description": "nodejs-tar: Arbitrary File Creation/Overwrite on Windows via insufficient relative path sanitization",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-22",
+        "cvss": 8.6,
+        "remediation": "Upgrade tar to 4.4.18, 5.0.10, 6.1.9",
+        "target": "package-lock.json (tar)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2021-37713",
+        "location": {
+          "file": "package-lock.json",
+          "package": "tar",
+          "installedVersion": "4.4.13",
+          "fixedVersion": "4.4.18, 5.0.10, 6.1.9",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2021-37713 tar 4.4.13"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-23745 in tar",
+        "severity": "high",
+        "description": "node-tar: tar: node-tar: Arbitrary file overwrite and symlink poisoning via unsanitized linkpaths in archives",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-22",
+        "cvss": 6.1,
+        "remediation": "Upgrade tar to 7.5.3",
+        "target": "package-lock.json (tar)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-23745",
+        "location": {
+          "file": "package-lock.json",
+          "package": "tar",
+          "installedVersion": "4.4.13",
+          "fixedVersion": "7.5.3",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-23745 tar 4.4.13"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-23950 in tar",
+        "severity": "high",
+        "description": "node-tar: tar: node-tar: Arbitrary file overwrite via Unicode path collision race condition",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-176",
+        "cvss": 5.9,
+        "remediation": "Upgrade tar to 7.5.4",
+        "target": "package-lock.json (tar)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-23950",
+        "location": {
+          "file": "package-lock.json",
+          "package": "tar",
+          "installedVersion": "4.4.13",
+          "fixedVersion": "7.5.4",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-23950 tar 4.4.13"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-24842 in tar",
+        "severity": "high",
+        "description": "node-tar: tar: node-tar: Arbitrary file creation via path traversal bypass in hardlink security check",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-22",
+        "cvss": 8.2,
+        "remediation": "Upgrade tar to 7.5.7",
+        "target": "package-lock.json (tar)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-24842",
+        "location": {
+          "file": "package-lock.json",
+          "package": "tar",
+          "installedVersion": "4.4.13",
+          "fixedVersion": "7.5.7",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-24842 tar 4.4.13"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-26960 in tar",
+        "severity": "high",
+        "description": "node-tar: node-tar: Arbitrary file read/write via malicious archive hardlink creation",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-22",
+        "cvss": 7.1,
+        "remediation": "Upgrade tar to 7.5.8",
+        "target": "package-lock.json (tar)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-26960",
+        "location": {
+          "file": "package-lock.json",
+          "package": "tar",
+          "installedVersion": "4.4.13",
+          "fixedVersion": "7.5.8",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-26960 tar 4.4.13"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-29786 in tar",
+        "severity": "high",
+        "description": "node-tar: hardlink path traversal via drive-relative linkpath",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-22",
+        "cvss": 6.3,
+        "remediation": "Upgrade tar to 7.5.10",
+        "target": "package-lock.json (tar)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-29786",
+        "location": {
+          "file": "package-lock.json",
+          "package": "tar",
+          "installedVersion": "4.4.13",
+          "fixedVersion": "7.5.10",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-29786 tar 4.4.13"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-31802 in tar",
+        "severity": "high",
+        "description": "tar: tar: File overwrite via drive-relative symlink traversal",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-22",
+        "cvss": 5.5,
+        "remediation": "Upgrade tar to 7.5.11",
+        "target": "package-lock.json (tar)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-31802",
+        "location": {
+          "file": "package-lock.json",
+          "package": "tar",
+          "installedVersion": "4.4.13",
+          "fixedVersion": "7.5.11",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-31802 tar 4.4.13"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-59874 in tar",
+        "severity": "high",
+        "description": "tar: Node-tar: Denial of Service via malformed tar archive header",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-835",
+        "cvss": 7.5,
+        "remediation": "Upgrade tar to 7.5.18",
+        "target": "package-lock.json (tar)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-59874",
+        "location": {
+          "file": "package-lock.json",
+          "package": "tar",
+          "installedVersion": "4.4.13",
+          "fixedVersion": "7.5.18",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-59874 tar 4.4.13"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-73566 in tar",
+        "severity": "high",
+        "description": "tar: node-tar: Denial of Service via crafted long-path tar archive",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-400",
+        "cvss": 7.5,
+        "remediation": "Upgrade tar to 7.5.21",
+        "target": "package-lock.json (tar)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-73566",
+        "location": {
+          "file": "package-lock.json",
+          "package": "tar",
+          "installedVersion": "4.4.13",
+          "fixedVersion": "7.5.21",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-73566 tar 4.4.13"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2019-14234 in Django",
+        "severity": "critical",
+        "description": "Django: SQL injection possibility in key and index lookups for JSONField/HStoreField",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-89",
+        "cvss": 9.8,
+        "remediation": "Upgrade Django to 1.11.23, 2.1.11, 2.2.4",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2019-14234",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "1.11.23, 2.1.11, 2.2.4",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2019-14234 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2019-19844 in Django",
+        "severity": "critical",
+        "description": "Django: crafted email address allows account takeover",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-640",
+        "cvss": 9.8,
+        "remediation": "Upgrade Django to 1.11.27, 2.2.9, 3.0.1",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2019-19844",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "1.11.27, 2.2.9, 3.0.1",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2019-19844 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2020-7471 in Django",
+        "severity": "critical",
+        "description": "django: potential SQL injection via StringAgg(delimiter)",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-89",
+        "cvss": 9.8,
+        "remediation": "Upgrade Django to 1.11.28, 2.2.10, 3.0.3",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2020-7471",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "1.11.28, 2.2.10, 3.0.3",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2020-7471 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2022-28346 in Django",
+        "severity": "critical",
+        "description": "Django: SQL injection in QuerySet.annotate(),aggregate() and extra()",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-89",
+        "cvss": 9.8,
+        "remediation": "Upgrade Django to 2.2.28, 3.2.13, 4.0.4",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2022-28346",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "2.2.28, 3.2.13, 4.0.4",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2022-28346 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2022-28347 in Django",
+        "severity": "critical",
+        "description": "Django: SQL injection via QuerySet.explain(options) on PostgreSQL",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-89",
+        "cvss": 9.8,
+        "remediation": "Upgrade Django to 2.2.28, 3.2.13, 4.0.4",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2022-28347",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "2.2.28, 3.2.13, 4.0.4",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2022-28347 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2025-64459 in Django",
+        "severity": "critical",
+        "description": "django: Django SQL injection",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-89",
+        "cvss": 8.3,
+        "remediation": "Upgrade Django to 5.2.8, 5.1.14, 4.2.26",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2025-64459",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "5.2.8, 5.1.14, 4.2.26",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2025-64459 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2019-14232 in Django",
+        "severity": "high",
+        "description": "Django: backtracking in a regular expression in django.utils.text.Truncator leads to DoS",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-400",
+        "cvss": 7.5,
+        "remediation": "Upgrade Django to 1.11.23, 2.1.11, 2.2.4",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2019-14232",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "1.11.23, 2.1.11, 2.2.4",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2019-14232 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2019-14233 in Django",
+        "severity": "high",
+        "description": "Django: the behavior of the underlying HTMLParser leading to DoS",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-400",
+        "cvss": 7.5,
+        "remediation": "Upgrade Django to 1.11.23, 2.1.11, 2.2.4",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2019-14233",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "1.11.23, 2.1.11, 2.2.4",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2019-14233 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2019-14235 in Django",
+        "severity": "high",
+        "description": "Django: Potential memory exhaustion in django.utils.encoding.uri_to_iri()",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-674",
+        "cvss": 7.5,
+        "remediation": "Upgrade Django to 1.11.23, 2.1.11, 2.2.4",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2019-14235",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "1.11.23, 2.1.11, 2.2.4",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2019-14235 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2019-19118 in Django",
+        "severity": "high",
+        "description": "django: privilege escalation in the django admin",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-276",
+        "cvss": 6.5,
+        "remediation": "Upgrade Django to 2.1.15, 2.2.8",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2019-19118",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "2.1.15, 2.2.8",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2019-19118 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2020-13254 in Django",
+        "severity": "high",
+        "description": "django: potential data leakage via malformed memcached keys",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-295",
+        "cvss": 5.9,
+        "remediation": "Upgrade Django to 2.2.13, 3.0.7",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2020-13254",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "2.2.13, 3.0.7",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2020-13254 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2020-24583 in Django",
+        "severity": "high",
+        "description": "django: incorrect permissions on intermediate-level directories on Python 3.7+",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-276",
+        "cvss": 7.5,
+        "remediation": "Upgrade Django to 2.2.16, 3.0.10, 3.1.1",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2020-24583",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "2.2.16, 3.0.10, 3.1.1",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2020-24583 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2020-9402 in Django",
+        "severity": "high",
+        "description": "django: potential SQL injection via \"tolerance\" parameter in GIS functions and aggregates on Oracle",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-89",
+        "cvss": 8.8,
+        "remediation": "Upgrade Django to 1.11.29, 2.2.11, 3.0.4",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2020-9402",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "1.11.29, 2.2.11, 3.0.4",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2020-9402 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2021-31542 in Django",
+        "severity": "high",
+        "description": "django: Potential directory-traversal via uploaded files",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-22",
+        "cvss": 7.5,
+        "remediation": "Upgrade Django to 2.2.21, 3.1.9, 3.2.1",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2021-31542",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "2.2.21, 3.1.9, 3.2.1",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2021-31542 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2021-33571 in Django",
+        "severity": "high",
+        "description": "django: Possible indeterminate SSRF, RFI, and LFI attacks since validators accepted leading zeros in IPv4 addresses",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-918",
+        "cvss": 7.5,
+        "remediation": "Upgrade Django to 2.2.24, 3.1.12, 3.2.4",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2021-33571",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "2.2.24, 3.1.12, 3.2.4",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2021-33571 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2021-45115 in Django",
+        "severity": "high",
+        "description": "django: Denial-of-service possibility in UserAttributeSimilarityValidator",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": null,
+        "cvss": 7.5,
+        "remediation": "Upgrade Django to 2.2.26, 3.2.11, 4.0.1",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2021-45115",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "2.2.26, 3.2.11, 4.0.1",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2021-45115 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2021-45116 in Django",
+        "severity": "high",
+        "description": "django: Potential information disclosure in dictsort template filter",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-20",
+        "cvss": 7.5,
+        "remediation": "Upgrade Django to 2.2.26, 3.2.11, 4.0.1",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2021-45116",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "2.2.26, 3.2.11, 4.0.1",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2021-45116 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2022-23833 in Django",
+        "severity": "high",
+        "description": "django: Denial-of-service possibility in file uploads",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-835",
+        "cvss": 7.5,
+        "remediation": "Upgrade Django to 2.2.27, 3.2.12, 4.0.2",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2022-23833",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "2.2.27, 3.2.12, 4.0.2",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2022-23833 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2022-36359 in Django",
+        "severity": "high",
+        "description": "An issue was discovered in the HTTP FileResponse class in Django 3.2 b ...",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-494",
+        "cvss": 8.8,
+        "remediation": "Upgrade Django to 3.2.15, 4.0.7",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2022-36359",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "3.2.15, 4.0.7",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2022-36359 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2025-57833 in Django",
+        "severity": "high",
+        "description": "django: Django SQL injection in FilteredRelation column aliases",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-89",
+        "cvss": 8.1,
+        "remediation": "Upgrade Django to 4.2.24, 5.1.12, 5.2.6",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2025-57833",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "4.2.24, 5.1.12, 5.2.6",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2025-57833 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2025-64458 in Django",
+        "severity": "high",
+        "description": "Django: Denial-of-service vulnerability in Django on Windows",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-407",
+        "cvss": 7.5,
+        "remediation": "Upgrade Django to 5.2.8, 5.1.14, 4.2.26",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2025-64458",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "5.2.8, 5.1.14, 4.2.26",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2025-64458 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2026-15307 in Django",
+        "severity": "high",
+        "description": "django: Django: Remote code execution via GeoDjango spatial lookups",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-73",
+        "cvss": 8.8,
+        "remediation": "Upgrade Django to 5.2.17, 6.0.8",
+        "target": "requirements.txt (Django)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2026-15307",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Django",
+          "installedVersion": "2.2.0",
+          "fixedVersion": "5.2.17, 6.0.8",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2026-15307 Django 2.2.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2019-10906 in Jinja2",
+        "severity": "high",
+        "description": "python-jinja2: str.format_map allows sandbox escape",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": null,
+        "cvss": 8.6,
+        "remediation": "Upgrade Jinja2 to 2.10.1",
+        "target": "requirements.txt (Jinja2)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2019-10906",
+        "location": {
+          "file": "requirements.txt",
+          "package": "Jinja2",
+          "installedVersion": "2.10",
+          "fixedVersion": "2.10.1",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2019-10906 Jinja2 2.10"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2019-20477 in PyYAML",
+        "severity": "critical",
+        "description": "PyYAML: command execution through python/object/apply constructor in FullLoader",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-502",
+        "cvss": 9.8,
+        "remediation": "Upgrade PyYAML to 5.2",
+        "target": "requirements.txt (PyYAML)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2019-20477",
+        "location": {
+          "file": "requirements.txt",
+          "package": "PyYAML",
+          "installedVersion": "5.1",
+          "fixedVersion": "5.2",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2019-20477 PyYAML 5.1"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2020-14343 in PyYAML",
+        "severity": "critical",
+        "description": "PyYAML: incomplete fix for CVE-2020-1747",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-20",
+        "cvss": 9.8,
+        "remediation": "Upgrade PyYAML to 5.4",
+        "target": "requirements.txt (PyYAML)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2020-14343",
+        "location": {
+          "file": "requirements.txt",
+          "package": "PyYAML",
+          "installedVersion": "5.1",
+          "fixedVersion": "5.4",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2020-14343 PyYAML 5.1"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2020-1747 in PyYAML",
+        "severity": "critical",
+        "description": "PyYAML: arbitrary command execution through python/object/new when FullLoader is used",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-20",
+        "cvss": 9.8,
+        "remediation": "Upgrade PyYAML to 5.3.1",
+        "target": "requirements.txt (PyYAML)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2020-1747",
+        "location": {
+          "file": "requirements.txt",
+          "package": "PyYAML",
+          "installedVersion": "5.1",
+          "fixedVersion": "5.3.1",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2020-1747 PyYAML 5.1"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] CVE-2018-18074 in requests",
+        "severity": "high",
+        "description": "python-requests: Redirect from HTTPS to HTTP does not remove Authorization header",
+        "verification": "hypothesis",
+        "confidence": "medium",
+        "method": "trivy vulnerability DB match (version range; no exploit validation)",
+        "cwe": "CWE-522",
+        "cvss": 7.5,
+        "remediation": "Upgrade requests to 2.20.0",
+        "target": "requirements.txt (requests)",
+        "sourceTool": "trivy",
+        "sourceRule": "CVE-2018-18074",
+        "location": {
+          "file": "requirements.txt",
+          "package": "requests",
+          "installedVersion": "2.19.0",
+          "fixedVersion": "2.20.0",
+          "kind": "dependency"
+        },
+        "evidence": [
+          {
+            "title": "trivy vulnerability",
+            "excerpt": "CVE-2018-18074 requests 2.19.0"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] secret aws-access-key-id in src/config.js",
+        "severity": "critical",
+        "description": "AWS Access Key ID",
+        "verification": "hypothesis",
+        "confidence": "low",
+        "method": "trivy secret pattern match (may be a test fixture or example)",
+        "cwe": null,
+        "cvss": null,
+        "remediation": "Confirm the value is a live credential; rotate it if so. Ignore documented test/example values.",
+        "target": "src/config.js",
+        "sourceTool": "trivy",
+        "sourceRule": "aws-access-key-id",
+        "location": {
+          "file": "src/config.js",
+          "startLine": 5,
+          "kind": "secret"
+        },
+        "evidence": [
+          {
+            "title": "trivy secret",
+            "excerpt": "aws-access-key-id AWS Access Key ID line=5"
+          }
+        ]
+      },
+      {
+        "title": "[trivy] secret github-pat in src/config.js",
+        "severity": "critical",
+        "description": "GitHub Personal Access Token",
+        "verification": "hypothesis",
+        "confidence": "low",
+        "method": "trivy secret pattern match (may be a test fixture or example)",
+        "cwe": null,
+        "cvss": null,
+        "remediation": "Confirm the value is a live credential; rotate it if so. Ignore documented test/example values.",
+        "target": "src/config.js",
+        "sourceTool": "trivy",
+        "sourceRule": "github-pat",
+        "location": {
+          "file": "src/config.js",
+          "startLine": 6,
+          "kind": "secret"
+        },
+        "evidence": [
+          {
+            "title": "trivy secret",
+            "excerpt": "github-pat GitHub Personal Access Token line=6"
+          }
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "title": "[trivy] CVE-2021-3749 in axios",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2021-3749 axios 0.21.1 -> 0.21.2",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2021-3749",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2025-27152 in axios",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2025-27152 axios 0.21.1 -> 1.8.2, 0.30.0",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2025-27152",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-25639 in axios",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-25639 axios 0.21.1 -> 1.13.5, 0.30.3",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-25639",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-42033 in axios",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-42033 axios 0.21.1 -> 1.15.1, 0.31.1",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-42033",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-42035 in axios",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-42035 axios 0.21.1 -> 1.15.1, 0.31.1",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-42035",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-42043 in axios",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-42043 axios 0.21.1 -> 1.15.1, 0.31.1",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-42043",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-44486 in axios",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-44486 axios 0.21.1 -> 1.16.0, 0.32.0",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-44486",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-44487 in axios",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-44487 axios 0.21.1 -> 1.16.0, 0.32.0",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-44487",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-44492 in axios",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-44492 axios 0.21.1 -> 1.16.0, 0.32.0",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-44492",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-44495 in axios",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-44495 axios 0.21.1 -> 1.15.2, 0.31.1",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-44495",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-44496 in axios",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-44496 axios 0.21.1 -> 1.16.0, 0.32.0",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-44496",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2024-45590 in body-parser",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2024-45590 body-parser 1.18.2 -> 1.20.3",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2024-45590",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2022-29078 in ejs",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2022-29078 ejs 3.1.6 -> 3.1.7",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2022-29078",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2022-23539 in jsonwebtoken",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2022-23539 jsonwebtoken 8.5.1 -> 9.0.0",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2022-23539",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2020-8203 in lodash",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2020-8203 lodash 4.17.15 -> 4.17.19",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2020-8203",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2021-23337 in lodash",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2021-23337 lodash 4.17.15 -> 4.17.21",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2021-23337",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-4800 in lodash",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-4800 lodash 4.17.15 -> 4.18.0",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-4800",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] NSWG-ECO-516 in lodash",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json NSWG-ECO-516 lodash 4.17.15 -> >=4.17.19",
+        "meta": {
+          "tool": "trivy",
+          "rule": "NSWG-ECO-516",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2021-44906 in minimist",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2021-44906 minimist 1.2.5 -> 1.2.6, 0.2.4",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2021-44906",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2022-0235 in node-fetch",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2022-0235 node-fetch 2.6.0 -> 3.1.1, 2.6.7",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2022-0235",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2024-45296 in path-to-regexp",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2024-45296 path-to-regexp 0.1.7 -> 1.9.0, 0.1.10, 8.0.0, 3.3.0, 6.3.0",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2024-45296",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2024-52798 in path-to-regexp",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2024-52798 path-to-regexp 0.1.7 -> 0.1.12",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2024-52798",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-4867 in path-to-regexp",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-4867 path-to-regexp 0.1.7 -> 0.1.13",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-4867",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2022-24999 in qs",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2022-24999 qs 6.5.1 -> 6.10.3, 6.9.7, 6.8.3, 6.7.3, 6.6.1, 6.5.3, 6.4.1, 6.3.3, 6.2.4",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2022-24999",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-59873 in tar",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-59873 tar 4.4.13 -> 7.5.19",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-59873",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2021-32803 in tar",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2021-32803 tar 4.4.13 -> 3.2.3, 4.4.15, 5.0.7, 6.1.2",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2021-32803",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2021-32804 in tar",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2021-32804 tar 4.4.13 -> 3.2.2, 4.4.14, 5.0.6, 6.1.1",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2021-32804",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2021-37701 in tar",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2021-37701 tar 4.4.13 -> 4.4.16, 5.0.8, 6.1.7",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2021-37701",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2021-37712 in tar",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2021-37712 tar 4.4.13 -> 4.4.18, 5.0.10, 6.1.9",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2021-37712",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2021-37713 in tar",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2021-37713 tar 4.4.13 -> 4.4.18, 5.0.10, 6.1.9",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2021-37713",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-23745 in tar",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-23745 tar 4.4.13 -> 7.5.3",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-23745",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-23950 in tar",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-23950 tar 4.4.13 -> 7.5.4",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-23950",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-24842 in tar",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-24842 tar 4.4.13 -> 7.5.7",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-24842",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-26960 in tar",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-26960 tar 4.4.13 -> 7.5.8",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-26960",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-29786 in tar",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-29786 tar 4.4.13 -> 7.5.10",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-29786",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-31802 in tar",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-31802 tar 4.4.13 -> 7.5.11",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-31802",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-59874 in tar",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-59874 tar 4.4.13 -> 7.5.18",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-59874",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-73566 in tar",
+        "kind": "external-tool",
+        "excerpt": "package-lock.json CVE-2026-73566 tar 4.4.13 -> 7.5.21",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-73566",
+          "file": "package-lock.json"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2019-14234 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2019-14234 Django 2.2.0 -> 1.11.23, 2.1.11, 2.2.4",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2019-14234",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2019-19844 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2019-19844 Django 2.2.0 -> 1.11.27, 2.2.9, 3.0.1",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2019-19844",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2020-7471 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2020-7471 Django 2.2.0 -> 1.11.28, 2.2.10, 3.0.3",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2020-7471",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2022-28346 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2022-28346 Django 2.2.0 -> 2.2.28, 3.2.13, 4.0.4",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2022-28346",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2022-28347 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2022-28347 Django 2.2.0 -> 2.2.28, 3.2.13, 4.0.4",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2022-28347",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2025-64459 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2025-64459 Django 2.2.0 -> 5.2.8, 5.1.14, 4.2.26",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2025-64459",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2019-14232 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2019-14232 Django 2.2.0 -> 1.11.23, 2.1.11, 2.2.4",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2019-14232",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2019-14233 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2019-14233 Django 2.2.0 -> 1.11.23, 2.1.11, 2.2.4",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2019-14233",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2019-14235 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2019-14235 Django 2.2.0 -> 1.11.23, 2.1.11, 2.2.4",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2019-14235",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2019-19118 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2019-19118 Django 2.2.0 -> 2.1.15, 2.2.8",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2019-19118",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2020-13254 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2020-13254 Django 2.2.0 -> 2.2.13, 3.0.7",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2020-13254",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2020-24583 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2020-24583 Django 2.2.0 -> 2.2.16, 3.0.10, 3.1.1",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2020-24583",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2020-9402 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2020-9402 Django 2.2.0 -> 1.11.29, 2.2.11, 3.0.4",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2020-9402",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2021-31542 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2021-31542 Django 2.2.0 -> 2.2.21, 3.1.9, 3.2.1",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2021-31542",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2021-33571 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2021-33571 Django 2.2.0 -> 2.2.24, 3.1.12, 3.2.4",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2021-33571",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2021-45115 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2021-45115 Django 2.2.0 -> 2.2.26, 3.2.11, 4.0.1",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2021-45115",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2021-45116 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2021-45116 Django 2.2.0 -> 2.2.26, 3.2.11, 4.0.1",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2021-45116",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2022-23833 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2022-23833 Django 2.2.0 -> 2.2.27, 3.2.12, 4.0.2",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2022-23833",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2022-36359 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2022-36359 Django 2.2.0 -> 3.2.15, 4.0.7",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2022-36359",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2025-57833 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2025-57833 Django 2.2.0 -> 4.2.24, 5.1.12, 5.2.6",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2025-57833",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2025-64458 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2025-64458 Django 2.2.0 -> 5.2.8, 5.1.14, 4.2.26",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2025-64458",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2026-15307 in Django",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2026-15307 Django 2.2.0 -> 5.2.17, 6.0.8",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2026-15307",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2019-10906 in Jinja2",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2019-10906 Jinja2 2.10 -> 2.10.1",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2019-10906",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2019-20477 in PyYAML",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2019-20477 PyYAML 5.1 -> 5.2",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2019-20477",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2020-14343 in PyYAML",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2020-14343 PyYAML 5.1 -> 5.4",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2020-14343",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2020-1747 in PyYAML",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2020-1747 PyYAML 5.1 -> 5.3.1",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2020-1747",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] CVE-2018-18074 in requests",
+        "kind": "external-tool",
+        "excerpt": "requirements.txt CVE-2018-18074 requests 2.19.0 -> 2.20.0",
+        "meta": {
+          "tool": "trivy",
+          "rule": "CVE-2018-18074",
+          "file": "requirements.txt"
+        }
+      },
+      {
+        "title": "[trivy] secret aws-access-key-id in src/config.js",
+        "kind": "external-tool",
+        "excerpt": "src/config.js aws-access-key-id line=5 (value redacted)",
+        "meta": {
+          "tool": "trivy",
+          "rule": "aws-access-key-id",
+          "file": "src/config.js"
+        }
+      },
+      {
+        "title": "[trivy] secret github-pat in src/config.js",
+        "kind": "external-tool",
+        "excerpt": "src/config.js github-pat line=6 (value redacted)",
+        "meta": {
+          "tool": "trivy",
+          "rule": "github-pat",
+          "file": "src/config.js"
+        }
+      },
+      {
+        "title": "trivy invocation",
+        "kind": "external-tool",
+        "excerpt": "command=trivy fs --format json --quiet --scanners vuln,secret --severity HIGH,CRITICAL --skip-db-update D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample sha256(stdout)=2fe15bbb04ec3db8e6941eee68ab7b7f1b5bc51378961280fa3693d4229e8723"
+      }
+    ],
+    "meta": {
+      "capability": "sast.trivy",
+      "externalTool": "trivy",
+      "targetKind": "directory",
+      "verificationDefault": "hypothesis",
+      "offlineDb": true
+    }
+  }
+}
