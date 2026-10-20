@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.0 — 2026-10-20
+
+Advanced Research：4 个真实外部适配器 + Gate B；L1 provider 自检门；L2 loopback；工作台环境/证据/报告；真实模型 BinaryStaticAnalysis；46 能力 / 8 域 / 190 测试。
+
 ## 1.2.0-alpha.1 — Advanced Research（进行中）
 
 第一增量：隔离提供者抽象与行为级分析。

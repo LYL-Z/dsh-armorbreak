@@ -1,0 +1,18 @@
+{
+  "generatedAt": "2026-10-20T16:22:50.241Z",
+  "driver": "real DeepSeek Harness desktop GUI (Windows UIA) + real DeepSeek-V4.1-Flash model",
+  "hostVersionAtRun": "1.1.1 (desktop host loaded before v1.2.0 restart)",
+  "task": {
+    "id": "task_mvgvv4cm_bff4bb69",
+    "title": "notepad.exe 二进制静态分析",
+    "state": "COMPLETED",
+    "workflow": "BinaryStaticAnalysis",
+    "reportFormat": "markdown",
+    "reportPath": "D:\\dsh-ABM\\.armorbreak\\tasks\\task_mvgvv4cm_bff4bb69\\reports\\binarystaticanalysis_2026-10-20_16-14-03.md",
+    "reportSha256": "0c0f9a314c97dc89ac0cf6073e7a6f64cdca2943a0d9bc442ddff9377206f0a0",
+    "evidence": 21,
+    "findings": 6
+  },
+  "screenshot": "docs/acceptance/screenshots/gui-model-workflow-v12.png",
+  "limitation": "Desktop host ran 1.1.1; v1.2.0 UI verified via v12test web + CDP."
+}

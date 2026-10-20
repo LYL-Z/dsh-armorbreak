@@ -1,0 +1,26 @@
+{
+  "generatedAt": "2026-10-20T16:23:22.672Z",
+  "method": "Chromium CDP (Edge 155), dsh --profile v12test --port 3099",
+  "bundleVersion": "1.2.0",
+  "capabilities": 46,
+  "tasks": 6,
+  "isolation": "DaemonReady",
+  "environment": [
+    "Docker: DaemonReady 29.8.1",
+    "Podman: Unavailable",
+    "WSL2: Installed (not a sandbox)"
+  ],
+  "filters": [
+    "severity",
+    "verification"
+  ],
+  "reportFormats": [
+    "markdown",
+    "html"
+  ],
+  "consoleErrors": [],
+  "screenshots": [
+    "docs/acceptance/screenshots/gui-v12-workbench.png",
+    "docs/acceptance/screenshots/gui-model-workflow-v12.png"
+  ]
+}

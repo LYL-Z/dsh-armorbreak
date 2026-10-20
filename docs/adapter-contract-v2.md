@@ -62,7 +62,10 @@ interface ExternalToolAdapter {
 | 真实 Semgrep CLI 运行 | ✅ Gate B 通过（1.181.0） | `scripts/verify-gate-b.mjs`：本地 5 条规则 → 6 findings，全部 hypothesis |
 | 真实 Trivy CLI 运行 | ✅ Gate B 通过（0.76.0） | 本地漏洞库离线扫描 → 67 findings（依赖 65 + 密钥 2） |
 | 超时/取消子进程 | ⚠️ 依赖 execFile timeout；未做真实工具取消测试 | 后续补 |
-| Ghidra/JADX/TShark/Syft | ❌ 未实现 | 路线图 |
+| `network.tshark` | ✅ 实现 + 真实 Gate B 4.6.9 | `lib/analyzers/network/tshark.js` |
+| `sast.syft` | ✅ 实现 + 真实 Gate B 1.54.1 | `lib/analyzers/sast/syft.js` |
+| `android.jadx` | ✅ 实现 + 真实 Gate B 1.5.6 | `lib/analyzers/android/jadx.js` |
+| `binary.ghidra` | ✅ 实现 + 真实 Gate B 12.1.4 | `lib/analyzers/binary/ghidra.js` + `scripts/ghidra/ExportSummary.java` |
 
 执行前置条件：`semgrep` / `trivy` 在 PATH；Semgrep 需 `options.config` 本地规则；Trivy 需本地 DB（默认 `--skip-db-update`，除非显式 `downloadDb: true` 且允许联网）。
 
