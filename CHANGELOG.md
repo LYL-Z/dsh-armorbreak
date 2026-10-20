@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## 1.0.4 — 2026-10-20
+
+Stage A 安全维护（v1.1.0 Research Workbench 的第一阶段）。只修安全边界，不新增分析能力。
+
+### Security
+
+- **统一研究工具权限边界**：preset 取消挂载 `tool-fs`/`tool-fs-search`/`tool-pwsh`/`tool-bash`/`tool-web`/`tool-jobs`（它们绕过 L0–L3）；新增策略网关内的只读 `armorbreak_files`（list/read/stat/search，有界、无写、无执行）。
+- **授权创建与模型分离**：`armorbreak_scope` 改为 `request`（pending，不生效）→ 平台审批 `allowed-once` → `activate`（记录 approvalSource/approvedBy/approvalId）；移除 `action=authorize`；无审批服务时 fail-closed。
+- **网络探测**：`live.http_probe` 改为流式有界读取（超限立即断连）、策略期解析并 pinned IP、不跟随重定向、超时/AbortSignal 传导、敏感头脱敏、拒绝云元数据地址。
+- **L1 容器**：镜像必须 digest-pinned + allowlist；`--pull never`、非 root、tmpfs、唯一名称、超时 `docker rm -f` 清理；命令 argv 上限。真实成功路径未验证（无 daemon）。
+- **文件路径**：拒绝 UNC/设备/NUL 路径形式。
+- **状态接口**：`/armorbreak/state` 仅 loopback、GET/HEAD、拒绝 `?workspace=`。
+
+### Tests
+
+- 新增 `tests/security-boundary.test.mjs`（7 用例）；全套 **153/153 通过**（v1.0.3 的 146 个全部保留）。
+- 未验证：真实 Docker 成功路径、模型驱动 GUI E2E、真实公网 SSRF 测试（按任务书禁止）。
+
 ## 1.0.3 — 2026-10-20
 
 扫描降噪：用户重跑源码目录审计后报告 27 条发现中 26 条为规则自匹配/测试夹具/文档示例噪声。

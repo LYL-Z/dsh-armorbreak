@@ -11,6 +11,7 @@ import { basename } from 'node:path'
 import { getRuntime } from './lib/core/runtime.js'
 import { getWorkflow, listWorkflows } from './lib/core/workflows.js'
 import { generateTaskReport } from './lib/core/reports.js'
+import { listDirectory, readFileBounded, searchFiles, statPath } from './lib/core/files.js'
 import { POLICY_TOOL_DOC } from './lib/core/help.js'
 
 export const inject = ['tools']
@@ -151,9 +152,29 @@ function approvalBridge(ctx, exec) {
   }
 }
 
+/**
+ * Activation helper: activation of a pending authorization request requires the
+ * platform approval service to answer allowed-once. Unavailable service means
+ * fail-closed: no active authorization is created.
+ * @param {any} ctx
+ * @param {any} exec
+ * @param {{requestId: string, target: string, purpose: string}} input
+ */
+async function activateWithPlatformApproval(ctx, exec, input) {
+  const bridge = approvalBridge(ctx, exec)
+  const outcome = await bridge({
+    riskLevel: 'L2',
+    target: input.target,
+    reason: `authorization request ${input.requestId}: ${input.purpose}`,
+  })
+  if (outcome !== 'allowed-once') {
+    throw new Error(`平台审批未通过（${outcome}）；授权申请保持 pending，未创建有效授权。`)
+  }
+  return { approvalSource: 'platform-approval', approvedBy: 'platform-approval', approvalId: `platform-${Date.now().toString(36)}`, outcome }
+}
+
 /** @param {any} task */
-function taskLine(task) {
-  return `任务 \`${task.id}\`「${md(task.title)}」状态 **${task.state}**${task.workflowId ? ` · 工作流 ${task.workflowId}` : ''} · 证据 ${task.stats?.evidence ?? 0} / 发现 ${task.stats?.findings ?? 0}`
+function taskLine(task) {  return `任务 \`${task.id}\`「${md(task.title)}」状态 **${task.state}**${task.workflowId ? ` · 工作流 ${task.workflowId}` : ''} · 证据 ${task.stats?.evidence ?? 0} / 发现 ${task.stats?.findings ?? 0}`
 }
 
 /** @param {any} task @param {{max?: number}} [opts] */
@@ -320,18 +341,120 @@ export function apply(ctx) {
     tool({
       name: 'armorbreak_scope',
       description:
-        'Manage the authorization scope that L0/L1/L2 policy checks enforce. Offline analysis inside the task workspace needs no explicit scope; anything outside the workspace, any dynamic execution (L1) and any active network test (L2) requires a recorded authorization and — for L1/L2 — a platform approval grant. Authorizations are durable, signed records; revoke them when the engagement ends. L3 operations have no authorization path.',
+        'Manage scope in two separated steps. (1) action=request records what you propose to study: purpose, operator, paths and/or network targets. It grants nothing. (2) action=activate activates a pending request ONLY after the platform asks the human and gets an allowed-once grant; the approval identity is stored in the authorization. Use action=list to inspect, action=revoke to revoke. Never claim that chat text or a request is a human authorization. Offline analysis inside the task workspace needs no scope record; outside paths, L1 execution and L2 probes always need an activated authorization.',
       parameters: {
         type: 'object',
         properties: {
-          action: { type: 'string', enum: ['list', 'authorize', 'revoke'], description: 'list current scope and approvals; authorize a new record; revoke one by id.' },
-          purpose: { type: 'string', description: 'authorize: what is being researched and why (>= 4 chars). Required with operator.' },
-          operator: { type: 'string', description: 'authorize: the human/team granting authorization (>= 2 chars).' },
-          paths: { type: 'array', items: { type: 'string' }, description: 'authorize: absolute file/directory paths or prefixes allowed outside the task workspace.' },
-          networkTargets: { type: 'array', items: { type: 'string' }, description: 'authorize: exact hosts, *.domain wildcards, IPs or CIDRs (optionally host:port) allowed for L2 active testing.' },
-          riskCeiling: { type: 'string', enum: ['L0', 'L1', 'L2'], description: 'authorize: highest risk level this record permits. Default L2.' },
-          ttlHours: { type: 'number', description: 'authorize: validity window in hours. Default 24.' },
+          action: { type: 'string', enum: ['list', 'request', 'activate', 'revoke'], description: 'list scope/requests; request a new authorization (not active); activate a pending request via platform approval; revoke an authorization or request by id.' },
+          purpose: { type: 'string', description: 'request: what is being researched and why (>= 4 chars). Required with operator.' },
+          operator: { type: 'string', description: 'request: the human/team requesting authorization (>= 2 chars).' },
+          paths: { type: 'array', items: { type: 'string' }, description: 'request: absolute file/directory paths or prefixes allowed outside the task workspace.' },
+          networkTargets: { type: 'array', items: { type: 'string' }, description: 'request: exact hosts, *.domain wildcards, IPs or CIDRs (optionally host:port) allowed for L2 active testing.' },
+          riskCeiling: { type: 'string', enum: ['L0', 'L1', 'L2'], description: 'request: highest risk level this record permits. Default L2.' },
+          ttlHours: { type: 'number', description: 'request: validity window in hours. Default 24.' },
+          requestId: { type: 'string', description: 'activate/revoke: authorization request id from action=list.' },
           authorizationId: { type: 'string', description: 'revoke: exact authorization id from action=list.' },
+        },
+        required: ['action'],
+        additionalProperties: false,
+      },
+      async run(args, exec) {
+        const runtime = getRuntime()
+        await runtime.init()
+        const workspace = workspaceOf(runtime, args)
+        const scope = runtime.workspace(workspace).scope
+        if (args.action === 'authorize') {
+          throw new Error('action=authorize 已移除：模型不能自行创建有效授权。请用 action=request 提交申请，再由平台向用户确认后 action=activate。')
+        }
+        if (args.action === 'request') {
+          const request = await scope.requestAuthorization({
+            purpose: String(args.purpose ?? ''),
+            operator: String(args.operator ?? ''),
+            paths: Array.isArray(args.paths) ? args.paths : [],
+            networkTargets: Array.isArray(args.networkTargets) ? args.networkTargets : [],
+            riskCeiling: args.riskCeiling ?? 'L2',
+            ttlMs: Math.max(1, Math.min(Number(args.ttlHours ?? 24), 24 * 30)) * 60 * 60 * 1000,
+          })
+          const text = [
+            '## 授权申请已登记（未生效）',
+            '',
+            `- 申请 ID：\`${request.id}\`（状态：${request.status}）`,
+            `- 用途：${request.item.purpose}`,
+            `- 申请人：${request.item.operator}`,
+            `- 路径：${request.item.paths.join(', ') || '（无）'}`,
+            `- 网络目标：${request.item.networkTargets.map((target) => target.host).join(', ') || '（无）'}`,
+            `- 风险上限：${request.item.riskCeiling} · 申请有效期至 ${request.item.expiresAt}`,
+            '',
+            '该记录**不授予任何权限**。下一步：调用 action=activate 并传 requestId；平台会向用户展示范围并请求明确批准，只有 allowed-once 才会生成有效授权。',
+          ].join('\n')
+          return { text, data: request }
+        }
+        if (args.action === 'activate') {
+          const requestId = String(args.requestId ?? '').trim()
+          if (!requestId) throw new Error('activate needs requestId (from action=list or action=request)')
+          const requests = await scope.listRequests()
+          const request = requests.find((item) => item.id === requestId)
+          if (!request) throw new Error(`authorization request not found: ${requestId}`)
+          if (request.status !== 'pending') throw new Error(`authorization request ${requestId} is not pending (${request.status})`)
+          const target = request.item.paths.join(', ') || request.item.networkTargets.map((item) => item.host).join(', ')
+          const approval = await activateWithPlatformApproval(ctx, exec, { requestId, target, purpose: request.item.purpose })
+          const record = await scope.activateAuthorization(requestId, approval)
+          const text = [
+            '## 授权已激活（平台审批记录在案）',
+            '',
+            `- 授权 ID：\`${record.id}\` · 来源申请：\`${requestId}\``,
+            `- 操作者：${record.operator} · 审批来源：${record.approvalSource}`,
+            `- 路径：${record.paths.join(', ') || '（无）'}`,
+            `- 网络目标：${record.networkTargets.map((item) => item.host).join(', ') || '（无）'}`,
+            `- 风险上限：${record.riskCeiling} · 至 ${record.expiresAt}`,
+            '',
+            '授权只授予范围；L1/L2 执行时仍会单独请求平台审批。',
+          ].join('\n')
+          return { text, data: record }
+        }
+        if (args.action === 'revoke') {
+          if (args.requestId) {
+            const request = await scope.revokeRequest(String(args.requestId))
+            return { text: `已撤销授权申请 \`${request.id}\`。`, data: request }
+          }
+          const result = await scope.revoke(String(args.authorizationId ?? ''))
+          return { text: `已撤销授权 \`${result.revoked}\`。`, data: result }
+        }
+        const snapshot = await scope.snapshot()
+        const requests = await scope.listRequests()
+        const lines = ['# 授权与审批状态', '']
+        lines.push('**待处理申请**：')
+        if (requests.length === 0) lines.push('- 无')
+        for (const item of requests) lines.push(`- \`${item.id}\` ${item.status === 'pending' ? '🕓 待审批' : item.status} · ${item.item.purpose} · 路径 ${(item.item.paths ?? []).join(', ') || '-'} · 网络 ${(item.item.networkTargets ?? []).map((target) => target.host).join(', ') || '-'}`)
+        lines.push('', '**有效授权**：')
+        if (snapshot.authorizations.length === 0) lines.push('- 无')
+        for (const item of snapshot.authorizations) {
+          lines.push(`- \`${item.id}\` ${item.active ? '✅ 有效' : '⛔ 过期'} · ${item.purpose} · 操作者 ${item.operator} · 审批 ${item.approvalSource ?? 'legacy/internal'} · 上限 ${item.riskCeiling} · 路径 ${(item.paths ?? []).join(', ') || '-'} · 网络 ${(item.networkTargets ?? []).map((target) => target.host).join(', ') || '-'} · 至 ${item.expiresAt}`)
+        }
+        lines.push('', '**审批记录**：')
+        if (snapshot.approvals.length === 0) lines.push('- 无（L1/L2 执行时会请求平台审批）')
+        for (const item of snapshot.approvals) {
+          lines.push(`- \`${item.id}\` ${item.active ? '✅ 有效' : '⛔ 失效'} · ${item.riskLevel} · 任务 ${item.taskId} · 目标 ${item.target} · 至 ${item.expiresAt}`)
+        }
+        return { text: lines.join('\n'), data: { ...snapshot, requests } }
+      },
+    }),
+  )
+
+  ctx.tools.register(
+    tool({
+      name: 'armorbreak_files',
+      description:
+        'Bounded, policy-gated read access to the current workspace or an activated authorized path. This is the only file-reading tool in strict ArmorBreak mode (generic fs/shell/web tools are not mounted), so use it to read reports, evidence, logs and source files. Actions: list a directory, read a bounded file, stat a path, or search text inside the workspace. Writes are not supported. Paths outside the workspace need an activated authorization and are denied by the same ScopePolicy as analysis.',
+      parameters: {
+        type: 'object',
+        properties: {
+          action: { type: 'string', enum: ['list', 'read', 'stat', 'search'], description: 'list: directory entries; read: bounded file content + hashes; stat: metadata; search: bounded regex search over text files.' },
+          workspace: { type: 'string', description: 'Absolute workspace directory. Defaults to the session working directory.' },
+          path: { type: 'string', description: 'Absolute file or directory path. Defaults to the workspace root for list/search.' },
+          pattern: { type: 'string', description: 'search: JavaScript regular expression (case-insensitive), max 200 chars.' },
+          maxBytes: { type: 'number', description: 'read: at most this many bytes (default 262144, max 262144).' },
+          maxResults: { type: 'number', description: 'search: at most this many matches (default 50, max 50).' },
         },
         required: ['action'],
         additionalProperties: false,
@@ -341,47 +464,42 @@ export function apply(ctx) {
         await runtime.init()
         const workspace = workspaceOf(runtime, args)
         const scope = runtime.workspace(workspace).scope
-        if (args.action === 'authorize') {
-          const record = await scope.authorize({
-            purpose: String(args.purpose ?? ''),
-            operator: String(args.operator ?? ''),
-            paths: Array.isArray(args.paths) ? args.paths : [],
-            networkTargets: Array.isArray(args.networkTargets) ? args.networkTargets : [],
-            riskCeiling: args.riskCeiling ?? 'L2',
-            ttlMs: Math.max(1, Math.min(Number(args.ttlHours ?? 24), 24 * 30)) * 60 * 60 * 1000,
-          })
-          const text = [
-            '## 授权已记录',
+        if (args.action === 'list') {
+          const result = await listDirectory(scope, { workspaceRoot: workspace, path: args.path })
+          if (!result.allowed) throw new Error(`${result.code}: ${result.reason}`)
+          const lines = [`# 目录 \`${result.resolved}\``, '', `条目：${result.data.entries.length}${result.data.truncated ? '（已截断）' : ''}`]
+          for (const entry of result.data.entries.slice(0, 80)) lines.push(`- ${entry.kind === 'directory' ? '📁' : entry.kind === 'symlink' ? '🔗' : '📄'} \`${entry.name}\``)
+          return { text: lines.join('\n'), data: result }
+        }
+        if (args.action === 'read') {
+          if (!args.path) throw new Error('read needs an absolute path')
+          const result = await readFileBounded(scope, { workspaceRoot: workspace, path: args.path, maxBytes: args.maxBytes })
+          if (!result.allowed) throw new Error(`${result.code}: ${result.reason}`)
+          const excerpt = result.data.text === null ? null : limitText(result.data.text, 12000)
+          const lines = [
+            `# 文件 \`${result.data.path}\``,
             '',
-            `- ID：\`${record.id}\``,
-            `- 用途：${record.purpose}`,
-            `- 操作者：${record.operator}`,
-            `- 路径：${record.paths.join(', ') || '（无）'}`,
-            `- 网络目标：${record.networkTargets.map((target) => target.host).join(', ') || '（无）'}`,
-            `- 风险上限：${record.riskCeiling} · 有效期至 ${record.expiresAt}`,
-            `- 完整性签名：\`${record.signature.slice(0, 16)}…\``,
-            '',
-            '注意：该记录只授予范围，不授予 L1/L2 执行许可；执行时仍会请求平台审批。',
-          ].join('\n')
-          return { text, data: record }
+            `- 大小：${result.data.totalBytes} 字节 · 已读：${result.data.analyzedBytes} 字节${result.data.truncated ? '（截断）' : ''}`,
+            `- 哈希范围：${result.data.hashScope} · SHA-256：\`${result.data.analyzedRangeSha256}\``,
+            `- 二进制：${result.data.binary ? '是' : '否'}`,
+          ]
+          if (excerpt !== null) lines.push('', '```', excerpt, '```')
+          if (result.data.truncated) lines.push('', '内容已截断；需要其余部分时在分析工具中使用 offset/range 能力，或读取生成后的报告。')
+          return { text: lines.join('\n'), data: { ...result.data, text: excerpt, fullTextSha256: result.data.analyzedRangeSha256 } }
         }
-        if (args.action === 'revoke') {
-          const result = await scope.revoke(String(args.authorizationId ?? ''))
-          return { text: `已撤销授权 \`${result.revoked}\`。`, data: result }
+        if (args.action === 'stat') {
+          if (!args.path) throw new Error('stat needs an absolute path')
+          const result = await statPath(scope, { workspaceRoot: workspace, path: args.path })
+          if (!result.allowed) throw new Error(`${result.code}: ${result.reason}`)
+          return { text: `\`${result.data.path}\` · ${result.data.kind} · ${result.data.size} 字节 · mtime ${result.data.mtime}`, data: result.data }
         }
-        const snapshot = await scope.snapshot()
-        const lines = ['# 授权与审批状态', '']
-        lines.push('**授权记录**：')
-        if (snapshot.authorizations.length === 0) lines.push('- 无')
-        for (const item of snapshot.authorizations) {
-          lines.push(`- \`${item.id}\` ${item.active ? '✅ 有效' : '⛔ 过期'} · ${item.purpose} · 操作者 ${item.operator} · 上限 ${item.riskCeiling} · 路径 ${(item.paths ?? []).join(', ') || '-'} · 网络 ${(item.networkTargets ?? []).map((target) => target.host).join(', ') || '-'} · 至 ${item.expiresAt}`)
-        }
-        lines.push('', '**审批记录**：')
-        if (snapshot.approvals.length === 0) lines.push('- 无（L1/L2 执行时会请求平台审批）')
-        for (const item of snapshot.approvals) {
-          lines.push(`- \`${item.id}\` ${item.active ? '✅ 有效' : '⛔ 失效'} · ${item.riskLevel} · 任务 ${item.taskId} · 目标 ${item.target} · 至 ${item.expiresAt}`)
-        }
-        return { text: lines.join('\n'), data: snapshot }
+        const pattern = String(args.pattern ?? '').slice(0, 200)
+        if (!pattern) throw new Error('search needs a pattern')
+        const result = await searchFiles(scope, { workspaceRoot: workspace, path: args.path, pattern, maxResults: args.maxResults })
+        if (!result.allowed) throw new Error(`${result.code}: ${result.reason}`)
+        const lines = [`# 搜索 \`${result.data.pattern}\` in \`${result.data.root}\``, '', `匹配：${result.data.matches.length}（扫描 ${result.data.scannedFiles} 个文本文件${result.data.truncated ? '，已截断' : ''}）`]
+        for (const match of result.data.matches.slice(0, 40)) lines.push(`- \`${match.file}:${match.line}\` — ${limitText(match.text, 240)}`)
+        return { text: lines.join('\n'), data: result.data }
       },
     }),
   )

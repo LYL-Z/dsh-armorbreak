@@ -56,20 +56,11 @@
               maxBytes: 65536
           - id: time-context
             name: '@deepseek-ai/dsh-time-context'
-          - id: tool-fs
-            name: '@deepseek-ai/dsh-tool-fs'
-          - id: tool-fs-search
-            name: '@deepseek-ai/dsh-tool-fs-search'
-            config:
-              sampleOverCapGlobResults: false
-          - id: tool-pwsh
-            name: '@deepseek-ai/dsh-tool-pwsh'
-            disabled: !!js process.platform !== 'win32'
-          - id: tool-bash
-            name: '@deepseek-ai/dsh-tool-bash'
-            disabled: !!js process.platform === 'win32'
-          - id: tool-jobs
-            name: '@deepseek-ai/dsh-tool-jobs'
+          # Strict research mode: generic fs/shell/web/jobs tools are intentionally
+          # NOT mounted here. They are governed by the Host sandbox, not by the
+          # ArmorBreak L0–L3 policy engine, so leaving them out removes the bypass
+          # surface. File access goes through armorbreak_files (policy-gated,
+          # bounded); network access goes through L2 capabilities only.
           - id: tool-todo
             name: '@deepseek-ai/dsh-tool-todo'
             config:
@@ -78,11 +69,6 @@
             name: '@deepseek-ai/dsh-tool-ask-user'
           - id: present
             name: '@deepseek-ai/dsh-tool-present'
-          - id: tool-web
-            name: '@deepseek-ai/dsh-tool-web'
-            config:
-              fetch: true
-              searchTimeoutMs: 60000
           - id: compaction
             name: cordis:group
             group: true

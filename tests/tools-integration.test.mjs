@@ -37,12 +37,13 @@ function mockExec(signal) {
   return { agent: undefined, callId: 'call_test_0001', signal: signal ?? new AbortController().signal }
 }
 
-test('tools.js registers eight model-facing tools with valid JSON schemas', async () => {
+test('tools.js registers nine model-facing tools with valid JSON schemas', async () => {
   const { defs } = await loadTools()
   const expected = [
     'armorbreak_health',
     'armorbreak_capabilities',
     'armorbreak_scope',
+    'armorbreak_files',
     'armorbreak_task',
     'armorbreak_analyze',
     'armorbreak_workflow',
@@ -67,7 +68,7 @@ test('armorbreak_health reports environment, isolation denial and capability cou
   const workspace = await mkdtemp(join(tmpdir(), 'abm-tool-ws-'))
   const value = await defs.get('armorbreak_health').execute({ workspace }, mockExec())
   assert.match(value.text, /环境健康|ArmorBreak/)
-  assert.equal(value.data.version, '1.0.3')
+  assert.equal(value.data.version, '1.0.4')
   assert.ok(value.data.registry.capabilities > 0)
   assert.equal(typeof value.data.isolation.available, 'boolean')
   assert.ok(Array.isArray(value.data.capabilities))
@@ -140,19 +141,44 @@ test('armorbreak_analyze runs a real L0 capability and produces a report', async
   assert.equal(evidence.data.evidence.valid, true)
 })
 
-test('armorbreak_scope records and revokes an authorization', async () => {
-  const { defs } = await loadTools()
+test('armorbreak_scope separates request from platform-approved activation, then revokes', async () => {
+  const { defs, ctx } = await loadTools()
   const workspace = await mkdtemp(join(tmpdir(), 'abm-tool-ws-'))
   const scopePath = await mkdtemp(join(tmpdir(), 'abm-scope-'))
-  const authorized = await defs.get('armorbreak_scope').execute(
-    { action: 'authorize', workspace, purpose: 'tool wiring test', operator: 'tester', paths: [scopePath], ttlHours: 1 },
+  const requested = await defs.get('armorbreak_scope').execute(
+    { action: 'request', workspace, purpose: 'tool wiring test', operator: 'tester', paths: [scopePath], ttlHours: 1 },
     mockExec(),
   )
-  assert.match(authorized.data.id, /^authz_/)
+  assert.match(requested.data.id, /^authreq_/)
+  assert.equal(requested.data.status, 'pending')
+  assert.match(requested.text, /未生效|not active|不授予/i)
+  const listedPending = await defs.get('armorbreak_scope').execute({ action: 'list', workspace }, mockExec())
+  assert.equal(listedPending.data.authorizations.length, 0, 'a request must not create an active authorization')
+
+  await assert.rejects(
+    () => defs.get('armorbreak_scope').execute({ action: 'activate', workspace, requestId: requested.data.id }, mockExec()),
+    /审批|approval|fail/i,
+    'activation without the platform approval service must fail closed',
+  )
+
+  // Inject a mock platform approval service and retry activation.
+  ctx.get = () => ({ request: async () => 'allowed-once' })
+  const activated = await defs.get('armorbreak_scope').execute(
+    { action: 'activate', workspace, requestId: requested.data.id },
+    { agent: {}, callId: 'call_test_activate', signal: new AbortController().signal },
+  )
+  assert.match(activated.data.id, /^authz_/)
+  assert.equal(activated.data.approvalSource, 'platform-approval')
+  assert.match(activated.text, /平台审批/)
   const listed = await defs.get('armorbreak_scope').execute({ action: 'list', workspace }, mockExec())
-  assert.ok(listed.data.authorizations.some((item) => item.id === authorized.data.id))
-  const revoked = await defs.get('armorbreak_scope').execute({ action: 'revoke', workspace, authorizationId: authorized.data.id }, mockExec())
+  assert.ok(listed.data.authorizations.some((item) => item.id === activated.data.id))
+  const revoked = await defs.get('armorbreak_scope').execute({ action: 'revoke', workspace, authorizationId: activated.data.id }, mockExec())
   assert.match(revoked.text, /已撤销/)
+  await assert.rejects(
+    () => defs.get('armorbreak_scope').execute({ action: 'authorize', workspace }, mockExec()),
+    /已移除|request/,
+    'the legacy self-service authorize action must not exist',
+  )
 })
 
 test('armorbreak_workflow lists and rejects unknown workflow ids', async () => {
