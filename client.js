@@ -99,6 +99,8 @@ window.__ModuleLoader__.load({
         noKnowledge: 'No matching knowledge.',
         catalogHint: 'Read-only connector metadata; installation is never automatic.',
         installations: 'Installations',
+        reports: 'Evaluations report',
+        reportHint: 'Mock evaluation dashboard; live model calls are not claimed.',
         installHint: 'Plan → stage → verify → explicit approve → activate. Package scripts never run.',
         artifactPath: 'Artifact path (absolute)',
         planInstall: 'Plan install',
@@ -190,6 +192,8 @@ window.__ModuleLoader__.load({
         noKnowledge: '没有匹配的知识。',
         catalogHint: '只读连接器元数据；安装永远不会自动执行。',
         installations: '安装',
+        reports: '评测报告',
+        reportHint: 'Mock 评测仪表盘；不宣称实时模型调用。',
         installHint: '计划 → staging → 校验 → 显式批准 → 激活；不执行包脚本。',
         artifactPath: '安装包路径（绝对路径）',
         planInstall: '创建安装计划',
@@ -250,6 +254,7 @@ window.__ModuleLoader__.load({
       const [catalogItems, setCatalogItems] = useState(null)
       const [researchError, setResearchError] = useState(null)
       const [installItems, setInstallItems] = useState([])
+      const [reportDashboard, setReportDashboard] = useState(null)
       const [installForm, setInstallForm] = useState({ artifactPath: '', license: 'MIT', commit: '', digest: 'sha256:local', components: '' })
       const [installBusy, setInstallBusy] = useState(false)
       const withSession = useCallback((url) => (sessionId ? `${url}${url.includes('?') ? '&' : '?'}session=${encodeURIComponent(String(sessionId))}` : url), [sessionId])
@@ -404,6 +409,14 @@ window.__ModuleLoader__.load({
           setKnowledgeResults(data)
         } catch (cause) { setResearchError(String(cause && cause.message ? cause.message : cause)) }
       }, [withSession, knowledgeQuery])
+      const loadReportDashboard = useCallback(async () => {
+        try {
+          const response = await fetch(withSession('/armorbreak/llm-report'), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+          const data = await response.json().catch(() => ({}))
+          if (!response.ok) throw new Error(data.error || String(response.status))
+          setReportDashboard(data)
+        } catch (cause) { setResearchError(String(cause && cause.message ? cause.message : cause)) }
+      }, [withSession])
       const loadInstallations = useCallback(async () => {
         try {
           const response = await fetch(withSession('/armorbreak/installations'), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
@@ -426,7 +439,8 @@ window.__ModuleLoader__.load({
         if (tab === 'evaluations') void loadEvaluations()
         else if (tab === 'catalog') void loadCatalog()
         else if (tab === 'installations') void loadInstallations()
-      }, [open, tab, loadEvaluations, loadCatalog, loadInstallations])
+        else if (tab === 'reports') void loadReportDashboard()
+      }, [open, tab, loadEvaluations, loadCatalog, loadInstallations, loadReportDashboard])
       useEffect(() => {
         if (open) void loadWorkflows()
       }, [open, loadWorkflows])
@@ -553,6 +567,18 @@ window.__ModuleLoader__.load({
           h('div', { style: { ...muted, fontSize: 11.5 } }, t.catalogHint),
           catalogItems && catalogItems.length === 0 ? h('div', { style: muted }, t.unavailable) : null,
           ...(catalogItems || []).map((item) => h('div', { key: item.id, style: { ...muted, fontSize: 11.5 } }, item.id + ' · ' + item.title + ' · ' + (item.license || 'license?'))),
+        )
+      }
+
+      function reportsView() {
+        return h(
+          'div',
+          { style: { display: 'grid', gap: 6 } },
+          h('div', { style: sectionTitle }, t.reports),
+          h('div', { style: { ...muted, fontSize: 11.5 } }, t.reportHint),
+          reportDashboard ? h('div', { style: { ...muted, fontSize: 11.5 } }, 'samples=' + String(reportDashboard.sampleCount) + ' · PASS=' + String(reportDashboard.byVerdict?.PASS ?? 0) + ' · FAIL=' + String(reportDashboard.byVerdict?.FAIL ?? 0) + ' · model=' + String(reportDashboard.model?.name) + '/' + String(reportDashboard.model?.version)) : null,
+          reportDashboard ? h('div', { style: { ...muted, fontSize: 11.5 } }, 'dataset=' + String(reportDashboard.datasetFingerprint ?? '').slice(0, 24) + ' · mock=' + String(reportDashboard.mockModel)) : null,
+          ...((reportDashboard && reportDashboard.failed) || []).slice(0, 20).map((item) => h('div', { key: item.traceId, style: { ...muted, fontSize: 11.5 } }, item.traceId + ' · ' + item.verdict + ' · ' + item.scenarioId)),
         )
       }
 
@@ -796,10 +822,11 @@ window.__ModuleLoader__.load({
                 h('button', { type: 'button', style: tabStyle(tab === 'knowledge'), onClick: () => { setTab('knowledge'); setDetail(null) } }, t.knowledge),
                 h('button', { type: 'button', style: tabStyle(tab === 'catalog'), onClick: () => { setTab('catalog'); setDetail(null) } }, t.catalog),
                 h('button', { type: 'button', style: tabStyle(tab === 'installations'), onClick: () => { setTab('installations'); setDetail(null) } }, t.installations),
+                h('button', { type: 'button', style: tabStyle(tab === 'reports'), onClick: () => { setTab('reports'); setDetail(null) } }, t.reports),
               ),
               error ? h('div', { style: { color: 'var(--dsw-alias-state-error-primary)' } }, `${t.error}: ${error}`) : null,
               !state && !error ? h('div', { style: muted }, t.loading) : null,
-              state ? (tab === 'overview' ? overviewView() : tab === 'tasks' ? tasksView() : tab === 'network' ? networkView() : tab === 'evaluations' ? evaluationsView() : tab === 'knowledge' ? knowledgeView() : tab === 'catalog' ? catalogView() : tab === 'installations' ? installationsView() : toolsView()) : null,
+              state ? (tab === 'overview' ? overviewView() : tab === 'tasks' ? tasksView() : tab === 'network' ? networkView() : tab === 'evaluations' ? evaluationsView() : tab === 'knowledge' ? knowledgeView() : tab === 'catalog' ? catalogView() : tab === 'installations' ? installationsView() : tab === 'reports' ? reportsView() : toolsView()) : null,
               h('div', { style: { display: 'flex', justifyContent: 'flex-end' } },
                 h('button', {
                   type: 'button',

@@ -16,6 +16,7 @@
 import { getRuntime } from './lib/core/runtime.js'
 import { getWorkflow, listWorkflows } from './lib/core/workflows.js'
 import { createMockTarget, runScenario } from './lib/aisec/evaluator.js'
+import { buildEvaluationDashboard } from './lib/aisec/reportDashboard.js'
 import { readFile } from 'node:fs/promises'
 
 export const inject = ['webServer']
@@ -607,6 +608,20 @@ export function createInstallationsHandler(runtime) {
   }
 }
 
+/**
+ * LLM evaluation dashboard (mock results explicitly labelled).
+ * @param {import('./lib/core/runtime.js').ArmorBreakRuntime} runtime
+ */
+export function createLLMReportHandler(runtime) {
+  return async function handleLLMReport(req, res) {
+    if (!guard(req, res)) return
+    try {
+      const records = await runtime.evaluationStore.list(100)
+      sendJson(res, 200, buildEvaluationDashboard(records))
+    } catch (error) { sendJson(res, 400, { error: String(error?.message ?? error) }) }
+  }
+}
+
 export function apply(ctx) {
   const runtime = getRuntime()
   void runtime.init().catch(() => {
@@ -626,6 +641,7 @@ export function apply(ctx) {
       { path: '/armorbreak/knowledge', handler: createKnowledgeHandler(runtime) },
       { path: '/armorbreak/catalog', handler: createCatalogHandler(runtime) },
       { path: '/armorbreak/installations', handler: createInstallationsHandler(runtime) },
+      { path: '/armorbreak/llm-report', handler: createLLMReportHandler(runtime) },
     ]
     const disposers = routes.map((route) => ctx.webServer.register({ kind: 'exact', path: route.path, handler: route.handler }))
     dispose = () => {
