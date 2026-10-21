@@ -48,6 +48,27 @@ jobs:
       - name: Text files are valid UTF-8
         run: node --test tests/hardening.test.mjs
 
+  offline-core:
+    name: L0 offline boundary (static gate)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Static L0 network-free gate
+        run: node --test tests/offline-core.test.mjs
+      - name: Core benchmark (runnable subset)
+        env:
+          ARMORBREAK_OFFLINE: '1'
+        run: node scripts/v2/core-benchmark.mjs
+
   live-docker:
     name: L1 Docker integration (real daemon)
     runs-on: ubuntu-latest
@@ -59,6 +80,24 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Wait for Docker daemon
+        run: |
+          for attempt in $(seq 1 30); do
+            if docker info >/dev/null 2>&1; then
+              echo "Docker daemon ready after ${attempt} attempt(s)"
+              exit 0
+            fi
+            echo "Docker daemon not ready (attempt ${attempt}/30); retrying in 2s"
+            sleep 2
+          done
+          echo "Docker daemon did not become ready within 60s"
+          docker info || true
+          exit 1
 
       - name: Pull a digest-pinned image
         run: |

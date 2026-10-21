@@ -79,6 +79,34 @@ window.__ModuleLoader__.load({
         probing: 'Probing…',
         toolsProbed: 'External tools',
         closePreview: 'Close',
+        network: 'Network',
+        networkState: 'Connectivity',
+        connectors: 'Data connectors',
+        resources: 'Read-only resources',
+        failures: 'failures',
+        successes: 'successes',
+        breaker: 'breaker',
+        offlineHint: 'Offline analysis remains available; resource updates are read-only and never grant L2.',
+        evaluations: 'Evaluations',
+        knowledge: 'Knowledge',
+        catalog: 'Catalog',
+        runEvaluation: 'Run authorized mock evaluation',
+        evaluationPrompt: 'Prompt / scenario text',
+        evaluationCategory: 'Category',
+        noEvaluations: 'No evaluations yet.',
+        searchKnowledge: 'Search knowledge',
+        search: 'Search',
+        noKnowledge: 'No matching knowledge.',
+        catalogHint: 'Read-only connector metadata; installation is never automatic.',
+        installations: 'Installations',
+        reports: 'Evaluations report',
+        missingTools: 'Missing external tools',
+        recoveryPath: 'Recovery: install the named tool, or use the documented built-in alternative. Offline L0 remains available.',
+        reportHint: 'Mock evaluation dashboard; live model calls are not claimed.',
+        installHint: 'Plan → stage → verify → explicit approve → activate. Package scripts never run.',
+        artifactPath: 'Artifact path (absolute)',
+        planInstall: 'Plan install',
+        noInstallations: 'No installation plans.',
       },
       zh: {
         title: '破甲模式',
@@ -146,6 +174,34 @@ window.__ModuleLoader__.load({
         probing: '探测中…',
         toolsProbed: '外部工具',
         closePreview: '关闭',
+        network: '网络',
+        networkState: '连接状态',
+        connectors: '数据连接器',
+        resources: '只读资源',
+        failures: '失败',
+        successes: '成功',
+        breaker: '熔断',
+        offlineHint: '离线分析仍然可用；资源更新只读，且不会授予 L2。',
+        evaluations: '评测',
+        knowledge: '知识',
+        catalog: '目录',
+        runEvaluation: '运行授权 mock 评测',
+        evaluationPrompt: 'Prompt / 场景文本',
+        evaluationCategory: '类别',
+        noEvaluations: '尚无评测。',
+        searchKnowledge: '检索知识',
+        search: '检索',
+        noKnowledge: '没有匹配的知识。',
+        catalogHint: '只读连接器元数据；安装永远不会自动执行。',
+        installations: '安装',
+        reports: '评测报告',
+        missingTools: '缺失外部工具',
+        recoveryPath: '恢复：安装对应工具，或使用文档中的内置替代；离线 L0 仍可用。',
+        reportHint: 'Mock 评测仪表盘；不宣称实时模型调用。',
+        installHint: '计划 → staging → 校验 → 显式批准 → 激活；不执行包脚本。',
+        artifactPath: '安装包路径（绝对路径）',
+        planInstall: '创建安装计划',
+        noInstallations: '尚无安装计划。',
       },
     }
 
@@ -194,6 +250,17 @@ window.__ModuleLoader__.load({
       const [evidenceSeverity, setEvidenceSeverity] = useState('')
       const [evidenceVerification, setEvidenceVerification] = useState('')
       const [reportFormat, setReportFormat] = useState('markdown')
+      const [evaluationItems, setEvaluationItems] = useState([])
+      const [evaluationForm, setEvaluationForm] = useState({ prompt: '', category: 'prompt-injection' })
+      const [evaluationBusy, setEvaluationBusy] = useState(false)
+      const [knowledgeQuery, setKnowledgeQuery] = useState('')
+      const [knowledgeResults, setKnowledgeResults] = useState(null)
+      const [catalogItems, setCatalogItems] = useState(null)
+      const [researchError, setResearchError] = useState(null)
+      const [installItems, setInstallItems] = useState([])
+      const [reportDashboard, setReportDashboard] = useState(null)
+      const [installForm, setInstallForm] = useState({ artifactPath: '', license: 'MIT', commit: '', digest: 'sha256:local', components: '' })
+      const [installBusy, setInstallBusy] = useState(false)
       const withSession = useCallback((url) => (sessionId ? `${url}${url.includes('?') ? '&' : '?'}session=${encodeURIComponent(String(sessionId))}` : url), [sessionId])
 
       const postAction = useCallback(async (payload) => {
@@ -329,6 +396,55 @@ window.__ModuleLoader__.load({
         }
       }, [])
 
+      const loadEvaluations = useCallback(async () => {
+        try {
+          const response = await fetch(withSession('/armorbreak/evaluations?limit=20'), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+          const data = await response.json().catch(() => ({}))
+          if (!response.ok) throw new Error(data.error || String(response.status))
+          setEvaluationItems(Array.isArray(data.items) ? data.items : [])
+        } catch (cause) { setResearchError(String(cause && cause.message ? cause.message : cause)) }
+      }, [withSession])
+      const loadKnowledge = useCallback(async (query) => {
+        try {
+          const q = String(query || knowledgeQuery || "").trim()
+          const response = await fetch(withSession('/armorbreak/knowledge?q=' + encodeURIComponent(q)), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+          const data = await response.json().catch(() => ({}))
+          if (!response.ok) throw new Error(data.error || String(response.status))
+          setKnowledgeResults(data)
+        } catch (cause) { setResearchError(String(cause && cause.message ? cause.message : cause)) }
+      }, [withSession, knowledgeQuery])
+      const loadReportDashboard = useCallback(async () => {
+        try {
+          const response = await fetch(withSession('/armorbreak/llm-report'), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+          const data = await response.json().catch(() => ({}))
+          if (!response.ok) throw new Error(data.error || String(response.status))
+          setReportDashboard(data)
+        } catch (cause) { setResearchError(String(cause && cause.message ? cause.message : cause)) }
+      }, [withSession])
+      const loadInstallations = useCallback(async () => {
+        try {
+          const response = await fetch(withSession('/armorbreak/installations'), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+          const data = await response.json().catch(() => ({}))
+          if (!response.ok) throw new Error(data.error || String(response.status))
+          setInstallItems(Array.isArray(data.items) ? data.items : [])
+        } catch (cause) { setResearchError(String(cause && cause.message ? cause.message : cause)) }
+      }, [withSession])
+      const loadCatalog = useCallback(async () => {
+        try {
+          const response = await fetch(withSession('/armorbreak/catalog'), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+          const data = await response.json().catch(() => ({}))
+          if (!response.ok) throw new Error(data.error || String(response.status))
+          setCatalogItems(Array.isArray(data.items) ? data.items : [])
+        } catch (cause) { setResearchError(String(cause && cause.message ? cause.message : cause)) }
+      }, [withSession])
+
+      useEffect(() => {
+        if (!open) return
+        if (tab === 'evaluations') void loadEvaluations()
+        else if (tab === 'catalog') void loadCatalog()
+        else if (tab === 'installations') void loadInstallations()
+        else if (tab === 'reports') void loadReportDashboard()
+      }, [open, tab, loadEvaluations, loadCatalog, loadInstallations, loadReportDashboard])
       useEffect(() => {
         if (open) void loadWorkflows()
       }, [open, loadWorkflows])
@@ -345,6 +461,10 @@ window.__ModuleLoader__.load({
       const policy = state && state.ui && state.ui.policy ? state.ui.policy : null
       const queue = state && Array.isArray(state.queue) ? state.queue : []
       const domains = state && state.ui && state.ui.tools && Array.isArray(state.ui.tools.domains) ? state.ui.tools.domains : []
+      const connectivity = state && state.connectivity ? state.connectivity : null
+      const networkSnapshot = connectivity && connectivity.state ? connectivity.state : null
+      const connectors = connectivity && Array.isArray(connectivity.connectors) ? connectivity.connectors : []
+      const resources = connectivity && Array.isArray(connectivity.resources) ? connectivity.resources : []
 
       const rootStyle = {
         border: '1px solid var(--dsw-alias-border-l1)',
@@ -407,6 +527,113 @@ window.__ModuleLoader__.load({
             ),
             h('div', { style: { ...muted, fontSize: 11.5 } }, `${t.evidence} ${task.evidence} · ${t.findings} ${task.findings}${task.report ? ` · ${task.report.format}` : ''}`),
           )),
+        )
+      }
+
+      function evaluationsView() {
+        return h(
+          'div',
+          { style: { display: 'grid', gap: 6 } },
+          h('div', { style: sectionTitle }, t.runEvaluation),
+          h('select', { value: evaluationForm.category, onChange: (event) => setEvaluationForm({ ...evaluationForm, category: event.target.value }), style: { font: 'inherit', padding: '2px 4px' } },
+            ...['prompt-injection', 'tool-abuse', 'data-exfiltration', 'memory-poisoning', 'multimodal', 'jailbreak-research'].map((value) => h('option', { key: value, value }, value))),
+          h('input', { value: evaluationForm.prompt, placeholder: t.evaluationPrompt, onChange: (event) => setEvaluationForm({ ...evaluationForm, prompt: event.target.value }), style: { font: 'inherit', padding: '2px 4px' } }),
+          h('button', { type: 'button', style: tabStyle(false), disabled: evaluationBusy, onClick: async () => {
+            setEvaluationBusy(true)
+            setResearchError(null)
+            const data = await postAction({ action: 'evaluate', prompt: evaluationForm.prompt, category: evaluationForm.category })
+            setEvaluationBusy(false)
+            if (data && data.evaluation) { setEvaluationForm({ ...evaluationForm, prompt: '' }); await loadEvaluations() }
+          } }, evaluationBusy ? t.probing : t.runEvaluation),
+          researchError ? h('div', { style: { color: 'var(--dsw-alias-state-error-primary)' } }, researchError) : null,
+          h('div', { style: sectionTitle }, t.evaluations),
+          evaluationItems.length === 0 ? h('div', { style: muted }, t.noEvaluations) : null,
+          ...evaluationItems.slice(0, 20).map((item) => h('div', { key: item.traceId, style: { ...muted, fontSize: 11.5 } }, item.traceId + ' · ' + item.verdict + ' · ' + item.scenarioId)),
+        )
+      }
+      function knowledgeView() {
+        return h(
+          'div',
+          { style: { display: 'grid', gap: 6 } },
+          h('div', { style: sectionTitle }, t.searchKnowledge),
+          h('input', { value: knowledgeQuery, placeholder: t.searchKnowledge, onChange: (event) => setKnowledgeQuery(event.target.value), style: { font: 'inherit', padding: '2px 4px' } }),
+          h('button', { type: 'button', style: tabStyle(false), onClick: () => void loadKnowledge() }, t.search),
+          knowledgeResults ? h('div', { style: { ...muted, fontSize: 11.5 } }, (knowledgeResults.backend || '') + ' · ' + String(knowledgeResults.count ?? 0)) : null,
+          knowledgeResults && Array.isArray(knowledgeResults.results) && knowledgeResults.results.length === 0 ? h('div', { style: muted }, t.noKnowledge) : null,
+          ...((knowledgeResults && knowledgeResults.results) || []).slice(0, 20).map((item) => h('div', { key: item.id, style: { ...muted, fontSize: 11.5 } }, item.title + ' · ' + item.uri + ' · v' + item.version)),
+        )
+      }
+      function catalogView() {
+        return h(
+          'div',
+          { style: { display: 'grid', gap: 6 } },
+          h('div', { style: sectionTitle }, t.catalog),
+          h('div', { style: { ...muted, fontSize: 11.5 } }, t.catalogHint),
+          catalogItems && catalogItems.length === 0 ? h('div', { style: muted }, t.unavailable) : null,
+          ...(catalogItems || []).map((item) => h('div', { key: item.id, style: { ...muted, fontSize: 11.5 } }, item.id + ' · ' + item.title + ' · ' + (item.license || 'license?'))),
+        )
+      }
+
+      function reportsView() {
+        return h(
+          'div',
+          { style: { display: 'grid', gap: 6 } },
+          h('div', { style: sectionTitle }, t.reports),
+          h('div', { style: { ...muted, fontSize: 11.5 } }, t.reportHint),
+          reportDashboard ? h('div', { style: { ...muted, fontSize: 11.5 } }, 'samples=' + String(reportDashboard.sampleCount) + ' · PASS=' + String(reportDashboard.byVerdict?.PASS ?? 0) + ' · FAIL=' + String(reportDashboard.byVerdict?.FAIL ?? 0) + ' · model=' + String(reportDashboard.model?.name) + '/' + String(reportDashboard.model?.version)) : null,
+          reportDashboard ? h('div', { style: { ...muted, fontSize: 11.5 } }, 'dataset=' + String(reportDashboard.datasetFingerprint ?? '').slice(0, 24) + ' · mock=' + String(reportDashboard.mockModel)) : null,
+          ...((reportDashboard && reportDashboard.failed) || []).slice(0, 20).map((item) => h('div', { key: item.traceId, style: { ...muted, fontSize: 11.5 } }, item.traceId + ' · ' + item.verdict + ' · ' + item.scenarioId)),
+        )
+      }
+
+      function installationsView() {
+        return h(
+          'div',
+          { style: { display: 'grid', gap: 6 } },
+          h('div', { style: sectionTitle }, t.planInstall),
+          h('div', { style: { ...muted, fontSize: 11.5 } }, t.installHint),
+          h('input', { value: installForm.artifactPath, placeholder: t.artifactPath, onChange: (event) => setInstallForm({ ...installForm, artifactPath: event.target.value }), style: { font: 'inherit', padding: '2px 4px' } }),
+          h('input', { value: installForm.license, placeholder: 'license', onChange: (event) => setInstallForm({ ...installForm, license: event.target.value }), style: { font: 'inherit', padding: '2px 4px' } }),
+          h('input', { value: installForm.commit, placeholder: 'commit', onChange: (event) => setInstallForm({ ...installForm, commit: event.target.value }), style: { font: 'inherit', padding: '2px 4px' } }),
+          h('button', { type: 'button', style: tabStyle(false), disabled: installBusy, onClick: async () => {
+            setInstallBusy(true); setResearchError(null)
+            const components = installForm.components ? [{ name: 'bundle', version: 'local', license: installForm.license, commit: installForm.commit, digest: installForm.digest, scripts: {} }] : [{ name: 'bundle', version: 'local', license: installForm.license, commit: installForm.commit, digest: installForm.digest, scripts: {} }]
+            const data = await postAction({ action: 'install.plan', artifactPath: installForm.artifactPath, license: installForm.license, commit: installForm.commit, components })
+            setInstallBusy(false); if (data) await loadInstallations()
+          } }, installBusy ? t.probing : t.planInstall),
+          researchError ? h('div', { style: { color: 'var(--dsw-alias-state-error-primary)' } }, researchError) : null,
+          h('div', { style: sectionTitle }, t.installations),
+          installItems.length === 0 ? h('div', { style: muted }, t.noInstallations) : null,
+          ...installItems.slice(0, 20).map((item) => h('div', { key: item.planId, style: { display: 'grid', gap: 2, borderLeft: '2px solid var(--dsw-alias-border-l1)', paddingLeft: 8, marginBottom: 4 } },
+            h('div', { style: { fontSize: 11.5 } }, item.planId + ' · ' + item.status + ' · ' + String(item.artifact?.sha256 ?? '').slice(0, 12)),
+            h('div', { style: { display: 'flex', gap: 4, flexWrap: 'wrap' } },
+              h('button', { type: 'button', style: tabStyle(false), onClick: async () => { await postAction({ action: 'install.stage', planId: item.planId }); await loadInstallations() } }, 'stage'),
+              h('button', { type: 'button', style: tabStyle(false), onClick: async () => { await postAction({ action: 'install.verify', planId: item.planId }); await loadInstallations() } }, 'verify'),
+              h('button', { type: 'button', style: tabStyle(false), onClick: async () => { await postAction({ action: 'install.approve', planId: item.planId, confirm: 'approve-install', operator: 'local-ui' }); await loadInstallations() } }, 'approve'),
+              h('button', { type: 'button', style: tabStyle(false), onClick: async () => { await postAction({ action: 'install.activate', planId: item.planId }); await loadInstallations() } }, 'activate'),
+              h('button', { type: 'button', style: tabStyle(false), onClick: async () => { await postAction({ action: 'install.rollback', planId: item.planId }); await loadInstallations() } }, 'rollback'),
+            ),
+          )),
+        )
+      }
+
+      function networkView() {
+        return h(
+          'div',
+          { style: { display: 'grid', gap: 8 } },
+          h('div', { style: sectionTitle }, t.networkState),
+          h('div', { style: muted }, String(networkSnapshot ? networkSnapshot.state : t.unavailable) + ' · ' + t.failures + ' ' + String(networkSnapshot?.failures ?? '-') + ' · ' + t.successes + ' ' + String(networkSnapshot?.successes ?? '-')),
+          ...(networkSnapshot?.history ?? []).slice(-5).map((entry, index) => h('div', { key: String(entry.at) + '-' + index, style: { ...muted, fontSize: 11.5 } }, String(entry.at ?? '') + ' ' + String(entry.from ?? '-') + ' → ' + String(entry.to) + (entry.reason ? ' · ' + entry.reason : ''))),
+          h('div', { style: sectionTitle }, t.connectors),
+          connectors.length === 0 ? h('div', { style: muted }, t.unavailable) : null,
+          ...connectors.map((connector) => h('div', { key: connector.id, style: { ...muted, fontSize: 11.5 } }, connector.id + ' · ' + t.breaker + ' ' + connector.breaker + ' · ' + t.failures + ' ' + connector.failures)),
+          h('div', { style: sectionTitle }, t.resources),
+          resources.length === 0 ? h('div', { style: muted }, t.unavailable) : null,
+          ...resources.slice(0, 8).map((resource) => h('div', { key: resource.id, style: { ...muted, fontSize: 11.5 } }, resource.id + ' · ' + resource.title + ' · ' + (resource.license || 'license?') + ' · ' + (resource.lastSyncedAt || 'never'))),
+          h('div', { style: sectionTitle }, t.missingTools),
+          ...domains.flatMap((domain) => (domain.externalTools ?? [])).filter((tool) => tool.availability !== 'available').slice(0, 12).map((tool) => h('div', { key: tool.name, style: { ...muted, fontSize: 11.5 } }, tool.name + ' · ' + tool.availability)),
+          h('div', { style: { ...muted, fontSize: 11.5 } }, t.recoveryPath),
+          h('div', { style: { ...muted, fontSize: 11.5 } }, t.offlineHint),
         )
       }
 
@@ -597,10 +824,16 @@ window.__ModuleLoader__.load({
                 h('button', { type: 'button', style: tabStyle(tab === 'overview'), onClick: () => { setTab('overview'); setDetail(null) } }, t.overview),
                 h('button', { type: 'button', style: tabStyle(tab === 'tasks'), onClick: () => { setTab('tasks'); setDetail(null) } }, t.taskCenter),
                 h('button', { type: 'button', style: tabStyle(tab === 'tools'), onClick: () => { setTab('tools'); setDetail(null) } }, t.toolCenter),
+                h('button', { type: 'button', style: tabStyle(tab === 'network'), onClick: () => { setTab('network'); setDetail(null) } }, t.network),
+                h('button', { type: 'button', style: tabStyle(tab === 'evaluations'), onClick: () => { setTab('evaluations'); setDetail(null) } }, t.evaluations),
+                h('button', { type: 'button', style: tabStyle(tab === 'knowledge'), onClick: () => { setTab('knowledge'); setDetail(null) } }, t.knowledge),
+                h('button', { type: 'button', style: tabStyle(tab === 'catalog'), onClick: () => { setTab('catalog'); setDetail(null) } }, t.catalog),
+                h('button', { type: 'button', style: tabStyle(tab === 'installations'), onClick: () => { setTab('installations'); setDetail(null) } }, t.installations),
+                h('button', { type: 'button', style: tabStyle(tab === 'reports'), onClick: () => { setTab('reports'); setDetail(null) } }, t.reports),
               ),
               error ? h('div', { style: { color: 'var(--dsw-alias-state-error-primary)' } }, `${t.error}: ${error}`) : null,
               !state && !error ? h('div', { style: muted }, t.loading) : null,
-              state ? (tab === 'overview' ? overviewView() : tab === 'tasks' ? tasksView() : toolsView()) : null,
+              state ? (tab === 'overview' ? overviewView() : tab === 'tasks' ? tasksView() : tab === 'network' ? networkView() : tab === 'evaluations' ? evaluationsView() : tab === 'knowledge' ? knowledgeView() : tab === 'catalog' ? catalogView() : tab === 'installations' ? installationsView() : tab === 'reports' ? reportsView() : toolsView()) : null,
               h('div', { style: { display: 'flex', justifyContent: 'flex-end' } },
                 h('button', {
                   type: 'button',

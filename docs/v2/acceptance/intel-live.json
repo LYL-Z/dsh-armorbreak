@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "armorbreak.intel-live/v1",
+  "generatedAt": "2026-10-21T11:31:09.700Z",
+  "sources": {
+    "cisa-kev": {
+      "status": "FETCHED",
+      "bytes": 1803455,
+      "sha256": "a3591cd3f9b803d7ba43782fdbc9c89feb66bca6d6ae3dc73689667e77645a7f",
+      "etag": "\"1b84bf-65e4a3ea5ebe0\"",
+      "fetchedAt": "2026-10-21T11:31:14.119Z",
+      "license": "US Government work (verify before redistribution)",
+      "contentType": "application/json",
+      "activeTesting": false,
+      "records": 1754,
+      "skipped": 0,
+      "stale": false
+    },
+    "first-epss": {
+      "status": "FETCHED",
+      "bytes": 203,
+      "sha256": "09ea8b3c12ad9de5ce4630b43b6b4c6d27066b7452b0fbb4160474aad50f5961",
+      "etag": null,
+      "fetchedAt": "2026-10-21T11:31:16.101Z",
+      "license": "FIRST terms — verify before redistribution",
+      "contentType": "application/json; charset=utf-8",
+      "activeTesting": false,
+      "records": 1,
+      "skipped": 0,
+      "stale": false
+    },
+    "osv": {
+      "status": "FETCHED",
+      "bytes": 1066,
+      "sha256": "81abe86ecb8c01a8da6a1bcefca93afddf1c88035fd11c16752c1495b9c48fd7",
+      "etag": null,
+      "fetchedAt": "2026-10-21T11:31:19.925Z",
+      "license": "Apache-2.0 (data terms separate)",
+      "contentType": "application/json",
+      "activeTesting": false,
+      "records": 1,
+      "skipped": 0,
+      "stale": false
+    }
+  },
+  "merged": {
+    "records": 1754,
+    "conflicts": 0,
+    "examples": [
+      {
+        "cveId": "CVE-2002-0367",
+        "kev": true,
+        "epss": null,
+        "osv": 0,
+        "sources": 1
+      },
+      {
+        "cveId": "CVE-2004-0210",
+        "kev": true,
+        "epss": null,
+        "osv": 0,
+        "sources": 1
+      },
+      {
+        "cveId": "CVE-2004-1464",
+        "kev": true,
+        "epss": null,
+        "osv": 0,
+        "sources": 1
+      }
+    ]
+  },
+  "result": "PASS"
+}

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "armorbreak.desktop-analysis/v1",
+  "generatedAt": "2026-10-21T12:26:00.000Z",
+  "result": "PASS",
+  "prompt": "请调用 armorbreak_analyze，对 D:\\dsh-ABM\\armorbreak\\docs\\v2\\benchmark\\core-scenarios.json 执行 L0 forensics.hash 分析，并生成 markdown 报告。",
+  "tool": "armorbreak_analyze",
+  "capability": "forensics.hash",
+  "riskLevel": "L0",
+  "taskId": "task_mvi33mq6_00e28f71",
+  "state": "COMPLETED",
+  "targetPath": "D:\\dsh-ABM\\armorbreak\\docs\\v2\\benchmark\\core-scenarios.json",
+  "inputSha256": "50eea274f68780a501df2f79aea32fd6785dcc2a2f87a1e198e6f5b7c79e1fc8",
+  "stats": { "evidence": 2, "findings": 0, "stepsDone": 0, "stepsFailed": 0 },
+  "evidenceChain": [
+    { "id": "ev_mvi33nx8_c55674ff", "title": "forensics.hash execution", "hash": "371bb7e808ab25b6801576b4b06d1f67bd9df04e5dbc6158ce7289fe84593fbd" },
+    { "id": "ev_mvi33nxf_3566fb8c", "title": "文件哈希", "hash": "fbb4918d6ec1eae2309e275799d8ad00bc7ab8ea3805c4b8a109251032557cbc" }
+  ],
+  "report": {
+    "originalPath": "D:\\dsh-ABM\\.armorbreak\\tasks\\task_mvi33mq6_00e28f71\\reports\\core-scenarios-json-完整性哈希登记_2026-10-21_12-24-24.md",
+    "committedCopy": "docs/v2/acceptance/desktop-l0-report.md",
+    "sha256": "bb07c8acb8fb8f247ef936fd4a9588daa49a41dcfc68af9040f4483298365296",
+    "bytes": 8270,
+    "format": "markdown"
+  },
+  "screenshot": {
+    "path": "docs/v2/acceptance/desktop-analysis.webp",
+    "sha256": "71c3e4e4a348b68ca2966207303b46bb8487b6d618ededa92a0c6bb998a61287"
+  },
+  "limitations": [
+    "task step list is empty in task.json (ad-hoc L0 execution); evidence chain and report are present",
+    "isolation still unavailable; this run is L0 only"
+  ]
+}

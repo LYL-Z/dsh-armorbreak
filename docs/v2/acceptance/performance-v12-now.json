@@ -1,0 +1,176 @@
+{
+  "schema": "armorbreak/benchmarks/v1",
+  "generatedAt": "2026-10-21T11:24:44.686Z",
+  "environment": {
+    "node": "v24.16.0",
+    "platform": "win32",
+    "arch": "x64",
+    "cpus": 24,
+    "cpu": "Intel(R) Core(TM) Ultra 9 290HX Plus",
+    "totalMemGiB": 63.68,
+    "capabilityCount": 46,
+    "domainCount": 8,
+    "sample": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\abm-bench-ws-2WvHMA\\sample.exe",
+    "sampleBytes": 360448,
+    "pcapBytes": 700024,
+    "pcapPackets": 5000,
+    "sastFiles": 200,
+    "reportFindings": 50,
+    "reportEvidence": 100,
+    "notes": "parser rows measure capability.run on a prepared bounded input; runner rows include task state transitions, evidence/finding persistence and audit logging"
+  },
+  "results": [
+    {
+      "name": "registry-cold-start",
+      "iterations": 1,
+      "totalMs": 988.32,
+      "meanMs": 988.32,
+      "p50Ms": 988.32,
+      "p95Ms": 988.32,
+      "p99Ms": 988.32,
+      "opsPerSec": 1.01,
+      "capabilityCount": 46,
+      "domainCount": 8
+    },
+    {
+      "name": "binary.identify (parser)",
+      "iterations": 60,
+      "totalMs": 118.87,
+      "meanMs": 1.981,
+      "p50Ms": 1.909,
+      "p95Ms": 2.581,
+      "p99Ms": 3.106,
+      "opsPerSec": 504.7,
+      "mode": "parser",
+      "capability": "binary.identify"
+    },
+    {
+      "name": "binary.strings (parser)",
+      "iterations": 60,
+      "totalMs": 126.41,
+      "meanMs": 2.107,
+      "p50Ms": 1.949,
+      "p95Ms": 2.716,
+      "p99Ms": 6.073,
+      "opsPerSec": 474.6,
+      "mode": "parser",
+      "capability": "binary.strings"
+    },
+    {
+      "name": "forensics.hash (parser)",
+      "iterations": 80,
+      "totalMs": 102.11,
+      "meanMs": 1.276,
+      "p50Ms": 0.985,
+      "p95Ms": 3.134,
+      "p99Ms": 4.42,
+      "opsPerSec": 783.5,
+      "mode": "parser",
+      "capability": "forensics.hash"
+    },
+    {
+      "name": "binary.entropy (parser)",
+      "iterations": 60,
+      "totalMs": 180.9,
+      "meanMs": 3.015,
+      "p50Ms": 2.955,
+      "p95Ms": 3.33,
+      "p99Ms": 3.586,
+      "opsPerSec": 331.7,
+      "mode": "parser",
+      "capability": "binary.entropy"
+    },
+    {
+      "name": "forensics.hash (through runner)",
+      "iterations": 20,
+      "totalMs": 915.59,
+      "meanMs": 45.779,
+      "p50Ms": 45.909,
+      "p95Ms": 47.761,
+      "p99Ms": 47.809,
+      "opsPerSec": 21.8,
+      "mode": "runner",
+      "capability": "forensics.hash"
+    },
+    {
+      "name": "network.pcap_overview (parser)",
+      "iterations": 30,
+      "totalMs": 282.06,
+      "meanMs": 9.402,
+      "p50Ms": 8.754,
+      "p95Ms": 13.917,
+      "p99Ms": 16.366,
+      "opsPerSec": 106.4,
+      "mode": "parser",
+      "capability": "network.pcap_overview"
+    },
+    {
+      "name": "network.flows (parser)",
+      "iterations": 30,
+      "totalMs": 311.29,
+      "meanMs": 10.376,
+      "p50Ms": 10.645,
+      "p95Ms": 12.095,
+      "p99Ms": 13.293,
+      "opsPerSec": 96.4,
+      "mode": "parser",
+      "capability": "network.flows"
+    },
+    {
+      "name": "sast.scan (parser)",
+      "iterations": 10,
+      "totalMs": 1189.21,
+      "meanMs": 118.921,
+      "p50Ms": 117.959,
+      "p95Ms": 125.993,
+      "p99Ms": 125.993,
+      "opsPerSec": 8.4,
+      "mode": "parser",
+      "capability": "sast.scan"
+    },
+    {
+      "name": "report-markdown",
+      "iterations": 20,
+      "totalMs": 112.66,
+      "meanMs": 5.633,
+      "p50Ms": 5.573,
+      "p95Ms": 6.049,
+      "p99Ms": 6.291,
+      "opsPerSec": 177.5
+    },
+    {
+      "name": "report-html",
+      "iterations": 20,
+      "totalMs": 117.04,
+      "meanMs": 5.852,
+      "p50Ms": 5.565,
+      "p95Ms": 6.377,
+      "p99Ms": 10.053,
+      "opsPerSec": 170.9
+    },
+    {
+      "name": "report-sarif",
+      "iterations": 20,
+      "totalMs": 104.9,
+      "meanMs": 5.245,
+      "p50Ms": 5.219,
+      "p95Ms": 5.572,
+      "p99Ms": 5.596,
+      "opsPerSec": 190.7
+    },
+    {
+      "name": "BinaryStaticAnalysis-workflow",
+      "iterations": 5,
+      "totalMs": 2373.39,
+      "meanMs": 474.678,
+      "p50Ms": 471.129,
+      "p95Ms": 498.793,
+      "p99Ms": 498.793,
+      "opsPerSec": 2.1
+    }
+  ],
+  "memory": {
+    "rssMiB": 266.2,
+    "heapUsedMiB": 25.5
+  }
+}

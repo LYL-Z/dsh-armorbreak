@@ -15,6 +15,8 @@
  */
 import { getRuntime } from './lib/core/runtime.js'
 import { getWorkflow, listWorkflows } from './lib/core/workflows.js'
+import { createMockTarget, runScenario } from './lib/aisec/evaluator.js'
+import { buildEvaluationDashboard } from './lib/aisec/reportDashboard.js'
 import { readFile } from 'node:fs/promises'
 
 export const inject = ['webServer']
@@ -83,6 +85,25 @@ export function createStateHandler(runtime) {
 }
 
 /** @param {import('node:http').IncomingMessage} req @param {import('node:http').ServerResponse} res */
+/**
+ * Same-origin fence for loopback routes. Absent Origin is allowed for the
+ * Electron/CLI fetch path; a present Origin must match the request Host and be a
+ * loopback authority. This blocks a malicious same-host page/CSRF form.
+ * @param {import('node:http').IncomingMessage} req
+ */
+export function isAllowedOrigin(req) {
+  const origin = String(req?.headers?.origin ?? '').trim()
+  if (!origin) return true
+  try {
+    const parsed = new URL(origin)
+    const host = String(req?.headers?.host ?? '').toLowerCase()
+    return ['127.0.0.1', 'localhost', '[::1]'].includes(parsed.hostname)
+      && parsed.host.toLowerCase() === host
+  } catch {
+    return false
+  }
+}
+
 function guard(req, res) {
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     res.writeHead(405, { 'content-type': 'application/json; charset=utf-8', allow: 'GET, HEAD' })
@@ -91,6 +112,10 @@ function guard(req, res) {
   }
   if (!isLoopbackPeer(req)) {
     denied(res, 'route is loopback-only')
+    return false
+  }
+  if (!isAllowedOrigin(req)) {
+    denied(res, 'origin is not the local workbench authority')
     return false
   }
   return true
@@ -287,6 +312,10 @@ export function createActionHandler(runtime) {
       denied(res, 'route is loopback-only')
       return
     }
+    if (!isAllowedOrigin(req)) {
+      denied(res, 'origin is not the local workbench authority')
+      return
+    }
     if (req.method !== 'POST') {
       res.writeHead(405, { 'content-type': 'application/json; charset=utf-8', allow: 'POST' })
       res.end(JSON.stringify({ error: 'method not allowed' }))
@@ -299,6 +328,13 @@ export function createActionHandler(runtime) {
     try {
       const body = await readJsonBody(req)
       const action = String(body.action ?? '')
+      const uiRoute = action === 'evaluate' ? 'ui.evaluations.run' : action.startsWith('install.') ? `ui.${action}` : `ui.tasks.${action}`
+      const uiPermission = action.startsWith('install.') ? 'SUPPLY_CHAIN' : 'TASK'
+      const uiDecision = await runtime.policyGateway.decide({ action: uiRoute, identity: { kind: 'ui' }, permission: uiPermission })
+      if (!uiDecision.allowed) {
+        denied(res, `${uiDecision.code}: ${uiDecision.reason}`)
+        return
+      }
       const session = resolveSessionWorkspace(runtime, req, '/armorbreak/actions')
       const workspaceRoot = session.workspace ?? runtime.lastWorkspace ?? runtime.defaultWorkspace()
       const ctx = runtime.workspace(workspaceRoot)
@@ -319,6 +355,72 @@ export function createActionHandler(runtime) {
         await runtime.runner.prepareTask(task)
         sendJson(res, 200, { ok: true, action, workspace: workspaceRoot, task: ctx.taskStore.summary(task, { includeSteps: true }) })
         return
+      }
+      if (action === 'evaluate') {
+        const prompt = String(body.prompt ?? '').slice(0, 4000)
+        const category = String(body.category ?? 'prompt-injection')
+        if (!prompt) throw new Error('prompt is required')
+        if (!['prompt-injection', 'tool-abuse', 'data-exfiltration', 'memory-poisoning', 'multimodal', 'jailbreak-research'].includes(category)) throw new Error('unsupported evaluation category')
+        const target = createMockTarget('workbench-mock')
+        const result = await runScenario({
+          scenario: { id: 'workbench-' + Date.now().toString(36), title: 'workbench evaluation', category, targetId: target.id, authorizationRequired: true, prompt },
+          target,
+        })
+        const stored = await runtime.evaluationStore.append(result)
+        sendJson(res, 200, { ok: true, action, evaluation: stored })
+        return
+      }
+      if (action.startsWith('install.')) {
+        const planId = String(body.planId ?? '')
+        if (action === 'install.plan') {
+          const artifactPath = String(body.artifactPath ?? '')
+          if (!artifactPath) throw new Error('artifactPath is required')
+          const plan = await runtime.installer.plan({
+            artifactPath,
+            repo: body.repo,
+            commit: body.commit,
+            version: body.version,
+            license: body.license,
+            components: Array.isArray(body.components) ? body.components : [],
+          })
+          if (plan.status === 'REJECTED') {
+            sendJson(res, 200, { ok: false, action, plan })
+            return
+          }
+          await runtime.installer.persist(plan)
+          sendJson(res, 200, { ok: true, action, plan })
+          return
+        }
+        if (!planId) throw new Error('planId is required')
+        const plan = await runtime.installer.get(planId)
+        if (action === 'install.stage') {
+          const staged = await runtime.installer.stage(plan)
+          sendJson(res, 200, { ok: true, action, plan: staged })
+          return
+        }
+        if (action === 'install.verify') {
+          const verified = await runtime.installer.verify(plan)
+          sendJson(res, 200, { ok: true, action, plan: verified })
+          return
+        }
+        if (action === 'install.approve') {
+          if (body.confirm !== 'approve-install') throw new Error('explicit confirm=approve-install is required')
+          const operator = String(body.operator ?? 'local-ui')
+          const token = runtime.approvalAuthority.issue({ id: `install:${plan.planId}`, riskLevel: 'L2', taskId: plan.planId, target: plan.planHash, operator }).token
+          const approved = await runtime.installer.approve(plan, { approvalToken: token, operator })
+          sendJson(res, 200, { ok: true, action, plan: approved })
+          return
+        }
+        if (action === 'install.activate') {
+          const active = await runtime.installer.activate(plan)
+          sendJson(res, 200, { ok: true, action, plan: active })
+          return
+        }
+        if (action === 'install.rollback') {
+          const rolled = await runtime.installer.rollback(plan)
+          sendJson(res, 200, { ok: true, action, plan: rolled })
+          return
+        }
       }
       const taskId = String(body.taskId ?? '')
       if (!taskId) throw new Error('taskId is required')
@@ -445,6 +547,81 @@ export function createReportHandler(runtime) {
  * Host plugin entry.
  * @param {import('@deepseek-ai/cordis').Context} ctx
  */
+/**
+ * Workbench evaluations list (read-only, bounded).
+ * @param {import('./lib/core/runtime.js').ArmorBreakRuntime} runtime
+ */
+export function createEvaluationsHandler(runtime) {
+  return async function handleEvaluations(req, res) {
+    if (!guard(req, res)) return
+    try {
+      const url = new URL(String(req.url ?? '/armorbreak/evaluations'), 'http://127.0.0.1')
+      const limit = Math.max(1, Math.min(Number(url.searchParams.get('limit') ?? 20) || 20, 100))
+      const items = await runtime.evaluationStore.list(limit)
+      sendJson(res, 200, { items, count: items.length })
+    } catch (error) { sendJson(res, 400, { error: String(error?.message ?? error) }) }
+  }
+}
+
+/**
+ * Read-only lexical knowledge search.
+ * @param {import('./lib/core/runtime.js').ArmorBreakRuntime} runtime
+ */
+export function createKnowledgeHandler(runtime) {
+  return async function handleKnowledge(req, res) {
+    if (!guard(req, res)) return
+    try {
+      const url = new URL(String(req.url ?? '/armorbreak/knowledge'), 'http://127.0.0.1')
+      const q = String(url.searchParams.get('q') ?? '').slice(0, 500)
+      const limit = Math.max(1, Math.min(Number(url.searchParams.get('limit') ?? 20) || 20, 100))
+      const results = q ? runtime.knowledgeIndex.search(q, { limit }) : []
+      sendJson(res, 200, { backend: runtime.knowledgeIndex.backend, query: q, results, count: results.length })
+    } catch (error) { sendJson(res, 400, { error: String(error?.message ?? error) }) }
+  }
+}
+
+/**
+ * Read-only connector catalog (metadata only, no installation).
+ * @param {import('./lib/core/runtime.js').ArmorBreakRuntime} runtime
+ */
+export function createCatalogHandler(runtime) {
+  return async function handleCatalog(req, res) {
+    if (!guard(req, res)) return
+    try {
+      const items = runtime.resourceSync.list().map((item) => ({ ...item, metadataOnly: true, executable: false }))
+      sendJson(res, 200, { items, count: items.length, automaticInstall: false })
+    } catch (error) { sendJson(res, 400, { error: String(error?.message ?? error) }) }
+  }
+}
+
+/**
+ * Read-only installation list.
+ * @param {import('./lib/core/runtime.js').ArmorBreakRuntime} runtime
+ */
+export function createInstallationsHandler(runtime) {
+  return async function handleInstallations(req, res) {
+    if (!guard(req, res)) return
+    try {
+      const items = await runtime.installer.list()
+      sendJson(res, 200, { items, count: items.length, executePackageCode: false })
+    } catch (error) { sendJson(res, 400, { error: String(error?.message ?? error) }) }
+  }
+}
+
+/**
+ * LLM evaluation dashboard (mock results explicitly labelled).
+ * @param {import('./lib/core/runtime.js').ArmorBreakRuntime} runtime
+ */
+export function createLLMReportHandler(runtime) {
+  return async function handleLLMReport(req, res) {
+    if (!guard(req, res)) return
+    try {
+      const records = await runtime.evaluationStore.list(100)
+      sendJson(res, 200, buildEvaluationDashboard(records))
+    } catch (error) { sendJson(res, 400, { error: String(error?.message ?? error) }) }
+  }
+}
+
 export function apply(ctx) {
   const runtime = getRuntime()
   void runtime.init().catch(() => {
@@ -460,6 +637,11 @@ export function apply(ctx) {
       { path: '/armorbreak/actions', handler: createActionHandler(runtime) },
       { path: '/armorbreak/evidence', handler: createEvidenceHandler(runtime) },
       { path: '/armorbreak/report', handler: createReportHandler(runtime) },
+      { path: '/armorbreak/evaluations', handler: createEvaluationsHandler(runtime) },
+      { path: '/armorbreak/knowledge', handler: createKnowledgeHandler(runtime) },
+      { path: '/armorbreak/catalog', handler: createCatalogHandler(runtime) },
+      { path: '/armorbreak/installations', handler: createInstallationsHandler(runtime) },
+      { path: '/armorbreak/llm-report', handler: createLLMReportHandler(runtime) },
     ]
     const disposers = routes.map((route) => ctx.webServer.register({ kind: 'exact', path: route.path, handler: route.handler }))
     dispose = () => {

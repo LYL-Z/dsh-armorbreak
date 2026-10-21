@@ -1,0 +1,6 @@
+# Garak adapter pin (AB2-M3-03)
+garak == 0.17.1
+python >= 3.10
+install: python -m pip install garak==0.17.1
+probes: promptinject, encoding (harmless research classes only)
+model: offline test generator or operator-authorized self-hosted endpoint only

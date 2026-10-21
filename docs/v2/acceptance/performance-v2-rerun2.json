@@ -1,0 +1,176 @@
+{
+  "schema": "armorbreak/benchmarks/v1",
+  "generatedAt": "2026-10-21T11:23:51.326Z",
+  "environment": {
+    "node": "v24.16.0",
+    "platform": "win32",
+    "arch": "x64",
+    "cpus": 24,
+    "cpu": "Intel(R) Core(TM) Ultra 9 290HX Plus",
+    "totalMemGiB": 63.68,
+    "capabilityCount": 46,
+    "domainCount": 8,
+    "sample": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\abm-bench-ws-qhctxA\\sample.exe",
+    "sampleBytes": 360448,
+    "pcapBytes": 700024,
+    "pcapPackets": 5000,
+    "sastFiles": 200,
+    "reportFindings": 50,
+    "reportEvidence": 100,
+    "notes": "parser rows measure capability.run on a prepared bounded input; runner rows include task state transitions, evidence/finding persistence and audit logging"
+  },
+  "results": [
+    {
+      "name": "registry-cold-start",
+      "iterations": 1,
+      "totalMs": 99.07,
+      "meanMs": 99.07,
+      "p50Ms": 99.07,
+      "p95Ms": 99.07,
+      "p99Ms": 99.07,
+      "opsPerSec": 10.09,
+      "capabilityCount": 46,
+      "domainCount": 8
+    },
+    {
+      "name": "binary.identify (parser)",
+      "iterations": 60,
+      "totalMs": 123.1,
+      "meanMs": 2.052,
+      "p50Ms": 1.977,
+      "p95Ms": 2.772,
+      "p99Ms": 3.145,
+      "opsPerSec": 487.4,
+      "mode": "parser",
+      "capability": "binary.identify"
+    },
+    {
+      "name": "binary.strings (parser)",
+      "iterations": 60,
+      "totalMs": 121.66,
+      "meanMs": 2.028,
+      "p50Ms": 1.916,
+      "p95Ms": 2.613,
+      "p99Ms": 4.014,
+      "opsPerSec": 493.2,
+      "mode": "parser",
+      "capability": "binary.strings"
+    },
+    {
+      "name": "forensics.hash (parser)",
+      "iterations": 80,
+      "totalMs": 81.01,
+      "meanMs": 1.013,
+      "p50Ms": 0.978,
+      "p95Ms": 1.146,
+      "p99Ms": 1.362,
+      "opsPerSec": 987.5,
+      "mode": "parser",
+      "capability": "forensics.hash"
+    },
+    {
+      "name": "binary.entropy (parser)",
+      "iterations": 60,
+      "totalMs": 182.36,
+      "meanMs": 3.039,
+      "p50Ms": 3,
+      "p95Ms": 3.341,
+      "p99Ms": 3.734,
+      "opsPerSec": 329,
+      "mode": "parser",
+      "capability": "binary.entropy"
+    },
+    {
+      "name": "forensics.hash (through runner)",
+      "iterations": 20,
+      "totalMs": 889.77,
+      "meanMs": 44.489,
+      "p50Ms": 43.945,
+      "p95Ms": 46.38,
+      "p99Ms": 46.386,
+      "opsPerSec": 22.5,
+      "mode": "runner",
+      "capability": "forensics.hash"
+    },
+    {
+      "name": "network.pcap_overview (parser)",
+      "iterations": 30,
+      "totalMs": 285.34,
+      "meanMs": 9.511,
+      "p50Ms": 9.05,
+      "p95Ms": 12.803,
+      "p99Ms": 16.02,
+      "opsPerSec": 105.1,
+      "mode": "parser",
+      "capability": "network.pcap_overview"
+    },
+    {
+      "name": "network.flows (parser)",
+      "iterations": 30,
+      "totalMs": 317.66,
+      "meanMs": 10.589,
+      "p50Ms": 10.594,
+      "p95Ms": 12.379,
+      "p99Ms": 12.427,
+      "opsPerSec": 94.4,
+      "mode": "parser",
+      "capability": "network.flows"
+    },
+    {
+      "name": "sast.scan (parser)",
+      "iterations": 10,
+      "totalMs": 1173.6,
+      "meanMs": 117.36,
+      "p50Ms": 116.533,
+      "p95Ms": 123.696,
+      "p99Ms": 123.696,
+      "opsPerSec": 8.5,
+      "mode": "parser",
+      "capability": "sast.scan"
+    },
+    {
+      "name": "report-markdown",
+      "iterations": 20,
+      "totalMs": 112.94,
+      "meanMs": 5.647,
+      "p50Ms": 5.523,
+      "p95Ms": 6.124,
+      "p99Ms": 6.477,
+      "opsPerSec": 177.1
+    },
+    {
+      "name": "report-html",
+      "iterations": 20,
+      "totalMs": 119.17,
+      "meanMs": 5.958,
+      "p50Ms": 5.569,
+      "p95Ms": 6.096,
+      "p99Ms": 12.291,
+      "opsPerSec": 167.8
+    },
+    {
+      "name": "report-sarif",
+      "iterations": 20,
+      "totalMs": 105.33,
+      "meanMs": 5.267,
+      "p50Ms": 5.175,
+      "p95Ms": 5.697,
+      "p99Ms": 5.911,
+      "opsPerSec": 189.9
+    },
+    {
+      "name": "BinaryStaticAnalysis-workflow",
+      "iterations": 5,
+      "totalMs": 2306.52,
+      "meanMs": 461.304,
+      "p50Ms": 458.319,
+      "p95Ms": 471.99,
+      "p99Ms": 471.99,
+      "opsPerSec": 2.2
+    }
+  ],
+  "memory": {
+    "rssMiB": 269.8,
+    "heapUsedMiB": 28.3
+  }
+}

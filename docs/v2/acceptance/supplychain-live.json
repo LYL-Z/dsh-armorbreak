@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "armorbreak.supplychain-live/v1",
+  "generatedAt": "2026-10-21T11:35:58.938Z",
+  "network": "read-only GET/POST query only; no package execution",
+  "catalog": {
+    "github": {
+      "status": 200,
+      "repo": "deepseek-ai/DeepSeek-V3",
+      "license": "MIT",
+      "defaultBranch": "main",
+      "commit": "9b4e9788e4a3a731f7567338ed15d3ec549ce03b"
+    },
+    "notFound": {
+      "status": 404,
+      "expected": 404
+    },
+    "dshOfficial": {
+      "status": "NOT_AVAILABLE",
+      "reason": "no official DSH catalog endpoint in current host"
+    },
+    "collected": {
+      "schemaVersion": "armorbreak.catalog/v1",
+      "items": [
+        {
+          "schemaVersion": "armorbreak.catalog-item/v1",
+          "canonicalRepo": "github.com/deepseek-ai/deepseek-v3",
+          "commit": "9b4e9788e4a3a731f7567338ed15d3ec549ce03b",
+          "license": "MIT",
+          "version": "main",
+          "source": "github-api",
+          "sources": [
+            "github-api"
+          ],
+          "status": "OK",
+          "executable": false,
+          "metadataOnly": true
+        }
+      ],
+      "rejected": [],
+      "deduped": 1
+    }
+  },
+  "osv": {
+    "status": 200,
+    "vulnerabilities": 5
+  },
+  "scorecard": {
+    "status": 200,
+    "score": 8.3
+  },
+  "gate": {
+    "allowed": false,
+    "denied": 1,
+    "reasons": [
+      "KNOWN_VULNERABILITY"
+    ]
+  },
+  "result": "PASS"
+}

@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 2.0.0 — 2026-10-21
+
+V2 安全研究版：L0–L3 策略网关、46 能力 / 9 工作流、真实 Garak/PyRIT/JailbreakBench、签名供应链、事务化安装/回滚、工作台、完整发布门与真实 Windows Desktop GUI E2E。
+
+- 安全：未知 action 默认拒绝；L3 永久拒绝；模型无法自我授权安装；`RESOURCE_READ` 不等于 L2；外部内容按不可信处理；审批令牌绑定 planHash，HMAC + 过期 + 单次消费。
+- 连接性：KEV/EPSS/OSV 三类真实公开数据源，Ed25519 签名版本索引，分源超时/限速/404/缺许可显式记录。
+- 供应链：真实 GitHub/OSV/Scorecard 证据；事务化 installer 的 plan/stage/verify/approve/activate/rollback 全链路；不执行未审批包代码。
+- AISEC：真实 Garak 0.17.1（33 eval，PASS 18/FAIL 15）、真实 PyRIT 1.1.0 官方 PromptTarget 本地 mock（0 网络）、JailbreakBench 100 behaviors 聚合校验（raw 不落库）。
+- 桌面：真实 DSH Desktop 0.2.1-rc.2 + armorbreak preset，模型调用 `armorbreak_health` 与 L0 `forensics.hash` 并生成 markdown 报告（8270 字节，SHA-256 `bb07c8ac…`）。
+- 发布门：Security/Offline/SupplyChain/AI/Performance/Compatibility 全 PASS；`release-gates.json` `releasable=true`。
+- 测试：278 tests / 277 pass / 1 skipped；62/62 目标场景；10 GiB 流式哈希。
+- 已知限制：隔离提供者当前不可用，L1/L2 未执行；外部工具 5/25；PDF 导出缺 LibreOffice；未接第三方真实模型端点。
+
 ## 1.2.0 — 2026-10-20
 
 Advanced Research：4 个真实外部适配器 + Gate B；L1 provider 自检门；L2 loopback；工作台环境/证据/报告；真实模型 BinaryStaticAnalysis；46 能力 / 8 域 / 190 测试。

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "armorbreak.performance-compare/v1",
+  "generatedAt": "2026-10-21T11:24:44.896Z",
+  "environment": "same Windows host, sequential runs",
+  "baseline": "docs/v2/acceptance/performance-v12-now.json",
+  "v2": "docs/v2/acceptance/performance-v2-rerun2.json",
+  "rows": [
+    {
+      "name": "sast.scan (parser)",
+      "baselineP50": 117.959,
+      "v2P50": 116.533,
+      "deltaPercent": -1.2
+    },
+    {
+      "name": "BinaryStaticAnalysis-workflow",
+      "baselineP50": 471.129,
+      "v2P50": 458.319,
+      "deltaPercent": -2.7
+    },
+    {
+      "name": "forensics.hash (parser)",
+      "baselineP50": 0.985,
+      "v2P50": 0.978,
+      "deltaPercent": -0.7
+    }
+  ],
+  "regressionsOver10Percent": []
+}

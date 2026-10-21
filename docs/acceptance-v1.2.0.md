@@ -6,3 +6,7 @@
 - 真实模型 GUI BinaryStaticAnalysis COMPLETED、21 证据、6 发现、报告哈希（model-e2e-v12.json）。
 - v1.2.0 Web/CDP：46 能力/6 任务/DaemonReady；环境视图；证据筛选；Markdown/HTML（gui-v12-verification.json）。
 - 残余见 known-issues。
+
+## V2 baseline re-run (2026-10-20)
+
+V2 M1-01 在 eature/armorbreak-v2 上真实重跑：190 tests / 189 pass / 0 fail / **1 skipped**（missing external tool produces actionable guidance，外部工具可见性依赖本机环境）。此前记录的 190/190 是仓库历史，不作为 V2 新运行结果。

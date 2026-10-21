@@ -1,0 +1,14 @@
+﻿ArmorBreak V2
+Copyright (c) 2026 LYL-Z
+
+This product includes the dsh-armorbreak Cordis bundle and preset.
+
+External tools are optional and are NOT bundled:
+- TShark (GPL-2.0-or-later)
+- Ghidra (Apache-2.0)
+- JADX (Apache-2.0)
+- Syft (Apache-2.0)
+- Semgrep (LGPL-2.1)
+- Trivy (Apache-2.0)
+
+See docs/v2/release/sbom.spdx.json and docs/v2/release/license-audit.md.

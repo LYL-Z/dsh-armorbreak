@@ -1,0 +1,18 @@
+﻿{
+    "schemaVersion":  "armorbreak.clean-room/v1",
+    "generatedAt":  "2026-10-21T04:47:07.2776559-07:00",
+    "image":  "armorbreak-clean:node24-py3",
+    "base":  "node:24-alpine",
+    "python":  "3.14.8-r0",
+    "networkMode":  "none",
+    "mount":  "ro",
+    "command":  "node --test",
+    "result":  "PASS",
+    "summary":  [
+                    "tests 277",
+                    "pass 276",
+                    "fail 0",
+                    "skipped 1"
+                ],
+    "note":  "First run without Python failed 4 AISEC worker tests; documented prerequisite and rebuilt image with python3."
+}

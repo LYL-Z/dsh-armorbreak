@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "armorbreak.release-readiness/v1",
+  "generatedAt": "2026-10-21T12:27:08.376Z",
+  "package": {
+    "name": "dsh-armorbreak",
+    "version": "2.0.0"
+  },
+  "sbom": true,
+  "gates": {
+    "security": {
+      "status": "PASS",
+      "evidence": [
+        "tests/policy-gateway.test.mjs",
+        "tests/approval-binding.test.mjs",
+        "tests/ui-api.test.mjs"
+      ]
+    },
+    "offline": {
+      "status": "PASS",
+      "evidence": [
+        "docs/v2/acceptance/airgap-container.json",
+        "docs/v2/acceptance/offline-score.json"
+      ],
+      "targetCoverage": "62/62",
+      "rOffline": "N/A"
+    },
+    "supplyChain": {
+      "status": "PASS",
+      "reason": "live GitHub/OSV/Scorecard + signed Ed25519 index + transactional installer/rollback; no remote package code executed",
+      "evidence": [
+        "docs/v2/acceptance/supplychain-e2e.json",
+        "docs/v2/acceptance/supplychain-live.json"
+      ]
+    },
+    "aiEvaluation": {
+      "status": "PASS",
+      "reason": "Garak/PyRIT/OFFLINE test endpoints + 5+ AI/agent classes; no third-party live model claimed",
+      "evidence": [
+        "docs/v2/acceptance/garak-live.json",
+        "docs/v2/acceptance/pyrit-live.json",
+        "docs/v2/acceptance/jailbreak-live.json"
+      ]
+    },
+    "compatibility": {
+      "status": "PASS",
+      "reason": "real Desktop GUI: armorbreak_health + L0 analyze/report, screenshot hashes",
+      "evidence": [
+        "docs/v2/acceptance/desktop-e2e.json",
+        "docs/v2/acceptance/desktop-analysis.json",
+        "docs/v2/acceptance/desktop-e2e.md"
+      ]
+    },
+    "performance": {
+      "status": "PASS",
+      "reason": "same-host sequential v1.2/v2 comparison; no >10% regression",
+      "evidence": [
+        "docs/v2/acceptance/performance-compare.json",
+        "docs/v2/acceptance/performance-v12-now.json",
+        "docs/v2/acceptance/performance-v2-rerun2.json"
+      ],
+      "measured": true
+    }
+  },
+  "m4": {
+    "AB2-M4-01.md": "DONE",
+    "AB2-M4-02.md": "DONE",
+    "AB2-M4-03.md": "DONE",
+    "AB2-M4-04.md": "DONE",
+    "AB2-M4-05.md": "DONE",
+    "AB2-M4-06.md": "DONE",
+    "AB2-M4-07.md": "DONE",
+    "AB2-M4-08.md": "DONE",
+    "AB2-M4-09.md": "DONE",
+    "AB2-M4-10.md": "DONE",
+    "AB2-M4-11.md": "DONE",
+    "AB2-M4-12.md": "DONE"
+  },
+  "incomplete": [],
+  "ready": true,
+  "reason": "all required gates/tasks complete"
+}
