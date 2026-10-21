@@ -5,6 +5,7 @@ import { join } from 'node:path'
 import test from 'node:test'
 
 import { createEngine } from '../packages/engine-node/index.js'
+import { ApprovalAuthority } from '../lib/control/approvalAuthority.js'
 
 async function fixture() {
   const stateRoot = await mkdtemp(join(tmpdir(), 'abm-engine-state-'))
@@ -63,5 +64,28 @@ test('task cancellation requires the workspace-authorized principal', async () =
   const cancelled = await engine.cancelTask(alice, task.id, 'operator requested')
   assert.equal(cancelled.state, 'CANCELLED')
   assert.equal(cancelled.principalId, 'alice')
+  await engine.close()
+})
+
+
+test('approval tokens are bound, expire and cannot be replayed', async () => {
+  const stateRoot = await mkdtemp(join(tmpdir(), 'abm-engine-approval-'))
+  const workspace = await mkdtemp(join(tmpdir(), 'abm-engine-approval-ws-'))
+  let now = 1_800_000_000_000
+  const authority = new ApprovalAuthority({ stateRoot, clock: () => now })
+  const engine = await createEngine({ stateRoot, approvalAuthority: authority, principals: [{ id: 'alice', kind: 'local-user', workspaces: [workspace] }, { id: 'bob', kind: 'local-user', workspaces: [workspace] }] })
+  const alice = ctx({ id: 'alice', kind: 'local-user' }, workspace, 'approve-1')
+  const token = authority.issue({ id: 'appr-1', riskLevel: 'L1', taskId: 'task-approval', target: workspace, operator: 'alice', ttlMs: 60_000 })
+  const approved = await engine.verifyApproval(alice, { riskLevel: 'L1', taskId: 'task-approval', target: workspace, approvalToken: token.token })
+  assert.equal(approved.operator, 'alice')
+  assert.equal(approved.approvalId, 'appr-1')
+  await assert.rejects(() => engine.verifyApproval(alice, { riskLevel: 'L1', taskId: 'task-approval', target: workspace, approvalToken: token.token }), (error) => error.code === 'TOKEN_REPLAYED')
+
+  const forged = authority.issue({ id: 'appr-2', riskLevel: 'L1', taskId: 'task-approval', target: workspace, operator: 'bob', ttlMs: 60_000 })
+  await assert.rejects(() => engine.verifyApproval(alice, { riskLevel: 'L1', taskId: 'task-approval', target: workspace, approvalToken: forged.token }), (error) => error.code === 'TOKEN_BINDING_MISMATCH')
+
+  const expiring = authority.issue({ id: 'appr-3', riskLevel: 'L2', taskId: 'task-approval', target: workspace, operator: 'alice', ttlMs: 1000 })
+  now += 2000
+  await assert.rejects(() => engine.verifyApproval(alice, { riskLevel: 'L2', taskId: 'task-approval', target: workspace, approvalToken: expiring.token }), (error) => error.code === 'TOKEN_EXPIRED')
   await engine.close()
 })

@@ -9,6 +9,7 @@
  */
 import { createHash } from 'node:crypto'
 import { ArmorBreakRuntime } from '../../lib/core/runtime.js'
+import { ApprovalAuthority } from '../../lib/control/approvalAuthority.js'
 import { validateInvocation } from '../protocol/index.js'
 import { CORE_VERSION } from '../core/index.js'
 
@@ -44,6 +45,7 @@ export class TrustedEngine {
       this.principals.set(principal.id, { ...principal, workspaces: new Set(principal.workspaces) })
     }
     this.idempotency = new Map()
+    this.approvalAuthority = options.approvalAuthority ?? new ApprovalAuthority({ stateRoot: this.stateRoot })
     this.runtime = new ArmorBreakRuntime({ stateRoot: this.stateRoot })
   }
 
@@ -95,6 +97,17 @@ export class TrustedEngine {
     const promise = this.runtime.workspace(ctx.workspaceId).taskStore.create({ ...payload, operator: principal.id })
     this.idempotency.set(`${principal.id}:${ctx.workspaceId}:${ctx.requestId}`, { digest: hash(payload), promise })
     return promise
+  }
+
+  /** Verify and consume a human/platform approval; model text is never an approval. */
+  async verifyApproval(ctx, { riskLevel, taskId, target, approvalToken } = {}) {
+    const principal = this.authenticate(ctx)
+    if (!['L1', 'L2'].includes(riskLevel)) throw new EngineError('INVALID_REQUEST', 'approval is only valid for L1/L2')
+    if (!approvalToken) throw new EngineError('APPROVAL_REQUIRED', 'an approval token is required')
+    if (!taskId || !target) throw new EngineError('INVALID_REQUEST', 'taskId and target are required')
+    const result = this.approvalAuthority.consume(String(approvalToken), { taskId: String(taskId), target: String(target), riskLevel, operator: principal.id, sessionId: ctx.principal.sessionId })
+    if (!result.valid) throw new EngineError(result.code ?? 'POLICY_DENIED', result.reason ?? 'approval rejected')
+    return { approvalId: result.payload.id, riskLevel, operator: principal.id, expiresAt: result.payload.expiresAt, taskId: String(taskId) }
   }
 
   async getTask(ctx, taskId) {
