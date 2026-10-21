@@ -79,6 +79,14 @@ window.__ModuleLoader__.load({
         probing: 'Probing…',
         toolsProbed: 'External tools',
         closePreview: 'Close',
+        network: 'Network',
+        networkState: 'Connectivity',
+        connectors: 'Data connectors',
+        resources: 'Read-only resources',
+        failures: 'failures',
+        successes: 'successes',
+        breaker: 'breaker',
+        offlineHint: 'Offline analysis remains available; resource updates are read-only and never grant L2.',
       },
       zh: {
         title: '破甲模式',
@@ -146,6 +154,14 @@ window.__ModuleLoader__.load({
         probing: '探测中…',
         toolsProbed: '外部工具',
         closePreview: '关闭',
+        network: '网络',
+        networkState: '连接状态',
+        connectors: '数据连接器',
+        resources: '只读资源',
+        failures: '失败',
+        successes: '成功',
+        breaker: '熔断',
+        offlineHint: '离线分析仍然可用；资源更新只读，且不会授予 L2。',
       },
     }
 
@@ -345,6 +361,10 @@ window.__ModuleLoader__.load({
       const policy = state && state.ui && state.ui.policy ? state.ui.policy : null
       const queue = state && Array.isArray(state.queue) ? state.queue : []
       const domains = state && state.ui && state.ui.tools && Array.isArray(state.ui.tools.domains) ? state.ui.tools.domains : []
+      const connectivity = state && state.connectivity ? state.connectivity : null
+      const networkSnapshot = connectivity && connectivity.state ? connectivity.state : null
+      const connectors = connectivity && Array.isArray(connectivity.connectors) ? connectivity.connectors : []
+      const resources = connectivity && Array.isArray(connectivity.resources) ? connectivity.resources : []
 
       const rootStyle = {
         border: '1px solid var(--dsw-alias-border-l1)',
@@ -407,6 +427,23 @@ window.__ModuleLoader__.load({
             ),
             h('div', { style: { ...muted, fontSize: 11.5 } }, `${t.evidence} ${task.evidence} · ${t.findings} ${task.findings}${task.report ? ` · ${task.report.format}` : ''}`),
           )),
+        )
+      }
+
+      function networkView() {
+        return h(
+          'div',
+          { style: { display: 'grid', gap: 8 } },
+          h('div', { style: sectionTitle }, t.networkState),
+          h('div', { style: muted }, String(networkSnapshot ? networkSnapshot.state : t.unavailable) + ' · ' + t.failures + ' ' + String(networkSnapshot?.failures ?? '-') + ' · ' + t.successes + ' ' + String(networkSnapshot?.successes ?? '-')),
+          ...(networkSnapshot?.history ?? []).slice(-5).map((entry, index) => h('div', { key: String(entry.at) + '-' + index, style: { ...muted, fontSize: 11.5 } }, String(entry.at ?? '') + ' ' + String(entry.from ?? '-') + ' → ' + String(entry.to) + (entry.reason ? ' · ' + entry.reason : ''))),
+          h('div', { style: sectionTitle }, t.connectors),
+          connectors.length === 0 ? h('div', { style: muted }, t.unavailable) : null,
+          ...connectors.map((connector) => h('div', { key: connector.id, style: { ...muted, fontSize: 11.5 } }, connector.id + ' · ' + t.breaker + ' ' + connector.breaker + ' · ' + t.failures + ' ' + connector.failures)),
+          h('div', { style: sectionTitle }, t.resources),
+          resources.length === 0 ? h('div', { style: muted }, t.unavailable) : null,
+          ...resources.slice(0, 8).map((resource) => h('div', { key: resource.id, style: { ...muted, fontSize: 11.5 } }, resource.id + ' · ' + resource.title + ' · ' + (resource.license || 'license?'))),
+          h('div', { style: { ...muted, fontSize: 11.5 } }, t.offlineHint),
         )
       }
 
@@ -597,10 +634,11 @@ window.__ModuleLoader__.load({
                 h('button', { type: 'button', style: tabStyle(tab === 'overview'), onClick: () => { setTab('overview'); setDetail(null) } }, t.overview),
                 h('button', { type: 'button', style: tabStyle(tab === 'tasks'), onClick: () => { setTab('tasks'); setDetail(null) } }, t.taskCenter),
                 h('button', { type: 'button', style: tabStyle(tab === 'tools'), onClick: () => { setTab('tools'); setDetail(null) } }, t.toolCenter),
+                h('button', { type: 'button', style: tabStyle(tab === 'network'), onClick: () => { setTab('network'); setDetail(null) } }, t.network),
               ),
               error ? h('div', { style: { color: 'var(--dsw-alias-state-error-primary)' } }, `${t.error}: ${error}`) : null,
               !state && !error ? h('div', { style: muted }, t.loading) : null,
-              state ? (tab === 'overview' ? overviewView() : tab === 'tasks' ? tasksView() : toolsView()) : null,
+              state ? (tab === 'overview' ? overviewView() : tab === 'tasks' ? tasksView() : tab === 'network' ? networkView() : toolsView()) : null,
               h('div', { style: { display: 'flex', justifyContent: 'flex-end' } },
                 h('button', {
                   type: 'button',
