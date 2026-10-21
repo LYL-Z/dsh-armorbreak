@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, feature/abu-universal]
     tags: ['v*']
   pull_request:
   workflow_dispatch:
@@ -70,8 +70,7 @@ jobs:
         run: node scripts/v2/core-benchmark.mjs
 
   live-docker:
-    name: L1 Docker integration (real daemon)
-    runs-on: ubuntu-latest
+    name: L1 Docker integration (real daemon)    runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
@@ -116,4 +115,28 @@ jobs:
           name: l1-docker-verification
           path: docs/acceptance/l1-docker-verification.json
           if-no-files-found: warn
+
+  release-evidence:
+    name: Release evidence checks (commit-bound)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Docs consistency
+        run: node scripts/v2/check-docs-consistency.mjs
+
+      - name: Evidence hashes and references
+        run: node scripts/v2/validate-evidence.mjs
+
+      - name: Evidence-driven release gates
+        run: node scripts/v2/release-gates.mjs
+
 
