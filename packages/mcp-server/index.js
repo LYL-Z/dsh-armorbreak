@@ -30,6 +30,21 @@ const TOOLS = [
     inputSchema: { type: 'object', required: ['capability', 'target'], properties: { capability: { type: 'string' }, target: { type: 'string' }, options: { type: 'object' } }, additionalProperties: false },
   },
   {
+    name: 'armorbreak_task_get',
+    description: 'Get one task visible to the configured principal/workspace.',
+    inputSchema: { type: 'object', required: ['taskId'], properties: { taskId: { type: 'string' } }, additionalProperties: false },
+  },
+  {
+    name: 'armorbreak_evidence',
+    description: 'Read the evidence chain for one authorized task.',
+    inputSchema: { type: 'object', required: ['taskId'], properties: { taskId: { type: 'string' } }, additionalProperties: false },
+  },
+  {
+    name: 'armorbreak_report',
+    description: 'Read the bounded Markdown report for one authorized task.',
+    inputSchema: { type: 'object', required: ['taskId'], properties: { taskId: { type: 'string' } }, additionalProperties: false },
+  },
+  {
     name: 'armorbreak_task_list',
     description: 'List tasks visible to the configured principal and workspace.',
     inputSchema: { type: 'object', properties: {}, additionalProperties: false },
@@ -86,6 +101,9 @@ export class McpServer {
         if (name === 'armorbreak_health') value = await this.engine.health(ctx)
         else if (name === 'armorbreak_capabilities') value = await this.engine.capabilities(ctx)
         else if (name === 'armorbreak_analyze') value = await this.engine.analyze(ctx, { capability: args.capability, target: args.target, options: args.options })
+        else if (name === 'armorbreak_task_get') value = await this.engine.getTask(ctx, args.taskId)
+        else if (name === 'armorbreak_evidence') value = await this.engine.getEvidence(ctx, args.taskId)
+        else if (name === 'armorbreak_report') value = await this.engine.getReport(ctx, args.taskId)
         else if (name === 'armorbreak_task_list') value = { tasks: await this.engine.listTasks(ctx) }
         return { jsonrpc: '2.0', id: message.id ?? null, result: { content: [{ type: 'text', text: JSON.stringify(value) }], isError: false } }
       } catch (cause) {

@@ -172,6 +172,33 @@ export class TrustedEngine {
     return { taskId: task.id, state: 'CANCELLED', principalId: principal.id, traceId: ctx.traceId }
   }
 
+  async getEvidence(ctx, taskId) {
+    return this.bounded(ctx, async () => {
+      this.authenticate(ctx)
+      const store = this.runtime.workspace(ctx.workspaceId).taskStore
+      let task
+      try { task = await store.get(String(taskId)) } catch { throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace') }
+      if (!task || task.workspace !== ctx.workspaceId) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
+      const records = await store.evidenceStore(task.id).readEvidence(200)
+      return { taskId: task.id, evidence: records.map((record) => ({ id: record.id, title: record.title, kind: record.kind, excerpt: record.excerpt, hash: record.hash, targetSha256: record.targetSha256 })) }
+    })
+  }
+
+  async getReport(ctx, taskId) {
+    return this.bounded(ctx, async () => {
+      this.authenticate(ctx)
+      const store = this.runtime.workspace(ctx.workspaceId).taskStore
+      let task
+      try { task = await store.get(String(taskId)) } catch { throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace') }
+      if (!task || task.workspace !== ctx.workspaceId) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
+      if (!task.report?.path) throw new EngineError('INVALID_REQUEST', 'task has no report')
+      const { readFile } = await import('node:fs/promises')
+      const content = await readFile(task.report.path, 'utf8')
+      if (content.length > 256 * 1024) throw new EngineError('INVALID_REQUEST', 'report exceeds 256 KiB')
+      return { taskId: task.id, path: task.report.path, sha256: task.report.sha256, markdown: content }
+    })
+  }
+
   async capabilities(ctx) {
     this.authenticate(ctx)
     return this.runtime.registry.list()
