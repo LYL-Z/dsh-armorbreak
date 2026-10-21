@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "armorbreak.external-tools-audit/v1",
+  "generatedAt": "2026-10-21T14:35:00.000Z",
+  "scope": "Windows 11 host + WSL Ubuntu 26.04; local audit only, not a release gate input",
+  "installed": 25,
+  "total": 25,
+  "verification": {
+    "command": "armorbreak_health({ probeVersions: true })",
+    "result": "25 / 25",
+    "note": "The already-running DSH Desktop host must be restarted to inherit newly written PATH/GHIDRA_HOME values; a fresh process reports 25/25."
+  },
+  "tools": [
+    { "id": "ghidra", "name": "Ghidra", "version": "12.1.4", "installKind": "portable" },
+    { "id": "rizin", "name": "Rizin", "version": "0.9.1", "installKind": "winget" },
+    { "id": "radare2", "name": "radare2", "version": "6.2.4", "installKind": "portable" },
+    { "id": "yara", "name": "YARA", "version": "4.5.5", "installKind": "winget" },
+    { "id": "jadx", "name": "JADX", "version": "1.5.6", "installKind": "winget" },
+    { "id": "apktool", "name": "Apktool", "version": "3.0.3", "installKind": "portable-jar" },
+    { "id": "adb", "name": "Android Debug Bridge", "version": "platform-tools", "installKind": "portable" },
+    { "id": "frida", "name": "Frida", "version": "17.24.3", "installKind": "pip" },
+    { "id": "semgrep", "name": "Semgrep", "version": "venv", "installKind": "pip-venv" },
+    { "id": "codeql", "name": "CodeQL", "version": "2.27.3", "installKind": "portable" },
+    { "id": "trivy", "name": "Trivy", "version": "installed", "installKind": "winget" },
+    { "id": "syft", "name": "Syft", "version": "installed", "installKind": "winget" },
+    { "id": "gitleaks", "name": "Gitleaks", "version": "8.30.1", "installKind": "winget" },
+    { "id": "tshark", "name": "TShark", "version": "4.6.9", "installKind": "wireshark" },
+    { "id": "zeek", "name": "Zeek", "version": "9.0.0", "installKind": "wsl-ubuntu + windows wrapper" },
+    { "id": "suricata", "name": "Suricata", "version": "8.0.3", "installKind": "wsl-ubuntu + windows wrapper" },
+    { "id": "nmap", "name": "Nmap", "version": "7.80", "installKind": "winget" },
+    { "id": "volatility3", "name": "Volatility 3", "version": "2.28.2", "installKind": "pip" },
+    { "id": "capa", "name": "capa", "version": "10.0.0", "installKind": "pip" },
+    { "id": "floss", "name": "FLOSS", "version": "3.x", "installKind": "winget" },
+    { "id": "docker", "name": "Docker", "version": "29.8.1", "installKind": "docker-desktop" },
+    { "id": "libreoffice", "name": "LibreOffice", "version": "26.8.1", "installKind": "msi-administrative-extract" },
+    { "id": "objdump", "name": "GNU objdump", "version": "2.47", "installKind": "msys2-binutils" },
+    { "id": "strings", "name": "GNU strings", "version": "2.47", "installKind": "msys2-binutils" },
+    { "id": "python", "name": "Python", "version": "3.11", "installKind": "system" }
+  ],
+  "limitations": [
+    "Zeek and Suricata are real Linux binaries installed in WSL Ubuntu and exposed through Windows .cmd wrappers; they are not native Windows services.",
+    "LibreOffice was extracted with an MSI administrative install, not registered system-wide.",
+    "The Docker pull for Zeek/Suricata images was not used; WSL binaries are the installed implementation.",
+    "This audit proves discovery/version probing, not full adapter workflow execution for every tool.",
+    "L1 isolation self-test was not run; the isolation provider remains unverified."
+  ]
+}
