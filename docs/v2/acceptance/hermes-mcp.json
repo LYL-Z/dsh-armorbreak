@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "armorbreak.hermes-mcp/v1",
+  "generatedAt": "2026-10-21T16:17:00.000Z",
+  "host": "Hermes Agent 0.19.0 (2026.7.20)",
+  "command": "hermes mcp test armorbreak",
+  "transport": {
+    "type": "stdio",
+    "command": "C:\\Program Files\\nodejs\\node.exe",
+    "args": ["D:/dsh-ABM/armorbreak/packages/mcp-server/index.js"]
+  },
+  "connected": true,
+  "connectMs": 1156,
+  "toolCount": 7,
+  "tools": [
+    "armorbreak_health",
+    "armorbreak_capabilities",
+    "armorbreak_analyze",
+    "armorbreak_task_get",
+    "armorbreak_evidence",
+    "armorbreak_report",
+    "armorbreak_task_list"
+  ],
+  "cleanup": {
+    "removedTestEntry": true,
+    "realConfigRestored": true,
+    "remainingServers": ["node_repl"]
+  },
+  "result": "PASS",
+  "limitations": [
+    "Discovery and MCP connection only; no Hermes model invocation or L0 tool execution.",
+    "Real Hermes config was backed up, modified only for this test, then restored."
+  ]
+}
