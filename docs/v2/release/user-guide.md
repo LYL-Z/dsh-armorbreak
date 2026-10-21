@@ -40,3 +40,4 @@
 - Real Garak/PyRIT/Inspect and OCR/PDF/audio runtimes are not bundled.
 - macOS not tested.
 - R_offline for online-LLM workflows is not measured (N/A).
+# prerequisites: Node 24, and CPython >=3.10 for the AISEC worker; Docker/Podman optional for L1.
