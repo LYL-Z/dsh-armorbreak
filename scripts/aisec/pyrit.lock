@@ -1,0 +1,5 @@
+# PyRIT adapter pin (AB2-M3-04)
+pyrit == 1.1.0
+python >= 3.11
+install: python -m pip install pyrit==1.1.0
+target: official PromptTarget subclass, local mock; no network request
