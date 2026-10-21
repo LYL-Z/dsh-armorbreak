@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.release-smoke/v1",
-  "generatedAt": "2026-10-21T16:34:21.529Z",
-  "commit": "7ff9df9ba412721d4f98a474f4aa98e899a132c4",
+  "generatedAt": "2026-10-21T16:36:47.172Z",
+  "commit": "723c6a02c8e91ae1248c7cf69dae69894e166adf",
   "version": "2.0.1",
   "checks": [
     {
