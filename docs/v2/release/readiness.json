@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.release-readiness/v1",
-  "generatedAt": "2026-10-21T11:49:18.685Z",
+  "generatedAt": "2026-10-21T12:05:14.387Z",
   "package": {
     "name": "dsh-armorbreak",
     "version": "1.2.0"
@@ -29,8 +29,13 @@
       "reason": "license/installer unit gates pass; no real signed catalog install"
     },
     "aiEvaluation": {
-      "status": "REVIEW",
-      "reason": "mock AISEC passes; Garak/PyRIT/Inspect not executed"
+      "status": "PASS",
+      "reason": "Garak/PyRIT/OFFLINE test endpoints + 5+ AI/agent classes; no third-party live model claimed",
+      "evidence": [
+        "docs/v2/acceptance/garak-live.json",
+        "docs/v2/acceptance/pyrit-live.json",
+        "docs/v2/acceptance/jailbreak-live.json"
+      ]
     },
     "compatibility": {
       "status": "REVIEW",

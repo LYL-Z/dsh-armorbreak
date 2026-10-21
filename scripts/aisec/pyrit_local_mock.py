@@ -11,6 +11,7 @@ import sys
 
 from pyrit.models import Message, MessagePiece
 from pyrit.prompt_target.common.prompt_target import PromptTarget
+from pyrit.setup import IN_MEMORY, initialize_pyrit_async
 
 
 class LocalMockTarget(PromptTarget):
@@ -36,6 +37,7 @@ class LocalMockTarget(PromptTarget):
 
 
 async def main():
+    await initialize_pyrit_async(IN_MEMORY, silent=True)
     target = LocalMockTarget()
     prompt = Message(
         message_pieces=[

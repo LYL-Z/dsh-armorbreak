@@ -39,7 +39,11 @@ const report = {
       rOffline: offline?.offlineRate ?? null,
     },
     supplyChain: { status: 'REVIEW', reason: 'license/installer unit gates pass; no real signed catalog install' },
-    aiEvaluation: { status: 'REVIEW', reason: 'mock AISEC passes; Garak/PyRIT/Inspect not executed' },
+    aiEvaluation: {
+      status: ['AB2-M3-03.md','AB2-M3-04.md','AB2-M3-05.md','AB2-M3-06.md','AB2-M3-07.md','AB2-M3-08.md','AB2-M3-11.md','AB2-M3-13.md'].every((file) => taskDocStatus[file] === 'DONE') ? 'PASS' : 'REVIEW',
+      reason: 'Garak/PyRIT/OFFLINE test endpoints + 5+ AI/agent classes; no third-party live model claimed',
+      evidence: ['docs/v2/acceptance/garak-live.json','docs/v2/acceptance/pyrit-live.json','docs/v2/acceptance/jailbreak-live.json'],
+    },
     compatibility: { status: 'REVIEW', reason: 'v1.2 tests pass; real Desktop GUI+model E2E not run' },
     performance: {
       status: perfCompare && Array.isArray(perfCompare.regressionsOver10Percent) && perfCompare.regressionsOver10Percent.length === 0 ? 'PASS' : 'REVIEW',
