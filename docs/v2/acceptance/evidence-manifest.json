@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.evidence-manifest/v1",
-  "commit": "a73e21a8a8c61532d5dc2e96fbb8797a8c515fd3",
-  "generatedAt": "2026-10-21T15:29:40.950Z",
+  "commit": "06d1d165a0412224f0eff5b4dc0722e023c71033",
+  "generatedAt": "2026-10-21T15:32:31.519Z",
   "files": {
     "docs/v2/acceptance/airgap-container.json": {
       "sha256": "967dc9c1443f006ac5e6552b0b080c797ef7f906239d049b06e95f522ad24397",
@@ -75,6 +75,18 @@
       "sha256": "16ef641c96eb0624bf206aa2b3627794cc5ffc68a25452191aa7ef203015b09d",
       "size": 39351
     },
+    "docs/v2/acceptance/p1-dsh-l0-report.md": {
+      "sha256": "a6d4ea9b230e83451ee85bce6bddec6810b55173ba2b585d03483461ca89ebee",
+      "size": 8177
+    },
+    "docs/v2/acceptance/p1-dsh-l0.json": {
+      "sha256": "ec2dfa94bb79b5ad0484b2475a80c11e61a1a8339e13f19f75228045316b43e6",
+      "size": 1307
+    },
+    "docs/v2/acceptance/p1-dsh-l0.webp": {
+      "sha256": "4caa3aad76f2e20ffca9abaca12dfc3c7ba025259967482650dc68f5c1e3218e",
+      "size": 316940
+    },
     "docs/v2/acceptance/performance-compare.json": {
       "sha256": "879a3291a580a981a9590ff1923c9e3a0a74555e1a1bc422fe7955aad30b997e",
       "size": 729
@@ -100,7 +112,7 @@
       "size": 601
     },
     "docs/v2/acceptance/release-smoke.json": {
-      "sha256": "c1bcc259630d21f8cf60a1208903b921eecc020e7f6fea3e822e5bed8d829056",
+      "sha256": "7f0fb8cd2b68fb5cd825e22efbcf4c76981fedbb40e405a9b8f09e4e54ac2cdb",
       "size": 1082
     },
     "docs/v2/acceptance/streaming-10gb.json": {
@@ -120,12 +132,12 @@
       "size": 1370
     },
     "docs/v2/acceptance/test-report.json": {
-      "sha256": "99a20d15939677265f1d6bdffa2fb316a3329db31c62793934b63fc4143fdd4f",
+      "sha256": "bae612366dc4496cc9a460021364974c71627f76b97d9ef35f6c2f56b806003a",
       "size": 517
     },
     "docs/v2/acceptance/test-report.tap": {
-      "sha256": "dd63b08a1d3fbffdb2ef72f9cd4c9a76046856eb438d567239a4cd6abb7f7c09",
-      "size": 61405
+      "sha256": "c0b9d96d8550c14b521325e5642e1b80b3fb393c24090df2de8055fe7132fa98",
+      "size": 61402
     }
   }
 }
