@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.release-readiness/v1",
-  "generatedAt": "2026-10-21T11:47:18.538Z",
+  "generatedAt": "2026-10-21T11:49:18.685Z",
   "package": {
     "name": "dsh-armorbreak",
     "version": "1.2.0"
