@@ -70,7 +70,8 @@ jobs:
         run: node scripts/v2/core-benchmark.mjs
 
   live-docker:
-    name: L1 Docker integration (real daemon)    runs-on: ubuntu-latest
+    name: L1 Docker integration (real daemon)
+    runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
