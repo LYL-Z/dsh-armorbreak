@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.bundle/v1",
   "name": "dsh-armorbreak",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "preset": {
     "id": "armorbreak",
     "preserved": true
@@ -529,8 +529,8 @@
     },
     {
       "path": "lib/core/isolation.js",
-      "sha256": "329c11ef103c705fe7595c3cb716673b63f4fdd02e4b287c61cf232466020c9c",
-      "bytes": 9867
+      "sha256": "f934fe996917ce9c00cf2ecf8418fe5f0d5b3cf155b2cfd28f6411aacb7ede7e",
+      "bytes": 12199
     },
     {
       "path": "lib/core/presentation.js",
@@ -549,8 +549,8 @@
     },
     {
       "path": "lib/core/runtime.js",
-      "sha256": "676db938a2cd42ef23016f354b41447daf3b8454bd90fd2eeadb50e1168a521d",
-      "bytes": 10583
+      "sha256": "4b33f2fd22f60d4aa4b250cec46cd7d50afba808bd6767cf0047f41c7365146e",
+      "bytes": 10612
     },
     {
       "path": "lib/core/scope.js",
@@ -618,6 +618,21 @@
       "bytes": 3761
     },
     {
+      "path": "lib/release/docsConsistency.js",
+      "sha256": "a756c744f46437e54f43b62b16fc43b4a60eccdb96f99458822b4c42b5d7561a",
+      "bytes": 2307
+    },
+    {
+      "path": "lib/release/evidenceValidator.js",
+      "sha256": "0b4a578734b241b856eb86dabf94c5372e55890b9e617f596a669a0fe7c158fd",
+      "bytes": 3515
+    },
+    {
+      "path": "lib/release/gates.js",
+      "sha256": "6970b7e57fbd5ac5fed82fb76e6fa7b654712773512ce01a1444294b4cfad5f2",
+      "bytes": 11088
+    },
+    {
       "path": "lib/release/rollout.js",
       "sha256": "09cab8be9e36ae593717dd5418fc5e064aa9378f49c110e848364b129b5b62fa",
       "bytes": 2130
@@ -644,7 +659,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "b7a2ab9b61fa0656f32e598b0490e3a13fe30cfa8cc86c51e9c2129f95970772",
+      "sha256": "a4b0ca46d8d6f84610b2db0a2f6aa8b1dd05cd09a5360943760206217b1eca86",
       "bytes": 1798
     },
     {
@@ -693,8 +708,8 @@
       "bytes": 59868
     }
   ],
-  "aggregateSha256": "fe801c4c76facdc7250d9cbf81c1e3a5213e1442b969d644122c08c472ee5c5b",
-  "fileCount": 137,
-  "totalBytes": 1562321,
+  "aggregateSha256": "55249e3e4aba0c8f42ae930f71b88705c7eab243fb3357b7d9f1826532e82caa",
+  "fileCount": 140,
+  "totalBytes": 1581592,
   "executable": false
 }
