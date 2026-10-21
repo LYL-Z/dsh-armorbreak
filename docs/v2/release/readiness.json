@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.release-readiness/v1",
-  "generatedAt": "2026-10-21T11:43:33.759Z",
+  "generatedAt": "2026-10-21T11:47:18.538Z",
   "package": {
     "name": "dsh-armorbreak",
     "version": "1.2.0"
@@ -58,12 +58,11 @@
     "AB2-M4-08.md": "DONE",
     "AB2-M4-09.md": "DONE",
     "AB2-M4-10.md": "DONE",
-    "AB2-M4-11.md": "REVIEW",
+    "AB2-M4-11.md": "DONE",
     "AB2-M4-12.md": "DONE"
   },
   "incomplete": [
-    "AB2-M4-06.md",
-    "AB2-M4-11.md"
+    "AB2-M4-06.md"
   ],
   "ready": false,
   "reason": "release blocked by incomplete gates/tasks; not a failure of the build"
