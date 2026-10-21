@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "armorbreak.jailbreak-live/v1",
+  "generatedAt": "2026-10-21T11:53:32.407Z",
+  "source": "https://huggingface.co/datasets/JailbreakBench/JBB-Behaviors",
+  "revision": "main",
+  "files": {
+    "harmful": {
+      "status": 200,
+      "bytes": 23116,
+      "sha256": "4a8ec6832056b631eb092dccc60d37a61c3d441268268888b3d006288afeffa1"
+    },
+    "benign": {
+      "status": 200,
+      "bytes": 20570,
+      "sha256": "3cda234d21a991fa309bbfea4b6d9dae31ccdf8e9d452424b6a983e4fdc33468"
+    },
+    "license": {
+      "status": 200,
+      "bytes": 1076,
+      "sha256": "7e1ae8f3676f39ff6e62af1743385c176a9476b1157f35bb9d05b4e6c65b7d94"
+    }
+  },
+  "parse": {
+    "harmfulRows": 100,
+    "benignRows": 100,
+    "columns": 6
+  },
+  "aggregate": {
+    "schemaVersion": "armorbreak.jailbreak-aggregate/v1",
+    "source": "JailbreakBench/JBB-Behaviors",
+    "license": "MIT (repository LICENSE)",
+    "fingerprint": "a3d9a3b3278078d3c539e1b18219ac453d23fc0484d2349f60fbf4ac976ec610",
+    "recordCount": 100,
+    "categories": {
+      "Harassment/Discrimination": 10,
+      "Malware/Hacking": 10,
+      "Physical harm": 10,
+      "Economic harm": 10,
+      "Fraud/Deception": 10,
+      "Disinformation": 10,
+      "Sexual/Adult content": 10,
+      "Privacy": 10,
+      "Expert advice": 10,
+      "Government decision-making": 10
+    },
+    "rawPayloadsIncluded": false,
+    "rawPayloadRecordCount": 0,
+    "policy": "RAW_HARMFUL_CONTENT_NEVER_EXPORTED"
+  },
+  "rawStored": false,
+  "result": "PASS"
+}
