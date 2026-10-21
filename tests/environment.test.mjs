@@ -4,6 +4,9 @@
  * / verified) is deterministic.
  */
 import assert from 'node:assert/strict'
+import { mkdtemp } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import test from 'node:test'
 
 import { IsolationProviderManager, PROVIDER_STATES } from '../lib/core/isolation.js'
@@ -110,4 +113,27 @@ test('selfTest runs a harmless pinned container and only records IsolationVerifi
   assert.match(failed.reason, /self-test failed/)
   const failedDiagnosis = await failing.diagnose({ fresh: true })
   assert.notEqual(failedDiagnosis.providers.find((p) => p.id === 'docker').state, 'IsolationVerified')
+})
+
+test('successful self-test persists across manager instances and is invalidated by a daemon change', async () => {
+  const stateRoot = await mkdtemp(join(tmpdir(), 'abm-isolation-state-'))
+  const first = new IsolationProviderManager({ exec: READY, stateRoot, verifyImpl: async () => ({ ok: true, reason: 'harmless container ran' }) })
+  assert.equal((await first.verify('docker')).verified, true)
+
+  const second = new IsolationProviderManager({ exec: READY, stateRoot })
+  const persisted = await second.diagnose({ fresh: true })
+  assert.equal(persisted.providers.find((p) => p.id === 'docker').state, 'IsolationVerified')
+  assert.equal(persisted.l1.available, true)
+
+  const changedDaemon = fakeExec({
+    'docker --version': 'Docker version 27.0.0',
+    'docker info --format {{.ServerVersion}}': '28.0.0',
+    'podman --version': 'podman version 5.0.0',
+    'wsl --version': 'WSL version 2.0',
+    'wsl --status': 'Default Version: 2',
+  })
+  const third = new IsolationProviderManager({ exec: changedDaemon, stateRoot })
+  const stale = await third.diagnose({ fresh: true })
+  assert.equal(stale.providers.find((p) => p.id === 'docker').state, 'DaemonReady')
+  assert.equal(stale.l1.available, false)
 })
