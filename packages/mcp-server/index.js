@@ -7,6 +7,7 @@
  */
 import { randomUUID } from 'node:crypto'
 import { createInterface } from 'node:readline'
+import { pathToFileURL } from 'node:url'
 import { createEngine } from '../engine-node/index.js'
 
 const PROTOCOL_VERSION = '2025-06-18'
@@ -150,6 +151,6 @@ async function main() {
   await engine.close()
 }
 
-if (import.meta.url === `file://${process.argv[1]?.replaceAll('\\', '/')}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main().catch((cause) => { process.stderr.write(`${String(cause?.stack ?? cause)}\n`); process.exitCode = 1 })
 }
