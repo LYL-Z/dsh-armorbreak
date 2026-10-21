@@ -33,6 +33,14 @@ test('CLI capabilities, analyze and task status work without DSH', async () => {
   assert.match(report.markdown, /ArmorBreak/)
   const tasks = JSON.parse((await f.run('task', 'list', '--json')).stdout)
   assert.ok(tasks.some((item) => item.id === analyzed.taskId))
+  const workflows = JSON.parse((await f.run('workflow', 'list', '--json')).stdout)
+  assert.ok(workflows.length >= 9)
+  const { createEngine } = await import('../packages/engine-node/index.js')
+  const direct = await createEngine({ stateRoot: f.stateRoot, principals: [{ id: 'cli-tester', kind: 'local-user', workspaces: [f.workspace] }] })
+  const pending = await direct.createTask({ principal: { id: 'cli-tester', kind: 'local-user' }, workspaceId: f.workspace, requestId: 'cli-cancel', traceId: 'cli-cancel' }, { title: 'cancel me', targetKind: 'none' })
+  await direct.close()
+  const cancelled = JSON.parse((await f.run('workflow', 'cancel', pending.id, '--json')).stdout)
+  assert.equal(cancelled.state, 'CANCELLED')
 })
 
 test('MCP server process emits only JSON-RPC frames on stdout', async () => {

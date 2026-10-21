@@ -34,7 +34,7 @@ function config() {
 async function main() {
   const { command, positional, options } = parse(process.argv.slice(2))
   if (command === 'help' || options.help) {
-    print('armorbreak doctor|capabilities|analyze|task|report|mcp [--json]', false)
+    print('armorbreak doctor|capabilities|analyze|task|workflow|report|mcp [--json]', false)
     return
   }
   const cfg = config()
@@ -56,6 +56,11 @@ async function main() {
       if (positional[0] === 'cancel' && positional[1]) return print(await engine.cancelTask(ctx, positional[1]), options.json)
       if (positional[0] !== 'status' || !positional[1]) throw new Error('task status <task-id>, task list, or task cancel <task-id> is required')
       return print(await engine.getTask(ctx, positional[1]), options.json)
+    }
+    if (command === 'workflow') {
+      if (positional[0] === 'list') return print(await engine.listWorkflows(ctx), options.json)
+      if (positional[0] === 'cancel' && positional[1]) return print(await engine.cancelTask(ctx, positional[1]), options.json)
+      throw new Error('workflow list or workflow cancel <task-id> is required')
     }
     if (command === 'mcp' && positional[0] === 'serve') {
       const { server } = await createMcpServer(cfg)

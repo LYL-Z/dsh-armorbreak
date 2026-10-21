@@ -11,6 +11,7 @@ import { createHash } from 'node:crypto'
 import { resolve, sep } from 'node:path'
 import { ArmorBreakRuntime } from '../../lib/core/runtime.js'
 import { ApprovalAuthority } from '../../lib/control/approvalAuthority.js'
+import { listWorkflows } from '../../lib/core/workflows.js'
 import { validateInvocation } from '../protocol/index.js'
 import { createEvidenceEnvelope, createEventEnvelope, CORE_VERSION } from '../core/index.js'
 
@@ -197,6 +198,11 @@ export class TrustedEngine {
       if (content.length > 256 * 1024) throw new EngineError('INVALID_REQUEST', 'report exceeds 256 KiB')
       return { taskId: task.id, path: task.report.path, sha256: task.report.sha256, markdown: content }
     })
+  }
+
+  async listWorkflows(ctx) {
+    this.authenticate(ctx)
+    return listWorkflows()
   }
 
   async capabilities(ctx) {
