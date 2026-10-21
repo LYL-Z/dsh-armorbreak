@@ -31,7 +31,8 @@ if (!existsSync(garak)) {
     const jsonl = files.find((file) => file.endsWith('.report.jsonl')) ?? files.find((file) => file.endsWith('.jsonl'))
     if (jsonl) {
       report.results = mapGarakReport({ text: await readFile(join(reportDir, jsonl), 'utf8'), plan, targetId: 'garak-local' })
-      report.status = 'PASS'
+      report.status = report.results.length > 0 ? 'PASS' : 'FAIL'
+      if (report.results.length === 0) report.error = 'no mapped Garak eval/attempt results'
     } else if (!report.error) report.error = 'no Garak JSONL report found'
   } catch (error) { report.error = String(error?.message ?? error).slice(0, 300) }
 }

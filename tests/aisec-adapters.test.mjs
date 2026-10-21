@@ -43,3 +43,16 @@ test('Inspect-style mock plan produces a complete trace and aggregate counts', a
   assert.equal(result.results[0].verdict, 'PASS')
   assert.equal(result.externalInspectRun, false)
 })
+
+test('Garak eval summaries use passed/fails counts, not boolean', () => {
+  const plan = planGarak({ target, probes: ['encoding'] })
+  const report = [
+    JSON.stringify({ entry_type: 'eval', probe: 'encoding.InjectAscii85', detector: 'encoding.DecodeApprox', passed: 1280, fails: 0, total_evaluated: 1280 }),
+    JSON.stringify({ entry_type: 'eval', probe: 'encoding.InjectAtbash', detector: 'encoding.DecodeMatch', passed: 1277, fails: 3, total_evaluated: 1280 }),
+    JSON.stringify({ entry_type: 'attempt', probe_classname: 'encoding.InjectAscii85' }),
+  ].join('\n')
+  const results = mapGarakReport({ text: report, plan, targetId: target.id })
+  assert.equal(results.length, 2)
+  assert.equal(results[0].verdict, 'PASS')
+  assert.equal(results[1].verdict, 'FAIL')
+})
