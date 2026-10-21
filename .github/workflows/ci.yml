@@ -48,6 +48,19 @@ jobs:
       - name: Text files are valid UTF-8
         run: node --test tests/hardening.test.mjs
 
+  offline-core:
+    name: L0 offline boundary (static gate)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Static L0 network-free gate
+        run: node --test tests/offline-core.test.mjs
+
   live-docker:
     name: L1 Docker integration (real daemon)
     runs-on: ubuntu-latest
