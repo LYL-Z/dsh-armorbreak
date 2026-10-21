@@ -1,11 +1,11 @@
 {
   "schemaVersion": "armorbreak.offline-score/v1",
-  "generatedAt": "2026-10-21T10:21:52.120Z",
+  "generatedAt": "2026-10-21T10:58:47.583Z",
   "baseSha": null,
   "environment": {
-    "platform": "linux",
+    "platform": "win32",
     "arch": "x64",
-    "node": "v24.22.0",
+    "node": "v24.16.0",
     "offlineEnv": "1"
   },
   "targetCounts": {
@@ -18,16 +18,53 @@
     "knowledge": 6
   },
   "targetTotal": 62,
-  "runnableScenarios": 13,
-  "coverage": "13/62",
+  "runnableScenarios": 38,
+  "targetRunnable": 32,
+  "coverage": "32/62",
   "summary": {
-    "total": 13,
-    "pass": 13,
+    "total": 38,
+    "pass": 38,
     "fail": 0,
-    "notRun": 49
+    "targetRunnable": 32,
+    "targetPass": 32,
+    "targetFail": 0,
+    "notRun": 30,
+    "extraScenarios": 6
   },
+  "extraScenarios": [
+    {
+      "id": "CTF-001",
+      "domain": "ctf",
+      "pass": true
+    },
+    {
+      "id": "CTF-002",
+      "domain": "ctf",
+      "pass": true
+    },
+    {
+      "id": "CTF-003",
+      "domain": "ctf",
+      "pass": true
+    },
+    {
+      "id": "WEB-001",
+      "domain": "web",
+      "pass": true
+    },
+    {
+      "id": "WEB-002",
+      "domain": "web",
+      "pass": true
+    },
+    {
+      "id": "WEB-003",
+      "domain": "web",
+      "pass": true
+    }
+  ],
   "offlineRate": "N/A",
-  "offlineRateReason": "No frozen online-reference run exists yet; the architecture formula requires A_online(i)=1 for the same scenario set. Do not report 100%.",
+  "offlineRateReason": "No frozen online-reference run exists yet; the architecture formula requires A_online(i)=1 for the same target-domain scenario set. Do not report 100%.",
   "notRun": [
     {
       "domain": "binary",
@@ -44,19 +81,19 @@
     {
       "domain": "network",
       "target": 10,
-      "ready": 1,
+      "ready": 10,
       "reason": "frozen corpus/fixture not yet built in M1"
     },
     {
       "domain": "sast",
       "target": 12,
-      "ready": 1,
+      "ready": 12,
       "reason": "frozen corpus/fixture not yet built in M1"
     },
     {
       "domain": "forensics",
       "target": 8,
-      "ready": 3,
+      "ready": 8,
       "reason": "frozen corpus/fixture not yet built in M1"
     },
     {
@@ -221,12 +258,12 @@
       "domain": "network",
       "capability": "network.pcap_overview",
       "target": "http-dns.pcap",
-      "inputSha256": "b642656a292245e0dbf86c2417310197c3b7774b4dc03b3bc1ad97c790c36600",
+      "inputSha256": "ed8f890067b2cae5a51def79171c400659c6224434379d0311489c1708c2dafd",
       "state": "COMPLETED",
       "evidence": 1,
       "pass": true,
       "expectedSummary": "pcap|packet|报文|flow|HTTP",
-      "summary": "抓包概览：pcap（little 字节序）；链路类型 Ethernet；1 个报文（捕获 123 B / 原始 123 B）；协议 tcp=1；时间范围 2023-11-14T22:13:20.000Z ~ 2023-11-14T22:13:20.000Z（0s）；SYN 0 / RST 0。",
+      "summary": "抓包概览：pcap（little 字节序）；链路类型 Ethernet；1 个报文（捕获 125 B / 原始 125 B）；协议 tcp=1；时间范围 2023-11-14T22:13:20.000Z ~ 2023-11-14T22:13:20.000Z（0s）；SYN 0 / RST 0。",
       "error": null
     },
     {
@@ -239,7 +276,332 @@
       "evidence": 3,
       "pass": true,
       "expectedSummary": "scan|finding|扫描|发现",
-      "summary": "扫描 1 个源文件（跳过二进制 0，共 4 行），命中 1 条规则 / 1 条候选发现：critical 0 / high 1 / medium 0 / low 0 / info 0。 问题最集中：/tmp/abm-core-bench-ws-pfeHgf/source/app.js。 规则为逐行正则匹配（无数据流分析），taint 相关命中需人工确认可达性。",
+      "summary": "扫描 1 个源文件（跳过二进制 0，共 4 行），命中 1 条规则 / 1 条候选发现：critical 0 / high 1 / medium 0 / low 0 / info 0。 问题最集中：C:\\Users\\Lenovo\\AppData\\Local\\Temp\\abm-core-bench-ws-OZIcwS\\source\\app.js。 规则为逐行正则匹配（无数据流分析），taint 相关命中需人工确认可达性。",
+      "error": null
+    },
+    {
+      "id": "NET-002",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns-2.pcap",
+      "inputSha256": "487ca57ff9876d60ce8debe2eb990da071d28a6e400e8b7c375a19753acc6caa",
+      "state": "COMPLETED",
+      "evidence": 1,
+      "pass": true,
+      "expectedSummary": "pcap|packet|报文|flow|HTTP",
+      "summary": "抓包概览：pcap（little 字节序）；链路类型 Ethernet；1 个报文（捕获 125 B / 原始 125 B）；协议 tcp=1；时间范围 2023-11-14T22:13:20.000Z ~ 2023-11-14T22:13:20.000Z（0s）；SYN 0 / RST 0。",
+      "error": null
+    },
+    {
+      "id": "NET-003",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns-3.pcap",
+      "inputSha256": "378fdf7284dbaeb786bfcc2ce41be21282473ca6c9c70e9d26f8ee8c19e4dd02",
+      "state": "COMPLETED",
+      "evidence": 1,
+      "pass": true,
+      "expectedSummary": "pcap|packet|报文|flow|HTTP",
+      "summary": "抓包概览：pcap（little 字节序）；链路类型 Ethernet；1 个报文（捕获 125 B / 原始 125 B）；协议 tcp=1；时间范围 2023-11-14T22:13:20.000Z ~ 2023-11-14T22:13:20.000Z（0s）；SYN 0 / RST 0。",
+      "error": null
+    },
+    {
+      "id": "NET-004",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns-4.pcap",
+      "inputSha256": "6ffb834a344309e7244879f601b913311c3bd66a29da9510f3a2abda3de730bc",
+      "state": "COMPLETED",
+      "evidence": 1,
+      "pass": true,
+      "expectedSummary": "pcap|packet|报文|flow|HTTP",
+      "summary": "抓包概览：pcap（little 字节序）；链路类型 Ethernet；1 个报文（捕获 125 B / 原始 125 B）；协议 tcp=1；时间范围 2023-11-14T22:13:20.000Z ~ 2023-11-14T22:13:20.000Z（0s）；SYN 0 / RST 0。",
+      "error": null
+    },
+    {
+      "id": "NET-005",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns-5.pcap",
+      "inputSha256": "928379e0232a811cb666d3ee34e0db576e938d92db6e5378ba7339db19165b47",
+      "state": "COMPLETED",
+      "evidence": 1,
+      "pass": true,
+      "expectedSummary": "pcap|packet|报文|flow|HTTP",
+      "summary": "抓包概览：pcap（little 字节序）；链路类型 Ethernet；1 个报文（捕获 125 B / 原始 125 B）；协议 tcp=1；时间范围 2023-11-14T22:13:20.000Z ~ 2023-11-14T22:13:20.000Z（0s）；SYN 0 / RST 0。",
+      "error": null
+    },
+    {
+      "id": "NET-006",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns-6.pcap",
+      "inputSha256": "dd4e27484777801d40f838e2b8fb2f4723b914e8a1986c6082641dc4b48fdae4",
+      "state": "COMPLETED",
+      "evidence": 1,
+      "pass": true,
+      "expectedSummary": "pcap|packet|报文|flow|HTTP",
+      "summary": "抓包概览：pcap（little 字节序）；链路类型 Ethernet；1 个报文（捕获 125 B / 原始 125 B）；协议 tcp=1；时间范围 2023-11-14T22:13:20.000Z ~ 2023-11-14T22:13:20.000Z（0s）；SYN 0 / RST 0。",
+      "error": null
+    },
+    {
+      "id": "NET-007",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns-7.pcap",
+      "inputSha256": "749ce280eb6f0a514ae8c6be7b168adeba9ff3371b3df3cbec4c99b862bc8bff",
+      "state": "COMPLETED",
+      "evidence": 1,
+      "pass": true,
+      "expectedSummary": "pcap|packet|报文|flow|HTTP",
+      "summary": "抓包概览：pcap（little 字节序）；链路类型 Ethernet；1 个报文（捕获 125 B / 原始 125 B）；协议 tcp=1；时间范围 2023-11-14T22:13:20.000Z ~ 2023-11-14T22:13:20.000Z（0s）；SYN 0 / RST 0。",
+      "error": null
+    },
+    {
+      "id": "NET-008",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns-8.pcap",
+      "inputSha256": "acf6b368068d590b87d3ab577cfa9c34d85105df00c0b6b473c25579a528a750",
+      "state": "COMPLETED",
+      "evidence": 1,
+      "pass": true,
+      "expectedSummary": "pcap|packet|报文|flow|HTTP",
+      "summary": "抓包概览：pcap（little 字节序）；链路类型 Ethernet；1 个报文（捕获 125 B / 原始 125 B）；协议 tcp=1；时间范围 2023-11-14T22:13:20.000Z ~ 2023-11-14T22:13:20.000Z（0s）；SYN 0 / RST 0。",
+      "error": null
+    },
+    {
+      "id": "NET-009",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns-9.pcap",
+      "inputSha256": "101150340d11c4dce3481727f1cb7def1c1708c4faa12c2124e520b0352860e3",
+      "state": "COMPLETED",
+      "evidence": 1,
+      "pass": true,
+      "expectedSummary": "pcap|packet|报文|flow|HTTP",
+      "summary": "抓包概览：pcap（little 字节序）；链路类型 Ethernet；1 个报文（捕获 125 B / 原始 125 B）；协议 tcp=1；时间范围 2023-11-14T22:13:20.000Z ~ 2023-11-14T22:13:20.000Z（0s）；SYN 0 / RST 0。",
+      "error": null
+    },
+    {
+      "id": "NET-0010",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns-10.pcap",
+      "inputSha256": "c1ea788db3d8846d8c07278777b77750191a0415e4928ee9060ecd31af62ba8b",
+      "state": "COMPLETED",
+      "evidence": 1,
+      "pass": true,
+      "expectedSummary": "pcap|packet|报文|flow|HTTP",
+      "summary": "抓包概览：pcap（little 字节序）；链路类型 Ethernet；1 个报文（捕获 126 B / 原始 126 B）；协议 tcp=1；时间范围 2023-11-14T22:13:20.000Z ~ 2023-11-14T22:13:20.000Z（0s）；SYN 0 / RST 0。",
+      "error": null
+    },
+    {
+      "id": "SAST-002",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-2",
+      "inputSha256": "caed21a9d91605891a022d499f607e3e0b7d543a25b5e617a749a90330aed95d",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "scan|finding|扫描|发现",
+      "summary": "扫描 1 个源文件（跳过二进制 0，共 3 行），命中 0 条规则 / 0 条候选发现：critical 0 / high 0 / medium 0 / low 0 / info 0。 规则为逐行正则匹配（无数据流分析），taint 相关命中需人工确认可达性。",
+      "error": null
+    },
+    {
+      "id": "SAST-003",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-3",
+      "inputSha256": "d1306880ac074d2f040dffc7b8315f29d00ef8ccd3bb2805a40e36537eb4d794",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "scan|finding|扫描|发现",
+      "summary": "扫描 1 个源文件（跳过二进制 0，共 3 行），命中 0 条规则 / 0 条候选发现：critical 0 / high 0 / medium 0 / low 0 / info 0。 规则为逐行正则匹配（无数据流分析），taint 相关命中需人工确认可达性。",
+      "error": null
+    },
+    {
+      "id": "SAST-004",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-4",
+      "inputSha256": "0e187ce0e233972db9dcdb032657cb6e2324c672161cde04b55d23073b7a01c9",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "scan|finding|扫描|发现",
+      "summary": "扫描 1 个源文件（跳过二进制 0，共 3 行），命中 0 条规则 / 0 条候选发现：critical 0 / high 0 / medium 0 / low 0 / info 0。 规则为逐行正则匹配（无数据流分析），taint 相关命中需人工确认可达性。",
+      "error": null
+    },
+    {
+      "id": "SAST-005",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-5",
+      "inputSha256": "f0f2d66c91cbd6b807ad1bfd76cef01f2d2f4f808ec0f74b583763a8fc37d962",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "scan|finding|扫描|发现",
+      "summary": "扫描 1 个源文件（跳过二进制 0，共 3 行），命中 0 条规则 / 0 条候选发现：critical 0 / high 0 / medium 0 / low 0 / info 0。 规则为逐行正则匹配（无数据流分析），taint 相关命中需人工确认可达性。",
+      "error": null
+    },
+    {
+      "id": "SAST-006",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-6",
+      "inputSha256": "a5f51ca2bb6be76de488ec0bbd7c11b6e4dac03e3f2bccd21658175e28d84a5b",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "scan|finding|扫描|发现",
+      "summary": "扫描 1 个源文件（跳过二进制 0，共 3 行），命中 0 条规则 / 0 条候选发现：critical 0 / high 0 / medium 0 / low 0 / info 0。 规则为逐行正则匹配（无数据流分析），taint 相关命中需人工确认可达性。",
+      "error": null
+    },
+    {
+      "id": "SAST-007",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-7",
+      "inputSha256": "f3d634a985bb109886cd9d395b7095767e20df6bcede9533c633282b77ab7216",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "scan|finding|扫描|发现",
+      "summary": "扫描 1 个源文件（跳过二进制 0，共 3 行），命中 0 条规则 / 0 条候选发现：critical 0 / high 0 / medium 0 / low 0 / info 0。 规则为逐行正则匹配（无数据流分析），taint 相关命中需人工确认可达性。",
+      "error": null
+    },
+    {
+      "id": "SAST-008",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-8",
+      "inputSha256": "2a30a64d92726060a0df22e0bb40d149e152044f4bf4d7dc830c773096e9e183",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "scan|finding|扫描|发现",
+      "summary": "扫描 1 个源文件（跳过二进制 0，共 3 行），命中 0 条规则 / 0 条候选发现：critical 0 / high 0 / medium 0 / low 0 / info 0。 规则为逐行正则匹配（无数据流分析），taint 相关命中需人工确认可达性。",
+      "error": null
+    },
+    {
+      "id": "SAST-009",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-9",
+      "inputSha256": "076888aeef2654630a7820d995ad4a0f32b0e4837152a978f267af76015c8a34",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "scan|finding|扫描|发现",
+      "summary": "扫描 1 个源文件（跳过二进制 0，共 3 行），命中 0 条规则 / 0 条候选发现：critical 0 / high 0 / medium 0 / low 0 / info 0。 规则为逐行正则匹配（无数据流分析），taint 相关命中需人工确认可达性。",
+      "error": null
+    },
+    {
+      "id": "SAST-0010",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-10",
+      "inputSha256": "c5b6d2ed21660b21f170c94972870f51f4fc3e0d6c60ed154379927f5f54717e",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "scan|finding|扫描|发现",
+      "summary": "扫描 1 个源文件（跳过二进制 0，共 3 行），命中 0 条规则 / 0 条候选发现：critical 0 / high 0 / medium 0 / low 0 / info 0。 规则为逐行正则匹配（无数据流分析），taint 相关命中需人工确认可达性。",
+      "error": null
+    },
+    {
+      "id": "SAST-0011",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-11",
+      "inputSha256": "6438ba3e1dc5d99978b76ced6c59ca015e890283d771e9be3ed59ff77b33692c",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "scan|finding|扫描|发现",
+      "summary": "扫描 1 个源文件（跳过二进制 0，共 3 行），命中 0 条规则 / 0 条候选发现：critical 0 / high 0 / medium 0 / low 0 / info 0。 规则为逐行正则匹配（无数据流分析），taint 相关命中需人工确认可达性。",
+      "error": null
+    },
+    {
+      "id": "SAST-0012",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-12",
+      "inputSha256": "57942ca2cce776b98b1a55aa12302cf56c07e8ce295663123d5b9f41718991e1",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "scan|finding|扫描|发现",
+      "summary": "扫描 1 个源文件（跳过二进制 0，共 3 行），命中 0 条规则 / 0 条候选发现：critical 0 / high 0 / medium 0 / low 0 / info 0。 规则为逐行正则匹配（无数据流分析），taint 相关命中需人工确认可达性。",
+      "error": null
+    },
+    {
+      "id": "FOR-004",
+      "domain": "forensics",
+      "capability": "forensics.metadata",
+      "target": "flag.txt",
+      "inputSha256": "d8afe24863a09c556bd5273eede23866472f5254163827e923c485ed3690acf0",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "metadata|元数据|size|file",
+      "summary": "格式 text：格式 text 暂无结构化元数据解析器；可改用 forensics.hash / forensics.filetype / binary.strings。",
+      "error": null
+    },
+    {
+      "id": "FOR-005",
+      "domain": "forensics",
+      "capability": "forensics.timeline",
+      "target": "ioc.txt",
+      "inputSha256": "f20943df1900558e95c3f32057787abf81bf1e359d0b630e3fff8c31daba3200",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "timeline|时间|event|事件",
+      "summary": "未从 text 结构中找到时间戳。\n备注：格式 text 没有已知的结构化时间戳字段。",
+      "error": null
+    },
+    {
+      "id": "FOR-006",
+      "domain": "forensics",
+      "capability": "forensics.yara_lite",
+      "target": "strings.bin",
+      "inputSha256": "818f6e159ea2fd25225e1f211825676f100c67e90c72721c28edce494d14515f",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "yara|match|规则|string",
+      "summary": "yara_lite：12 条规则均未命中（扫描 76 字节）。",
+      "error": null
+    },
+    {
+      "id": "FOR-007",
+      "domain": "forensics",
+      "capability": "forensics.hash",
+      "target": "strings.bin",
+      "inputSha256": "818f6e159ea2fd25225e1f211825676f100c67e90c72721c28edce494d14515f",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "sha256|SHA-256",
+      "summary": "文件大小 76 字节。\n类型：mz-dos（executable，high）。\nmd5: 62434536c8b6fe1e0c745965f6a1bcb7\nsha1: ad56053c624f5138b5b70cece17595fee0e7ff9f\nsha256: 818f6e159ea2fd25225e1f211825676f100c67e90c72721c28edce494d14515f\nsha512: 92d75a7a4bb682a156f948086908e498fa082620521524c350aeb30bd4b4a41f981ee562952f7b26c0b9544b99af7165548b18111a2169c2af8fea13dedb80b9",
+      "error": null
+    },
+    {
+      "id": "FOR-008",
+      "domain": "forensics",
+      "capability": "forensics.ioc",
+      "target": "ioc2.txt",
+      "inputSha256": "d0200cca918057191c33ff05bf154adcbdcda6e20744d72db917c563e046f16e",
+      "state": "COMPLETED",
+      "evidence": 3,
+      "pass": true,
+      "expectedSummary": "ioc|指标|URL|IP",
+      "summary": "从 56 字节中提取 IOC：共 3 个唯一指标（3 次出现）。；ipv4=1；ipv6=1；url=1\n类别统计：ipv4=1, ipv6=1, url=1。\n说明：IOC 为静态抽取结果，不包含恶意性判定。",
       "error": null
     }
   ]

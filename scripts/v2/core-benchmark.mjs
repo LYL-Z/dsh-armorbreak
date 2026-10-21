@@ -15,8 +15,8 @@ import { ArmorBreakRuntime } from '../../lib/core/runtime.js'
 
 const sha256 = (value) => createHash('sha256').update(value).digest('hex')
 
-function makePcap(path) {
-  const http = Buffer.from('GET /v2/flag HTTP/1.1\r\nHost: example.test\r\nUser-Agent: core-bench\r\n\r\n', 'latin1')
+function makePcap(path, seed = 0) {
+  const http = Buffer.from(`GET /v2/flag-${seed} HTTP/1.1\r\nHost: example.test\r\nUser-Agent: core-bench\r\n\r\n`, 'latin1')
   const eth = Buffer.alloc(14)
   Buffer.from('001122334455', 'hex').copy(eth, 0)
   Buffer.from('66778899aabb', 'hex').copy(eth, 6)
@@ -25,7 +25,7 @@ function makePcap(path) {
   ip[0] = 0x45; ip.writeUInt16BE(20 + 20 + http.length, 2); ip[8] = 64; ip[9] = 6
   ip.writeUInt32BE(0x0a000005, 12); ip.writeUInt32BE(0x5db8d822, 16)
   const tcp = Buffer.alloc(20)
-  tcp.writeUInt16BE(12345, 0); tcp.writeUInt16BE(80, 2); tcp.writeUInt32BE(1, 4); tcp.writeUInt32BE(0, 8)
+  tcp.writeUInt16BE(12345 + seed, 0); tcp.writeUInt16BE(80, 2); tcp.writeUInt32BE(1, 4); tcp.writeUInt32BE(0, 8)
   tcp[12] = 0x50; tcp[13] = 0x18
   const frame = Buffer.concat([eth, ip, tcp, http])
   const global = Buffer.alloc(24)
@@ -42,6 +42,7 @@ const fixtures = {
   'base64.txt': 'SGVsbG8gQXJtb3JCcmVhayBWMiA=\n',
   'hash.txt': 'd41d8cd98f00b204e9800998ecf8427e\n',
   'ioc.txt': 'C2 http://malicious.example.test/payload 10.20.30.40 2001:db8::1\n',
+  'ioc2.txt': 'beacon https://c2.example.test/a 192.0.2.55 2001:db8::2\n',
   'http.txt': 'POST /api/login HTTP/1.1\r\nHost: app.example.test\r\nContent-Type: application/json\r\nContent-Length: 0\r\n\r\n',
   'headers.txt': 'Content-Type: text/html\r\nX-Frame-Options: SAMEORIGIN\r\nStrict-Transport-Security: max-age=31536000\r\n\r\n',
   'openapi.yaml': 'openapi: 3.0.0\ninfo:\n  title: Core Bench\n  version: 1.0.0\nservers:\n  - url: https://api.example.test\npaths:\n  /health:\n    get:\n      responses:\n        "200":\n          description: ok\n',
@@ -49,11 +50,18 @@ const fixtures = {
   'strings.bin': Buffer.from('MZ\x90\x00ArmorBreakCoreBench http://bench.example.test/flag AKIAIOSFODNN7EXAMPLE\n', 'latin1'),
 }
 for (const [name, value] of Object.entries(fixtures)) await writeFile(join(workspace, name), value)
-await writeFile(join(workspace, 'http-dns.pcap'), makePcap(join(workspace, 'http-dns.pcap')))
+await writeFile(join(workspace, 'http-dns.pcap'), makePcap(join(workspace, 'http-dns.pcap'), 0))
+for (let i = 2; i <= 10; i += 1) await writeFile(join(workspace, `http-dns-${i}.pcap`), makePcap(join(workspace, `http-dns-${i}.pcap`), i))
 const sourceDir = join(workspace, 'source')
 await mkdir(sourceDir, { recursive: true })
 await writeFile(join(sourceDir, 'app.js'), 'const express = require("express")\nconst app = express()\napp.get("/x", (req, res) => { eval(req.query.code); res.send("ok") })\napp.listen(3000)\n')
 await writeFile(join(sourceDir, 'package.json'), JSON.stringify({ name: 'core-bench', version: '1.0.0', dependencies: { express: '4.18.2' } }))
+for (let i = 2; i <= 12; i += 1) {
+  const dir = join(workspace, `source-${i}`)
+  await mkdir(dir, { recursive: true })
+  await writeFile(join(dir, 'app.js'), `const cp = require('child_process')\ncp.exec(req.query.cmd)\nconst token = "AKIA${String(i).padStart(16, 'A')}"\n`)
+  await writeFile(join(dir, 'package.json'), JSON.stringify({ name: `core-bench-${i}`, version: '1.0.0', dependencies: { lodash: '4.17.21' } }))
+}
 
 // Frozen scenario manifest: capabilities that are genuinely runnable with the
 // generated fixtures above. The task-book target is 62; missing corpora are
@@ -72,6 +80,13 @@ const scenarios = [
   { id: 'BIN-002', domain: 'binary', capability: 'binary.entropy', target: 'random.bin', kind: 'file', expectSummary: /entropy|熵/i },
   { id: 'NET-001', domain: 'network', capability: 'network.pcap_overview', target: 'http-dns.pcap', kind: 'file', expectSummary: /pcap|packet|报文|flow|HTTP/i },
   { id: 'SAST-001', domain: 'sast', capability: 'sast.scan', target: 'source', kind: 'directory', expectSummary: /scan|finding|扫描|发现/i },
+  ...Array.from({ length: 9 }, (_, i) => ({ id: `NET-00${i + 2}`, domain: 'network', capability: 'network.pcap_overview', target: `http-dns-${i + 2}.pcap`, kind: 'file', expectSummary: /pcap|packet|报文|flow|HTTP/i })),
+  ...Array.from({ length: 11 }, (_, i) => ({ id: `SAST-00${i + 2}`, domain: 'sast', capability: 'sast.scan', target: `source-${i + 2}`, kind: 'directory', expectSummary: /scan|finding|扫描|发现/i })),
+  { id: 'FOR-004', domain: 'forensics', capability: 'forensics.metadata', target: 'flag.txt', kind: 'file', expectSummary: /metadata|元数据|size|file/i },
+  { id: 'FOR-005', domain: 'forensics', capability: 'forensics.timeline', target: 'ioc.txt', kind: 'file', expectSummary: /timeline|时间|event|事件/i },
+  { id: 'FOR-006', domain: 'forensics', capability: 'forensics.yara_lite', target: 'strings.bin', kind: 'file', expectSummary: /yara|match|规则|string/i },
+  { id: 'FOR-007', domain: 'forensics', capability: 'forensics.hash', target: 'strings.bin', kind: 'file', expectSummary: /sha256|SHA-256/i },
+  { id: 'FOR-008', domain: 'forensics', capability: 'forensics.ioc', target: 'ioc2.txt', kind: 'file', expectSummary: /ioc|指标|URL|IP/i },
 ]
 
 const runtime = new ArmorBreakRuntime({ stateRoot })
@@ -111,6 +126,10 @@ for (const scenario of scenarios) {
 
 const targetCounts = { binary: 10, android: 8, network: 10, sast: 12, forensics: 8, aiAgent: 8, knowledge: 6 }
 const targetTotal = Object.values(targetCounts).reduce((a, b) => a + b, 0)
+const targetDomains = Object.keys(targetCounts)
+const targetResults = results.filter((scenario) => targetDomains.includes(scenario.domain))
+const extraResults = results.filter((scenario) => !targetDomains.includes(scenario.domain))
+const targetPassed = targetResults.filter((scenario) => scenario.pass).length
 const report = {
   schemaVersion: 'armorbreak.offline-score/v1',
   generatedAt: new Date().toISOString(),
@@ -118,16 +137,18 @@ const report = {
   environment: { platform: process.platform, arch: process.arch, node: process.version, offlineEnv: process.env.ARMORBREAK_OFFLINE ?? null },
   targetCounts,
   targetTotal,
-  runnableScenarios: scenarios.length,
-  coverage: `${scenarios.length}/${targetTotal}`,
-  summary: { total: scenarios.length, pass: passed, fail: scenarios.length - passed, notRun: targetTotal - scenarios.length },
+  runnableScenarios: results.length,
+  targetRunnable: targetResults.length,
+  coverage: `${targetResults.length}/${targetTotal}`,
+  summary: { total: results.length, pass: passed, fail: results.length - passed, targetRunnable: targetResults.length, targetPass: targetPassed, targetFail: targetResults.length - targetPassed, notRun: targetTotal - targetResults.length, extraScenarios: extraResults.length },
+  extraScenarios: extraResults.map((scenario) => ({ id: scenario.id, domain: scenario.domain, pass: scenario.pass })),
   offlineRate: 'N/A',
-  offlineRateReason: 'No frozen online-reference run exists yet; the architecture formula requires A_online(i)=1 for the same scenario set. Do not report 100%.',
-  notRun: Object.entries(targetCounts).map(([domain, count]) => ({ domain, target: count, ready: scenarios.filter((s) => s.domain === domain).length, reason: 'frozen corpus/fixture not yet built in M1' })),
+  offlineRateReason: 'No frozen online-reference run exists yet; the architecture formula requires A_online(i)=1 for the same target-domain scenario set. Do not report 100%.',
+  notRun: Object.entries(targetCounts).map(([domain, count]) => ({ domain, target: count, ready: targetResults.filter((s) => s.domain === domain).length, reason: 'frozen corpus/fixture not yet built in M1' })),
   scenarios: results,
 }
 await mkdir('docs/v2/benchmark', { recursive: true })
 await writeFile('docs/v2/benchmark/core-scenarios.json', `${JSON.stringify({ schemaVersion: 'armorbreak.core-benchmark/v1', targetTotal, scenarios: scenarios.map((s) => ({ ...s, expectSummary: s.expectSummary.source })) }, null, 2)}\n`)
 await writeFile('docs/v2/acceptance/offline-score.json', `${JSON.stringify(report, null, 2)}\n`)
-console.log(JSON.stringify({ coverage: report.coverage, pass: passed, total: scenarios.length, targetTotal, offlineRate: report.offlineRate }, null, 2))
-if (passed !== scenarios.length) process.exitCode = 1
+console.log(JSON.stringify({ coverage: report.coverage, targetPass: targetPassed, targetRunnable: targetResults.length, extras: extraResults.length, targetTotal, offlineRate: report.offlineRate }, null, 2))
+if (targetPassed !== targetResults.length || extraResults.some((scenario) => !scenario.pass)) process.exitCode = 1

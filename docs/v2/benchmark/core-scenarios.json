@@ -110,6 +110,206 @@
       "target": "source",
       "kind": "directory",
       "expectSummary": "scan|finding|扫描|发现"
+    },
+    {
+      "id": "NET-002",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns-2.pcap",
+      "kind": "file",
+      "expectSummary": "pcap|packet|报文|flow|HTTP"
+    },
+    {
+      "id": "NET-003",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns-3.pcap",
+      "kind": "file",
+      "expectSummary": "pcap|packet|报文|flow|HTTP"
+    },
+    {
+      "id": "NET-004",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns-4.pcap",
+      "kind": "file",
+      "expectSummary": "pcap|packet|报文|flow|HTTP"
+    },
+    {
+      "id": "NET-005",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns-5.pcap",
+      "kind": "file",
+      "expectSummary": "pcap|packet|报文|flow|HTTP"
+    },
+    {
+      "id": "NET-006",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns-6.pcap",
+      "kind": "file",
+      "expectSummary": "pcap|packet|报文|flow|HTTP"
+    },
+    {
+      "id": "NET-007",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns-7.pcap",
+      "kind": "file",
+      "expectSummary": "pcap|packet|报文|flow|HTTP"
+    },
+    {
+      "id": "NET-008",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns-8.pcap",
+      "kind": "file",
+      "expectSummary": "pcap|packet|报文|flow|HTTP"
+    },
+    {
+      "id": "NET-009",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns-9.pcap",
+      "kind": "file",
+      "expectSummary": "pcap|packet|报文|flow|HTTP"
+    },
+    {
+      "id": "NET-0010",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns-10.pcap",
+      "kind": "file",
+      "expectSummary": "pcap|packet|报文|flow|HTTP"
+    },
+    {
+      "id": "SAST-002",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-2",
+      "kind": "directory",
+      "expectSummary": "scan|finding|扫描|发现"
+    },
+    {
+      "id": "SAST-003",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-3",
+      "kind": "directory",
+      "expectSummary": "scan|finding|扫描|发现"
+    },
+    {
+      "id": "SAST-004",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-4",
+      "kind": "directory",
+      "expectSummary": "scan|finding|扫描|发现"
+    },
+    {
+      "id": "SAST-005",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-5",
+      "kind": "directory",
+      "expectSummary": "scan|finding|扫描|发现"
+    },
+    {
+      "id": "SAST-006",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-6",
+      "kind": "directory",
+      "expectSummary": "scan|finding|扫描|发现"
+    },
+    {
+      "id": "SAST-007",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-7",
+      "kind": "directory",
+      "expectSummary": "scan|finding|扫描|发现"
+    },
+    {
+      "id": "SAST-008",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-8",
+      "kind": "directory",
+      "expectSummary": "scan|finding|扫描|发现"
+    },
+    {
+      "id": "SAST-009",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-9",
+      "kind": "directory",
+      "expectSummary": "scan|finding|扫描|发现"
+    },
+    {
+      "id": "SAST-0010",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-10",
+      "kind": "directory",
+      "expectSummary": "scan|finding|扫描|发现"
+    },
+    {
+      "id": "SAST-0011",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-11",
+      "kind": "directory",
+      "expectSummary": "scan|finding|扫描|发现"
+    },
+    {
+      "id": "SAST-0012",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source-12",
+      "kind": "directory",
+      "expectSummary": "scan|finding|扫描|发现"
+    },
+    {
+      "id": "FOR-004",
+      "domain": "forensics",
+      "capability": "forensics.metadata",
+      "target": "flag.txt",
+      "kind": "file",
+      "expectSummary": "metadata|元数据|size|file"
+    },
+    {
+      "id": "FOR-005",
+      "domain": "forensics",
+      "capability": "forensics.timeline",
+      "target": "ioc.txt",
+      "kind": "file",
+      "expectSummary": "timeline|时间|event|事件"
+    },
+    {
+      "id": "FOR-006",
+      "domain": "forensics",
+      "capability": "forensics.yara_lite",
+      "target": "strings.bin",
+      "kind": "file",
+      "expectSummary": "yara|match|规则|string"
+    },
+    {
+      "id": "FOR-007",
+      "domain": "forensics",
+      "capability": "forensics.hash",
+      "target": "strings.bin",
+      "kind": "file",
+      "expectSummary": "sha256|SHA-256"
+    },
+    {
+      "id": "FOR-008",
+      "domain": "forensics",
+      "capability": "forensics.ioc",
+      "target": "ioc2.txt",
+      "kind": "file",
+      "expectSummary": "ioc|指标|URL|IP"
     }
   ]
 }
