@@ -179,7 +179,16 @@ async function activateWithPlatformApproval(ctx, exec, input) {
   if (outcome !== 'allowed-once') {
     throw new Error(`平台审批未通过（${outcome}）；授权申请保持 pending，未创建有效授权。`)
   }
-  return { approvalSource: 'platform-approval', approvedBy: 'platform-approval', approvalId: `platform-${Date.now().toString(36)}`, outcome }
+  const runtime = getRuntime()
+  const activationId = `authz:${input.requestId}`
+  const token = runtime.approvalAuthority?.issue({
+    id: activationId,
+    riskLevel: 'L2',
+    taskId: input.requestId,
+    target: 'authorization-request',
+    operator: 'platform-approval',
+  }).token ?? null
+  return { approvalSource: 'platform-approval', approvedBy: 'platform-approval', approvalId: activationId, approvalToken: token, operator: 'platform-approval', outcome }
 }
 
 /** @param {any} task */

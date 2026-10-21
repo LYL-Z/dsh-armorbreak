@@ -43,3 +43,25 @@ test('approval token cannot be replayed against another target or task', async (
     /binding|rejected/,
   )
 })
+
+test('authorization activation requires a bound Host token and consumes it once', async () => {
+  const runtime = await runtimeFor()
+  const scope = runtime.scope
+  const request = await scope.requestAuthorization({ purpose: 'authorization token test', operator: 'alice', networkTargets: ['127.0.0.1:18080'], riskCeiling: 'L2' })
+  await assert.rejects(
+    () => scope.activateAuthorization(request.id, { approvedBy: 'platform-approval', approvalSource: 'platform-approval' }),
+    /bound approval token/,
+  )
+  const activationId = `authz:${request.id}`
+  const issued = runtime.approvalAuthority.issue({ id: activationId, riskLevel: 'L2', taskId: request.id, target: 'authorization-request', operator: 'platform-approval' })
+  const active = await scope.activateAuthorization(request.id, {
+    approvedBy: 'platform-approval',
+    approvalSource: 'platform-approval',
+    approvalId: activationId,
+    approvalToken: issued.token,
+    operator: 'platform-approval',
+  })
+  assert.equal(active.id.startsWith('authz_'), true)
+  assert.equal(active.approvalId, activationId)
+  assert.equal(runtime.approvalAuthority.verify(issued.token, { id: activationId }).code, 'TOKEN_REPLAYED')
+})
