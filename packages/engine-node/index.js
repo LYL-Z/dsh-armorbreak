@@ -8,6 +8,7 @@
  * rejected rather than silently creating a second task.
  */
 import { createHash } from 'node:crypto'
+import { resolve, sep } from 'node:path'
 import { ArmorBreakRuntime } from '../../lib/core/runtime.js'
 import { ApprovalAuthority } from '../../lib/control/approvalAuthority.js'
 import { validateInvocation } from '../protocol/index.js'
@@ -174,6 +175,43 @@ export class TrustedEngine {
   async capabilities(ctx) {
     this.authenticate(ctx)
     return this.runtime.registry.list()
+  }
+
+  /** Execute one L0 capability through the existing Core runner. L1/L2 never self-approve. */
+  async analyze(ctx, { capability, target, options = {} } = {}) {
+    return this.bounded(ctx, async () => {
+      const principal = this.authenticate(ctx)
+      const capabilityId = String(capability ?? '')
+      const selected = this.runtime.registry.get(capabilityId)
+      if (!selected) throw new EngineError('UNKNOWN_CAPABILITY', `unknown capability: ${capabilityId}`)
+      if (selected.riskLevel !== 'L0') throw new EngineError('APPROVAL_REQUIRED', `${selected.riskLevel} requires a trusted approval; MCP cannot self-approve`)
+      if (!target) throw new EngineError('INVALID_REQUEST', 'target is required for an L0 file analysis')
+      const workspaceRoot = resolve(ctx.workspaceId)
+      const targetPath = resolve(String(target))
+      if (targetPath !== workspaceRoot && !targetPath.startsWith(workspaceRoot + sep)) throw new EngineError('TARGET_OUT_OF_SCOPE', 'target is outside the authorized workspace')
+      const store = this.runtime.workspace(ctx.workspaceId).taskStore
+      const task = await store.create({
+        title: `MCP ${selected.title}`,
+        objective: `Run ${capabilityId} on ${targetPath}`,
+        workflowId: null,
+        targetPath,
+        targetKind: selected.targetKind ?? 'file',
+        operator: principal.id,
+        steps: [{ id: 'analyze', title: selected.title, capabilityId, options: options && typeof options === 'object' ? options : {} }],
+      })
+      const result = await this.runtime.runner.runCapability({
+        task, capabilityId, targetPath, options: options && typeof options === 'object' ? options : {},
+        stepId: task.steps.find((step) => step.status === 'PENDING')?.id ?? null,
+        requestApproval: async () => false,
+      })
+      let finalized = task
+      if (!task.steps.some((step) => step.status === 'PENDING' || step.status === 'RUNNING')) finalized = await this.runtime.runner.finalizeTask(task, { generateReport: true })
+      return {
+        taskId: task.id, state: finalized.state, capability: capabilityId, riskLevel: selected.riskLevel,
+        target: result.target ?? targetPath, targetSha256: result.targetSha256 ?? null,
+        evidenceIds: result.evidenceIds ?? [], reportPath: finalized.report?.path ?? null,
+      }
+    })
   }
 
   async health(ctx) {

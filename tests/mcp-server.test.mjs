@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdtemp } from 'node:fs/promises'
+import { mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
@@ -42,5 +42,23 @@ test('MCP fails closed before initialize, on unknown tools and parse errors', as
   const malformed = JSON.parse(await server.handleLine('{not json'))
   assert.equal(malformed.error.code, -32700)
   assert.equal(await server.handleLine(JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized' })), null)
+  await engine.close()
+})
+
+
+test('MCP armorbreak_analyze performs a real L0 task and report', async () => {
+  const { server, engine, workspace } = await fixture()
+  await writeFile(join(workspace, 'sample.txt'), 'armorbreak mcp l0 test\n')
+  await server.handleLine(JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize' }))
+  const response = JSON.parse(await server.handleLine(JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'armorbreak_analyze', arguments: { capability: 'forensics.hash', target: join(workspace, 'sample.txt') } } })))
+  assert.equal(response.result.isError, false, response.result.content?.[0]?.text)
+  const result = JSON.parse(response.result.content[0].text)
+  assert.equal(result.state, 'COMPLETED')
+  assert.equal(result.capability, 'forensics.hash')
+  assert.match(result.targetSha256, /^[a-f0-9]{64}$/)
+  assert.ok(result.evidenceIds.length >= 1)
+  assert.ok(result.reportPath)
+  const outside = JSON.parse(await server.handleLine(JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'armorbreak_analyze', arguments: { capability: 'forensics.hash', target: 'C:\\Windows\\win.ini' } } })))
+  assert.equal(outside.result.isError, true)
   await engine.close()
 })

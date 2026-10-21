@@ -25,6 +25,11 @@ const TOOLS = [
     inputSchema: { type: 'object', properties: {}, additionalProperties: false },
   },
   {
+    name: 'armorbreak_analyze',
+    description: 'Run one L0 capability on a target inside the configured workspace and produce a report.',
+    inputSchema: { type: 'object', required: ['capability', 'target'], properties: { capability: { type: 'string' }, target: { type: 'string' }, options: { type: 'object' } }, additionalProperties: false },
+  },
+  {
     name: 'armorbreak_task_list',
     description: 'List tasks visible to the configured principal and workspace.',
     inputSchema: { type: 'object', properties: {}, additionalProperties: false },
@@ -80,6 +85,7 @@ export class McpServer {
         let value
         if (name === 'armorbreak_health') value = await this.engine.health(ctx)
         else if (name === 'armorbreak_capabilities') value = await this.engine.capabilities(ctx)
+        else if (name === 'armorbreak_analyze') value = await this.engine.analyze(ctx, { capability: args.capability, target: args.target, options: args.options })
         else if (name === 'armorbreak_task_list') value = { tasks: await this.engine.listTasks(ctx) }
         return { jsonrpc: '2.0', id: message.id ?? null, result: { content: [{ type: 'text', text: JSON.stringify(value) }], isError: false } }
       } catch (cause) {
