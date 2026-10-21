@@ -1,0 +1,7 @@
+﻿{
+    "reason":  "docker pull node:24-alpine did not complete within the attempt window; no container test ran",
+    "attempted":  "docker run --rm --network none -v D:\\dsh-ABM\\armorbreak:/work:ro -w /work node:24-alpine node --test tests/offline-core.test.mjs",
+    "generatedAt":  "2026-10-20T23:09:13.1968710-07:00",
+    "result":  "BLOCKED",
+    "note":  "Static offline-core test passes locally; do not claim real airgap PASS"
+}
