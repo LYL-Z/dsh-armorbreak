@@ -34,7 +34,7 @@ function config() {
 async function main() {
   const { command, positional, options } = parse(process.argv.slice(2))
   if (command === 'help' || options.help) {
-    print('armorbreak doctor|capabilities|analyze|task|mcp [--json]', false)
+    print('armorbreak doctor|capabilities|analyze|task|report|mcp [--json]', false)
     return
   }
   const cfg = config()
@@ -47,8 +47,14 @@ async function main() {
       if (!options.target || !options.capability) throw new Error('analyze requires --target and --capability')
       return print(await engine.analyze(ctx, { capability: String(options.capability), target: String(options.target), options: {} }), options.json)
     }
+    if (command === 'report') {
+      if (!positional[0]) throw new Error('report <task-id> is required')
+      return print(await engine.getReport(ctx, positional[0]), options.json)
+    }
     if (command === 'task') {
-      if (positional[0] !== 'status' || !positional[1]) throw new Error('task status <task-id> is required')
+      if (positional[0] === 'list') return print(await engine.listTasks(ctx), options.json)
+      if (positional[0] === 'cancel' && positional[1]) return print(await engine.cancelTask(ctx, positional[1]), options.json)
+      if (positional[0] !== 'status' || !positional[1]) throw new Error('task status <task-id>, task list, or task cancel <task-id> is required')
       return print(await engine.getTask(ctx, positional[1]), options.json)
     }
     if (command === 'mcp' && positional[0] === 'serve') {

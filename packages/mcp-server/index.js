@@ -81,13 +81,39 @@ export class McpServer {
         jsonrpc: '2.0', id: message.id ?? null,
         result: {
           protocolVersion: PROTOCOL_VERSION,
-          capabilities: { tools: { listChanged: false } },
+          capabilities: { tools: { listChanged: false }, resources: { listChanged: false }, prompts: { listChanged: false } },
           serverInfo: { name: 'armorbreak', version: SERVER_VERSION },
         },
       }
     }
     if (message.method === 'notifications/initialized') return null
     if (!this.initialized) return error(message.id ?? null, -32002, 'server not initialized')
+    if (message.method === 'resources/list') {
+      const tasks = await this.engine.listTasks(this.context(message.id))
+      return {
+        jsonrpc: '2.0', id: message.id ?? null,
+        result: { resources: tasks.map((task) => ({ uri: `armorbreak://task/${task.id}`, name: task.title, mimeType: 'application/json' })) },
+      }
+    }
+    if (message.method === 'resources/read') {
+      const uri = String(message.params?.uri ?? '')
+      const match = /^armorbreak:\/\/(task|report)\/(.+)$/.exec(uri)
+      if (!match) return error(message.id ?? null, -32602, 'unsupported resource uri')
+      const ctx = this.context(message.id)
+      if (match[1] === 'task') {
+        const task = await this.engine.getTask(ctx, match[2])
+        return { jsonrpc: '2.0', id: message.id ?? null, result: { contents: [{ uri, mimeType: 'application/json', text: JSON.stringify(task) }] } }
+      }
+      const report = await this.engine.getReport(ctx, match[2])
+      return { jsonrpc: '2.0', id: message.id ?? null, result: { contents: [{ uri, mimeType: 'text/markdown', text: report.markdown }] } }
+    }
+    if (message.method === 'prompts/list') {
+      return { jsonrpc: '2.0', id: message.id ?? null, result: { prompts: [{ name: 'armorbreak-triage', description: 'Plan an authorized L0-first ArmorBreak triage.', arguments: [{ name: 'target', required: true }] }] } }
+    }
+    if (message.method === 'prompts/get') {
+      if (message.params?.name !== 'armorbreak-triage') return error(message.id ?? null, -32602, 'unknown prompt')
+      return { jsonrpc: '2.0', id: message.id ?? null, result: { description: 'ArmorBreak triage', messages: [{ role: 'user', content: { type: 'text', text: 'Call armorbreak_capabilities, choose an L0 capability, analyze the authorized target, then verify task/evidence/report.' } }] } }
+    }
     if (message.method === 'tools/list') {
       return { jsonrpc: '2.0', id: message.id ?? null, result: { tools: TOOLS } }
     }

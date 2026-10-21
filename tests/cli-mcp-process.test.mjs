@@ -29,6 +29,10 @@ test('CLI capabilities, analyze and task status work without DSH', async () => {
   assert.match(analyzed.targetSha256, /^[a-f0-9]{64}$/)
   const task = JSON.parse((await f.run('task', 'status', analyzed.taskId, '--json')).stdout)
   assert.equal(task.id, analyzed.taskId)
+  const report = JSON.parse((await f.run('report', analyzed.taskId, '--json')).stdout)
+  assert.match(report.markdown, /ArmorBreak/)
+  const tasks = JSON.parse((await f.run('task', 'list', '--json')).stdout)
+  assert.ok(tasks.some((item) => item.id === analyzed.taskId))
 })
 
 test('MCP server process emits only JSON-RPC frames on stdout', async () => {
