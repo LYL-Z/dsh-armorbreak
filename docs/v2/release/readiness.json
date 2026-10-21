@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "armorbreak.release-readiness/v1",
+  "generatedAt": "2026-10-21T11:21:33.184Z",
+  "package": {
+    "name": "dsh-armorbreak",
+    "version": "1.2.0"
+  },
+  "sbom": true,
+  "gates": {
+    "security": {
+      "status": "PASS",
+      "evidence": [
+        "tests/policy-gateway.test.mjs",
+        "tests/approval-binding.test.mjs",
+        "tests/ui-api.test.mjs"
+      ]
+    },
+    "offline": {
+      "status": "PASS",
+      "evidence": [
+        "docs/v2/acceptance/airgap-container.json",
+        "docs/v2/acceptance/offline-score.json"
+      ],
+      "targetCoverage": "62/62",
+      "rOffline": "N/A"
+    },
+    "supplyChain": {
+      "status": "REVIEW",
+      "reason": "license/installer unit gates pass; no real signed catalog install"
+    },
+    "aiEvaluation": {
+      "status": "REVIEW",
+      "reason": "mock AISEC passes; Garak/PyRIT/Inspect not executed"
+    },
+    "compatibility": {
+      "status": "REVIEW",
+      "reason": "v1.2 tests pass; real Desktop GUI+model E2E not run"
+    },
+    "performance": {
+      "status": "REVIEW",
+      "reason": "sast +23%, workflow +14% vs v1.2 baseline; profile pending",
+      "evidence": [
+        "docs/v2/acceptance/performance-v2.json",
+        "docs/v2/acceptance/benchmark-v1.2.log"
+      ],
+      "measured": true
+    }
+  },
+  "m4": {
+    "AB2-M4-01.md": "DONE",
+    "AB2-M4-02.md": "REVIEW",
+    "AB2-M4-03.md": "REVIEW",
+    "AB2-M4-04.md": "REVIEW",
+    "AB2-M4-05.md": "DONE",
+    "AB2-M4-06.md": "REVIEW",
+    "AB2-M4-08.md": "DONE",
+    "AB2-M4-09.md": "REVIEW"
+  },
+  "incomplete": [
+    "AB2-M4-03.md",
+    "AB2-M4-04.md",
+    "AB2-M4-06.md",
+    "AB2-M4-07.md",
+    "AB2-M4-10.md",
+    "AB2-M4-11.md",
+    "AB2-M4-12.md"
+  ],
+  "ready": false,
+  "reason": "release blocked by incomplete gates/tasks; not a failure of the build"
+}

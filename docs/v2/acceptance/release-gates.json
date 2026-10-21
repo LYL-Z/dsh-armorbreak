@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.release-gates/v1",
-  "generatedAt": "2026-10-21T11:17:49.634Z",
+  "generatedAt": "2026-10-21T11:21:41.219Z",
   "branch": "feature/armorbreak-v2",
   "gates": {
     "security": {
@@ -85,9 +85,15 @@
     "AB2-M4-01.md": "DONE",
     "AB2-M4-02.md": "REVIEW",
     "AB2-M4-03.md": "REVIEW",
+    "AB2-M4-04.md": "REVIEW",
     "AB2-M4-05.md": "DONE",
     "AB2-M4-06.md": "REVIEW",
-    "AB2-M4-09.md": "REVIEW"
+    "AB2-M4-07.md": "REVIEW",
+    "AB2-M4-08.md": "DONE",
+    "AB2-M4-09.md": "REVIEW",
+    "AB2-M4-10.md": "REVIEW",
+    "AB2-M4-11.md": "REVIEW",
+    "AB2-M4-12.md": "REVIEW"
   },
   "mandatoryM4": [
     {
@@ -100,7 +106,7 @@
     },
     {
       "file": "AB2-M4-04.md",
-      "status": "MISSING"
+      "status": "REVIEW"
     },
     {
       "file": "AB2-M4-05.md",
@@ -108,15 +114,15 @@
     },
     {
       "file": "AB2-M4-10.md",
-      "status": "MISSING"
+      "status": "REVIEW"
     },
     {
       "file": "AB2-M4-11.md",
-      "status": "MISSING"
+      "status": "REVIEW"
     },
     {
       "file": "AB2-M4-12.md",
-      "status": "MISSING"
+      "status": "REVIEW"
     }
   ],
   "releasable": false,
