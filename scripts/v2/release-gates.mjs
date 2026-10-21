@@ -14,6 +14,8 @@ const offline = await readJson('docs/v2/acceptance/offline-score.json')
 const airgap = await readJson('docs/v2/acceptance/airgap-container.json')
 const perf = await readJson('docs/v2/acceptance/performance-v2.json')
 const perfCompare = await readJson('docs/v2/acceptance/performance-compare.json')
+const supplyE2E = await readJson('docs/v2/acceptance/supplychain-e2e.json')
+const supplyLive = await readJson('docs/v2/acceptance/supplychain-live.json')
 const taskDir = 'docs/v2/tasks'
 const taskDocStatus = {}
 try {
@@ -38,7 +40,11 @@ const report = {
       targetCoverage: offline?.coverage ?? null,
       rOffline: offline?.offlineRate ?? null,
     },
-    supplyChain: { status: 'REVIEW', reason: 'license/installer unit gates pass; no real signed catalog install' },
+    supplyChain: {
+      status: supplyE2E?.result === 'PASS' && supplyLive?.result === 'PASS' ? 'PASS' : 'REVIEW',
+      reason: 'live GitHub/OSV/Scorecard + signed Ed25519 index + transactional installer/rollback; no remote package code executed',
+      evidence: ['docs/v2/acceptance/supplychain-e2e.json','docs/v2/acceptance/supplychain-live.json'],
+    },
     aiEvaluation: {
       status: ['AB2-M3-03.md','AB2-M3-04.md','AB2-M3-05.md','AB2-M3-06.md','AB2-M3-07.md','AB2-M3-08.md','AB2-M3-11.md','AB2-M3-13.md'].every((file) => taskDocStatus[file] === 'DONE') ? 'PASS' : 'REVIEW',
       reason: 'Garak/PyRIT/OFFLINE test endpoints + 5+ AI/agent classes; no third-party live model claimed',

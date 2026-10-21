@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "armorbreak.supplychain-e2e/v1",
+  "generatedAt": "2026-10-21T12:07:48.984Z",
+  "packageSources": [
+    {
+      "id": "github:deepseek-ai/DeepSeek-V3",
+      "kind": "public-metadata",
+      "license": "MIT",
+      "commit": "9b4e9788e4a3a731f7567338ed15d3ec549ce03b"
+    },
+    {
+      "id": "local://armorbreak-bundle",
+      "kind": "local-signed-artifact",
+      "license": "MIT",
+      "artifactSha256": "146b2b3c559ea3ff074acca92e9e1261d42e2c8ef8f56234a6bf94b44b531463"
+    }
+  ],
+  "installer": {
+    "plan": "PLANNED",
+    "planHash": "64dfbd5775183115e123034b47713d0f31b031f2748d30d658d703a89a3a3e20",
+    "staged": "STAGED",
+    "verified": "VERIFIED",
+    "approved": "APPROVED",
+    "active": "ACTIVE",
+    "activePointerPlanId": "plan-64dfbd5775183115",
+    "rolledBack": "ROLLED_BACK",
+    "executePackageCode": false
+  },
+  "index": {
+    "signature": {
+      "alg": "ed25519",
+      "keyId": "e2e-key",
+      "signature": "llosa8tU2GL0MZvk5LW9s+ijgQq/mqW2LNkJpN03ZlhW+uI3QOZ54v4uau9FbbPovx9WANxs0KeaDFiSjObCDA=="
+    },
+    "verified": true,
+    "rollbackHash": "0c7d04373499063c4e3e9bfaa0e063437c9b0ffa38400e609e1b57bac464ab1a",
+    "rolledBackEntries": 1
+  },
+  "result": "PASS"
+}

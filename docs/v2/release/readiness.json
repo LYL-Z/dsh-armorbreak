@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.release-readiness/v1",
-  "generatedAt": "2026-10-21T12:05:14.387Z",
+  "generatedAt": "2026-10-21T12:08:39.912Z",
   "package": {
     "name": "dsh-armorbreak",
     "version": "1.2.0"
@@ -25,8 +25,12 @@
       "rOffline": "N/A"
     },
     "supplyChain": {
-      "status": "REVIEW",
-      "reason": "license/installer unit gates pass; no real signed catalog install"
+      "status": "PASS",
+      "reason": "live GitHub/OSV/Scorecard + signed Ed25519 index + transactional installer/rollback; no remote package code executed",
+      "evidence": [
+        "docs/v2/acceptance/supplychain-e2e.json",
+        "docs/v2/acceptance/supplychain-live.json"
+      ]
     },
     "aiEvaluation": {
       "status": "PASS",
