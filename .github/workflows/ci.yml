@@ -60,6 +60,20 @@ jobs:
         with:
           node-version: 24
 
+      - name: Wait for Docker daemon
+        run: |
+          for attempt in $(seq 1 30); do
+            if docker info >/dev/null 2>&1; then
+              echo "Docker daemon ready after ${attempt} attempt(s)"
+              exit 0
+            fi
+            echo "Docker daemon not ready (attempt ${attempt}/30); retrying in 2s"
+            sleep 2
+          done
+          echo "Docker daemon did not become ready within 60s"
+          docker info || true
+          exit 1
+
       - name: Pull a digest-pinned image
         run: |
           docker pull busybox:1.36
