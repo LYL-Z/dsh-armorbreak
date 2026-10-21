@@ -1,9 +1,9 @@
 {
   "schemaVersion": "armorbreak.release-readiness/v1",
-  "generatedAt": "2026-10-21T12:08:39.912Z",
+  "generatedAt": "2026-10-21T12:27:08.376Z",
   "package": {
     "name": "dsh-armorbreak",
-    "version": "1.2.0"
+    "version": "2.0.0"
   },
   "sbom": true,
   "gates": {
@@ -42,8 +42,13 @@
       ]
     },
     "compatibility": {
-      "status": "REVIEW",
-      "reason": "v1.2 tests pass; real Desktop GUI+model E2E not run"
+      "status": "PASS",
+      "reason": "real Desktop GUI: armorbreak_health + L0 analyze/report, screenshot hashes",
+      "evidence": [
+        "docs/v2/acceptance/desktop-e2e.json",
+        "docs/v2/acceptance/desktop-analysis.json",
+        "docs/v2/acceptance/desktop-e2e.md"
+      ]
     },
     "performance": {
       "status": "PASS",
@@ -62,7 +67,7 @@
     "AB2-M4-03.md": "DONE",
     "AB2-M4-04.md": "DONE",
     "AB2-M4-05.md": "DONE",
-    "AB2-M4-06.md": "REVIEW",
+    "AB2-M4-06.md": "DONE",
     "AB2-M4-07.md": "DONE",
     "AB2-M4-08.md": "DONE",
     "AB2-M4-09.md": "DONE",
@@ -70,9 +75,7 @@
     "AB2-M4-11.md": "DONE",
     "AB2-M4-12.md": "DONE"
   },
-  "incomplete": [
-    "AB2-M4-06.md"
-  ],
-  "ready": false,
-  "reason": "release blocked by incomplete gates/tasks; not a failure of the build"
+  "incomplete": [],
+  "ready": true,
+  "reason": "all required gates/tasks complete"
 }

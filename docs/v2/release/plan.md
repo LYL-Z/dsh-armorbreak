@@ -1,6 +1,6 @@
 # V2 Release Plan (M4-10)
 
-**Status: NOT RELEASABLE.** Current branch `feature/armorbreak-v2`, latest base 1.2.0; no V2 tag/release exists.
+**Status: RELEASE READY for v2.0.0.** Branch `feature/armorbreak-v2`; all six gates PASS and every mandatory M4 task is DONE. Tag `v2.0.0` is created only after the final CI run; no V1 tag is moved.
 
 ## Prerequisites (all must be true)
 

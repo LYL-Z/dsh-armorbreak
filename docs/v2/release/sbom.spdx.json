@@ -2,10 +2,10 @@
   "spdxVersion": "SPDX-2.3",
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
-  "name": "dsh-armorbreak-1.2.0",
-  "documentNamespace": "https://github.com/LYL-Z/dsh-armorbreak/sbom/1.2.0",
+  "name": "dsh-armorbreak-2.0.0",
+  "documentNamespace": "https://github.com/LYL-Z/dsh-armorbreak/sbom/2.0.0",
   "creationInfo": {
-    "created": "2026-10-21T11:21:33.108Z",
+    "created": "2026-10-21T12:27:08.224Z",
     "creators": [
       "Tool: scripts/v2/build-sbom.mjs"
     ]
@@ -13,7 +13,7 @@
   "packages": [
     {
       "name": "dsh-armorbreak",
-      "versionInfo": "1.2.0",
+      "versionInfo": "2.0.0",
       "SPDXID": "SPDXRef-Package-dsh-armorbreak",
       "downloadLocation": "git+https://github.com/LYL-Z/dsh-armorbreak.git",
       "licenseConcluded": "MIT",
@@ -87,7 +87,7 @@
     {
       "annotationType": "OTHER",
       "annotator": "Tool: scripts/v2/build-sbom.mjs",
-      "annotationDate": "2026-10-21T11:21:33.110Z",
+      "annotationDate": "2026-10-21T12:27:08.225Z",
       "comment": "External tools are not bundled; their licenses must be reviewed separately before distribution."
     }
   ]

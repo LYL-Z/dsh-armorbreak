@@ -1,23 +1,72 @@
 {
-  "schemaVersion": "armorbreak.desktop-e2e/v1",
-  "generatedAt": "2026-10-21T11:13:13.476Z",
-  "platform": "win32",
-  "node": "v24.16.0",
-  "bundleLock": true,
-  "checks": {
-    "dshCli": "C:\\Users\\Lenovo\\AppData\\Roaming\\npm\\dsh",
-    "guiUrl": "http://127.0.0.1:62782",
-    "modelCredential": "not-in-headless-env"
+  "schemaVersion": "armorbreak.desktop-e2e/v2",
+  "generatedAt": "2026-10-21T12:26:00.000Z",
+  "source": "real DSH Desktop GUI + live model tool calls",
+  "result": "PASS",
+  "host": {
+    "dsh": "0.2.1-rc.2",
+    "node": "v24.21.0",
+    "platform": "win32/x64",
+    "preset": "armorbreak",
+    "model": "DeepSeek-V4.1-Flash",
+    "workspace": "D:\\dsh-ABM"
   },
-  "result": "BLOCKED",
-  "reason": "Not run: requires an installed V2 DSH Desktop bundle, selected ArmorBreak preset, and a live model tool call.",
-  "bundle": {
-    "name": "dsh-armorbreak",
-    "version": "1.2.0",
-    "preset": {
-      "id": "armorbreak",
-      "preserved": true
+  "capabilities": 46,
+  "historicalTasks": 6,
+  "externalTools": { "installed": 5, "total": 25 },
+  "toolCalls": [
+    {
+      "name": "armorbreak_health",
+      "completed": true,
+      "elapsedSeconds": 7,
+      "result": "environment health report rendered in Desktop chat"
     },
-    "aggregateSha256": "188169b991e501d914da6429c565ba7f326b5e868e3ec80cab7cdadaeee72653"
-  }
+    {
+      "name": "armorbreak_analyze",
+      "completed": true,
+      "workflow": "L0 forensics.hash",
+      "taskId": "task_mvi33mq6_00e28f71",
+      "state": "COMPLETED"
+    }
+  ],
+  "l0Task": {
+    "taskId": "task_mvi33mq6_00e28f71",
+    "title": "core-scenarios.json 完整性哈希登记",
+    "state": "COMPLETED",
+    "targetPath": "D:\\dsh-ABM\\armorbreak\\docs\\v2\\benchmark\\core-scenarios.json",
+    "inputSha256": "50eea274f68780a501df2f79aea32fd6785dcc2a2f87a1e198e6f5b7c79e1fc8",
+    "evidenceCount": 2,
+    "evidenceIds": ["ev_mvi33nx8_c55674ff", "ev_mvi33nxf_3566fb8c"],
+    "reportPath": "D:\\dsh-ABM\\.armorbreak\\tasks\\task_mvi33mq6_00e28f71\\reports\\core-scenarios-json-完整性哈希登记_2026-10-21_12-24-24.md",
+    "reportSha256": "bb07c8acb8fb8f247ef936fd4a9588daa49a41dcfc68af9040f4483298365296",
+    "reportBytes": 8270
+  },
+  "screenshots": [
+    {
+      "path": "docs/v2/acceptance/desktop-health.webp",
+      "sha256": "ea9e5ce3ec9ac93122789258426bd523155f423c1f86a5bda10de4877b89b396",
+      "shows": "armorbreak_health GUI result, 46 capabilities, 5/25 tools"
+    },
+    {
+      "path": "docs/v2/acceptance/desktop-health-detail.webp",
+      "sha256": "986c3df3df27152e27382978a2dffc2633b6641367a5580115d48104c5d576f9",
+      "shows": "armorbreak_health host/runtime details"
+    },
+    {
+      "path": "docs/v2/acceptance/desktop-analysis.webp",
+      "sha256": "71c3e4e4a348b68ca2966207303b46bb8487b6d618ededa92a0c6bb998a61287",
+      "shows": "L0 forensics.hash analysis and generated report"
+    }
+  ],
+  "limitations": [
+    "isolation provider unavailable; no L1/L2 execution",
+    "approval prompts disabled in this environment",
+    "PDF export unavailable without LibreOffice",
+    "external tools 5/25 installed"
+  ],
+  "notes": [
+    "Screenshots are user-observed Desktop UI evidence, not headless mocks.",
+    "The L0 task/report files live outside the repo; a byte-identical report copy is committed under docs/v2/acceptance/desktop-l0-report.md.",
+    "No third-party target or network action was used for the L0 analysis."
+  ]
 }

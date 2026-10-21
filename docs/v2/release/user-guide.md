@@ -1,6 +1,6 @@
 # ArmorBreak V2 User Guide (M4-11)
 
-> This guide documents the V2 candidate behavior on `feature/armorbreak-v2`. V2 is not released; use v1.2.0 for production today.
+> This guide documents ArmorBreak V2.0.0. Install it into an isolated test profile first; the release evidence and known limitations are in `docs/releases/v2.0.0.md`.
 
 ## Install / select
 

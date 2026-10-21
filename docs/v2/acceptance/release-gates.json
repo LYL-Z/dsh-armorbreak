@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.release-gates/v1",
-  "generatedAt": "2026-10-21T12:08:39.841Z",
+  "generatedAt": "2026-10-21T12:27:08.307Z",
   "branch": "feature/armorbreak-v2",
   "gates": {
     "security": {
@@ -38,8 +38,13 @@
       ]
     },
     "compatibility": {
-      "status": "REVIEW",
-      "reason": "v1.2 tests pass; real Desktop GUI+model E2E not run"
+      "status": "PASS",
+      "reason": "real Desktop GUI: armorbreak_health + L0 analyze/report, screenshot hashes",
+      "evidence": [
+        "docs/v2/acceptance/desktop-e2e.json",
+        "docs/v2/acceptance/desktop-analysis.json",
+        "docs/v2/acceptance/desktop-e2e.md"
+      ]
     },
     "performance": {
       "status": "PASS",
@@ -97,7 +102,7 @@
     "AB2-M4-03.md": "DONE",
     "AB2-M4-04.md": "DONE",
     "AB2-M4-05.md": "DONE",
-    "AB2-M4-06.md": "REVIEW",
+    "AB2-M4-06.md": "DONE",
     "AB2-M4-07.md": "DONE",
     "AB2-M4-08.md": "DONE",
     "AB2-M4-09.md": "DONE",
@@ -108,7 +113,7 @@
   "mandatoryM4": [
     {
       "file": "AB2-M4-06.md",
-      "status": "REVIEW"
+      "status": "DONE"
     },
     {
       "file": "AB2-M4-03.md",
@@ -135,6 +140,6 @@
       "status": "DONE"
     }
   ],
-  "releasable": false,
-  "reason": "M4-03/04/06/10/11/12 remain incomplete; release blocked by design"
+  "releasable": true,
+  "reason": "all six gates PASS and mandatory M4 tasks DONE"
 }

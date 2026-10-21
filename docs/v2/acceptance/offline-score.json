@@ -1,12 +1,12 @@
 {
   "schemaVersion": "armorbreak.offline-score/v1",
-  "generatedAt": "2026-10-21T11:02:50.795Z",
+  "generatedAt": "2026-10-21T12:27:04.693Z",
   "baseSha": null,
   "environment": {
-    "platform": "linux",
+    "platform": "win32",
     "arch": "x64",
-    "node": "v24.22.0",
-    "offlineEnv": "1"
+    "node": "v24.16.0",
+    "offlineEnv": null
   },
   "targetCounts": {
     "binary": 10,
@@ -276,7 +276,7 @@
       "evidence": 3,
       "pass": true,
       "expectedSummary": "scan|finding|扫描|发现",
-      "summary": "扫描 1 个源文件（跳过二进制 0，共 4 行），命中 1 条规则 / 1 条候选发现：critical 0 / high 1 / medium 0 / low 0 / info 0。 问题最集中：/tmp/abm-core-bench-ws-GfboAk/source/app.js。 规则为逐行正则匹配（无数据流分析），taint 相关命中需人工确认可达性。",
+      "summary": "扫描 1 个源文件（跳过二进制 0，共 4 行），命中 1 条规则 / 1 条候选发现：critical 0 / high 1 / medium 0 / low 0 / info 0。 问题最集中：C:\\Users\\Lenovo\\AppData\\Local\\Temp\\abm-core-bench-ws-Befurh\\source\\app.js。 规则为逐行正则匹配（无数据流分析），taint 相关命中需人工确认可达性。",
       "error": null
     },
     {

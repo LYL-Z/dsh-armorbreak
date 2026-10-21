@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.bundle/v1",
   "name": "dsh-armorbreak",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "preset": {
     "id": "armorbreak",
     "preserved": true
@@ -9,8 +9,8 @@
   "entries": [
     {
       "path": "client.js",
-      "sha256": "5775e3e662c1ff80770851c70d6473dcb48879394095772af8d0490435f7521b",
-      "bytes": 32777
+      "sha256": "d29ee6ae048f28243b9e0484446d40453c49862959d933dadcd22d52b67d922a",
+      "bytes": 51220
     },
     {
       "path": "cordis.patch.yml",
@@ -24,8 +24,88 @@
     },
     {
       "path": "index.js",
-      "sha256": "43b972c7bc96fb8feff72202c84b8484f57b86747d6a1cb363bc56c8b7a22e38",
-      "bytes": 22146
+      "sha256": "f3b4e257b1193f2c58a07c4e65654778b133c8e46e1d43f1f00bc295fcfee389",
+      "bytes": 29211
+    },
+    {
+      "path": "lib/aisec/agentDojo.js",
+      "sha256": "c1800aa58a653a46a8e2ea07b93f6fe56e146c8d2f7ddcaa21e1912d27b67e60",
+      "bytes": 3337
+    },
+    {
+      "path": "lib/aisec/campaign.js",
+      "sha256": "4ff0421a79fb3b88a727e4949c13f215b5cf823e19a34f8c21e9a466425fe11f",
+      "bytes": 4879
+    },
+    {
+      "path": "lib/aisec/composite.js",
+      "sha256": "02b17205e25dd27c8975251bf6b0959999f568b5d0567947bf3a13a6c3ad7d23",
+      "bytes": 1661
+    },
+    {
+      "path": "lib/aisec/evaluationStore.js",
+      "sha256": "871d891eef52381ac45a9096e30d871fb266fc58427457a6e4f591e738878230",
+      "bytes": 671
+    },
+    {
+      "path": "lib/aisec/evaluator.js",
+      "sha256": "1579c955f4662ca199c1616a990e32301df973462a5db3ac908168d7b49bbaf9",
+      "bytes": 2909
+    },
+    {
+      "path": "lib/aisec/garakAdapter.js",
+      "sha256": "36aa5cfb9e309da8caa09aec06290982d0de0bd714491a6df5c85a6370a7e62f",
+      "bytes": 4500
+    },
+    {
+      "path": "lib/aisec/inspectAdapter.js",
+      "sha256": "c09b04cab0a2442ec77cde0ebca06a3fea7b6bb6ef6a6a75af7d9d5141f57d99",
+      "bytes": 1930
+    },
+    {
+      "path": "lib/aisec/jailbreakDataset.js",
+      "sha256": "0ceff701d9c496da65ee19ff9f27881225cd9042bc6ae7ef6910eabaab54dce2",
+      "bytes": 2262
+    },
+    {
+      "path": "lib/aisec/judge.js",
+      "sha256": "d722a6fcce01f8e2f35229a05567a61224d2022fcb0c9176426fa8e938596c3c",
+      "bytes": 3594
+    },
+    {
+      "path": "lib/aisec/multimodal.js",
+      "sha256": "37ff05c990390a9246f15e7b99106acf198034848ab332f5531e5a914267dced",
+      "bytes": 1240
+    },
+    {
+      "path": "lib/aisec/pyritAdapter.js",
+      "sha256": "0d4ad7c222252d8b72a96e078063d3ceede50eb62a0435763e4939ebbbf6bb63",
+      "bytes": 2713
+    },
+    {
+      "path": "lib/aisec/ragGuard.js",
+      "sha256": "c53e7d502513bf3ab9cc915c0c11ea7419535170a2eafb6163d8b2995601d86e",
+      "bytes": 1836
+    },
+    {
+      "path": "lib/aisec/report.js",
+      "sha256": "96f525992677752471f8e752a8543f7b77a0a87445346b87bde2e5134a65535c",
+      "bytes": 2401
+    },
+    {
+      "path": "lib/aisec/reportDashboard.js",
+      "sha256": "eb469cbc17264442a5ca68e78e882a08b7aa1162407bc9e5751bf99203fc93bb",
+      "bytes": 1797
+    },
+    {
+      "path": "lib/aisec/schema.js",
+      "sha256": "20fe8e68849183fb36496cb73f4b38b1d5c866dcc2776aa7d22f9f39c6af1b00",
+      "bytes": 2864
+    },
+    {
+      "path": "lib/aisec/workerSupervisor.js",
+      "sha256": "40c7564b1d6662f36fc8985bb13b415a04392cc4e95c0b3453e9bce6c6c5702e",
+      "bytes": 5053
     },
     {
       "path": "lib/analyzers/android/axml.js",
@@ -359,8 +439,8 @@
     },
     {
       "path": "lib/catalog/licenseGate.js",
-      "sha256": "54bb70157310f000acf9f6a48cbcf36271017e41ee7c1edc44bd74e52e7449cc",
-      "bytes": 3177
+      "sha256": "6d2edfb739cdaea4fa3fd8b95a51e2e38e951a59e445ace36bf5246296f16a81",
+      "bytes": 3763
     },
     {
       "path": "lib/catalog/rating.js",
@@ -384,18 +464,18 @@
     },
     {
       "path": "lib/connectivity/resourceFetcher.js",
-      "sha256": "58aa049d14d3da12818ae5480a12fc151a2aaf589bc173dcf66c44e95d0fbe89",
-      "bytes": 4511
+      "sha256": "f03cf45bed8c2c62165fc25b74d281d7d996a2633497ec0ac6e3976d84748c82",
+      "bytes": 4538
     },
     {
       "path": "lib/connectivity/syncManager.js",
-      "sha256": "4676f8e7929ce23568498acd648e34d3b27bc6c152f5eed5547b1a87ad7739d4",
-      "bytes": 3435
+      "sha256": "097428b777305bb46a3166196ac5e76286f8c853361561c40ca9e1146962dd92",
+      "bytes": 3673
     },
     {
       "path": "lib/connectivity/versionedIndex.js",
-      "sha256": "159cf8553e8c106d5859732dee7cf5484a2a4136d535e85f64c0adce644bb74b",
-      "bytes": 2231
+      "sha256": "71261b02b5b0968577c53193a84211b3027b50cc638f998bb13a037dc757ae69",
+      "bytes": 2805
     },
     {
       "path": "lib/control/approvalAuthority.js",
@@ -404,8 +484,8 @@
     },
     {
       "path": "lib/control/policyGateway.js",
-      "sha256": "c95635bc5a5635f25108ba2f4524c3e71bebc11c909faa31f64f081d1b353101",
-      "bytes": 8127
+      "sha256": "1f42fd47ffa2c4ed9ebb4fad68fa399b3ba32c8208f31a0a353ca7682974d9ae",
+      "bytes": 8696
     },
     {
       "path": "lib/core/audit.js",
@@ -469,8 +549,8 @@
     },
     {
       "path": "lib/core/runtime.js",
-      "sha256": "fcf813ded2ed5147feadc930fc4e6fe097e43c392242de6b9d3075d6031c7f7e",
-      "bytes": 9944
+      "sha256": "676db938a2cd42ef23016f354b41447daf3b8454bd90fd2eeadb50e1168a521d",
+      "bytes": 10583
     },
     {
       "path": "lib/core/scope.js",
@@ -499,8 +579,8 @@
     },
     {
       "path": "lib/install/installer.js",
-      "sha256": "17ad3f8dbb469919fbee2b6b9f1f5bffe415b9ea73d280dfc320a0b7097fba6c",
-      "bytes": 8161
+      "sha256": "6f0ed1561b84b32660da4fed524634eb2dfb299c357888407cbe7867432418d0",
+      "bytes": 9066
     },
     {
       "path": "lib/intel/normalize.js",
@@ -534,8 +614,13 @@
     },
     {
       "path": "lib/pack/offlinePack.js",
-      "sha256": "d4412b79e18a5f373e0adfc88cc79b2c22e17e45db2c1da8931651fec0cdec20",
-      "bytes": 2237
+      "sha256": "0af1ccbe035fb7ce58dcbe95a5ef5519d275d20422d70dec173b40890efa5362",
+      "bytes": 3761
+    },
+    {
+      "path": "lib/release/rollout.js",
+      "sha256": "09cab8be9e36ae593717dd5418fc5e064aa9378f49c110e848364b129b5b62fa",
+      "bytes": 2130
     },
     {
       "path": "lib/schemas/v2/index.js",
@@ -559,7 +644,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "aec7d820fefa00e893764cb8961c967f3ba8418a08f24ed5c24c9cdfc829cbab",
+      "sha256": "b7a2ab9b61fa0656f32e598b0490e3a13fe30cfa8cc86c51e9c2129f95970772",
       "bytes": 1798
     },
     {
@@ -608,8 +693,8 @@
       "bytes": 59868
     }
   ],
-  "aggregateSha256": "188169b991e501d914da6429c565ba7f326b5e868e3ec80cab7cdadaeee72653",
-  "fileCount": 120,
-  "totalBytes": 1485974,
+  "aggregateSha256": "fe801c4c76facdc7250d9cbf81c1e3a5213e1442b969d644122c08c472ee5c5b",
+  "fileCount": 137,
+  "totalBytes": 1562321,
   "executable": false
 }

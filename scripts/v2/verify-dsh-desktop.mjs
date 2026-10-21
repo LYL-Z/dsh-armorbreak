@@ -27,5 +27,5 @@ try {
 } catch { result.checks.dshCli = null }
 result.checks.guiUrl = process.env.DSH_WEB_URL ?? null
 result.checks.modelCredential = process.env.DEEPSEEK_API_KEY ? 'present-in-env' : 'not-in-headless-env'
-await writeFile('docs/v2/acceptance/desktop-e2e.json', `${JSON.stringify(result, null, 2)}\n`)
+await writeFile('docs/v2/acceptance/desktop-e2e-probe.json', `${JSON.stringify(result, null, 2)}\n`)
 console.log(JSON.stringify(result, null, 2))

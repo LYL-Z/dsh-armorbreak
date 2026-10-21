@@ -16,6 +16,8 @@ const perf = await readJson('docs/v2/acceptance/performance-v2.json')
 const perfCompare = await readJson('docs/v2/acceptance/performance-compare.json')
 const supplyE2E = await readJson('docs/v2/acceptance/supplychain-e2e.json')
 const supplyLive = await readJson('docs/v2/acceptance/supplychain-live.json')
+const desktopE2E = await readJson('docs/v2/acceptance/desktop-e2e.json')
+const desktopAnalysis = await readJson('docs/v2/acceptance/desktop-analysis.json')
 const taskDir = 'docs/v2/tasks'
 const taskDocStatus = {}
 try {
@@ -50,7 +52,11 @@ const report = {
       reason: 'Garak/PyRIT/OFFLINE test endpoints + 5+ AI/agent classes; no third-party live model claimed',
       evidence: ['docs/v2/acceptance/garak-live.json','docs/v2/acceptance/pyrit-live.json','docs/v2/acceptance/jailbreak-live.json'],
     },
-    compatibility: { status: 'REVIEW', reason: 'v1.2 tests pass; real Desktop GUI+model E2E not run' },
+    compatibility: {
+      status: desktopE2E?.result === 'PASS' && desktopAnalysis?.result === 'PASS' && desktopE2E?.l0Task?.reportSha256 && (desktopE2E?.screenshots ?? []).length >= 3 && desktopE2E?.toolCalls?.length >= 2 ? 'PASS' : 'REVIEW',
+      reason: desktopE2E?.result === 'PASS' ? 'real Desktop GUI: armorbreak_health + L0 analyze/report, screenshot hashes' : 'real Desktop GUI evidence missing',
+      evidence: ['docs/v2/acceptance/desktop-e2e.json','docs/v2/acceptance/desktop-analysis.json','docs/v2/acceptance/desktop-e2e.md'],
+    },
     performance: {
       status: perfCompare && Array.isArray(perfCompare.regressionsOver10Percent) && perfCompare.regressionsOver10Percent.length === 0 ? 'PASS' : 'REVIEW',
       reason: perfCompare ? 'same-host sequential v1.2/v2 comparison; no >10% regression' : 'comparison missing',
@@ -63,6 +69,10 @@ const report = {
   releasable: false,
   reason: 'M4-03/04/06/10/11/12 remain incomplete; release blocked by design',
 }
+const allGatesPass = Object.values(report.gates).every((gate) => gate.status === 'PASS')
+const mandatoryDone = report.mandatoryM4.every((item) => item.status === 'DONE')
+report.releasable = allGatesPass && mandatoryDone
+report.reason = report.releasable ? 'all six gates PASS and mandatory M4 tasks DONE' : `blocked: gates=${Object.entries(report.gates).filter(([, gate]) => gate.status !== 'PASS').map(([name]) => name).join(',')}; mandatory=${report.mandatoryM4.filter((item) => item.status !== 'DONE').map((item) => item.file).join(',')}`
 await writeFile('docs/v2/acceptance/release-gates.json', `${JSON.stringify(report, null, 2)}\n`)
 console.log(JSON.stringify({ releasable: report.releasable, gates: Object.fromEntries(Object.entries(report.gates).map(([key, value]) => [key, value.status])), mandatory: report.mandatoryM4 }, null, 2))
 
