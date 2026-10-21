@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://armorbreak.dev/schemas/v1/evidence-envelope.schema.json",
+  "title": "ArmorBreak Evidence Envelope",
+  "type": "object",
+  "required": ["traceId", "runId", "taskId", "principalId", "origin", "targetHash"],
+  "properties": {
+    "traceId": { "type": "string", "minLength": 1 },
+    "runId": { "type": "string", "minLength": 1 },
+    "taskId": { "type": "string", "minLength": 1 },
+    "principalId": { "type": "string", "minLength": 1 },
+    "origin": { "enum": ["dsh", "mcp", "cli", "sdk"] },
+    "targetHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  },
+  "additionalProperties": true
+}
