@@ -40,3 +40,16 @@ test('license gate fails closed for unknown/copyleft licenses and dangerous scri
   assert.equal(plan.allowed, false)
   assert.equal(plan.denied, 1)
 })
+
+test('OSV known vulnerability and low/missing Scorecard block automatic assembly', () => {
+  const base = { name: 'x', version: '1', license: 'MIT', commit: 'a', digest: 'd', scripts: {} }
+  const vulnerable = assessComponent({ ...base, osv: { known: true, summary: 'CVE-2025-1' } })
+  assert.equal(vulnerable.allowed, false)
+  assert.ok(vulnerable.reasons.some((reason) => reason.code === 'KNOWN_VULNERABILITY'))
+  const low = assessComponent({ ...base, scorecard: { score: 2 } })
+  assert.equal(low.allowed, false)
+  assert.ok(low.reasons.some((reason) => reason.code === 'LOW_SCORECARD'))
+  const missing = assessComponent(base, { requireScorecard: true })
+  assert.equal(missing.allowed, false)
+  assert.ok(missing.reasons.some((reason) => reason.code === 'SCORECARD_MISSING'))
+})
