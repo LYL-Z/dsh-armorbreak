@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "armorbreak.p1-dsh-l0/v1",
+  "generatedAt": "2026-10-21T15:32:00.000Z",
+  "host": "DeepSeek Harness Desktop",
+  "model": "DeepSeek-V4.1-Flash",
+  "tool": "armorbreak_analyze",
+  "capability": "forensics.hash",
+  "riskLevel": "L0",
+  "taskId": "task_mvi9s8sb_821b3068",
+  "title": "core/index.js 完整性哈希登记",
+  "state": "COMPLETED",
+  "targetPath": "D:\\dsh-ABM\\armorbreak\\packages\\core\\index.js",
+  "inputSha256": "1f0579721ae3085d72fa92618517406fa4bd00810981d60dbe72b0148b596b39",
+  "evidenceIds": ["ev_mvi9s9mp_4ff58d4a", "ev_mvi9s9mx_097a9b93"],
+  "evidenceCount": 2,
+  "report": {
+    "originalPath": "D:\\dsh-ABM\\.armorbreak\\tasks\\task_mvi9s8sb_821b3068\\reports\\core-index-js-完整性哈希登记_2026-10-21_15-31-30.md",
+    "committedCopy": "docs/v2/acceptance/p1-dsh-l0-report.md",
+    "bytes": 8177,
+    "sha256": "a6d4ea9b230e83451ee85bce6bddec6810b55173ba2b585d03483461ca89ebee"
+  },
+  "screenshot": {
+    "path": "docs/v2/acceptance/p1-dsh-l0.webp",
+    "sha256": "4caa3aad76f2e20ffca9abaca12dfc3c7ba025259967482650dc68f5c1e3218e"
+  },
+  "result": "PASS",
+  "limitations": [
+    "L0 only; no L1/L2 execution",
+    "health widget still showed a stale 0-capability value in this old session",
+    "report is a byte-level hash, not a semantic audit"
+  ]
+}
