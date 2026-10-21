@@ -1,0 +1,416 @@
+{
+  "generatedAt": "2026-10-21T05:34:46.787Z",
+  "schemaVersion": "armorbreak.baseline/v1",
+  "baseSha": "1c8a1c50dec3927aa1a2fec218e3c330a9185116",
+  "branch": "feature/armorbreak-v2",
+  "packageVersion": "1.2.0",
+  "node": "v24.16.0",
+  "platform": "win32",
+  "arch": "x64",
+  "dsh": {
+    "version": "unknown",
+    "desktopVersion": "0.2.1-rc.2 (documented; not re-probed)"
+  },
+  "tests": {
+    "tests": 190,
+    "pass": 189,
+    "fail": 0,
+    "skipped": 1,
+    "source": "docs/v2/acceptance/unit-tests.log",
+    "freshRun": true,
+    "skippedExamples": [
+      "sast.semgrep missing external tool guidance"
+    ]
+  },
+  "benchmark": {
+    "p50p95": {
+      "schema": "armorbreak/benchmarks/v1",
+      "generatedAt": "2026-10-21T05:33:42.790Z",
+      "environment": {
+        "node": "v24.16.0",
+        "platform": "win32",
+        "arch": "x64",
+        "cpus": 24,
+        "cpu": "Intel(R) Core(TM) Ultra 9 290HX Plus",
+        "totalMemGiB": 63.68,
+        "capabilityCount": 46,
+        "domainCount": 8,
+        "sample": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\abm-bench-ws-XzS1MR\\sample.exe",
+        "sampleBytes": 360448,
+        "pcapBytes": 700024,
+        "pcapPackets": 5000,
+        "sastFiles": 200,
+        "reportFindings": 50,
+        "reportEvidence": 100,
+        "notes": "parser rows measure capability.run on a prepared bounded input; runner rows include task state transitions, evidence/finding persistence and audit logging"
+      },
+      "results": [
+        {
+          "name": "registry-cold-start",
+          "iterations": 1,
+          "totalMs": 83.88,
+          "meanMs": 83.88,
+          "p50Ms": 83.88,
+          "p95Ms": 83.88,
+          "p99Ms": 83.88,
+          "opsPerSec": 11.92,
+          "capabilityCount": 46,
+          "domainCount": 8
+        },
+        {
+          "name": "binary.identify (parser)",
+          "iterations": 60,
+          "totalMs": 113.2,
+          "meanMs": 1.887,
+          "p50Ms": 1.787,
+          "p95Ms": 2.439,
+          "p99Ms": 3.718,
+          "opsPerSec": 530,
+          "mode": "parser",
+          "capability": "binary.identify"
+        },
+        {
+          "name": "binary.strings (parser)",
+          "iterations": 60,
+          "totalMs": 112.27,
+          "meanMs": 1.871,
+          "p50Ms": 1.74,
+          "p95Ms": 2.234,
+          "p99Ms": 3.536,
+          "opsPerSec": 534.4,
+          "mode": "parser",
+          "capability": "binary.strings"
+        },
+        {
+          "name": "forensics.hash (parser)",
+          "iterations": 80,
+          "totalMs": 75.1,
+          "meanMs": 0.939,
+          "p50Ms": 0.927,
+          "p95Ms": 1.021,
+          "p99Ms": 1.129,
+          "opsPerSec": 1065.3,
+          "mode": "parser",
+          "capability": "forensics.hash"
+        },
+        {
+          "name": "binary.entropy (parser)",
+          "iterations": 60,
+          "totalMs": 173.85,
+          "meanMs": 2.898,
+          "p50Ms": 2.849,
+          "p95Ms": 3.141,
+          "p99Ms": 3.424,
+          "opsPerSec": 345.1,
+          "mode": "parser",
+          "capability": "binary.entropy"
+        },
+        {
+          "name": "forensics.hash (through runner)",
+          "iterations": 20,
+          "totalMs": 820.25,
+          "meanMs": 41.012,
+          "p50Ms": 40.558,
+          "p95Ms": 43.084,
+          "p99Ms": 45.319,
+          "opsPerSec": 24.4,
+          "mode": "runner",
+          "capability": "forensics.hash"
+        },
+        {
+          "name": "network.pcap_overview (parser)",
+          "iterations": 30,
+          "totalMs": 258.12,
+          "meanMs": 8.604,
+          "p50Ms": 8.044,
+          "p95Ms": 11.234,
+          "p99Ms": 15.139,
+          "opsPerSec": 116.2,
+          "mode": "parser",
+          "capability": "network.pcap_overview"
+        },
+        {
+          "name": "network.flows (parser)",
+          "iterations": 30,
+          "totalMs": 362.47,
+          "meanMs": 12.082,
+          "p50Ms": 10.525,
+          "p95Ms": 18.868,
+          "p99Ms": 19.563,
+          "opsPerSec": 82.8,
+          "mode": "parser",
+          "capability": "network.flows"
+        },
+        {
+          "name": "sast.scan (parser)",
+          "iterations": 10,
+          "totalMs": 1004.03,
+          "meanMs": 100.403,
+          "p50Ms": 96.672,
+          "p95Ms": 118.792,
+          "p99Ms": 118.792,
+          "opsPerSec": 10,
+          "mode": "parser",
+          "capability": "sast.scan"
+        },
+        {
+          "name": "report-markdown",
+          "iterations": 20,
+          "totalMs": 98.6,
+          "meanMs": 4.93,
+          "p50Ms": 4.856,
+          "p95Ms": 5.227,
+          "p99Ms": 5.354,
+          "opsPerSec": 202.8
+        },
+        {
+          "name": "report-html",
+          "iterations": 20,
+          "totalMs": 101.57,
+          "meanMs": 5.078,
+          "p50Ms": 4.941,
+          "p95Ms": 5.052,
+          "p99Ms": 9.005,
+          "opsPerSec": 196.9
+        },
+        {
+          "name": "report-sarif",
+          "iterations": 20,
+          "totalMs": 94.47,
+          "meanMs": 4.724,
+          "p50Ms": 4.627,
+          "p95Ms": 5.231,
+          "p99Ms": 5.686,
+          "opsPerSec": 211.7
+        },
+        {
+          "name": "BinaryStaticAnalysis-workflow",
+          "iterations": 5,
+          "totalMs": 2086.12,
+          "meanMs": 417.225,
+          "p50Ms": 414.018,
+          "p95Ms": 441.437,
+          "p99Ms": 441.437,
+          "opsPerSec": 2.4
+        }
+      ],
+      "memory": {
+        "rssMiB": 334.8,
+        "heapUsedMiB": 30.7
+      }
+    },
+    "source": "benchmarks/results.json"
+  },
+  "capabilities": {
+    "count": 46,
+    "domains": [
+      "android",
+      "binary",
+      "ctf",
+      "forensics",
+      "live",
+      "network",
+      "sast",
+      "web"
+    ],
+    "ids": [
+      "android.apk_structure",
+      "android.dex",
+      "android.findings",
+      "android.jadx",
+      "android.manifest",
+      "android.signing",
+      "binary.behavior",
+      "binary.entropy",
+      "binary.ghidra",
+      "binary.headers",
+      "binary.identify",
+      "binary.strings",
+      "binary.structure",
+      "ctf.classify",
+      "ctf.crypto_basics",
+      "ctf.decode",
+      "ctf.flag_scan",
+      "ctf.hash_id",
+      "forensics.filetype",
+      "forensics.hash",
+      "forensics.ioc",
+      "forensics.metadata",
+      "forensics.timeline",
+      "forensics.yara_lite",
+      "live.container_exec",
+      "live.http_probe",
+      "network.anomalies",
+      "network.dns",
+      "network.flows",
+      "network.http",
+      "network.iocs",
+      "network.pcap_overview",
+      "network.tls",
+      "network.tshark",
+      "sast.deps",
+      "sast.patch_suggestion",
+      "sast.sbom",
+      "sast.scan",
+      "sast.secrets",
+      "sast.semgrep",
+      "sast.syft",
+      "sast.trivy",
+      "web.har",
+      "web.headers",
+      "web.http_message",
+      "web.openapi"
+    ]
+  },
+  "manifests": [
+    {
+      "domain": "android",
+      "file": "lib/analyzers/android/manifest.js",
+      "idDeclarations": 6
+    },
+    {
+      "domain": "binary",
+      "file": "lib/analyzers/binary/manifest.js",
+      "idDeclarations": 6
+    },
+    {
+      "domain": "ctf",
+      "file": "lib/analyzers/ctf/manifest.js",
+      "idDeclarations": 5
+    },
+    {
+      "domain": "forensics",
+      "file": "lib/analyzers/forensics/manifest.js",
+      "idDeclarations": 6
+    },
+    {
+      "domain": "live",
+      "file": "lib/analyzers/live/manifest.js",
+      "idDeclarations": 2
+    },
+    {
+      "domain": "network",
+      "file": "lib/analyzers/network/manifest.js",
+      "idDeclarations": 7
+    },
+    {
+      "domain": "sast",
+      "file": "lib/analyzers/sast/manifest.js",
+      "idDeclarations": 5
+    },
+    {
+      "domain": "web",
+      "file": "lib/analyzers/web/manifest.js",
+      "idDeclarations": 4
+    }
+  ],
+  "workflows": [
+    {
+      "id": "BinaryStaticAnalysis",
+      "name": null,
+      "steps": null
+    },
+    {
+      "id": "AndroidAPKReview",
+      "name": null,
+      "steps": null
+    },
+    {
+      "id": "WebCodeSecurityReview",
+      "name": null,
+      "steps": null
+    },
+    {
+      "id": "PCAPInvestigation",
+      "name": null,
+      "steps": null
+    },
+    {
+      "id": "DependencyAudit",
+      "name": null,
+      "steps": null
+    },
+    {
+      "id": "CTFArtifactAnalysis",
+      "name": null,
+      "steps": null
+    },
+    {
+      "id": "ForensicFileReview",
+      "name": null,
+      "steps": null
+    },
+    {
+      "id": "WebAPIReview",
+      "name": null,
+      "steps": null
+    },
+    {
+      "id": "SecurityReportGeneration",
+      "name": null,
+      "steps": null
+    }
+  ],
+  "diagnostics": {
+    "loaded": true,
+    "capabilities": 46,
+    "domains": [
+      "android",
+      "binary",
+      "ctf",
+      "forensics",
+      "live",
+      "network",
+      "sast",
+      "web"
+    ],
+    "diagnostics": []
+  },
+  "isolation": [
+    {
+      "id": "docker",
+      "title": "Docker",
+      "state": "Installed",
+      "reason": "CLI 已安装，但守护进程不可用：docker info --format {{.ServerVersion}} failed: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.\n",
+      "version": "Docker version 29.8.1, build 4a63305",
+      "isolation": "container",
+      "installUrl": "https://docs.docker.com/engine/install/",
+      "note": null
+    },
+    {
+      "id": "podman",
+      "title": "Podman",
+      "state": "Unavailable",
+      "reason": "Podman CLI 未安装",
+      "version": null,
+      "isolation": "container-rootless",
+      "installUrl": "https://podman.io/docs/installation",
+      "note": null
+    },
+    {
+      "id": "wsl2",
+      "title": "WSL2",
+      "state": "Installed",
+      "reason": "WSL2 已安装；默认不视为安全沙箱，未做隔离自检",
+      "version": "W\u0000S\u0000L\u0000 \u0000Hr,g:\u0000 \u00002\u0000.\u00007\u0000.\u00001\u00004\u0000.\u00000\u0000\r\u0000",
+      "server": "؞��\u0006R�S:\u0000 \u0000U\u0000b\u0000u\u0000n\u0000t\u0000u\u0000\r\u0000",
+      "isolation": "vm",
+      "installUrl": "https://learn.microsoft.com/windows/wsl/install",
+      "note": "WSL2 可用不等于未知样本可安全执行；默认不把它作为安全沙箱，也不自动启用。"
+    }
+  ],
+  "history": {
+    "available": true,
+    "taskCount": 6,
+    "states": {
+      "COMPLETED": 5,
+      "FAILED": 1
+    },
+    "error": null
+  },
+  "docsInconsistencies": [
+    "package.json description still says 39 offline capabilities (actual 46)",
+    "docs/acceptance-v1.2.0.md claims 190/190, fresh run is 189/190 pass with 1 skipped",
+    "acceptance doc does not record the fresh skipped test"
+  ]
+}
