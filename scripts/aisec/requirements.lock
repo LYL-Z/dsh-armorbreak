@@ -1,0 +1,6 @@
+# ArmorBreak AISEC worker dependency lock (AB2-M3-02)
+# Runtime: CPython >= 3.10, stdlib only. No third-party packages.
+# Verified locally with Python 3.11.9; CI must report the actual interpreter.
+python = ">=3.10"
+runtime = "stdlib"
+dependencies = []
