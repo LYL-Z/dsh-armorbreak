@@ -327,8 +327,9 @@ export function createActionHandler(runtime) {
     try {
       const body = await readJsonBody(req)
       const action = String(body.action ?? '')
-      const uiRoute = action === 'evaluate' ? 'ui.evaluations.run' : `ui.tasks.${action}`
-      const uiDecision = await runtime.policyGateway.decide({ action: uiRoute, identity: { kind: 'ui' }, permission: 'TASK' })
+      const uiRoute = action === 'evaluate' ? 'ui.evaluations.run' : action.startsWith('install.') ? `ui.${action}` : `ui.tasks.${action}`
+      const uiPermission = action.startsWith('install.') ? 'SUPPLY_CHAIN' : 'TASK'
+      const uiDecision = await runtime.policyGateway.decide({ action: uiRoute, identity: { kind: 'ui' }, permission: uiPermission })
       if (!uiDecision.allowed) {
         denied(res, `${uiDecision.code}: ${uiDecision.reason}`)
         return
@@ -367,6 +368,58 @@ export function createActionHandler(runtime) {
         const stored = await runtime.evaluationStore.append(result)
         sendJson(res, 200, { ok: true, action, evaluation: stored })
         return
+      }
+      if (action.startsWith('install.')) {
+        const planId = String(body.planId ?? '')
+        if (action === 'install.plan') {
+          const artifactPath = String(body.artifactPath ?? '')
+          if (!artifactPath) throw new Error('artifactPath is required')
+          const plan = await runtime.installer.plan({
+            artifactPath,
+            repo: body.repo,
+            commit: body.commit,
+            version: body.version,
+            license: body.license,
+            components: Array.isArray(body.components) ? body.components : [],
+          })
+          if (plan.status === 'REJECTED') {
+            sendJson(res, 200, { ok: false, action, plan })
+            return
+          }
+          await runtime.installer.persist(plan)
+          sendJson(res, 200, { ok: true, action, plan })
+          return
+        }
+        if (!planId) throw new Error('planId is required')
+        const plan = await runtime.installer.get(planId)
+        if (action === 'install.stage') {
+          const staged = await runtime.installer.stage(plan)
+          sendJson(res, 200, { ok: true, action, plan: staged })
+          return
+        }
+        if (action === 'install.verify') {
+          const verified = await runtime.installer.verify(plan)
+          sendJson(res, 200, { ok: true, action, plan: verified })
+          return
+        }
+        if (action === 'install.approve') {
+          if (body.confirm !== 'approve-install') throw new Error('explicit confirm=approve-install is required')
+          const operator = String(body.operator ?? 'local-ui')
+          const token = runtime.approvalAuthority.issue({ id: `install:${plan.planId}`, riskLevel: 'L2', taskId: plan.planId, target: plan.planHash, operator }).token
+          const approved = await runtime.installer.approve(plan, { approvalToken: token, operator })
+          sendJson(res, 200, { ok: true, action, plan: approved })
+          return
+        }
+        if (action === 'install.activate') {
+          const active = await runtime.installer.activate(plan)
+          sendJson(res, 200, { ok: true, action, plan: active })
+          return
+        }
+        if (action === 'install.rollback') {
+          const rolled = await runtime.installer.rollback(plan)
+          sendJson(res, 200, { ok: true, action, plan: rolled })
+          return
+        }
       }
       const taskId = String(body.taskId ?? '')
       if (!taskId) throw new Error('taskId is required')
@@ -540,6 +593,20 @@ export function createCatalogHandler(runtime) {
   }
 }
 
+/**
+ * Read-only installation list.
+ * @param {import('./lib/core/runtime.js').ArmorBreakRuntime} runtime
+ */
+export function createInstallationsHandler(runtime) {
+  return async function handleInstallations(req, res) {
+    if (!guard(req, res)) return
+    try {
+      const items = await runtime.installer.list()
+      sendJson(res, 200, { items, count: items.length, executePackageCode: false })
+    } catch (error) { sendJson(res, 400, { error: String(error?.message ?? error) }) }
+  }
+}
+
 export function apply(ctx) {
   const runtime = getRuntime()
   void runtime.init().catch(() => {
@@ -558,6 +625,7 @@ export function apply(ctx) {
       { path: '/armorbreak/evaluations', handler: createEvaluationsHandler(runtime) },
       { path: '/armorbreak/knowledge', handler: createKnowledgeHandler(runtime) },
       { path: '/armorbreak/catalog', handler: createCatalogHandler(runtime) },
+      { path: '/armorbreak/installations', handler: createInstallationsHandler(runtime) },
     ]
     const disposers = routes.map((route) => ctx.webServer.register({ kind: 'exact', path: route.path, handler: route.handler }))
     dispose = () => {

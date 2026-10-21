@@ -98,6 +98,11 @@ window.__ModuleLoader__.load({
         search: 'Search',
         noKnowledge: 'No matching knowledge.',
         catalogHint: 'Read-only connector metadata; installation is never automatic.',
+        installations: 'Installations',
+        installHint: 'Plan → stage → verify → explicit approve → activate. Package scripts never run.',
+        artifactPath: 'Artifact path (absolute)',
+        planInstall: 'Plan install',
+        noInstallations: 'No installation plans.',
       },
       zh: {
         title: '破甲模式',
@@ -184,6 +189,11 @@ window.__ModuleLoader__.load({
         search: '检索',
         noKnowledge: '没有匹配的知识。',
         catalogHint: '只读连接器元数据；安装永远不会自动执行。',
+        installations: '安装',
+        installHint: '计划 → staging → 校验 → 显式批准 → 激活；不执行包脚本。',
+        artifactPath: '安装包路径（绝对路径）',
+        planInstall: '创建安装计划',
+        noInstallations: '尚无安装计划。',
       },
     }
 
@@ -239,6 +249,9 @@ window.__ModuleLoader__.load({
       const [knowledgeResults, setKnowledgeResults] = useState(null)
       const [catalogItems, setCatalogItems] = useState(null)
       const [researchError, setResearchError] = useState(null)
+      const [installItems, setInstallItems] = useState([])
+      const [installForm, setInstallForm] = useState({ artifactPath: '', license: 'MIT', commit: '', digest: 'sha256:local', components: '' })
+      const [installBusy, setInstallBusy] = useState(false)
       const withSession = useCallback((url) => (sessionId ? `${url}${url.includes('?') ? '&' : '?'}session=${encodeURIComponent(String(sessionId))}` : url), [sessionId])
 
       const postAction = useCallback(async (payload) => {
@@ -391,6 +404,14 @@ window.__ModuleLoader__.load({
           setKnowledgeResults(data)
         } catch (cause) { setResearchError(String(cause && cause.message ? cause.message : cause)) }
       }, [withSession, knowledgeQuery])
+      const loadInstallations = useCallback(async () => {
+        try {
+          const response = await fetch(withSession('/armorbreak/installations'), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
+          const data = await response.json().catch(() => ({}))
+          if (!response.ok) throw new Error(data.error || String(response.status))
+          setInstallItems(Array.isArray(data.items) ? data.items : [])
+        } catch (cause) { setResearchError(String(cause && cause.message ? cause.message : cause)) }
+      }, [withSession])
       const loadCatalog = useCallback(async () => {
         try {
           const response = await fetch(withSession('/armorbreak/catalog'), { headers: { accept: 'application/json' }, credentials: 'same-origin' })
@@ -404,7 +425,8 @@ window.__ModuleLoader__.load({
         if (!open) return
         if (tab === 'evaluations') void loadEvaluations()
         else if (tab === 'catalog') void loadCatalog()
-      }, [open, tab, loadEvaluations, loadCatalog])
+        else if (tab === 'installations') void loadInstallations()
+      }, [open, tab, loadEvaluations, loadCatalog, loadInstallations])
       useEffect(() => {
         if (open) void loadWorkflows()
       }, [open, loadWorkflows])
@@ -531,6 +553,37 @@ window.__ModuleLoader__.load({
           h('div', { style: { ...muted, fontSize: 11.5 } }, t.catalogHint),
           catalogItems && catalogItems.length === 0 ? h('div', { style: muted }, t.unavailable) : null,
           ...(catalogItems || []).map((item) => h('div', { key: item.id, style: { ...muted, fontSize: 11.5 } }, item.id + ' · ' + item.title + ' · ' + (item.license || 'license?'))),
+        )
+      }
+
+      function installationsView() {
+        return h(
+          'div',
+          { style: { display: 'grid', gap: 6 } },
+          h('div', { style: sectionTitle }, t.planInstall),
+          h('div', { style: { ...muted, fontSize: 11.5 } }, t.installHint),
+          h('input', { value: installForm.artifactPath, placeholder: t.artifactPath, onChange: (event) => setInstallForm({ ...installForm, artifactPath: event.target.value }), style: { font: 'inherit', padding: '2px 4px' } }),
+          h('input', { value: installForm.license, placeholder: 'license', onChange: (event) => setInstallForm({ ...installForm, license: event.target.value }), style: { font: 'inherit', padding: '2px 4px' } }),
+          h('input', { value: installForm.commit, placeholder: 'commit', onChange: (event) => setInstallForm({ ...installForm, commit: event.target.value }), style: { font: 'inherit', padding: '2px 4px' } }),
+          h('button', { type: 'button', style: tabStyle(false), disabled: installBusy, onClick: async () => {
+            setInstallBusy(true); setResearchError(null)
+            const components = installForm.components ? [{ name: 'bundle', version: 'local', license: installForm.license, commit: installForm.commit, digest: installForm.digest, scripts: {} }] : [{ name: 'bundle', version: 'local', license: installForm.license, commit: installForm.commit, digest: installForm.digest, scripts: {} }]
+            const data = await postAction({ action: 'install.plan', artifactPath: installForm.artifactPath, license: installForm.license, commit: installForm.commit, components })
+            setInstallBusy(false); if (data) await loadInstallations()
+          } }, installBusy ? t.probing : t.planInstall),
+          researchError ? h('div', { style: { color: 'var(--dsw-alias-state-error-primary)' } }, researchError) : null,
+          h('div', { style: sectionTitle }, t.installations),
+          installItems.length === 0 ? h('div', { style: muted }, t.noInstallations) : null,
+          ...installItems.slice(0, 20).map((item) => h('div', { key: item.planId, style: { display: 'grid', gap: 2, borderLeft: '2px solid var(--dsw-alias-border-l1)', paddingLeft: 8, marginBottom: 4 } },
+            h('div', { style: { fontSize: 11.5 } }, item.planId + ' · ' + item.status + ' · ' + String(item.artifact?.sha256 ?? '').slice(0, 12)),
+            h('div', { style: { display: 'flex', gap: 4, flexWrap: 'wrap' } },
+              h('button', { type: 'button', style: tabStyle(false), onClick: async () => { await postAction({ action: 'install.stage', planId: item.planId }); await loadInstallations() } }, 'stage'),
+              h('button', { type: 'button', style: tabStyle(false), onClick: async () => { await postAction({ action: 'install.verify', planId: item.planId }); await loadInstallations() } }, 'verify'),
+              h('button', { type: 'button', style: tabStyle(false), onClick: async () => { await postAction({ action: 'install.approve', planId: item.planId, confirm: 'approve-install', operator: 'local-ui' }); await loadInstallations() } }, 'approve'),
+              h('button', { type: 'button', style: tabStyle(false), onClick: async () => { await postAction({ action: 'install.activate', planId: item.planId }); await loadInstallations() } }, 'activate'),
+              h('button', { type: 'button', style: tabStyle(false), onClick: async () => { await postAction({ action: 'install.rollback', planId: item.planId }); await loadInstallations() } }, 'rollback'),
+            ),
+          )),
         )
       }
 
@@ -742,10 +795,11 @@ window.__ModuleLoader__.load({
                 h('button', { type: 'button', style: tabStyle(tab === 'evaluations'), onClick: () => { setTab('evaluations'); setDetail(null) } }, t.evaluations),
                 h('button', { type: 'button', style: tabStyle(tab === 'knowledge'), onClick: () => { setTab('knowledge'); setDetail(null) } }, t.knowledge),
                 h('button', { type: 'button', style: tabStyle(tab === 'catalog'), onClick: () => { setTab('catalog'); setDetail(null) } }, t.catalog),
+                h('button', { type: 'button', style: tabStyle(tab === 'installations'), onClick: () => { setTab('installations'); setDetail(null) } }, t.installations),
               ),
               error ? h('div', { style: { color: 'var(--dsw-alias-state-error-primary)' } }, `${t.error}: ${error}`) : null,
               !state && !error ? h('div', { style: muted }, t.loading) : null,
-              state ? (tab === 'overview' ? overviewView() : tab === 'tasks' ? tasksView() : tab === 'network' ? networkView() : tab === 'evaluations' ? evaluationsView() : tab === 'knowledge' ? knowledgeView() : tab === 'catalog' ? catalogView() : toolsView()) : null,
+              state ? (tab === 'overview' ? overviewView() : tab === 'tasks' ? tasksView() : tab === 'network' ? networkView() : tab === 'evaluations' ? evaluationsView() : tab === 'knowledge' ? knowledgeView() : tab === 'catalog' ? catalogView() : tab === 'installations' ? installationsView() : toolsView()) : null,
               h('div', { style: { display: 'flex', justifyContent: 'flex-end' } },
                 h('button', {
                   type: 'button',

@@ -18,7 +18,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 import { ArmorBreakRuntime } from '../lib/core/runtime.js'
-import { createActionHandler, createCatalogHandler, createEnvironmentHandler, createEvaluationsHandler, createEvidenceHandler, createKnowledgeHandler, createReportHandler, createStateHandler, createTasksHandler, createToolsHandler } from '../index.js'
+import { createActionHandler, createCatalogHandler, createEnvironmentHandler, createEvaluationsHandler, createEvidenceHandler, createInstallationsHandler, createKnowledgeHandler, createReportHandler, createStateHandler, createTasksHandler, createToolsHandler } from '../index.js'
 
 function fakeResponse() {
   const captured = { status: null, headers: null, body: '', json: null }
@@ -345,4 +345,45 @@ test('workbench creates a mock evaluation and exposes evaluations/knowledge/cata
   assert.equal(catalog.captured.status, 200)
   assert.equal(catalog.captured.json.count, 3)
   assert.equal(catalog.captured.json.automaticInstall, false)
+})
+
+test('workbench installation follows stage/verify/approve/activate/rollback and requires explicit confirmation', async () => {
+  const { runtime, workspace } = await realWorkspaceRuntime()
+  const artifactPath = join(workspace, 'bundle.tgz')
+  await writeFile(artifactPath, 'INSTALL-BUNDLE')
+  const action = createActionHandler(runtime)
+  const component = { name: 'bundle', version: '1.0.0', license: 'MIT', commit: 'abc', digest: 'sha256:x', scripts: {} }
+  const planned = fakeResponse()
+  await action(actionReq({ action: 'install.plan', artifactPath, repo: 'github.com/a/b', commit: 'abc', license: 'MIT', components: [component] }), planned)
+  assert.equal(planned.captured.status, 200)
+  assert.equal(planned.captured.json.ok, true)
+  const plan = planned.captured.json.plan
+  assert.equal(plan.status, 'PLANNED')
+  assert.equal(plan.executePackageCode, false)
+
+  const listed = fakeResponse()
+  await createInstallationsHandler(runtime)(req('/armorbreak/installations'), listed)
+  assert.equal(listed.captured.json.count, 1)
+
+  const staged = fakeResponse()
+  await action(actionReq({ action: 'install.stage', planId: plan.planId }), staged)
+  assert.equal(staged.captured.json.plan.status, 'STAGED')
+  const verified = fakeResponse()
+  await action(actionReq({ action: 'install.verify', planId: plan.planId }), verified)
+  assert.equal(verified.captured.json.plan.status, 'VERIFIED')
+
+  const refused = fakeResponse()
+  await action(actionReq({ action: 'install.approve', planId: plan.planId }), refused)
+  assert.equal(refused.captured.status, 400)
+  assert.match(refused.captured.json.error, /confirm/i)
+
+  const approved = fakeResponse()
+  await action(actionReq({ action: 'install.approve', planId: plan.planId, confirm: 'approve-install', operator: 'alice' }), approved)
+  assert.equal(approved.captured.json.plan.status, 'APPROVED')
+  const active = fakeResponse()
+  await action(actionReq({ action: 'install.activate', planId: plan.planId }), active)
+  assert.equal(active.captured.json.plan.status, 'ACTIVE')
+  const rolled = fakeResponse()
+  await action(actionReq({ action: 'install.rollback', planId: plan.planId }), rolled)
+  assert.equal(rolled.captured.json.plan.status, 'ROLLED_BACK')
 })
