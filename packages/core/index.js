@@ -12,9 +12,10 @@ import { TaskStore } from '../../lib/core/tasks.js'
 import { EvidenceStore } from '../../lib/core/evidence.js'
 import { PolicyGateway } from '../../lib/control/policyGateway.js'
 import { PROTOCOL_VERSION, validateInvocation } from '../protocol/index.js'
+import { createEvidenceEnvelope, createEventEnvelope, sanitizeEvidencePayload } from './evidenceEnvelope.js'
 
 export const CORE_VERSION = '0.1.0-p1'
-export { ArmorBreakRuntime, CapabilityRegistry, TaskStore, EvidenceStore, PolicyGateway, PROTOCOL_VERSION, validateInvocation }
+export { ArmorBreakRuntime, CapabilityRegistry, TaskStore, EvidenceStore, PolicyGateway, PROTOCOL_VERSION, validateInvocation, createEvidenceEnvelope, createEventEnvelope, sanitizeEvidencePayload }
 
 /**
  * Create one process-level Core. stateRoot is mandatory in multi-client use so
