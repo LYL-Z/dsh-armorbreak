@@ -1,0 +1,123 @@
+{
+  "schemaVersion": "armorbreak.release-gates/v1",
+  "generatedAt": "2026-10-21T11:13:21.621Z",
+  "branch": "feature/armorbreak-v2",
+  "gates": {
+    "security": {
+      "status": "PASS",
+      "evidence": [
+        "tests/policy-gateway.test.mjs",
+        "tests/approval-binding.test.mjs",
+        "tests/ui-api.test.mjs"
+      ]
+    },
+    "offline": {
+      "status": "REVIEW",
+      "evidence": [
+        "docs/v2/acceptance/airgap-container.json",
+        "docs/v2/acceptance/offline-score.json"
+      ],
+      "targetCoverage": "62/62",
+      "rOffline": "N/A"
+    },
+    "supplyChain": {
+      "status": "REVIEW",
+      "reason": "license/installer unit gates pass; no real signed catalog install"
+    },
+    "aiEvaluation": {
+      "status": "REVIEW",
+      "reason": "mock AISEC passes; Garak/PyRIT/Inspect not executed"
+    },
+    "compatibility": {
+      "status": "REVIEW",
+      "reason": "v1.2 tests pass; real Desktop GUI+model E2E not run"
+    },
+    "performance": {
+      "status": "REVIEW",
+      "reason": "sast +23%, workflow +14% vs v1.2 baseline; profile pending",
+      "evidence": [
+        "docs/v2/acceptance/performance-v2.json",
+        "docs/v2/acceptance/benchmark-v1.2.log"
+      ],
+      "measured": true
+    }
+  },
+  "taskDocStatus": {
+    "AB2-M1-01.md": "DONE",
+    "AB2-M1-02.md": "DONE",
+    "AB2-M1-03.md": "DONE",
+    "AB2-M1-04.md": "DONE",
+    "AB2-M1-05.md": "DONE",
+    "AB2-M1-06.md": "DONE",
+    "AB2-M1-07.md": "DONE",
+    "AB2-M1-08.md": "DONE",
+    "AB2-M1-09.md": "DONE",
+    "AB2-M1-10.md": "DONE",
+    "AB2-M1-11.md": "DONE",
+    "AB2-M1-12.md": "DONE",
+    "AB2-M2-01.md": "REVIEW",
+    "AB2-M2-02.md": "REVIEW",
+    "AB2-M2-03.md": "REVIEW",
+    "AB2-M2-04.md": "REVIEW",
+    "AB2-M2-05.md": "REVIEW",
+    "AB2-M2-06.md": "DONE",
+    "AB2-M2-07.md": "DONE",
+    "AB2-M2-08.md": "DONE",
+    "AB2-M2-09.md": "REVIEW",
+    "AB2-M2-10.md": "REVIEW",
+    "AB2-M2-11.md": "DONE",
+    "AB2-M2-12.md": "DONE",
+    "AB2-M2-13.md": "DONE",
+    "AB2-M2-14.md": "REVIEW",
+    "AB2-M3-01.md": "DONE",
+    "AB2-M3-02.md": "DONE",
+    "AB2-M3-03.md": "REVIEW",
+    "AB2-M3-04.md": "REVIEW",
+    "AB2-M3-05.md": "REVIEW",
+    "AB2-M3-06.md": "REVIEW",
+    "AB2-M3-07.md": "REVIEW",
+    "AB2-M3-08.md": "REVIEW",
+    "AB2-M3-09.md": "DONE",
+    "AB2-M3-10.md": "DONE",
+    "AB2-M3-11.md": "REVIEW",
+    "AB2-M3-12.md": "DONE",
+    "AB2-M3-13.md": "DONE",
+    "AB2-M4-01.md": "DONE",
+    "AB2-M4-02.md": "REVIEW",
+    "AB2-M4-05.md": "DONE",
+    "AB2-M4-06.md": "REVIEW",
+    "AB2-M4-09.md": "REVIEW"
+  },
+  "mandatoryM4": [
+    {
+      "file": "AB2-M4-06.md",
+      "status": "REVIEW"
+    },
+    {
+      "file": "AB2-M4-03.md",
+      "status": "MISSING"
+    },
+    {
+      "file": "AB2-M4-04.md",
+      "status": "MISSING"
+    },
+    {
+      "file": "AB2-M4-05.md",
+      "status": "DONE"
+    },
+    {
+      "file": "AB2-M4-10.md",
+      "status": "MISSING"
+    },
+    {
+      "file": "AB2-M4-11.md",
+      "status": "MISSING"
+    },
+    {
+      "file": "AB2-M4-12.md",
+      "status": "MISSING"
+    }
+  ],
+  "releasable": false,
+  "reason": "M4-03/04/06/10/11/12 remain incomplete; release blocked by design"
+}

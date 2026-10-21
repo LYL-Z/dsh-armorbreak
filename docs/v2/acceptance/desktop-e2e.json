@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "armorbreak.desktop-e2e/v1",
+  "generatedAt": "2026-10-21T11:13:13.476Z",
+  "platform": "win32",
+  "node": "v24.16.0",
+  "bundleLock": true,
+  "checks": {
+    "dshCli": "C:\\Users\\Lenovo\\AppData\\Roaming\\npm\\dsh",
+    "guiUrl": "http://127.0.0.1:62782",
+    "modelCredential": "not-in-headless-env"
+  },
+  "result": "BLOCKED",
+  "reason": "Not run: requires an installed V2 DSH Desktop bundle, selected ArmorBreak preset, and a live model tool call.",
+  "bundle": {
+    "name": "dsh-armorbreak",
+    "version": "1.2.0",
+    "preset": {
+      "id": "armorbreak",
+      "preserved": true
+    },
+    "aggregateSha256": "188169b991e501d914da6429c565ba7f326b5e868e3ec80cab7cdadaeee72653"
+  }
+}
