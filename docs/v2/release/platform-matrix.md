@@ -6,6 +6,6 @@
 | Ubuntu 24.04 x64 (GHA) | 24 | PASS (unit/offline/benchmark) | CI ubuntu-latest |
 | Linux container `node:24-alpine` | 24 | PASS (network-none: 3/3 static, 62/62 benchmark) | `airgap-container.json` |
 | macOS | — | **N/A — not tested** | no host |
-| Windows DSH Desktop real GUI + model | — | **BLOCKED** | `desktop-e2e.json` |
+| Windows DSH Desktop real GUI + model | — | **REAL_VERIFIED** | `desktop-e2e.json`, `desktop-analysis.json`, `desktop-e2e.md` |
 
 No cross-platform PASS is claimed for macOS or for a real desktop V2 install. Optional external tools (Tshark/Ghidra/JADX/Syft/Semgrep/Trivy) are separate dependencies with their own licenses and are not bundled.

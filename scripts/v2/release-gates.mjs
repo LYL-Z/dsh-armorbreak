@@ -1,78 +1,11 @@
-﻿#!/usr/bin/env node
-/**
- * AB2-M4-05/M4-10 release gate report.
- * Reads existing evidence only; never turns a missing run into PASS.
- */
-import { readFile, writeFile, readdir } from 'node:fs/promises'
-import { join } from 'node:path'
+#!/usr/bin/env node
+/** ABU-002/003: write the evidence-driven release gate report. */
+import { execFileSync } from 'node:child_process'
+import { writeFileSync } from 'node:fs'
+import { computeReleaseGates } from '../../lib/release/gates.js'
 
-async function readJson(path) {
-  try { return JSON.parse((await readFile(path, 'utf8')).replace(/^\uFEFF/, '')) } catch { return null }
-}
-
-const offline = await readJson('docs/v2/acceptance/offline-score.json')
-const airgap = await readJson('docs/v2/acceptance/airgap-container.json')
-const perf = await readJson('docs/v2/acceptance/performance-v2.json')
-const perfCompare = await readJson('docs/v2/acceptance/performance-compare.json')
-const supplyE2E = await readJson('docs/v2/acceptance/supplychain-e2e.json')
-const supplyLive = await readJson('docs/v2/acceptance/supplychain-live.json')
-const desktopE2E = await readJson('docs/v2/acceptance/desktop-e2e.json')
-const desktopAnalysis = await readJson('docs/v2/acceptance/desktop-analysis.json')
-const taskDir = 'docs/v2/tasks'
-const taskDocStatus = {}
-try {
-  for (const file of await readdir(taskDir)) {
-    if (!file.endsWith('.md')) continue
-    const text = await readFile(join(taskDir, file), 'utf8')
-    const status = text.match(/^status:\s*(\S+)/m)?.[1] ?? 'UNKNOWN'
-    taskDocStatus[file] = status
-  }
-} catch { /* no docs */ }
-
-const mandatory = ['AB2-M4-06.md', 'AB2-M4-03.md', 'AB2-M4-04.md', 'AB2-M4-05.md', 'AB2-M4-10.md', 'AB2-M4-11.md', 'AB2-M4-12.md']
-const report = {
-  schemaVersion: 'armorbreak.release-gates/v1',
-  generatedAt: new Date().toISOString(),
-  branch: process.env.GITHUB_REF_NAME ?? 'feature/armorbreak-v2',
-  gates: {
-    security: { status: 'PASS', evidence: ['tests/policy-gateway.test.mjs', 'tests/approval-binding.test.mjs', 'tests/ui-api.test.mjs'] },
-    offline: {
-      status: airgap?.result === 'PASS' && offline?.summary?.targetPass === 62 ? 'PASS' : 'REVIEW',
-      evidence: ['docs/v2/acceptance/airgap-container.json', 'docs/v2/acceptance/offline-score.json'],
-      targetCoverage: offline?.coverage ?? null,
-      rOffline: offline?.offlineRate ?? null,
-    },
-    supplyChain: {
-      status: supplyE2E?.result === 'PASS' && supplyLive?.result === 'PASS' ? 'PASS' : 'REVIEW',
-      reason: 'live GitHub/OSV/Scorecard + signed Ed25519 index + transactional installer/rollback; no remote package code executed',
-      evidence: ['docs/v2/acceptance/supplychain-e2e.json','docs/v2/acceptance/supplychain-live.json'],
-    },
-    aiEvaluation: {
-      status: ['AB2-M3-03.md','AB2-M3-04.md','AB2-M3-05.md','AB2-M3-06.md','AB2-M3-07.md','AB2-M3-08.md','AB2-M3-11.md','AB2-M3-13.md'].every((file) => taskDocStatus[file] === 'DONE') ? 'PASS' : 'REVIEW',
-      reason: 'Garak/PyRIT/OFFLINE test endpoints + 5+ AI/agent classes; no third-party live model claimed',
-      evidence: ['docs/v2/acceptance/garak-live.json','docs/v2/acceptance/pyrit-live.json','docs/v2/acceptance/jailbreak-live.json'],
-    },
-    compatibility: {
-      status: desktopE2E?.result === 'PASS' && desktopAnalysis?.result === 'PASS' && desktopE2E?.l0Task?.reportSha256 && (desktopE2E?.screenshots ?? []).length >= 3 && desktopE2E?.toolCalls?.length >= 2 ? 'PASS' : 'REVIEW',
-      reason: desktopE2E?.result === 'PASS' ? 'real Desktop GUI: armorbreak_health + L0 analyze/report, screenshot hashes' : 'real Desktop GUI evidence missing',
-      evidence: ['docs/v2/acceptance/desktop-e2e.json','docs/v2/acceptance/desktop-analysis.json','docs/v2/acceptance/desktop-e2e.md'],
-    },
-    performance: {
-      status: perfCompare && Array.isArray(perfCompare.regressionsOver10Percent) && perfCompare.regressionsOver10Percent.length === 0 ? 'PASS' : 'REVIEW',
-      reason: perfCompare ? 'same-host sequential v1.2/v2 comparison; no >10% regression' : 'comparison missing',
-      evidence: ['docs/v2/acceptance/performance-compare.json', 'docs/v2/acceptance/performance-v12-now.json', 'docs/v2/acceptance/performance-v2-rerun2.json'],
-      measured: Boolean(perf),
-    },
-  },
-  taskDocStatus,
-  mandatoryM4: mandatory.map((file) => ({ file, status: taskDocStatus[file] ?? 'MISSING' })),
-  releasable: false,
-  reason: 'M4-03/04/06/10/11/12 remain incomplete; release blocked by design',
-}
-const allGatesPass = Object.values(report.gates).every((gate) => gate.status === 'PASS')
-const mandatoryDone = report.mandatoryM4.every((item) => item.status === 'DONE')
-report.releasable = allGatesPass && mandatoryDone
-report.reason = report.releasable ? 'all six gates PASS and mandatory M4 tasks DONE' : `blocked: gates=${Object.entries(report.gates).filter(([, gate]) => gate.status !== 'PASS').map(([name]) => name).join(',')}; mandatory=${report.mandatoryM4.filter((item) => item.status !== 'DONE').map((item) => item.file).join(',')}`
-await writeFile('docs/v2/acceptance/release-gates.json', `${JSON.stringify(report, null, 2)}\n`)
-console.log(JSON.stringify({ releasable: report.releasable, gates: Object.fromEntries(Object.entries(report.gates).map(([key, value]) => [key, value.status])), mandatory: report.mandatoryM4 }, null, 2))
-
+const commit = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
+const report = computeReleaseGates({ commit, allowEvidenceAncestor: true })
+writeFileSync('docs/v2/acceptance/release-gates.json', `${JSON.stringify(report, null, 2)}\n`)
+console.log(JSON.stringify({ commit, releasable: report.releasable, gates: Object.fromEntries(Object.entries(report.gates).map(([name, gate]) => [name, gate.status])), testReport: report.testReport }, null, 2))
+if (!report.releasable) process.exitCode = 1

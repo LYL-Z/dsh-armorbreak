@@ -18,9 +18,10 @@ A second Web instance cannot be booted through the global CLI with the v2 bundle
 - `dsh --profile desktop` fails on missing experimental bundles;
 - global CLI's plural preset package is not the Desktop host's singular package.
 
-The running Desktop GUI is a v1.x session and must not be restarted while it
-hosts this work. Consequently, a real V2 Desktop GUI/model E2E was **not**
-executed; M4-06 remains REVIEW/BLOCKED.
+A real V2 Desktop GUI/model E2E **was executed** after restarting the Desktop host:
+`armorbreak_health` and a L0 `forensics.hash` report are recorded with screenshot and
+report hashes in `desktop-e2e.json` / `desktop-analysis.json`. The earlier
+v1.x-host blocker is historical, not the current status.
 
 ## Follow-up
 
