@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict'
+﻿import assert from 'node:assert/strict'
 import { mkdtemp } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -89,3 +89,24 @@ test('approval tokens are bound, expire and cannot be replayed', async () => {
   await assert.rejects(() => engine.verifyApproval(alice, { riskLevel: 'L2', taskId: 'task-approval', target: workspace, approvalToken: expiring.token }), (error) => error.code === 'TOKEN_EXPIRED')
   await engine.close()
 })
+
+
+test('sanitized evidence envelopes are persisted and abort is fail-closed', async () => {
+  const { engine, workspace } = await fixture()
+  const alice = ctx({ id: 'alice', kind: 'local-user' }, workspace, 'envelope-1')
+  const task = await engine.createTask(alice, { title: 'envelope task', targetKind: 'none' })
+  const targetHash = 'a'.repeat(64)
+  const recorded = await engine.recordEnvelope(alice, task.id, { origin: 'cli', targetHash, event: 'task.started', payload: { token: 'never-store-me', safe: 'ok' } })
+  assert.equal(recorded.envelope.type, 'event')
+  assert.equal(recorded.envelope.payload.token, '[REDACTED]')
+  assert.equal(JSON.stringify(recorded.envelope).includes('never-store-me'), false)
+  const evidence = await engine.runtime.workspace(workspace).taskStore.evidenceStore(task.id).readEvidence()
+  assert.ok(evidence.some((record) => record.id === recorded.evidenceId))
+  const chain = await engine.runtime.workspace(workspace).taskStore.evidenceStore(task.id).verifyChain()
+  assert.equal(chain.valid, true)
+  const controller = new AbortController()
+  controller.abort()
+  await assert.rejects(() => engine.recordEnvelope({ ...alice, cancellation: controller.signal }, task.id, { origin: 'cli', targetHash, payload: {} }), (error) => error.code === 'CANCELLED')
+  await engine.close()
+})
+

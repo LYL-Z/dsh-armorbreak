@@ -11,7 +11,7 @@ import { createHash } from 'node:crypto'
 import { ArmorBreakRuntime } from '../../lib/core/runtime.js'
 import { ApprovalAuthority } from '../../lib/control/approvalAuthority.js'
 import { validateInvocation } from '../protocol/index.js'
-import { CORE_VERSION } from '../core/index.js'
+import { createEvidenceEnvelope, createEventEnvelope, CORE_VERSION } from '../core/index.js'
 
 const MAX_TITLE = 300
 const MAX_OBJECTIVE = 5000
@@ -46,6 +46,7 @@ export class TrustedEngine {
     }
     this.idempotency = new Map()
     this.approvalAuthority = options.approvalAuthority ?? new ApprovalAuthority({ stateRoot: this.stateRoot })
+    this.requestTimeoutMs = Number(options.requestTimeoutMs ?? 30_000)
     this.runtime = new ArmorBreakRuntime({ stateRoot: this.stateRoot })
   }
 
@@ -58,7 +59,29 @@ export class TrustedEngine {
     await this.runtime.close?.()
   }
 
+  bounded(ctx, operation) {
+    const signal = ctx?.cancellation ?? ctx?.signal
+    if (signal?.aborted) return Promise.reject(new EngineError('CANCELLED', 'request was cancelled before execution'))
+    let timer
+    const timeout = new Promise((_, reject) => {
+      timer = setTimeout(() => reject(new EngineError('TIMEOUT', `request exceeded ${this.requestTimeoutMs}ms`)), this.requestTimeoutMs)
+      timer.unref?.()
+    })
+    let abortHandler
+    const aborted = new Promise((_, reject) => {
+      if (!signal) return
+      abortHandler = () => reject(new EngineError('CANCELLED', 'request aborted'))
+      signal.addEventListener('abort', abortHandler, { once: true })
+    })
+    const running = typeof operation === 'function' ? operation() : operation
+    return Promise.race([running, timeout, aborted]).finally(() => {
+      clearTimeout(timer)
+      if (signal && abortHandler) signal.removeEventListener('abort', abortHandler)
+    })
+  }
+
   authenticate(ctx) {
+    if (ctx?.cancellation?.aborted || ctx?.signal?.aborted) throw new EngineError('CANCELLED', 'request was cancelled')
     const validation = validateInvocation(ctx)
     if (!validation.ok) throw new EngineError('INVALID_REQUEST', validation.issues.join('; '))
     const configured = this.principals.get(ctx.principal.id)
@@ -108,6 +131,21 @@ export class TrustedEngine {
     const result = this.approvalAuthority.consume(String(approvalToken), { taskId: String(taskId), target: String(target), riskLevel, operator: principal.id, sessionId: ctx.principal.sessionId })
     if (!result.valid) throw new EngineError(result.code ?? 'POLICY_DENIED', result.reason ?? 'approval rejected')
     return { approvalId: result.payload.id, riskLevel, operator: principal.id, expiresAt: result.payload.expiresAt, taskId: String(taskId) }
+  }
+
+  /** Persist a sanitized event/evidence envelope into the existing evidence chain. */
+  async recordEnvelope(ctx, taskId, { origin = 'sdk', targetHash, payload = {}, event } = {}) {
+    return this.bounded(ctx, async () => {
+      this.authenticate(ctx)
+      const store = this.runtime.workspace(ctx.workspaceId).taskStore
+      const task = await store.get(String(taskId))
+      if (!task || task.workspace !== ctx.workspaceId) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
+      const envelope = event
+        ? createEventEnvelope({ ctx, taskId: task.id, origin, targetHash, event, payload })
+        : createEvidenceEnvelope({ ctx, taskId: task.id, origin, targetHash, payload })
+      const record = await store.evidenceStore(task.id).addEvidence({ title: event ? `event:${event}`.slice(0, 200) : 'evidence-envelope', kind: 'event-envelope', excerpt: JSON.stringify(envelope), meta: { traceId: ctx.traceId, principalId: ctx.principal.id, origin, targetHash, payloadSha256: envelope.payloadSha256 }, targetSha256: targetHash })
+      return { envelope, evidenceId: record.id }
+    })
   }
 
   async getTask(ctx, taskId) {
