@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "armorbreak.release-smoke/v1",
+  "generatedAt": "2026-10-21T15:10:04.843Z",
+  "commit": "a262a6f14bc7553305d0323a7dacd5b795783a39",
+  "version": "2.0.1",
+  "checks": [
+    {
+      "id": "package-version",
+      "status": "PASS",
+      "detail": "2.0.1"
+    },
+    {
+      "id": "bundle-version",
+      "status": "PASS",
+      "detail": "2.0.1"
+    },
+    {
+      "id": "sbom-version",
+      "status": "PASS",
+      "detail": "dsh-armorbreak-2.0.1"
+    },
+    {
+      "id": "readiness-version",
+      "status": "PASS",
+      "detail": "2.0.1"
+    },
+    {
+      "id": "docs-consistency",
+      "status": "PASS",
+      "detail": "no issues"
+    },
+    {
+      "id": "evidence-hashes",
+      "status": "PASS",
+      "detail": "34 files verified"
+    },
+    {
+      "id": "release-gates",
+      "status": "PASS",
+      "detail": "all gates are evidence-verified and mandatory M4 tasks are DONE"
+    },
+    {
+      "id": "tag-immutable",
+      "status": "PASS",
+      "detail": "v2.0.0 tag still points at the published merge commit"
+    }
+  ],
+  "result": "PASS"
+}

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.evidence-manifest/v1",
-  "commit": "1f318fdba46225253bbfac9dcb5386637c8868bb",
-  "generatedAt": "2026-10-21T15:07:27.644Z",
+  "commit": "a262a6f14bc7553305d0323a7dacd5b795783a39",
+  "generatedAt": "2026-10-21T15:10:04.985Z",
   "files": {
     "docs/v2/acceptance/airgap-container.json": {
       "sha256": "967dc9c1443f006ac5e6552b0b080c797ef7f906239d049b06e95f522ad24397",
@@ -104,8 +104,12 @@
       "size": 601
     },
     "docs/v2/acceptance/release-gates.json": {
-      "sha256": "284e6ec75ea08698c82154d42ec1c30e6dc6c1819a4cfd92b9caac454c401d73",
+      "sha256": "aa9e1634a095db3de392879d332bb50e99aa029a1623ca480bfbd17862135552",
       "size": 5285
+    },
+    "docs/v2/acceptance/release-smoke.json": {
+      "sha256": "975e718376389be697166396f1acc7be4401f0058329c04986c99c149c285aca",
+      "size": 1082
     },
     "docs/v2/acceptance/streaming-10gb.json": {
       "sha256": "6aa3cfb1271be394b98cf0d075f0fffb8b9a4342795029a1e817c07eb6295f95",
@@ -124,12 +128,12 @@
       "size": 1370
     },
     "docs/v2/acceptance/test-report.json": {
-      "sha256": "913c75f740182f1448893358ffe185909fc05032082d6228c6e636c5738774dd",
+      "sha256": "cbb06baa3ebb2dd1a5ba81bec85541e2d94bb545307ffa545115a5d04627a8e3",
       "size": 517
     },
     "docs/v2/acceptance/test-report.tap": {
-      "sha256": "024c7baf6c41b40c95fa7f6c182b2bbc8e446e7c9dcfce9210b29e7cbfbf140b",
-      "size": 58711
+      "sha256": "5f76ef215a3698fe1569d4c4f2eee6013b3e5a742c51d3e2e7c9d4b944957a73",
+      "size": 58707
     },
     "docs/v2/acceptance/unit-tests.log": {
       "sha256": "dfa304ac38a30ee86e13c5cb8987d751ecbb2c70af47b12c00f9357af76f4ac8",
