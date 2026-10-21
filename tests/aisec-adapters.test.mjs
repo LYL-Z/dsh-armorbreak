@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { mapGarakReport, planGarak } from '../lib/aisec/garakAdapter.js'
+import { GARAK_VERSION, mapGarakReport, planGarak } from '../lib/aisec/garakAdapter.js'
 import { planInspection, runMockInspection } from '../lib/aisec/inspectAdapter.js'
 import { createMockTarget } from '../lib/aisec/evaluator.js'
 
@@ -11,6 +11,7 @@ test('Garak plan rejects unauthorized targets and non-allowlisted probes', () =>
   assert.throws(() => planGarak({ target, probes: ['dan'] }), /not allowlisted/)
   const plan = planGarak({ target, probes: ['promptinject', 'encoding'] })
   assert.equal(plan.captureRawPayloads, false)
+  assert.equal(GARAK_VERSION, '0.17.1')
   assert.match(plan.traceId, /^garak-/)
 })
 
