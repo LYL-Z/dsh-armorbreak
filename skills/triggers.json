@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "armorbreak.skill-triggers/v1",
+  "skills": [
+    {
+      "name": "armorbreak-triage",
+      "keywords": ["triage", "artifact", "incident", "scope", "next step"],
+      "positive": "Triage this authorized artifact and decide the next safe analysis step.",
+      "negative": "Write a short poem about the moon."
+    },
+    {
+      "name": "armorbreak-binary",
+      "keywords": ["binary", "static", "symbols", "strings", "elf", "pe"],
+      "positive": "Perform static binary triage on this ELF file: symbols, strings and sections.",
+      "negative": "Plan a vegetarian dinner for four people."
+    },
+    {
+      "name": "armorbreak-android",
+      "keywords": ["apk", "dex", "manifest", "android"],
+      "positive": "Inspect the Android APK manifest and DEX structure without executing it.",
+      "negative": "Explain how to configure a Bluetooth mouse."
+    },
+    {
+      "name": "armorbreak-sast",
+      "keywords": ["sast", "source code", "semgrep", "dependency", "code review"],
+      "positive": "Run a SAST code review with Semgrep and dependency scanning on this source code.",
+      "negative": "Summarize the history of the bicycle."
+    },
+    {
+      "name": "armorbreak-pcap",
+      "keywords": ["pcap", "packet capture", "flows", "dns", "tls"],
+      "positive": "Analyze this pcap offline: extract DNS, TLS and flow observations.",
+      "negative": "Recommend a good hiking trail for beginners."
+    },
+    {
+      "name": "armorbreak-ai-eval",
+      "keywords": ["aisec", "prompt injection", "ai security", "evaluation", "eval"],
+      "positive": "Design an AISEC evaluation with prompt injection test cases and evidence.",
+      "negative": "Write a recipe for tomato soup."
+    },
+    {
+      "name": "armorbreak-report",
+      "keywords": ["report", "findings", "evidence", "limitations", "reproducible"],
+      "positive": "Generate an evidence-linked report with findings, limitations and reproducible steps.",
+      "negative": "Translate this sentence into French."
+    }
+  ]
+}
