@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.evidence-manifest/v1",
-  "commit": "034a5919818b5bc571bffc943dd5e7df70e8298a",
-  "generatedAt": "2026-10-21T16:07:42.532Z",
+  "commit": "77615ca0b3ad5386bdaa6f074d0fd8e3e40d7fa8",
+  "generatedAt": "2026-10-21T16:11:27.006Z",
   "files": {
     "docs/v2/acceptance/airgap-container.json": {
       "sha256": "967dc9c1443f006ac5e6552b0b080c797ef7f906239d049b06e95f522ad24397",
@@ -19,9 +19,17 @@
       "sha256": "13936bc12376f61a323ffab0d849cedaf36ce41b8a4202a9a50ea549e731aaef",
       "size": 10769
     },
+    "docs/v2/acceptance/claude-mcp.json": {
+      "sha256": "96416698f030b7636b4cf79066976633ddff55683acf73f983a46c581cbaa555",
+      "size": 1007
+    },
     "docs/v2/acceptance/clean-room.json": {
       "sha256": "bf608c584985b765a104d10c7cccf5f579eb49487c155fb0c5632a5c5fd982bb",
       "size": 609
+    },
+    "docs/v2/acceptance/codex-mcp.json": {
+      "sha256": "7c0efee10f8abdd9615658897d05ac41c073ef9492cf48ee48bf97e5f1ea824b",
+      "size": 1848
     },
     "docs/v2/acceptance/desktop-analysis.json": {
       "sha256": "d96020879c4bf809d02a911c24c2e8cbf0c5e9c1c03c3abd767805cfc0d3636f",
@@ -116,7 +124,7 @@
       "size": 601
     },
     "docs/v2/acceptance/release-smoke.json": {
-      "sha256": "008397cf6fcddcaca16068240a1974571fa326cd75a1a923b50670708382f5c4",
+      "sha256": "5de69bad83e04aa22c2a9e00f3dd69001c87515b2241aa778bbeb985778368eb",
       "size": 1082
     },
     "docs/v2/acceptance/streaming-10gb.json": {
@@ -136,12 +144,12 @@
       "size": 1370
     },
     "docs/v2/acceptance/test-report.json": {
-      "sha256": "060e3207b680e6cfd38b55b4f53aa951971058f940a8852846acce020cc09143",
+      "sha256": "16c99ee9fb644bb4529aa41629e7378082204e2428e692a54ea2cab9fb4b294c",
       "size": 517
     },
     "docs/v2/acceptance/test-report.tap": {
-      "sha256": "783238bc5caca42edc0911acf865de93c411a82e63381c9f09eb537c1c5033ea",
-      "size": 63157
+      "sha256": "8d380ed6261b8421d6c4d7eed62237413fb2caeda7c60b89845a85b0a111373d",
+      "size": 63152
     }
   }
 }
