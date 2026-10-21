@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "armorbreak.host-overlay/v1",
+  "host": "zcode",
+  "pluginManifest": "plugins/portable/plugin.json",
+  "mcpConfig": "plugins/portable/mcp.json",
+  "skillsPath": "skills",
+  "notes": ["Portable overlay; ZCode MCP/key structure must be validated against the installed version."],
+  "verified": false
+}

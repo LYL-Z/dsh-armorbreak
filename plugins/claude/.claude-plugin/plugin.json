@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "armorbreak.host-overlay/v1",
+  "host": "claude-code",
+  "pluginManifest": "plugins/portable/plugin.json",
+  "mcpConfig": "plugins/portable/mcp.json",
+  "skillsPath": "skills",
+  "notes": ["Portable MCP/Skills overlay; Claude Code native plugin schema is not claimed verified."],
+  "verified": false
+}
