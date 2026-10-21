@@ -1,0 +1,115 @@
+{
+  "schemaVersion": "armorbreak.core-benchmark/v1",
+  "targetTotal": 62,
+  "scenarios": [
+    {
+      "id": "CTF-001",
+      "domain": "ctf",
+      "capability": "ctf.flag_scan",
+      "target": "flag.txt",
+      "kind": "file",
+      "expectSummary": "flag"
+    },
+    {
+      "id": "CTF-002",
+      "domain": "ctf",
+      "capability": "ctf.decode",
+      "target": "base64.txt",
+      "kind": "file",
+      "options": {
+        "transforms": [
+          "base64"
+        ]
+      },
+      "expectSummary": "base64|Hello|ArmorBreak"
+    },
+    {
+      "id": "CTF-003",
+      "domain": "ctf",
+      "capability": "ctf.hash_id",
+      "target": "hash.txt",
+      "kind": "file",
+      "expectSummary": "md5|MD5|hash"
+    },
+    {
+      "id": "FOR-001",
+      "domain": "forensics",
+      "capability": "forensics.hash",
+      "target": "random.bin",
+      "kind": "file",
+      "expectSummary": "sha256|SHA-256"
+    },
+    {
+      "id": "FOR-002",
+      "domain": "forensics",
+      "capability": "forensics.filetype",
+      "target": "random.bin",
+      "kind": "file",
+      "expectSummary": "未知|unknown|binary|data"
+    },
+    {
+      "id": "FOR-003",
+      "domain": "forensics",
+      "capability": "forensics.ioc",
+      "target": "ioc.txt",
+      "kind": "file",
+      "expectSummary": "ioc|指标|URL|IP"
+    },
+    {
+      "id": "WEB-001",
+      "domain": "web",
+      "capability": "web.http_message",
+      "target": "http.txt",
+      "kind": "file",
+      "expectSummary": "HTTP|请求|request"
+    },
+    {
+      "id": "WEB-002",
+      "domain": "web",
+      "capability": "web.headers",
+      "target": "headers.txt",
+      "kind": "file",
+      "expectSummary": "header|头|HSTS|Content"
+    },
+    {
+      "id": "WEB-003",
+      "domain": "web",
+      "capability": "web.openapi",
+      "target": "openapi.yaml",
+      "kind": "file",
+      "expectSummary": "openapi|paths|server"
+    },
+    {
+      "id": "BIN-001",
+      "domain": "binary",
+      "capability": "binary.strings",
+      "target": "strings.bin",
+      "kind": "file",
+      "expectSummary": "string|字符串"
+    },
+    {
+      "id": "BIN-002",
+      "domain": "binary",
+      "capability": "binary.entropy",
+      "target": "random.bin",
+      "kind": "file",
+      "expectSummary": "entropy|熵"
+    },
+    {
+      "id": "NET-001",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns.pcap",
+      "kind": "file",
+      "expectSummary": "pcap|packet|报文|flow|HTTP"
+    },
+    {
+      "id": "SAST-001",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source",
+      "kind": "directory",
+      "expectSummary": "scan|finding|扫描|发现"
+    }
+  ]
+}

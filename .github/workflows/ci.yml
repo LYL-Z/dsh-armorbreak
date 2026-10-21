@@ -60,6 +60,10 @@ jobs:
           node-version: 24
       - name: Static L0 network-free gate
         run: node --test tests/offline-core.test.mjs
+      - name: Core benchmark (runnable subset)
+        env:
+          ARMORBREAK_OFFLINE: '1'
+        run: node scripts/v2/core-benchmark.mjs
 
   live-docker:
     name: L1 Docker integration (real daemon)

@@ -1,0 +1,246 @@
+{
+  "schemaVersion": "armorbreak.offline-score/v1",
+  "generatedAt": "2026-10-21T05:52:41.914Z",
+  "baseSha": null,
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v24.16.0",
+    "offlineEnv": "1"
+  },
+  "targetCounts": {
+    "binary": 10,
+    "android": 8,
+    "network": 10,
+    "sast": 12,
+    "forensics": 8,
+    "aiAgent": 8,
+    "knowledge": 6
+  },
+  "targetTotal": 62,
+  "runnableScenarios": 13,
+  "coverage": "13/62",
+  "summary": {
+    "total": 13,
+    "pass": 13,
+    "fail": 0,
+    "notRun": 49
+  },
+  "offlineRate": "N/A",
+  "offlineRateReason": "No frozen online-reference run exists yet; the architecture formula requires A_online(i)=1 for the same scenario set. Do not report 100%.",
+  "notRun": [
+    {
+      "domain": "binary",
+      "target": 10,
+      "ready": 2,
+      "reason": "frozen corpus/fixture not yet built in M1"
+    },
+    {
+      "domain": "android",
+      "target": 8,
+      "ready": 0,
+      "reason": "frozen corpus/fixture not yet built in M1"
+    },
+    {
+      "domain": "network",
+      "target": 10,
+      "ready": 1,
+      "reason": "frozen corpus/fixture not yet built in M1"
+    },
+    {
+      "domain": "sast",
+      "target": 12,
+      "ready": 1,
+      "reason": "frozen corpus/fixture not yet built in M1"
+    },
+    {
+      "domain": "forensics",
+      "target": 8,
+      "ready": 3,
+      "reason": "frozen corpus/fixture not yet built in M1"
+    },
+    {
+      "domain": "aiAgent",
+      "target": 8,
+      "ready": 0,
+      "reason": "frozen corpus/fixture not yet built in M1"
+    },
+    {
+      "domain": "knowledge",
+      "target": 6,
+      "ready": 0,
+      "reason": "frozen corpus/fixture not yet built in M1"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "CTF-001",
+      "domain": "ctf",
+      "capability": "ctf.flag_scan",
+      "target": "flag.txt",
+      "inputSha256": "d8afe24863a09c556bd5273eede23866472f5254163827e923c485ed3690acf0",
+      "state": "COMPLETED",
+      "evidence": 4,
+      "pass": true,
+      "expectedSummary": "flag",
+      "summary": "flag/熵扫描 45 字节：命中 flag 2 个（CTF{b3nch_f1ag}、flag{core_ready}），高熵 token 0 个，熵 4.411 bits/byte。 flag 为直接正则观察；高熵候选仅为启发式提示。",
+      "error": null
+    },
+    {
+      "id": "CTF-002",
+      "domain": "ctf",
+      "capability": "ctf.decode",
+      "target": "base64.txt",
+      "inputSha256": "b5ead0d81387e1b7d67ae14cd6b49a141a3fe93d9adb17aa068c9e2d25457ba0",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "base64|Hello|ArmorBreak",
+      "summary": "按链 [base64] 解码：成功 1/1 步，输出 20 字节（可读文本，熵 3.546 bits/byte）；未发现 flag。",
+      "error": null
+    },
+    {
+      "id": "CTF-003",
+      "domain": "ctf",
+      "capability": "ctf.hash_id",
+      "target": "hash.txt",
+      "inputSha256": "e56634de8abfd15fe8a17033c89f47e8f8e94b16f6971cce5012d332a3de5f28",
+      "state": "COMPLETED",
+      "evidence": 3,
+      "pass": true,
+      "expectedSummary": "md5|MD5|hash",
+      "summary": "哈希/摘要识别：在输入中找到 1 个候选（高置信 1 个）。 首个候选：d41d8cd98f00b204e9800998ecf8427e → md5(likely) / ntlm(possible) / md4(possible)。 识别结果仅为格式匹配（hypothesis），不代表已破解。",
+      "error": null
+    },
+    {
+      "id": "FOR-001",
+      "domain": "forensics",
+      "capability": "forensics.hash",
+      "target": "random.bin",
+      "inputSha256": "f85a0853664d11cf7fe1879ad0da58b447cac89665d63e8d46f12ce4eea95ff0",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "sha256|SHA-256",
+      "summary": "文件大小 8192 字节。\n类型：data（unknown，low）。\nmd5: 1397a0e5e1323c9ae708f3f36913ce64\nsha1: f409f420b470f87d607b7d766eced132ebe3db38\nsha256: f85a0853664d11cf7fe1879ad0da58b447cac89665d63e8d46f12ce4eea95ff0\nsha512: af72a6c9777f18720780fac01d1d88a4c9b515bc6aff5476b213101bcc11ac68ed2102a5c671b1c09e1f954164b37a8b07bb8eb3efe4339b4e64d7f621163396",
+      "error": null
+    },
+    {
+      "id": "FOR-002",
+      "domain": "forensics",
+      "capability": "forensics.filetype",
+      "target": "random.bin",
+      "inputSha256": "f85a0853664d11cf7fe1879ad0da58b447cac89665d63e8d46f12ce4eea95ff0",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "未知|unknown|binary|data",
+      "summary": "文件类型：data（类别 unknown，MIME application/octet-stream，置信度 low，8192 字节）。",
+      "error": null
+    },
+    {
+      "id": "FOR-003",
+      "domain": "forensics",
+      "capability": "forensics.ioc",
+      "target": "ioc.txt",
+      "inputSha256": "f20943df1900558e95c3f32057787abf81bf1e359d0b630e3fff8c31daba3200",
+      "state": "COMPLETED",
+      "evidence": 3,
+      "pass": true,
+      "expectedSummary": "ioc|指标|URL|IP",
+      "summary": "从 65 字节中提取 IOC：共 3 个唯一指标（3 次出现）。；ipv4=1；ipv6=1；url=1\n类别统计：ipv4=1, ipv6=1, url=1。\n说明：IOC 为静态抽取结果，不包含恶意性判定。",
+      "error": null
+    },
+    {
+      "id": "WEB-001",
+      "domain": "web",
+      "capability": "web.http_message",
+      "target": "http.txt",
+      "inputSha256": "b2b08a0d1ae136ac1a953db71e1ca9e85594b45a0931cb78f346b89e7e26c1e5",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "HTTP|请求|request",
+      "summary": "HTTP 请求 POST /api/login（HTTP/1.1）：3 个头，body 0 字节。发现 0 条问题：high 0 / medium 0 / low 0 / info 0。凭据类头值均已脱敏。",
+      "error": null
+    },
+    {
+      "id": "WEB-002",
+      "domain": "web",
+      "capability": "web.headers",
+      "target": "headers.txt",
+      "inputSha256": "779172aba596ee5a3f4b37f98c30c4618ba91cbfb1921b51131f1154bd38ef73",
+      "state": "COMPLETED",
+      "evidence": 5,
+      "pass": true,
+      "expectedSummary": "header|头|HSTS|Content",
+      "summary": "已审计 3 个响应头：fail 3 / warn 0 / pass 2 / info 2，Cookie 0 个。发现 3 条问题：high 0 / medium 1 / low 2 / info 0。",
+      "error": null
+    },
+    {
+      "id": "WEB-003",
+      "domain": "web",
+      "capability": "web.openapi",
+      "target": "openapi.yaml",
+      "inputSha256": "38b979f8bfac7ae45cdeb1f56c6cbb4d379b91baf5e29bc099c8a5ddbe5ffcbf",
+      "state": "COMPLETED",
+      "evidence": 2,
+      "pass": true,
+      "expectedSummary": "openapi|paths|server",
+      "summary": "OpenAPI 3.0.0 “Core Bench” 1.0.0：1 条路径 / 1 个操作 / 0 个安全方案 / 1 个服务器。发现 1 条问题：critical 0 / high 0 / medium 1 / low 0 / info 0。",
+      "error": null
+    },
+    {
+      "id": "BIN-001",
+      "domain": "binary",
+      "capability": "binary.strings",
+      "target": "strings.bin",
+      "inputSha256": "818f6e159ea2fd25225e1f211825676f100c67e90c72721c28edce494d14515f",
+      "state": "COMPLETED",
+      "evidence": 3,
+      "pass": true,
+      "expectedSummary": "string|字符串",
+      "summary": "提取字符串：ASCII 1 条，UTF-16LE 0 条（maxStrings=1000）。\n分类计数：url=1, ipv4=0, domain=0, email=0, registryKey=0, windowsPath=0, winapi=0, command=0, crypto=0, base64=0, guid=0, pdbPath=0。\n高价值样例：[url] http://bench.example.test/flag",
+      "error": null
+    },
+    {
+      "id": "BIN-002",
+      "domain": "binary",
+      "capability": "binary.entropy",
+      "target": "random.bin",
+      "inputSha256": "f85a0853664d11cf7fe1879ad0da58b447cac89665d63e8d46f12ce4eea95ff0",
+      "state": "COMPLETED",
+      "evidence": 3,
+      "pass": true,
+      "expectedSummary": "entropy|熵",
+      "summary": "整体熵 8 bits/byte（very-high），分析字节 8192。\n分块：2 块 × 4096 字节，高熵块 2，零字节占比 0.4%，可打印占比 38.3%。\n未解析到节级熵（未知容器或未启用）。\n提示：整体熵 8.0000 bits/byte（very-high），未出现强烈的压缩/加密信号。",
+      "error": null
+    },
+    {
+      "id": "NET-001",
+      "domain": "network",
+      "capability": "network.pcap_overview",
+      "target": "http-dns.pcap",
+      "inputSha256": "b642656a292245e0dbf86c2417310197c3b7774b4dc03b3bc1ad97c790c36600",
+      "state": "COMPLETED",
+      "evidence": 1,
+      "pass": true,
+      "expectedSummary": "pcap|packet|报文|flow|HTTP",
+      "summary": "抓包概览：pcap（little 字节序）；链路类型 Ethernet；1 个报文（捕获 123 B / 原始 123 B）；协议 tcp=1；时间范围 2023-11-14T22:13:20.000Z ~ 2023-11-14T22:13:20.000Z（0s）；SYN 0 / RST 0。",
+      "error": null
+    },
+    {
+      "id": "SAST-001",
+      "domain": "sast",
+      "capability": "sast.scan",
+      "target": "source",
+      "inputSha256": "3b272d48671c46aa8751c4c5f24b0259e55f6d02570de26ddf32305817e5a350",
+      "state": "COMPLETED",
+      "evidence": 3,
+      "pass": true,
+      "expectedSummary": "scan|finding|扫描|发现",
+      "summary": "扫描 1 个源文件（跳过二进制 0，共 4 行），命中 1 条规则 / 1 条候选发现：critical 0 / high 1 / medium 0 / low 0 / info 0。 问题最集中：C:\\Users\\Lenovo\\AppData\\Local\\Temp\\abm-core-bench-ws-uRzVua\\source\\app.js。 规则为逐行正则匹配（无数据流分析），taint 相关命中需人工确认可达性。",
+      "error": null
+    }
+  ]
+}
