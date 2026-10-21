@@ -175,6 +175,11 @@ export class TrustedEngine {
     this.authenticate(ctx)
     return this.runtime.registry.list()
   }
+
+  async health(ctx) {
+    this.authenticate(ctx)
+    return this.runtime.stateSummary(ctx.workspaceId)
+  }
 }
 
 export async function createEngine(options) {
