@@ -1,6 +1,6 @@
 # V2 Release Plan (M4-10)
 
-**Status: RELEASE READY for v2.0.0.** Branch `feature/armorbreak-v2`; all six gates PASS and every mandatory M4 task is DONE. Tag `v2.0.0` is created only after the final CI run; no V1 tag is moved.
+**Status: RELEASED v2.0.0 (2026-10-21).** Tag `v2.0.0` points at merge commit `f96d03a`; GitHub Release `v2.0.0` contains bundle lock, SBOM, release gates, readiness, and evidence zip. All six gates PASS; no V1 tag was moved.
 
 ## Prerequisites (all must be true)
 
