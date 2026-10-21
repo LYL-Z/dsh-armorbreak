@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "armorbreak.claude-mcp/v1",
+  "generatedAt": "2026-10-21T16:12:00.000Z",
+  "claudeVersion": "2.1.299 (Claude Code)",
+  "scope": "project",
+  "project": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\claude-abm-proj-9f3daacf-671e-4e1e-ae1a-68c583e97f67",
+  "server": {
+    "name": "armorbreak",
+    "type": "stdio",
+    "command": "node",
+    "args": ["D:\\dsh-ABM\\armorbreak\\packages\\mcp-server\\index.js"],
+    "envKeys": ["ARMORBREAK_STATE_ROOT", "ARMORBREAK_WORKSPACE", "ARMORBREAK_PRINCIPAL_ID"]
+  },
+  "observed": {
+    "configFile": ".mcp.json",
+    "listStatus": "Pending approval",
+    "connected": false,
+    "mcpListCommand": "claude mcp list"
+  },
+  "result": "CONFIG_VISIBLE_PENDING_APPROVAL",
+  "limitations": [
+    "Claude Code requires interactive project MCP approval; non-interactive approval was not bypassed.",
+    "No model invocation or L0 tool call was made through Claude.",
+    "This is configuration recognition evidence, not agent integration acceptance."
+  ]
+}
