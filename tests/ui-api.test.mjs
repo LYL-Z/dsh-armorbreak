@@ -94,7 +94,7 @@ function fakeRuntime(overrides = {}) {
 }
 
 function req(url, options = {}) {
-  return { method: options.method ?? 'GET', url, socket: { remoteAddress: options.remoteAddress ?? '127.0.0.1' } }
+  return { method: options.method ?? 'GET', url, headers: options.headers ?? {}, socket: { remoteAddress: options.remoteAddress ?? '127.0.0.1' } }
 }
 
 function actionReq(body, options = {}) {
@@ -296,4 +296,27 @@ test('state route binds a known session to its recorded workspace without direct
   assert.equal(invalid.captured.status, 200)
   assert.equal(invalid.captured.json.workspace, 'C:/mru')
   assert.deepEqual(calls, ['C:/session-ws', null, null], 'only a known session may select a workspace')
+})
+
+test('workbench routes enforce same-origin and reject foreign/null origins', async () => {
+  const { runtime } = fakeRuntime()
+  const state = createStateHandler(runtime)
+  const foreign = fakeResponse()
+  await state(req('/armorbreak/state', { headers: { origin: 'https://evil.example', host: '127.0.0.1:64835' } }), foreign)
+  assert.equal(foreign.captured.status, 403)
+  const nullOrigin = fakeResponse()
+  await state(req('/armorbreak/state', { headers: { origin: 'null', host: '127.0.0.1:64835' } }), nullOrigin)
+  assert.equal(nullOrigin.captured.status, 403)
+  const same = fakeResponse()
+  await state(req('/armorbreak/state', { headers: { origin: 'http://127.0.0.1:64835', host: '127.0.0.1:64835' } }), same)
+  assert.equal(same.captured.status, 200)
+
+  const action = createActionHandler(runtime)
+  const actionForeign = fakeResponse()
+  await action(req('/armorbreak/actions', {
+    method: 'POST',
+    headers: { origin: 'https://evil.example', host: '127.0.0.1:64835', 'x-armorbreak-ui': '1', 'content-type': 'application/json' },
+  }), actionForeign)
+  assert.equal(actionForeign.captured.status, 403)
+  assert.match(actionForeign.captured.json.error, /origin/i)
 })

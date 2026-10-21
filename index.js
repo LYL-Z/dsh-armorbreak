@@ -83,6 +83,25 @@ export function createStateHandler(runtime) {
 }
 
 /** @param {import('node:http').IncomingMessage} req @param {import('node:http').ServerResponse} res */
+/**
+ * Same-origin fence for loopback routes. Absent Origin is allowed for the
+ * Electron/CLI fetch path; a present Origin must match the request Host and be a
+ * loopback authority. This blocks a malicious same-host page/CSRF form.
+ * @param {import('node:http').IncomingMessage} req
+ */
+export function isAllowedOrigin(req) {
+  const origin = String(req?.headers?.origin ?? '').trim()
+  if (!origin) return true
+  try {
+    const parsed = new URL(origin)
+    const host = String(req?.headers?.host ?? '').toLowerCase()
+    return ['127.0.0.1', 'localhost', '[::1]'].includes(parsed.hostname)
+      && parsed.host.toLowerCase() === host
+  } catch {
+    return false
+  }
+}
+
 function guard(req, res) {
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     res.writeHead(405, { 'content-type': 'application/json; charset=utf-8', allow: 'GET, HEAD' })
@@ -91,6 +110,10 @@ function guard(req, res) {
   }
   if (!isLoopbackPeer(req)) {
     denied(res, 'route is loopback-only')
+    return false
+  }
+  if (!isAllowedOrigin(req)) {
+    denied(res, 'origin is not the local workbench authority')
     return false
   }
   return true
@@ -285,6 +308,10 @@ export function createActionHandler(runtime) {
   return async function handleAction(req, res) {
     if (!isLoopbackPeer(req)) {
       denied(res, 'route is loopback-only')
+      return
+    }
+    if (!isAllowedOrigin(req)) {
+      denied(res, 'origin is not the local workbench authority')
       return
     }
     if (req.method !== 'POST') {
