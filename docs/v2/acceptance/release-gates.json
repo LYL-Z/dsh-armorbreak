@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.release-gates/v1",
-  "generatedAt": "2026-10-21T11:24:50.253Z",
+  "generatedAt": "2026-10-21T11:41:38.628Z",
   "branch": "feature/armorbreak-v2",
   "gates": {
     "security": {
@@ -56,20 +56,20 @@
     "AB2-M1-10.md": "DONE",
     "AB2-M1-11.md": "DONE",
     "AB2-M1-12.md": "DONE",
-    "AB2-M2-01.md": "REVIEW",
-    "AB2-M2-02.md": "REVIEW",
-    "AB2-M2-03.md": "REVIEW",
-    "AB2-M2-04.md": "REVIEW",
-    "AB2-M2-05.md": "REVIEW",
+    "AB2-M2-01.md": "DONE",
+    "AB2-M2-02.md": "DONE",
+    "AB2-M2-03.md": "DONE",
+    "AB2-M2-04.md": "DONE",
+    "AB2-M2-05.md": "DONE",
     "AB2-M2-06.md": "DONE",
     "AB2-M2-07.md": "DONE",
     "AB2-M2-08.md": "DONE",
     "AB2-M2-09.md": "REVIEW",
-    "AB2-M2-10.md": "REVIEW",
+    "AB2-M2-10.md": "DONE",
     "AB2-M2-11.md": "DONE",
     "AB2-M2-12.md": "DONE",
     "AB2-M2-13.md": "DONE",
-    "AB2-M2-14.md": "REVIEW",
+    "AB2-M2-14.md": "DONE",
     "AB2-M3-01.md": "DONE",
     "AB2-M3-02.md": "DONE",
     "AB2-M3-03.md": "REVIEW",
@@ -84,17 +84,17 @@
     "AB2-M3-12.md": "DONE",
     "AB2-M3-13.md": "DONE",
     "AB2-M4-01.md": "DONE",
-    "AB2-M4-02.md": "REVIEW",
-    "AB2-M4-03.md": "REVIEW",
-    "AB2-M4-04.md": "REVIEW",
+    "AB2-M4-02.md": "DONE",
+    "AB2-M4-03.md": "DONE",
+    "AB2-M4-04.md": "DONE",
     "AB2-M4-05.md": "DONE",
     "AB2-M4-06.md": "REVIEW",
-    "AB2-M4-07.md": "REVIEW",
+    "AB2-M4-07.md": "DONE",
     "AB2-M4-08.md": "DONE",
-    "AB2-M4-09.md": "REVIEW",
+    "AB2-M4-09.md": "DONE",
     "AB2-M4-10.md": "REVIEW",
     "AB2-M4-11.md": "REVIEW",
-    "AB2-M4-12.md": "REVIEW"
+    "AB2-M4-12.md": "DONE"
   },
   "mandatoryM4": [
     {
@@ -103,11 +103,11 @@
     },
     {
       "file": "AB2-M4-03.md",
-      "status": "REVIEW"
+      "status": "DONE"
     },
     {
       "file": "AB2-M4-04.md",
-      "status": "REVIEW"
+      "status": "DONE"
     },
     {
       "file": "AB2-M4-05.md",
@@ -123,7 +123,7 @@
     },
     {
       "file": "AB2-M4-12.md",
-      "status": "REVIEW"
+      "status": "DONE"
     }
   ],
   "releasable": false,

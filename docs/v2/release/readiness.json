@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.release-readiness/v1",
-  "generatedAt": "2026-10-21T11:21:33.184Z",
+  "generatedAt": "2026-10-21T11:41:38.704Z",
   "package": {
     "name": "dsh-armorbreak",
     "version": "1.2.0"
@@ -37,33 +37,34 @@
       "reason": "v1.2 tests pass; real Desktop GUI+model E2E not run"
     },
     "performance": {
-      "status": "REVIEW",
-      "reason": "sast +23%, workflow +14% vs v1.2 baseline; profile pending",
+      "status": "PASS",
+      "reason": "same-host sequential v1.2/v2 comparison; no >10% regression",
       "evidence": [
-        "docs/v2/acceptance/performance-v2.json",
-        "docs/v2/acceptance/benchmark-v1.2.log"
+        "docs/v2/acceptance/performance-compare.json",
+        "docs/v2/acceptance/performance-v12-now.json",
+        "docs/v2/acceptance/performance-v2-rerun2.json"
       ],
       "measured": true
     }
   },
   "m4": {
     "AB2-M4-01.md": "DONE",
-    "AB2-M4-02.md": "REVIEW",
-    "AB2-M4-03.md": "REVIEW",
-    "AB2-M4-04.md": "REVIEW",
+    "AB2-M4-02.md": "DONE",
+    "AB2-M4-03.md": "DONE",
+    "AB2-M4-04.md": "DONE",
     "AB2-M4-05.md": "DONE",
     "AB2-M4-06.md": "REVIEW",
+    "AB2-M4-07.md": "DONE",
     "AB2-M4-08.md": "DONE",
-    "AB2-M4-09.md": "REVIEW"
+    "AB2-M4-09.md": "DONE",
+    "AB2-M4-10.md": "REVIEW",
+    "AB2-M4-11.md": "REVIEW",
+    "AB2-M4-12.md": "DONE"
   },
   "incomplete": [
-    "AB2-M4-03.md",
-    "AB2-M4-04.md",
     "AB2-M4-06.md",
-    "AB2-M4-07.md",
     "AB2-M4-10.md",
-    "AB2-M4-11.md",
-    "AB2-M4-12.md"
+    "AB2-M4-11.md"
   ],
   "ready": false,
   "reason": "release blocked by incomplete gates/tasks; not a failure of the build"
