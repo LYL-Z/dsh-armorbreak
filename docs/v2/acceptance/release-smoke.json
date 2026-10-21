@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.release-smoke/v1",
-  "generatedAt": "2026-10-21T15:10:04.843Z",
-  "commit": "a262a6f14bc7553305d0323a7dacd5b795783a39",
+  "generatedAt": "2026-10-21T15:10:45.088Z",
+  "commit": "76a354ad490a68f2aa7359ae931791874a0433af",
   "version": "2.0.1",
   "checks": [
     {
@@ -32,7 +32,7 @@
     {
       "id": "evidence-hashes",
       "status": "PASS",
-      "detail": "34 files verified"
+      "detail": "33 files verified"
     },
     {
       "id": "release-gates",
