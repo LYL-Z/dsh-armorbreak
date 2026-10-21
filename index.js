@@ -15,6 +15,7 @@
  */
 import { getRuntime } from './lib/core/runtime.js'
 import { getWorkflow, listWorkflows } from './lib/core/workflows.js'
+import { createMockTarget, runScenario } from './lib/aisec/evaluator.js'
 import { readFile } from 'node:fs/promises'
 
 export const inject = ['webServer']
@@ -326,7 +327,8 @@ export function createActionHandler(runtime) {
     try {
       const body = await readJsonBody(req)
       const action = String(body.action ?? '')
-      const uiDecision = await runtime.policyGateway.decide({ action: `ui.tasks.${action}`, identity: { kind: 'ui' }, permission: 'TASK' })
+      const uiRoute = action === 'evaluate' ? 'ui.evaluations.run' : `ui.tasks.${action}`
+      const uiDecision = await runtime.policyGateway.decide({ action: uiRoute, identity: { kind: 'ui' }, permission: 'TASK' })
       if (!uiDecision.allowed) {
         denied(res, `${uiDecision.code}: ${uiDecision.reason}`)
         return
@@ -350,6 +352,20 @@ export function createActionHandler(runtime) {
         })
         await runtime.runner.prepareTask(task)
         sendJson(res, 200, { ok: true, action, workspace: workspaceRoot, task: ctx.taskStore.summary(task, { includeSteps: true }) })
+        return
+      }
+      if (action === 'evaluate') {
+        const prompt = String(body.prompt ?? '').slice(0, 4000)
+        const category = String(body.category ?? 'prompt-injection')
+        if (!prompt) throw new Error('prompt is required')
+        if (!['prompt-injection', 'tool-abuse', 'data-exfiltration', 'memory-poisoning', 'multimodal', 'jailbreak-research'].includes(category)) throw new Error('unsupported evaluation category')
+        const target = createMockTarget('workbench-mock')
+        const result = await runScenario({
+          scenario: { id: 'workbench-' + Date.now().toString(36), title: 'workbench evaluation', category, targetId: target.id, authorizationRequired: true, prompt },
+          target,
+        })
+        const stored = await runtime.evaluationStore.append(result)
+        sendJson(res, 200, { ok: true, action, evaluation: stored })
         return
       }
       const taskId = String(body.taskId ?? '')
@@ -477,6 +493,53 @@ export function createReportHandler(runtime) {
  * Host plugin entry.
  * @param {import('@deepseek-ai/cordis').Context} ctx
  */
+/**
+ * Workbench evaluations list (read-only, bounded).
+ * @param {import('./lib/core/runtime.js').ArmorBreakRuntime} runtime
+ */
+export function createEvaluationsHandler(runtime) {
+  return async function handleEvaluations(req, res) {
+    if (!guard(req, res)) return
+    try {
+      const url = new URL(String(req.url ?? '/armorbreak/evaluations'), 'http://127.0.0.1')
+      const limit = Math.max(1, Math.min(Number(url.searchParams.get('limit') ?? 20) || 20, 100))
+      const items = await runtime.evaluationStore.list(limit)
+      sendJson(res, 200, { items, count: items.length })
+    } catch (error) { sendJson(res, 400, { error: String(error?.message ?? error) }) }
+  }
+}
+
+/**
+ * Read-only lexical knowledge search.
+ * @param {import('./lib/core/runtime.js').ArmorBreakRuntime} runtime
+ */
+export function createKnowledgeHandler(runtime) {
+  return async function handleKnowledge(req, res) {
+    if (!guard(req, res)) return
+    try {
+      const url = new URL(String(req.url ?? '/armorbreak/knowledge'), 'http://127.0.0.1')
+      const q = String(url.searchParams.get('q') ?? '').slice(0, 500)
+      const limit = Math.max(1, Math.min(Number(url.searchParams.get('limit') ?? 20) || 20, 100))
+      const results = q ? runtime.knowledgeIndex.search(q, { limit }) : []
+      sendJson(res, 200, { backend: runtime.knowledgeIndex.backend, query: q, results, count: results.length })
+    } catch (error) { sendJson(res, 400, { error: String(error?.message ?? error) }) }
+  }
+}
+
+/**
+ * Read-only connector catalog (metadata only, no installation).
+ * @param {import('./lib/core/runtime.js').ArmorBreakRuntime} runtime
+ */
+export function createCatalogHandler(runtime) {
+  return async function handleCatalog(req, res) {
+    if (!guard(req, res)) return
+    try {
+      const items = runtime.resourceSync.list().map((item) => ({ ...item, metadataOnly: true, executable: false }))
+      sendJson(res, 200, { items, count: items.length, automaticInstall: false })
+    } catch (error) { sendJson(res, 400, { error: String(error?.message ?? error) }) }
+  }
+}
+
 export function apply(ctx) {
   const runtime = getRuntime()
   void runtime.init().catch(() => {
@@ -492,6 +555,9 @@ export function apply(ctx) {
       { path: '/armorbreak/actions', handler: createActionHandler(runtime) },
       { path: '/armorbreak/evidence', handler: createEvidenceHandler(runtime) },
       { path: '/armorbreak/report', handler: createReportHandler(runtime) },
+      { path: '/armorbreak/evaluations', handler: createEvaluationsHandler(runtime) },
+      { path: '/armorbreak/knowledge', handler: createKnowledgeHandler(runtime) },
+      { path: '/armorbreak/catalog', handler: createCatalogHandler(runtime) },
     ]
     const disposers = routes.map((route) => ctx.webServer.register({ kind: 'exact', path: route.path, handler: route.handler }))
     dispose = () => {
