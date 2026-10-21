@@ -58,6 +58,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
       - name: Static L0 network-free gate
         run: node --test tests/offline-core.test.mjs
       - name: Core benchmark (runnable subset)
@@ -76,6 +80,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
       - name: Wait for Docker daemon
         run: |

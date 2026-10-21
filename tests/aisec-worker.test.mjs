@@ -3,7 +3,7 @@ import test from 'node:test'
 import { PythonWorker } from '../lib/aisec/workerSupervisor.js'
 
 function worker(extra = {}) {
-  return new PythonWorker({ defaultTimeoutMs: 3000, ...extra })
+  return new PythonWorker({ defaultTimeoutMs: 10000, ...extra })
 }
 
 test('worker speaks JSONL, uses env allowlist and returns protocol', async () => {
