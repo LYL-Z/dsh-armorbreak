@@ -1,0 +1,8 @@
+{
+  "name": "@armorbreak/mcp-server",
+  "version": "0.1.0-p2",
+  "private": true,
+  "type": "module",
+  "description": "ArmorBreak MCP stdio server: JSON-RPC, tools/list, tools/call",
+  "exports": "./index.js"
+}
