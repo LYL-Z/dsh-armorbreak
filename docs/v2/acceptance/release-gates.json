@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.release-gates/v1",
-  "generatedAt": "2026-10-21T11:13:21.621Z",
+  "generatedAt": "2026-10-21T11:15:11.998Z",
   "branch": "feature/armorbreak-v2",
   "gates": {
     "security": {
@@ -12,7 +12,7 @@
       ]
     },
     "offline": {
-      "status": "REVIEW",
+      "status": "PASS",
       "evidence": [
         "docs/v2/acceptance/airgap-container.json",
         "docs/v2/acceptance/offline-score.json"

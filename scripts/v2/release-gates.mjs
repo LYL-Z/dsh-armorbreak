@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * AB2-M4-05/M4-10 release gate report.
  * Reads existing evidence only; never turns a missing run into PASS.
@@ -7,7 +7,7 @@ import { readFile, writeFile, readdir } from 'node:fs/promises'
 import { join } from 'node:path'
 
 async function readJson(path) {
-  try { return JSON.parse(await readFile(path, 'utf8')) } catch { return null }
+  try { return JSON.parse((await readFile(path, 'utf8')).replace(/^\uFEFF/, '')) } catch { return null }
 }
 
 const offline = await readJson('docs/v2/acceptance/offline-score.json')
@@ -54,3 +54,4 @@ const report = {
 }
 await writeFile('docs/v2/acceptance/release-gates.json', `${JSON.stringify(report, null, 2)}\n`)
 console.log(JSON.stringify({ releasable: report.releasable, gates: Object.fromEntries(Object.entries(report.gates).map(([key, value]) => [key, value.status])), mandatory: report.mandatoryM4 }, null, 2))
+
