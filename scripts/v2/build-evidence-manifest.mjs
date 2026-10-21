@@ -10,7 +10,7 @@ const dir = 'docs/v2/acceptance'
 const commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
 const files = {}
 for (const name of readdirSync(dir).sort()) {
-  if (name === 'evidence-manifest.json' || name === 'release-gates.json') continue
+  if (name === 'evidence-manifest.json' || name === 'release-gates.json' || name.endsWith('.log')) continue
   const full = join(dir, name)
   if (!statSync(full).isFile()) continue
   const relativePath = relative(root, full).replaceAll('\\', '/')
