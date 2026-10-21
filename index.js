@@ -326,6 +326,11 @@ export function createActionHandler(runtime) {
     try {
       const body = await readJsonBody(req)
       const action = String(body.action ?? '')
+      const uiDecision = await runtime.policyGateway.decide({ action: `ui.tasks.${action}`, identity: { kind: 'ui' }, permission: 'TASK' })
+      if (!uiDecision.allowed) {
+        denied(res, `${uiDecision.code}: ${uiDecision.reason}`)
+        return
+      }
       const session = resolveSessionWorkspace(runtime, req, '/armorbreak/actions')
       const workspaceRoot = session.workspace ?? runtime.lastWorkspace ?? runtime.defaultWorkspace()
       const ctx = runtime.workspace(workspaceRoot)
