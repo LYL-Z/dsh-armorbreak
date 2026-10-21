@@ -32,6 +32,7 @@ test('sync stages/activates one source and isolates a failed source', async () =
   assert.equal(good.state, 'SYNCED')
   assert.equal(good.activeTesting, false)
   assert.equal((await manager.cache.active('cloud')).version, good.activeVersion)
+  assert.ok(manager.list().find((item) => item.id === 'good').lastSyncedAt)
   const bad = await manager.sync('bad')
   assert.equal(bad.state, 'FAILED')
   assert.equal(network.state, 'OFFLINE')
