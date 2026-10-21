@@ -1,0 +1,19 @@
+﻿{
+    "schemaVersion":  "armorbreak.airgap/v1",
+    "generatedAt":  "2026-10-21T03:22:01.8483571-07:00",
+    "image":  "node@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f",
+    "networkMode":  "none",
+    "platform":  "linux/amd64 (Docker Desktop)",
+    "commands":  [
+                     "node --test tests/offline-core.test.mjs",
+                     "node scripts/v2/core-benchmark.mjs"
+                 ],
+    "results":  {
+                    "offlineCoreTests":  "3/3 PASS",
+                    "coreBenchmark":  "13/13 PASS",
+                    "coverage":  "13/62",
+                    "offlineRate":  "N/A"
+                },
+    "result":  "PASS_PARTIAL",
+    "reason":  "Real network-none container passed the static L0 boundary and 13 runnable Core scenarios; the frozen 62-scenario set and R_offline are not yet complete."
+}
