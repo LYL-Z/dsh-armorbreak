@@ -11,9 +11,10 @@ Base: `feature/armorbreak-v2` 路 2026-10-21
 | Offline core | `--network none` container, 62/62 target scenarios + 3/3 static gate | `airgap-container.json` | PASS |
 | 10 GiB streaming | sparse read, peak RSS 137.7 MB | `streaming-10gb.json` | PASS |
 | Security negatives | unknown action, model authorization, L3 deny, installer pre-approval, Origin/CSRF, replay | policy/approval/UI tests | PASS |
-| Performance | v2 measured; two >10% regressions vs v1.2 baseline | `performance-v2.json` | REVIEW |
+| Performance | same-host v1.2/v2 sequential comparison; no >10% regression | `performance-compare.json` | PASS |
 | macOS | not available on this host | 鈥?| N/A (not claimed) |
 | Desktop GUI model E2E | requires installed V2 bundle + GUI model call | `desktop-e2e.json` | REVIEW |
 
 The single skipped test is intentional: missing external tool must produce actionable guidance, not silently downgrade. macOS was not run and is never reported as PASS.
+
 

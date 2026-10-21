@@ -1,0 +1,176 @@
+{
+  "schema": "armorbreak/benchmarks/v1",
+  "generatedAt": "2026-10-21T11:23:43.109Z",
+  "environment": {
+    "node": "v24.16.0",
+    "platform": "win32",
+    "arch": "x64",
+    "cpus": 24,
+    "cpu": "Intel(R) Core(TM) Ultra 9 290HX Plus",
+    "totalMemGiB": 63.68,
+    "capabilityCount": 46,
+    "domainCount": 8,
+    "sample": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\abm-bench-ws-1OW35x\\sample.exe",
+    "sampleBytes": 360448,
+    "pcapBytes": 700024,
+    "pcapPackets": 5000,
+    "sastFiles": 200,
+    "reportFindings": 50,
+    "reportEvidence": 100,
+    "notes": "parser rows measure capability.run on a prepared bounded input; runner rows include task state transitions, evidence/finding persistence and audit logging"
+  },
+  "results": [
+    {
+      "name": "registry-cold-start",
+      "iterations": 1,
+      "totalMs": 99,
+      "meanMs": 99,
+      "p50Ms": 99,
+      "p95Ms": 99,
+      "p99Ms": 99,
+      "opsPerSec": 10.1,
+      "capabilityCount": 46,
+      "domainCount": 8
+    },
+    {
+      "name": "binary.identify (parser)",
+      "iterations": 60,
+      "totalMs": 121.37,
+      "meanMs": 2.023,
+      "p50Ms": 1.966,
+      "p95Ms": 2.559,
+      "p99Ms": 3.034,
+      "opsPerSec": 494.3,
+      "mode": "parser",
+      "capability": "binary.identify"
+    },
+    {
+      "name": "binary.strings (parser)",
+      "iterations": 60,
+      "totalMs": 123.85,
+      "meanMs": 2.064,
+      "p50Ms": 1.996,
+      "p95Ms": 2.527,
+      "p99Ms": 4.087,
+      "opsPerSec": 484.5,
+      "mode": "parser",
+      "capability": "binary.strings"
+    },
+    {
+      "name": "forensics.hash (parser)",
+      "iterations": 80,
+      "totalMs": 79.08,
+      "meanMs": 0.989,
+      "p50Ms": 0.967,
+      "p95Ms": 1.122,
+      "p99Ms": 1.167,
+      "opsPerSec": 1011.6,
+      "mode": "parser",
+      "capability": "forensics.hash"
+    },
+    {
+      "name": "binary.entropy (parser)",
+      "iterations": 60,
+      "totalMs": 181.92,
+      "meanMs": 3.032,
+      "p50Ms": 2.995,
+      "p95Ms": 3.435,
+      "p99Ms": 3.671,
+      "opsPerSec": 329.8,
+      "mode": "parser",
+      "capability": "binary.entropy"
+    },
+    {
+      "name": "forensics.hash (through runner)",
+      "iterations": 20,
+      "totalMs": 943.74,
+      "meanMs": 47.187,
+      "p50Ms": 47.659,
+      "p95Ms": 49.113,
+      "p99Ms": 49.574,
+      "opsPerSec": 21.2,
+      "mode": "runner",
+      "capability": "forensics.hash"
+    },
+    {
+      "name": "network.pcap_overview (parser)",
+      "iterations": 30,
+      "totalMs": 287.37,
+      "meanMs": 9.579,
+      "p50Ms": 9.237,
+      "p95Ms": 12.626,
+      "p99Ms": 16.472,
+      "opsPerSec": 104.4,
+      "mode": "parser",
+      "capability": "network.pcap_overview"
+    },
+    {
+      "name": "network.flows (parser)",
+      "iterations": 30,
+      "totalMs": 324.59,
+      "meanMs": 10.82,
+      "p50Ms": 11.065,
+      "p95Ms": 12.749,
+      "p99Ms": 13.363,
+      "opsPerSec": 92.4,
+      "mode": "parser",
+      "capability": "network.flows"
+    },
+    {
+      "name": "sast.scan (parser)",
+      "iterations": 10,
+      "totalMs": 1231.09,
+      "meanMs": 123.109,
+      "p50Ms": 121.177,
+      "p95Ms": 136.859,
+      "p99Ms": 136.859,
+      "opsPerSec": 8.1,
+      "mode": "parser",
+      "capability": "sast.scan"
+    },
+    {
+      "name": "report-markdown",
+      "iterations": 20,
+      "totalMs": 117.77,
+      "meanMs": 5.888,
+      "p50Ms": 5.764,
+      "p95Ms": 6.525,
+      "p99Ms": 6.737,
+      "opsPerSec": 169.8
+    },
+    {
+      "name": "report-html",
+      "iterations": 20,
+      "totalMs": 122.26,
+      "meanMs": 6.113,
+      "p50Ms": 5.786,
+      "p95Ms": 6.514,
+      "p99Ms": 12.43,
+      "opsPerSec": 163.6
+    },
+    {
+      "name": "report-sarif",
+      "iterations": 20,
+      "totalMs": 106.34,
+      "meanMs": 5.317,
+      "p50Ms": 5.335,
+      "p95Ms": 5.772,
+      "p99Ms": 5.938,
+      "opsPerSec": 188.1
+    },
+    {
+      "name": "BinaryStaticAnalysis-workflow",
+      "iterations": 5,
+      "totalMs": 2321.04,
+      "meanMs": 464.207,
+      "p50Ms": 464.788,
+      "p95Ms": 470.497,
+      "p99Ms": 470.497,
+      "opsPerSec": 2.2
+    }
+  ],
+  "memory": {
+    "rssMiB": 267.6,
+    "heapUsedMiB": 25.7
+  }
+}

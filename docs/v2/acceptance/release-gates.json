@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.release-gates/v1",
-  "generatedAt": "2026-10-21T11:21:41.219Z",
+  "generatedAt": "2026-10-21T11:24:50.253Z",
   "branch": "feature/armorbreak-v2",
   "gates": {
     "security": {
@@ -33,11 +33,12 @@
       "reason": "v1.2 tests pass; real Desktop GUI+model E2E not run"
     },
     "performance": {
-      "status": "REVIEW",
-      "reason": "sast +23%, workflow +14% vs v1.2 baseline; profile pending",
+      "status": "PASS",
+      "reason": "same-host sequential v1.2/v2 comparison; no >10% regression",
       "evidence": [
-        "docs/v2/acceptance/performance-v2.json",
-        "docs/v2/acceptance/benchmark-v1.2.log"
+        "docs/v2/acceptance/performance-compare.json",
+        "docs/v2/acceptance/performance-v12-now.json",
+        "docs/v2/acceptance/performance-v2-rerun2.json"
       ],
       "measured": true
     }

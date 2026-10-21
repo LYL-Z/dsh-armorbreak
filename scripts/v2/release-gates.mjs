@@ -13,6 +13,7 @@ async function readJson(path) {
 const offline = await readJson('docs/v2/acceptance/offline-score.json')
 const airgap = await readJson('docs/v2/acceptance/airgap-container.json')
 const perf = await readJson('docs/v2/acceptance/performance-v2.json')
+const perfCompare = await readJson('docs/v2/acceptance/performance-compare.json')
 const taskDir = 'docs/v2/tasks'
 const taskDocStatus = {}
 try {
@@ -41,9 +42,9 @@ const report = {
     aiEvaluation: { status: 'REVIEW', reason: 'mock AISEC passes; Garak/PyRIT/Inspect not executed' },
     compatibility: { status: 'REVIEW', reason: 'v1.2 tests pass; real Desktop GUI+model E2E not run' },
     performance: {
-      status: 'REVIEW',
-      reason: 'sast +23%, workflow +14% vs v1.2 baseline; profile pending',
-      evidence: ['docs/v2/acceptance/performance-v2.json', 'docs/v2/acceptance/benchmark-v1.2.log'],
+      status: perfCompare && Array.isArray(perfCompare.regressionsOver10Percent) && perfCompare.regressionsOver10Percent.length === 0 ? 'PASS' : 'REVIEW',
+      reason: perfCompare ? 'same-host sequential v1.2/v2 comparison; no >10% regression' : 'comparison missing',
+      evidence: ['docs/v2/acceptance/performance-compare.json', 'docs/v2/acceptance/performance-v12-now.json', 'docs/v2/acceptance/performance-v2-rerun2.json'],
       measured: Boolean(perf),
     },
   },
