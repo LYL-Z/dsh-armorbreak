@@ -1,10 +1,6 @@
 ---
 name: armorbreak-ai-eval
-description: Design and run authorized AISEC evaluations with mock/live labels, prompt-injection boundaries and evidence.
-license: MIT
-metadata:
-  product: ArmorBreak
-  risk: L0-first
+description: "Design and run authorized AISEC evaluations with mock/live labels, prompt-injection boundaries and evidence."
 ---
 
 # ArmorBreak ai-eval

@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "armorbreak.mcp-skills-inspector/v1",
+  "generatedAt": "2026-10-21T16:26:31.606Z",
+  "inspector": "@modelcontextprotocol/inspector 2.11.0",
+  "method": "skills/list --verify",
+  "exitCode": 0,
+  "skillCount": 7,
+  "verified": 7,
+  "conformanceErrors": 0,
+  "digestMismatches": 0,
+  "skills": [
+    {
+      "name": "armorbreak-ai-eval",
+      "uri": "file:///D:/dsh-ABM/armorbreak/skills/armorbreak-ai-eval/SKILL.md",
+      "ok": true,
+      "status": "verified",
+      "digest": "sha256:6fdfc82f1f6b2fda649b02c2c65c08e52bf100ac96bebd45604b6d1ebebff763"
+    },
+    {
+      "name": "armorbreak-android",
+      "uri": "file:///D:/dsh-ABM/armorbreak/skills/armorbreak-android/SKILL.md",
+      "ok": true,
+      "status": "verified",
+      "digest": "sha256:4694829698c842b6ff88dfad096fe5d2d24d6e6afe06918ed8d6815125afbcaf"
+    },
+    {
+      "name": "armorbreak-binary",
+      "uri": "file:///D:/dsh-ABM/armorbreak/skills/armorbreak-binary/SKILL.md",
+      "ok": true,
+      "status": "verified",
+      "digest": "sha256:510d76e693054d2078c5b42d33c4e749498453d011fa7e25f60b3e2f6108d331"
+    },
+    {
+      "name": "armorbreak-pcap",
+      "uri": "file:///D:/dsh-ABM/armorbreak/skills/armorbreak-pcap/SKILL.md",
+      "ok": true,
+      "status": "verified",
+      "digest": "sha256:cad7f4b6eb1205d624d226cf04ac27737890ab1f137abd15d49c4c704f094229"
+    },
+    {
+      "name": "armorbreak-report",
+      "uri": "file:///D:/dsh-ABM/armorbreak/skills/armorbreak-report/SKILL.md",
+      "ok": true,
+      "status": "verified",
+      "digest": "sha256:dfbc8767afea837270cae713e3af86c614ebbf81dca82e60287da2fe116fda96"
+    },
+    {
+      "name": "armorbreak-sast",
+      "uri": "file:///D:/dsh-ABM/armorbreak/skills/armorbreak-sast/SKILL.md",
+      "ok": true,
+      "status": "verified",
+      "digest": "sha256:06b7b1f9f64febdd5db11db8f5b15119fbdb9e62a05e65ea23dbf1d37fad4939"
+    },
+    {
+      "name": "armorbreak-triage",
+      "uri": "file:///D:/dsh-ABM/armorbreak/skills/armorbreak-triage/SKILL.md",
+      "ok": true,
+      "status": "verified",
+      "digest": "sha256:42b36aa7476a5fa6e31beefc0bac123fe1d738b9e434f372753bf76aff13b3e2"
+    }
+  ],
+  "result": "PASS",
+  "rawSha256": "bb6b986dc6bee9a1055008a40b09d5e4b29e0a8ee98cef799aee077ab92e06fa",
+  "limitations": [
+    "Official SEP-2640 conformance/digest verification only.",
+    "Positive/negative trigger examples are still tracked separately."
+  ]
+}

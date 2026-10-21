@@ -4,7 +4,7 @@ Base: `feature/abu-universal` 路 2026-10-21
 
 | Gate | Scope | Evidence | Status |
 |---|---|---|---|
-| Unit / integration | `node --test` 311 tests, 310 pass / 1 skipped (external-tool guidance) | `test-report.json` + raw `test-report.tap` | PASS |
+| Unit / integration | `node --test` 312 tests, 311 pass / 1 skipped (external-tool guidance) | `test-report.json` + raw `test-report.tap` | PASS |
 | Ubuntu 24 Node 24 | full suite, offline-core, benchmark | GitHub Actions | PASS |
 | Windows Node 24 | full suite, offline-core, benchmark | GitHub Actions | PASS |
 | Docker L1 | real daemon + isolation verification | `live-docker` + persisted self-test | PASS |

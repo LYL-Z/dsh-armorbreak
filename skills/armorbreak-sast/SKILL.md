@@ -1,10 +1,6 @@
 ---
 name: armorbreak-sast
-description: Review authorized source code and dependencies with Semgrep/Trivy/Syft, separating observed facts from hypotheses.
-license: MIT
-metadata:
-  product: ArmorBreak
-  risk: L0-first
+description: "Review authorized source code and dependencies with Semgrep/Trivy/Syft, separating observed facts from hypotheses."
 ---
 
 # ArmorBreak sast

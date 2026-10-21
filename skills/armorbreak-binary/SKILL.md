@@ -1,10 +1,6 @@
 ---
 name: armorbreak-binary
-description: Perform offline static binary triage: format, structure, symbols, strings, hashes and suspicious API categories.
-license: MIT
-metadata:
-  product: ArmorBreak
-  risk: L0-first
+description: "Perform offline static binary triage: format, structure, symbols, strings, hashes and suspicious API categories."
 ---
 
 # ArmorBreak binary

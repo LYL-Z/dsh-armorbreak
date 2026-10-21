@@ -1,10 +1,6 @@
 ---
 name: armorbreak-pcap
-description: Analyze authorized packet captures offline, producing bounded flow/DNS/HTTP/TLS observations and evidence.
-license: MIT
-metadata:
-  product: ArmorBreak
-  risk: L0-first
+description: "Analyze authorized packet captures offline, producing bounded flow/DNS/HTTP/TLS observations and evidence."
 ---
 
 # ArmorBreak pcap

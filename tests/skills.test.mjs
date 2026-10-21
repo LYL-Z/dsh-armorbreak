@@ -17,7 +17,7 @@ test('seven standard Agent Skills have valid frontmatter', async () => {
       const description = /^description:\s*(.+)$/m.exec(front)?.[1]
       assert.equal(name, dir.name)
       assert.ok(description && description.length >= 20)
-      assert.match(front, /^license:\s*MIT$/m)
+      assert.doesNotMatch(front, /^(license|metadata):/m)
       skills.push(name)
     } catch (error) {
       if (error.code === 'ENOENT') continue

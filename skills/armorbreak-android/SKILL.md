@@ -1,10 +1,6 @@
 ---
 name: armorbreak-android
-description: Inspect an authorized APK/DEX structure, manifest, resources and decompilation boundaries without executing the app.
-license: MIT
-metadata:
-  product: ArmorBreak
-  risk: L0-first
+description: "Inspect an authorized APK/DEX structure, manifest, resources and decompilation boundaries without executing the app."
 ---
 
 # ArmorBreak android

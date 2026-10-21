@@ -7,12 +7,35 @@
  */
 import { randomUUID } from 'node:crypto'
 import { createInterface } from 'node:readline'
-import { pathToFileURL } from 'node:url'
+import { pathToFileURL, fileURLToPath } from 'node:url'
+import { createHash } from 'node:crypto'
+import { readFileSync, readdirSync } from 'node:fs'
+import { join, resolve, sep } from 'node:path'
 import { createEngine } from '../engine-node/index.js'
 
 const PROTOCOL_VERSION = '2025-06-18'
 const SERVER_VERSION = '0.1.0-p2'
 const MAX_LINE = 1024 * 1024
+const SKILLS_ROOT = resolve(fileURLToPath(new URL('../../skills/', import.meta.url)))
+function loadSkills() {
+  const out = []
+  for (const dir of readdirSync(SKILLS_ROOT, { withFileTypes: true })) {
+    if (!dir.isDirectory()) continue
+    const file = join(SKILLS_ROOT, dir.name, 'SKILL.md')
+    try {
+      const text = readFileSync(file, 'utf8')
+      const match = /^---\n([\s\S]*?)\n---\n/.exec(text)
+      if (!match) continue
+      const name = /^name:\s*(\S+)$/m.exec(match[1])?.[1]
+      let description = /^description:\s*(.+)$/m.exec(match[1])?.[1]
+      if (description) description = description.replace(/^\"|\"$/g, '')
+      if (!name || !description) continue
+      const uri = pathToFileURL(file).href
+      out.push({ uri, frontmatter: { name, description }, resources: [{ uri, size: Buffer.byteLength(text), digest: `sha256:${createHash('sha256').update(text).digest('hex')}` }] })
+    } catch { /* missing SKILL.md */ }
+  }
+  return out
+}
 
 const TOOLS = [
   {
@@ -81,13 +104,32 @@ export class McpServer {
         jsonrpc: '2.0', id: message.id ?? null,
         result: {
           protocolVersion: PROTOCOL_VERSION,
-          capabilities: { tools: { listChanged: false }, resources: { listChanged: false }, prompts: { listChanged: false } },
+          capabilities: { tools: { listChanged: false }, resources: { listChanged: false }, prompts: { listChanged: false }, extensions: { 'io.modelcontextprotocol/skills': { directoryRead: false } } },
           serverInfo: { name: 'armorbreak', version: SERVER_VERSION },
         },
       }
     }
     if (message.method === 'notifications/initialized') return null
     if (!this.initialized) return error(message.id ?? null, -32002, 'server not initialized')
+    if (message.method === 'skills/list') {
+      return { jsonrpc: '2.0', id: message.id ?? null, result: { skills: loadSkills() } }
+    }
+    if (message.method === 'skills/get') {
+      const found = loadSkills().find((skill) => skill.uri === String(message.params?.uri ?? ''))
+      if (!found) return error(message.id ?? null, -32602, 'unknown skill uri')
+      return { jsonrpc: '2.0', id: message.id ?? null, result: { skill: found } }
+    }
+    if (message.method === 'resources/read') {
+      const uri = String(message.params?.uri ?? '')
+      if (uri.startsWith('file://')) {
+        let path
+        try { path = fileURLToPath(uri) } catch { return error(message.id ?? null, -32602, 'invalid file uri') }
+        if (!resolve(path).startsWith(SKILLS_ROOT + sep) || !path.endsWith('SKILL.md')) return error(message.id ?? null, -32602, 'skill uri outside skills root')
+        try {
+          return { jsonrpc: '2.0', id: message.id ?? null, result: { contents: [{ uri, mimeType: 'text/markdown', text: readFileSync(path, 'utf8') }] } }
+        } catch { return error(message.id ?? null, -32602, 'skill file not readable') }
+      }
+    }
     if (message.method === 'resources/list') {
       const tasks = await this.engine.listTasks(this.context(message.id))
       return {

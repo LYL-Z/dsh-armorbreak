@@ -1,10 +1,6 @@
 ---
 name: armorbreak-report
-description: Generate an evidence-linked ArmorBreak report with findings, limitations and reproducible conditions.
-license: MIT
-metadata:
-  product: ArmorBreak
-  risk: L0-first
+description: "Generate an evidence-linked ArmorBreak report with findings, limitations and reproducible conditions."
 ---
 
 # ArmorBreak report

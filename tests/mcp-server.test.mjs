@@ -79,3 +79,20 @@ test('MCP armorbreak_analyze performs a real L0 task and report', async () => {
   assert.equal(outside.result.isError, true)
   await engine.close()
 })
+
+
+test('MCP exposes the seven Agent Skills with digests and readable SKILL.md', async () => {
+  const { server, engine } = await fixture()
+  await server.handleLine(JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize' }))
+  const listed = JSON.parse(await server.handleLine(JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'skills/list' })))
+  assert.equal(listed.result.skills.length, 7)
+  for (const skill of listed.result.skills) {
+    assert.match(skill.uri, /SKILL\.md$/)
+    assert.match(skill.resources[0].digest, /^sha256:[a-f0-9]{64}$/)
+    const read = JSON.parse(await server.handleLine(JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'resources/read', params: { uri: skill.uri } })))
+    assert.match(read.result.contents[0].text, /^---\n/)
+  }
+  const got = JSON.parse(await server.handleLine(JSON.stringify({ jsonrpc: '2.0', id: 4, method: 'skills/get', params: { uri: listed.result.skills[0].uri } })))
+  assert.equal(got.result.skill.uri, listed.result.skills[0].uri)
+  await engine.close()
+})

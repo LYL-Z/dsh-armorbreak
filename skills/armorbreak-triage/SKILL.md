@@ -1,10 +1,6 @@
 ---
 name: armorbreak-triage
-description: Triage an authorized security artifact or workspace and decide the next safe analysis step.
-license: MIT
-metadata:
-  product: ArmorBreak
-  risk: L0-first
+description: "Triage an authorized security artifact or workspace and decide the next safe analysis step."
 ---
 
 # ArmorBreak triage
