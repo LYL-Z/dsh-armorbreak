@@ -1,0 +1,8 @@
+{
+  "name": "@armorbreak/engine-node",
+  "version": "0.1.0-p1",
+  "private": true,
+  "type": "module",
+  "description": "Node Engine with trusted principals, workspace ACL, bounded tasks and idempotent requests",
+  "exports": "./index.js"
+}
