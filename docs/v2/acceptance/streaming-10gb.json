@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "armorbreak.streaming-proof/v1",
+  "generatedAt": "2026-10-21T10:18:35.042Z",
+  "fileBytes": 10737418240,
+  "statBytes": 10737418240,
+  "hashedBytes": 10737418240,
+  "sha256": "732377e7f4a2abdc13ddfa1eb4c9c497fd2a2b294674d056cf51581b47dd586d",
+  "elapsedMs": 6751,
+  "peakRssBytes": 137674752,
+  "rssBudgetBytes": 536870912,
+  "withinRssBudget": true,
+  "method": "fs.truncate sparse file + createReadStream 1 MiB + SHA-256",
+  "platform": "win32",
+  "node": "v24.16.0"
+}
