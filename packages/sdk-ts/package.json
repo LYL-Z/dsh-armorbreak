@@ -1,0 +1,14 @@
+{
+  "name": "@armorbreak/sdk-ts",
+  "version": "0.1.0-p2",
+  "private": true,
+  "type": "module",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./contract": "./schemas/client-contract.json"
+  }
+}
