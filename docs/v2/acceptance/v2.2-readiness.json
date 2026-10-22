@@ -1,10 +1,11 @@
 {
   "schemaVersion": "armorbreak.v2-readiness/v1",
-  "commit": "77dd570ae8bb8885110e0831a0cfbd30ce926997",
+  "commit": "7b158cb9ae07ea28165b9f93a1a8445088800d41",
   "preReleaseReady": true,
   "gaReady": false,
   "ready": true,
-  "releaseTag": true,
+  "preReleaseTag": true,
+  "releaseTag": false,
   "taskStatus": {
     "ABU-101": "TESTED",
     "ABU-102": "TESTED",
@@ -369,6 +370,6 @@
   "artifact": {
     "version": "2.0.1",
     "signed": false,
-    "sha256": "fad179c6fd96b3f3a9aadd4534cc3321a74f25bf20d9ed534a6ec463570ea133"
+    "sha256": "d59d1e5e10eec6572cc7d03c439d158276fa4aaaa9fb48ab634cbcca570d2c23"
   }
 }
