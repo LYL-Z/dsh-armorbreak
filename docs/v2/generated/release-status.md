@@ -5,7 +5,6 @@ Release tag: **false**
 
 ## Blockers
 
-- `ABU-203_NOT_TESTED`: ABU-203 status=IN_PROGRESS
 - `ABU-206_NOT_TESTED`: ABU-206 status=IN_PROGRESS
 - `ABU-210_NOT_TESTED`: ABU-210 status=IN_PROGRESS
 - `ABU-301_NOT_TESTED`: ABU-301 status=IN_PROGRESS
