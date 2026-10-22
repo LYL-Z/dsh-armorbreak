@@ -131,7 +131,7 @@ const manifest = {
 writeFileSync(join(outDir, `${name}.manifest.json`), `${JSON.stringify(manifest, null, 2)}\n`)
 mkdirSync(resolve(evidencePath, '..'), { recursive: true })
 writeFileSync(evidencePath, `${JSON.stringify(manifest, null, 2)}\n`)
-writeFileSync(join(root, 'docs/v2/acceptance/portable-artifact.json'), `${JSON.stringify({
+if (!process.argv.includes('--no-portable-evidence')) writeFileSync(join(root, 'docs/v2/acceptance/portable-artifact.json'), `${JSON.stringify({
   schemaVersion: 'armorbreak.portable-artifact/v1', generatedAt: manifest.generatedAt, sourceCommit: commit, version: pkg.version,
   artifact: basename(first.target), bytes: first.bytes, sha256: first.sha256, sbom: basename(sbomPath),
   cleanRoom, signed: false,
