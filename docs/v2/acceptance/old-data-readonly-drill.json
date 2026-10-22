@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "armorbreak.old-data-drill/v1",
+  "generatedAt": "2026-10-22T11:54:42.333Z",
+  "commit": "77dd570ae8bb8885110e0831a0cfbd30ce926997",
+  "sourceRoot": "D:\\dsh-ABM\\armorbreak\\.armorbreak\\tasks",
+  "readOnly": true,
+  "sourceMutated": false,
+  "tasks": [
+    {
+      "id": "task_mvjewuhz_6d0bc96f",
+      "state": "COMPLETED",
+      "schemaVersion": "armorbreak/v2",
+      "taskSha256": "395b9020a79f58234dee0601e67f616becc1a6a269cafc691cbec02ef0c29c79",
+      "reportSha256": "9bf2cbe12c18ed7ae6684bf1d50a1e920ec063509513954e9014d39795faed8f",
+      "evidenceLines": 12,
+      "snapshotFiles": 4
+    },
+    {
+      "id": "task_mvjey0mk_d002525a",
+      "state": "COMPLETED",
+      "schemaVersion": "armorbreak/v2",
+      "taskSha256": "1e113ac9de8b216055615711715fc854e4c779ab1e78280be5cdcd9289ff485e",
+      "reportSha256": "96c664a076365bdb7a857fe1686e1963725f64972dffa6be494f205a7f3fdf54",
+      "evidenceLines": 11,
+      "snapshotFiles": 4
+    },
+    {
+      "id": "task_mvjf4409_3916dfb3",
+      "state": "COMPLETED",
+      "schemaVersion": "armorbreak/v2",
+      "taskSha256": "b883ea2fb11d6e146d80aba289580ef9c369ded86e94448072ca918bec9fc0c0",
+      "reportSha256": "f5dc24cd22419bb1c87577faeb4c8e0a704b82ab6a6bc2ba5a90bb9101f1116e",
+      "evidenceLines": 11,
+      "snapshotFiles": 4
+    }
+  ],
+  "migration": {
+    "source": "D:\\dsh-ABM\\armorbreak\\.armorbreak\\tasks\\task_mvjewuhz_6d0bc96f",
+    "target": "D:\\dsh-ABM\\temp\\abm-old-drill-bztaqA\\migrated",
+    "sourceUnchanged": true,
+    "targetFiles": 5,
+    "rollback": {
+      "target": "D:\\dsh-ABM\\temp\\abm-old-drill-bztaqA\\migrated",
+      "removed": true,
+      "removedFiles": 5
+    }
+  },
+  "faultInjection": {
+    "injected": true,
+    "message": "injected migration fault after copy",
+    "targetExists": false
+  },
+  "pass": true
+}

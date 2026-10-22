@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "armorbreak.claude-prep/v1",
+  "generatedAt": "2026-10-22T11:54:52.764Z",
+  "claudeVersion": "2.1.299 (Claude Code)",
+  "pluginValidation": {
+    "exitCode": 0,
+    "output": "Validating plugin manifest: D:\\dsh-ABM\\armorbreak\\plugins\\claude\\.claude-plugin\\plugin.json\n\n√ Validation passed\n"
+  },
+  "mcp": {
+    "exitCode": 0,
+    "armorbreakConnected": true,
+    "output": "Checking MCP server health…\n\nnode_repl: C:\\Users\\Lenovo\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\2f053e67fec2d258\\bin\\node_repl.exe  - × Failed to connect — CONNECTION_CLOSED: Connection closed\nblender-mcp: D:\\The Memory\\_uv-bin\\blender-mcp.exe  - √ Connected\narmorbreak: node D:\\dsh-ABM\\armorbreak\\packages\\mcp-server\\index.js - √ Connected\n\n"
+  },
+  "skills": {
+    "count": 7,
+    "names": [
+      "armorbreak-ai-eval",
+      "armorbreak-android",
+      "armorbreak-binary",
+      "armorbreak-pcap",
+      "armorbreak-report",
+      "armorbreak-sast",
+      "armorbreak-triage"
+    ]
+  },
+  "model": {
+    "exitCode": 1,
+    "blocked": true,
+    "output": "Not logged in · Please run /login\n\nClaude Code doesn't recognize the model \"deepseek-v4-pro\", so it assumes a context window of 200k tokens. Update Claude Code, or see https://code.claude.com/docs/en/model-config#correct-the-window-for-a-gateway-or-custom-model-id to set the window.\n[claude-code:unrecognized_model] {\"model\":\"deepseek-v4-pro\",\"query_source\":\"sdk\"}\n"
+  },
+  "result": "BLOCKED_EXTERNAL"
+}

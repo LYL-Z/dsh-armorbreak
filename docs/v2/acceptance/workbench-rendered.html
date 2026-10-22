@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ArmorBreak Workbench</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">ARMORBREAK · UNIVERSAL CORE</p>
+      <h1>ArmorBreak Workbench</h1>
+      <p class="subtitle">Hosts, providers, skills and evidence in one read-only console.</p>
+    </div>
+    <div class="top-actions">
+      <span id="status-dot" class="dot ok"></span>
+      <span id="status-label">connected</span>
+      <button id="refresh" type="button">Refresh</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="summary" aria-label="Summary">
+      <article class="metric"><span>Readiness</span><strong id="m-ready" class="pass-text">READY</strong><small id="m-ready-note">9 owner waivers</small></article>
+      <article class="metric"><span>Hosts L0</span><strong id="m-hosts">6/9</strong><small>real model tasks</small></article>
+      <article class="metric"><span>Providers</span><strong id="m-providers">6</strong><small>configured adapters</small></article>
+      <article class="metric"><span>Artifact</span><strong id="m-artifact">UNSIGNED</strong><small id="m-artifact-note">fad179c6fd96</small></article>
+    </section>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="hosts" role="tab">Hosts</button>
+      <button class="tab" data-tab="providers" role="tab">Providers</button>
+      <button class="tab" data-tab="skills" role="tab">Skills</button>
+      <button class="tab" data-tab="tasks" role="tab">Tasks</button>
+      <button class="tab" data-tab="evidence" role="tab">Evidence</button>
+      <button class="tab" data-tab="diagnostics" role="tab">Diagnostics</button>
+    </nav>
+
+    <section id="panel-hosts" class="panel active">
+      <div class="panel-head"><h2>Host compatibility</h2><p>Handshake and real model task state, never inferred from config alone.</p></div>
+      <div class="table-wrap"><table><thead><tr><th>Host</th><th>Version</th><th>Install</th><th>Handshake</th><th>Task</th><th>Evidence level</th></tr></thead><tbody id="hosts-body">
+    <tr class="clickable" data-host="0">
+      <td><strong>DSH</strong></td>
+      <td>DeepSeek Harness Desktop</td>
+      <td><span class="badge ">INSTALLED</span></td>
+      <td><span class="badge pass">PASS</span></td>
+      <td><span class="badge pass">L0_COMPLETED</span></td>
+      <td><span class="badge pass">real_verified</span></td>
+    </tr>
+    <tr class="clickable" data-host="1">
+      <td><strong>Codex</strong></td>
+      <td>codex-cli 0.154.0</td>
+      <td><span class="badge warn">INSTALLED_REAL_USER_CONFIG</span></td>
+      <td><span class="badge pass">PASS</span></td>
+      <td><span class="badge pass">L0_COMPLETED</span></td>
+      <td><span class="badge pass">real_verified</span></td>
+    </tr>
+    <tr class="clickable" data-host="2">
+      <td><strong>Claude Code</strong></td>
+      <td>2.1.299</td>
+      <td><span class="badge warn">USER_CONFIG_REGISTERED</span></td>
+      <td><span class="badge pass">PASS</span></td>
+      <td><span class="badge warn">NOT_RUN</span></td>
+      <td><span class="badge warn">mcp_verified_model_blocked</span></td>
+    </tr>
+    <tr class="clickable" data-host="3">
+      <td><strong>Hermes Agent</strong></td>
+      <td>0.19.0 (2026.7.20)</td>
+      <td><span class="badge warn">INSTALLED_REAL_USER_CONFIG</span></td>
+      <td><span class="badge pass">PASS</span></td>
+      <td><span class="badge pass">L0_COMPLETED</span></td>
+      <td><span class="badge pass">real_verified</span></td>
+    </tr>
+    <tr class="clickable" data-host="4">
+      <td><strong>Cursor</strong></td>
+      <td>3.17.8</td>
+      <td><span class="badge warn">USER_CONFIG_REGISTERED</span></td>
+      <td><span class="badge pass">PASS</span></td>
+      <td><span class="badge pass">L0_COMPLETED</span></td>
+      <td><span class="badge pass">real_verified</span></td>
+    </tr>
+    <tr class="clickable" data-host="5">
+      <td><strong>WorkBuddy</strong></td>
+      <td>5.5.2</td>
+      <td><span class="badge warn">USER_CONFIG_REGISTERED</span></td>
+      <td><span class="badge pass">PASS</span></td>
+      <td><span class="badge pass">L0_COMPLETED</span></td>
+      <td><span class="badge pass">real_verified</span></td>
+    </tr>
+    <tr class="clickable" data-host="6">
+      <td><strong>ZCode</strong></td>
+      <td>3.14.4</td>
+      <td><span class="badge warn">USER_CONFIG_REGISTERED</span></td>
+      <td><span class="badge pass">PASS</span></td>
+      <td><span class="badge ">HANDSHAKE_ONLY</span></td>
+      <td><span class="badge ">mcp_verified</span></td>
+    </tr>
+    <tr class="clickable" data-host="7">
+      <td><strong>Pi</strong></td>
+      <td>—</td>
+      <td><span class="badge ">NOT_INSTALLED</span></td>
+      <td><span class="badge warn">NOT_RUN</span></td>
+      <td><span class="badge warn">NOT_RUN</span></td>
+      <td><span class="badge ">not_installed</span></td>
+    </tr>
+    <tr class="clickable" data-host="8">
+      <td><strong>TRAE</strong></td>
+      <td>3.4.2</td>
+      <td><span class="badge warn">USER_CONFIG_REGISTERED</span></td>
+      <td><span class="badge pass">PASS</span></td>
+      <td><span class="badge pass">L0_COMPLETED</span></td>
+      <td><span class="badge pass">real_verified</span></td>
+    </tr></tbody></table></div>
+      <div id="host-detail" class="detail">Select a host to inspect limitations and evidence.</div>
+    </section>
+
+    <section id="panel-providers" class="panel">
+      <div class="panel-head"><h2>Provider capability matrix</h2><p>Credential status is boolean only; secrets never reach the browser.</p></div>
+      <div class="table-wrap"><table><thead><tr><th>Provider</th><th>Kind</th><th>Models</th><th>Tools</th><th>Credential</th><th>Action</th></tr></thead><tbody id="providers-body">
+    <tr class="clickable" data-provider="0">
+      <td><strong>openai-compatible</strong></td>
+      <td>openai-compatible</td>
+      <td>gpt-4.1</td>
+      <td><span class="badge pass">yes</span></td>
+      <td><span class="badge bad">missing</span></td>
+      <td><button type="button" data-diagnose="openai-compatible">Diagnose</button></td>
+    </tr>
+    <tr class="clickable" data-provider="1">
+      <td><strong>openai-responses</strong></td>
+      <td>openai-responses</td>
+      <td>gpt-5</td>
+      <td><span class="badge pass">yes</span></td>
+      <td><span class="badge bad">missing</span></td>
+      <td><button type="button" data-diagnose="openai-responses">Diagnose</button></td>
+    </tr>
+    <tr class="clickable" data-provider="2">
+      <td><strong>anthropic</strong></td>
+      <td>anthropic</td>
+      <td>claude-sonnet-4-5</td>
+      <td><span class="badge pass">yes</span></td>
+      <td><span class="badge bad">missing</span></td>
+      <td><button type="button" data-diagnose="anthropic">Diagnose</button></td>
+    </tr>
+    <tr class="clickable" data-provider="3">
+      <td><strong>gemini</strong></td>
+      <td>gemini</td>
+      <td>gemini-2.5-pro</td>
+      <td><span class="badge pass">yes</span></td>
+      <td><span class="badge bad">missing</span></td>
+      <td><button type="button" data-diagnose="gemini">Diagnose</button></td>
+    </tr>
+    <tr class="clickable" data-provider="4">
+      <td><strong>ollama</strong></td>
+      <td>ollama</td>
+      <td>qwen3.5:4b</td>
+      <td><span class="badge pass">yes</span></td>
+      <td><span class="badge ">none</span></td>
+      <td><button type="button" data-diagnose="ollama">Diagnose</button></td>
+    </tr>
+    <tr class="clickable" data-provider="5">
+      <td><strong>local</strong></td>
+      <td>local</td>
+      <td>local-model</td>
+      <td><span class="badge pass">yes</span></td>
+      <td><span class="badge ">none</span></td>
+      <td><button type="button" data-diagnose="local">Diagnose</button></td>
+    </tr></tbody></table></div>
+      <div id="provider-detail" class="detail">Select a provider to inspect transport and credential requirements.</div>
+    </section>
+
+    <section id="panel-skills" class="panel">
+      <div class="panel-head"><h2>Skills and plugins</h2><p>Native Agent Skills shipped with this bundle.</p></div>
+      <div id="skills-list" class="cards-list"><article class="card"><h3>armorbreak-ai-eval</h3><p>Design and run authorized AISEC evaluations with mock/live labels, prompt-injection boundaries and evidence.</p></article><article class="card"><h3>armorbreak-android</h3><p>Inspect an authorized APK/DEX structure, manifest, resources and decompilation boundaries without executing the app.</p></article><article class="card"><h3>armorbreak-binary</h3><p>Perform offline static binary triage: format, structure, symbols, strings, hashes and suspicious API categories.</p></article><article class="card"><h3>armorbreak-pcap</h3><p>Analyze authorized packet captures offline, producing bounded flow/DNS/HTTP/TLS observations and evidence.</p></article><article class="card"><h3>armorbreak-report</h3><p>Generate an evidence-linked ArmorBreak report with findings, limitations and reproducible conditions.</p></article><article class="card"><h3>armorbreak-sast</h3><p>Review authorized source code and dependencies with Semgrep/Trivy/Syft, separating observed facts from hypotheses.</p></article><article class="card"><h3>armorbreak-triage</h3><p>Triage an authorized security artifact or workspace and decide the next safe analysis step.</p></article></div>
+    </section>
+
+    <section id="panel-tasks" class="panel">
+      <div class="panel-head"><h2>Task status</h2><p>Machine-readable task state; status text alone is not a GA claim.</p></div>
+      <div class="table-wrap"><table><thead><tr><th>Task</th><th>Status</th><th>Acceptance</th><th>Real endpoint</th></tr></thead><tbody id="tasks-body">
+    <tr><td><strong>ABU-001</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-002</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-003</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-004</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-005</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-006</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-007</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-101</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-102</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-103</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-104</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-105</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-106</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-107</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-108</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-109</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-201</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-202</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-203</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-204</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-205</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-206</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-207</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-208</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-209</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-210</strong></td><td><span class="badge ">IN_PROGRESS</span></td><td>PARTIAL</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-211</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-301</strong></td><td><span class="badge pass">HOST_VERIFIED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-302</strong></td><td><span class="badge warn">NOT_STARTED</span></td><td>NOT_STARTED</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-303</strong></td><td><span class="badge ">IN_PROGRESS</span></td><td>PARTIAL</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-304</strong></td><td><span class="badge pass">HOST_VERIFIED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-305</strong></td><td><span class="badge pass">HOST_VERIFIED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-306</strong></td><td><span class="badge pass">HOST_VERIFIED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-307</strong></td><td><span class="badge warn">NOT_STARTED</span></td><td>NOT_STARTED</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-308</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-309</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-310</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-311</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS_MOCK_REAL_BLOCKED</td><td><span class="badge warn">BLOCKED_EXTERNAL</span></td></tr>
+    <tr><td><strong>ABU-312</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS_LOCAL_REAL_BLOCKED</td><td><span class="badge warn">BLOCKED_EXTERNAL</span></td></tr>
+    <tr><td><strong>ABU-313</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS_MOCK_REAL_BLOCKED</td><td><span class="badge warn">BLOCKED_EXTERNAL</span></td></tr>
+    <tr><td><strong>ABU-314</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS_MOCK_REAL_BLOCKED</td><td><span class="badge warn">BLOCKED_EXTERNAL</span></td></tr>
+    <tr><td><strong>ABU-315</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-316</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-317</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-318</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS_MOCK_REAL_BLOCKED</td><td><span class="badge warn">BLOCKED_EXTERNAL</span></td></tr>
+    <tr><td><strong>ABU-401</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-402</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS_ENGINEERING_HOST_INSTALL_BLOCKED</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-403</strong></td><td><span class="badge ">IN_PROGRESS</span></td><td>BLOCKED_EXTERNAL</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-404</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-405</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-406</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-407</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-408</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS_BUILD_PRODUCTION_SIGNATURE_BLOCKED</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-409</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS_ENGINEERING_EXTERNAL_REVIEW</td><td><span class="badge ">not-required</span></td></tr></tbody></table></div>
+    </section>
+
+    <section id="panel-evidence" class="panel">
+      <div class="panel-head"><h2>Evidence center</h2><p>Commit-bound evidence and residual limitations.</p></div>
+      <div class="cards-list" id="evidence-list"><article class="card"><h3>Host model E2E</h3><p>Cursor, WorkBuddy and TRAE real L0 tasks; see docs/v2/acceptance/host-model-e2e-2026-10-22.json</p></article><article class="card"><h3>Provider live Ollama</h3><p>Local chat, SSE and tool loop; see docs/v2/acceptance/provider-live-ollama.json</p></article><article class="card"><h3>Test report</h3><p>Commit-bound raw TAP and test-report.json in docs/v2/acceptance</p></article><article class="card"><h3>Release readiness</h3><p>ready=true; blockers=0; waived=9</p></article></div>
+    </section>
+
+    <section id="panel-diagnostics" class="panel">
+      <div class="panel-head"><h2>API diagnostics</h2><p>Configuration diagnostics only; a live provider call requires a real credential and explicit test.</p></div>
+      <div class="diagnose-row"><select id="diag-provider"><option value="openai-compatible">openai-compatible · openai-compatible</option><option value="openai-responses">openai-responses · openai-responses</option><option value="anthropic">anthropic · anthropic</option><option value="gemini">gemini · gemini</option><option value="ollama">ollama · ollama</option><option value="local">local · local</option></select><button id="diag-run" type="button">Run diagnostic</button></div>
+      <pre id="diag-output" class="output">Choose a provider.</pre>
+    </section>
+  </main>
+  <footer>Read-only Workbench · no secrets rendered · <span id="generated">generated 2026-10-22T11:55:11.287Z</span></footer>
+  <script src="/app.js"></script>
+
+
+</body></html>

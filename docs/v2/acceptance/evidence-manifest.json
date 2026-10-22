@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.evidence-manifest/v1",
-  "commit": "5907b604a183f07e945d310dbc6daa813f72727a",
-  "generatedAt": "2026-10-22T11:02:59.021Z",
+  "commit": "77dd570ae8bb8885110e0831a0cfbd30ce926997",
+  "generatedAt": "2026-10-22T11:55:44.620Z",
   "files": {
     "docs/v2/acceptance/airgap-container.json": {
       "sha256": "967dc9c1443f006ac5e6552b0b080c797ef7f906239d049b06e95f522ad24397",
@@ -30,6 +30,10 @@
     "docs/v2/acceptance/claude-plugin-validation.json": {
       "sha256": "fb23b48c6b6b67ece3a9e440ee28d4046b7976faa0b663e59302837a33b59add",
       "size": 661
+    },
+    "docs/v2/acceptance/claude-prep.json": {
+      "sha256": "d9e44fb609b1ccefc9d803d657751271e99d5eebe487e2bf4bc4fee84ebca012",
+      "size": 1525
     },
     "docs/v2/acceptance/clean-room.json": {
       "sha256": "bf608c584985b765a104d10c7cccf5f579eb49487c155fb0c5632a5c5fd982bb",
@@ -183,6 +187,10 @@
       "sha256": "e1b987935b3b20e4c2d8e456458c9e1153c50113b806fd0e0f8f9fbf156bfb4c",
       "size": 4544
     },
+    "docs/v2/acceptance/independent-review-pack.md": {
+      "sha256": "b33e5c52416198642c3953596c1b214689c64bd2377bb6e218945ca63cc57e0f",
+      "size": 1827
+    },
     "docs/v2/acceptance/intel-live.json": {
       "sha256": "eed5da5d710a03e55183866420713fb71d224d163801fd0f22fc5127652577da",
       "size": 1911
@@ -210,6 +218,10 @@
     "docs/v2/acceptance/offline-score.json": {
       "sha256": "16ef641c96eb0624bf206aa2b3627794cc5ffc68a25452191aa7ef203015b09d",
       "size": 39351
+    },
+    "docs/v2/acceptance/old-data-readonly-drill.json": {
+      "sha256": "2bffd20d78697f5335e7f5279d68f5b55ae2cc685feb6f13ac06129fa0e17e45",
+      "size": 1838
     },
     "docs/v2/acceptance/p1-dsh-l0-report.md": {
       "sha256": "a6d4ea9b230e83451ee85bce6bddec6810b55173ba2b585d03483461ca89ebee",
@@ -244,8 +256,8 @@
       "size": 4182
     },
     "docs/v2/acceptance/portable-artifact.json": {
-      "sha256": "1bca403253e7769a2171763fadc38009f89d59277eac8370b411eee46f96a140",
-      "size": 659
+      "sha256": "cf9dda265824905935b8779c7bf1befad8e7975f06fc152def546f317fc80a86",
+      "size": 650
     },
     "docs/v2/acceptance/provider-live-ollama.json": {
       "sha256": "c648a5763df6513561c61b542d3519bd31cf032feaa9b60ac012905c82083b31",
@@ -254,6 +266,10 @@
     "docs/v2/acceptance/pyrit-live.json": {
       "sha256": "1743ebab23f1f0bea41a848f5af0809e7703a655a8f94b461acb9b5a9f3a709a",
       "size": 601
+    },
+    "docs/v2/acceptance/release-build.json": {
+      "sha256": "44aeefb3bafb9aca57a68b689789e09641cffbafcdedb144120e9fd320a3d5b2",
+      "size": 1185
     },
     "docs/v2/acceptance/signoff-liuyilin.jpg": {
       "sha256": "b33e01ba38f89d115a13b623b3f08e4266d9848116ca3ef902bd024b72d9442e",
@@ -276,20 +292,32 @@
       "size": 1415
     },
     "docs/v2/acceptance/test-matrix.md": {
-      "sha256": "cb29fc4b28a6b8156f99b7d04e3bcd577b53f743b5c52fd7de9a64768ed3f3d0",
+      "sha256": "301fee5482e42f47d3acfdba8aae639b8f06c271a9b60daa6367a72eb62fa338",
       "size": 1370
     },
     "docs/v2/acceptance/test-report.json": {
-      "sha256": "b1c055127392f17731cb4e32ce2e8c806fe43b5d7b995bcd60dc046f4491d232",
+      "sha256": "ef47d74c811f010a48f72b75e7e450416a6c64fbfa4633291b4e34bda26c26c6",
       "size": 517
     },
     "docs/v2/acceptance/test-report.tap": {
-      "sha256": "e0664bfe628c5708684f5e517a30eb4508f23a6fb35e68d5624aff284fd8b160",
-      "size": 74384
+      "sha256": "b08bee621f5dfeec3821dcc11ef3d4c27c7d4f3af32b17395fa8a298bffc15d1",
+      "size": 77141
     },
     "docs/v2/acceptance/v2.2-readiness.json": {
-      "sha256": "dcea4b73b85c97384657bd567c821c02f74fa207ba84d508ca6cbf54d99fa1ea",
-      "size": 3776
+      "sha256": "b899232158767e936a1d488107184bc134db65bcd7f0e36a3def24d99eda888b",
+      "size": 8845
+    },
+    "docs/v2/acceptance/workbench-rendered.html": {
+      "sha256": "950403dc5bf3d879c0e0017ec41840080061ceac36ac024631617a06177fc716",
+      "size": 20359
+    },
+    "docs/v2/acceptance/workbench.html": {
+      "sha256": "d91b7fc27ef4bebe7cbcb4bdf597011e24f14ec49c0687b0fb6623b57f1332bf",
+      "size": 4252
+    },
+    "docs/v2/acceptance/workbench.png": {
+      "sha256": "d456f6702a8909e5ae3b2f0927254209fee770953f233eab90230de3a8c29441",
+      "size": 175961
     }
   }
 }
