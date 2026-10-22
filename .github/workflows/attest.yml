@@ -1,0 +1,56 @@
+name: Release attestation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, feat/attestation]
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
+jobs:
+  attest:
+    name: Build and attest candidate artifact
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Build deterministic candidate
+        run: node scripts/v2/build-release.mjs --out dist --evidence docs/v2/acceptance/release-build.json
+
+      - name: Attest artifact provenance
+        id: attest
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: dist/armorbreak-portable-*.tar.gz
+
+      - name: Verify attestation and write evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p docs/v2/acceptance
+          gh attestation verify dist/armorbreak-portable-*.tar.gz \
+            --repo "${{ github.repository }}" \
+            --format json > docs/v2/acceptance/github-attestation.json
+          node -e "const fs=require('fs');const a=JSON.parse(fs.readFileSync('docs/v2/acceptance/github-attestation.json'));console.log(JSON.stringify({attestationId:'${{ steps.attest.outputs.attestation-id }}',bundlePath:'${{ steps.attest.outputs.bundle-path }}',verified:true,count:Array.isArray(a)?a.length:1},null,2))"
+
+      - name: Upload attestation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-attestation
+          path: |
+            docs/v2/acceptance/github-attestation.json
+            dist/armorbreak-portable-*.tar.gz
+            dist/armorbreak-portable-*.tar.gz.sbom.cdx.json
+          if-no-files-found: error
