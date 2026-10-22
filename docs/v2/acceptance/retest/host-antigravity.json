@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "armorbreak.real-retest/v1",
+  "kind": "host",
+  "id": "antigravity",
+  "host": "Antigravity",
+  "at": "2026-10-22T13:47:28.297Z",
+  "run": false,
+  "status": "PREPARED",
+  "details": {
+    "version": "0.64.0"
+  }
+}

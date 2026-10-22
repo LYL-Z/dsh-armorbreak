@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "armorbreak.real-retest/v1",
+  "kind": "provider",
+  "id": "openai-responses",
+  "provider": "OpenAI Responses",
+  "at": "2026-10-22T13:47:30.763Z",
+  "run": false,
+  "model": "gpt-5",
+  "status": "PREPARED",
+  "details": {
+    "credentialEnv": "OPENAI_API_KEY",
+    "credentialPresent": false
+  }
+}

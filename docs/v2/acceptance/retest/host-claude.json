@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "armorbreak.real-retest/v1",
+  "kind": "host",
+  "id": "claude",
+  "host": "Claude Code",
+  "at": "2026-10-22T13:47:28.210Z",
+  "run": false,
+  "status": "PREPARED",
+  "details": {
+    "version": "2.1.299 (Claude Code)"
+  }
+}

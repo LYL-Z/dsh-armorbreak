@@ -23,12 +23,14 @@ const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
 
 const EXCLUDE = new Set(['.git', 'node_modules', 'dist', '.armorbreak', '.github'])
+const EXCLUDE_PATHS = new Set(['docs/v2/release/readiness.json', 'docs/v2/release/sbom.spdx.json'])
 function files(current = root, prefix = '') {
   const out = []
   for (const entry of readdirSync(current, { withFileTypes: true })) {
     if (EXCLUDE.has(entry.name)) continue
     const full = join(current, entry.name)
     const rel = prefix ? `${prefix}/${entry.name}` : entry.name
+    if (EXCLUDE_PATHS.has(rel) || rel.startsWith('docs/v2/acceptance/')) continue
     if (entry.isDirectory()) out.push(...files(full, rel))
     else if (entry.isFile()) out.push(rel)
   }

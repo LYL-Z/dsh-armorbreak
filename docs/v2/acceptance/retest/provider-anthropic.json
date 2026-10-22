@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "armorbreak.real-retest/v1",
+  "kind": "provider",
+  "id": "anthropic",
+  "provider": "Anthropic Messages",
+  "at": "2026-10-22T13:47:30.764Z",
+  "run": false,
+  "model": "claude-sonnet-4-5",
+  "status": "PREPARED",
+  "details": {
+    "credentialEnv": "ANTHROPIC_API_KEY",
+    "credentialPresent": false
+  }
+}

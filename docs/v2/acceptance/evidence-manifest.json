@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.evidence-manifest/v1",
-  "commit": "b4c2cc787d04b82b45280482e106532fc7339f57",
-  "generatedAt": "2026-10-22T13:28:21.992Z",
+  "commit": "71ec654318601ffd452a85ae884ae99be2be64ea",
+  "generatedAt": "2026-10-22T13:58:42.501Z",
   "files": {
     "docs/v2/acceptance/airgap-container.json": {
       "sha256": "967dc9c1443f006ac5e6552b0b080c797ef7f906239d049b06e95f522ad24397",
@@ -26,6 +26,10 @@
     "docs/v2/acceptance/benchmark-overhead.json": {
       "sha256": "b0010c878b5a59df9ca1b7799287651e64baa9e9438b1b006c385cccecd28082",
       "size": 1324
+    },
+    "docs/v2/acceptance/blocker-map.json": {
+      "sha256": "e591f78571e157b7366ef60425651ede1cb9057954ac187d955f2d02e0768630",
+      "size": 4551
     },
     "docs/v2/acceptance/claude-mcp.json": {
       "sha256": "b9da52cc36174f7aa7f09409ff2489e38db10cb719121c309ce0ccb17d290134",
@@ -108,8 +112,8 @@
       "size": 32873
     },
     "docs/v2/acceptance/github-attestation.json": {
-      "sha256": "0a12c808e904edece99440892347d7f52fdafdac11f799c7792ab5058778c8a2",
-      "size": 27565
+      "sha256": "88b6d70e0b77fac8169acce15285495e3db8d90fb4b8f8dc75f3707f815cd693",
+      "size": 14356
     },
     "docs/v2/acceptance/hermes-l0-report.md": {
       "sha256": "1b65e4df6c3f72005d70d46a2ad49ef7f114139df701815fde157fea80210594",
@@ -224,8 +228,8 @@
       "size": 4544
     },
     "docs/v2/acceptance/independent-review-pack.md": {
-      "sha256": "b33e5c52416198642c3953596c1b214689c64bd2377bb6e218945ca63cc57e0f",
-      "size": 1827
+      "sha256": "b385b725180af2a48674536003c514cd2f84c1b7bb79fee822207d6f8ac97dca",
+      "size": 5685
     },
     "docs/v2/acceptance/intel-live.json": {
       "sha256": "eed5da5d710a03e55183866420713fb71d224d163801fd0f22fc5127652577da",
@@ -292,7 +296,7 @@
       "size": 4182
     },
     "docs/v2/acceptance/portable-artifact.json": {
-      "sha256": "ac3c1671d702c6b0f0d89ae7e1a9a97fc85444197599a69208ef5cadc2b23725",
+      "sha256": "998b0a63994c71dddf7eba12db51e2306968b4d2ccfc89863f2090c3033f0dc1",
       "size": 1050
     },
     "docs/v2/acceptance/provider-live-ollama.json": {
@@ -304,8 +308,36 @@
       "size": 601
     },
     "docs/v2/acceptance/release-build.json": {
-      "sha256": "0dcc9b2297a69aafcd384df1037a4bff5fb2bf9e6e2a3b53ba6c7ef01d007f41",
+      "sha256": "0dab973867eca886fe3a180e8cd34feb647ffd8871abca9606a404f5cab7c65c",
       "size": 1546
+    },
+    "docs/v2/acceptance/retest/host-antigravity.json": {
+      "sha256": "352a6f13c6186f9c9e196435df38d1dec0f108929f43720b37dc41ae89475cd2",
+      "size": 237
+    },
+    "docs/v2/acceptance/retest/host-claude.json": {
+      "sha256": "4b03d3aeb54d9efd566f7dee74fa8a13cd6e4a67757f037a5a069cdf3db6aea7",
+      "size": 247
+    },
+    "docs/v2/acceptance/retest/host-zcode.json": {
+      "sha256": "fdb3702c4955e38f2f55fa39f1e6429de1599106501927e8ceb9b9220d97ba01",
+      "size": 225
+    },
+    "docs/v2/acceptance/retest/provider-anthropic.json": {
+      "sha256": "15591a56266b9a23aab609de092f7fba39f10e7d68fa409cb16597e554275b3c",
+      "size": 331
+    },
+    "docs/v2/acceptance/retest/provider-gemini.json": {
+      "sha256": "c07cf48fc24e3df59eef32d8c9bc643c8f66b0cde79b6798c4ec71b91874114a",
+      "size": 317
+    },
+    "docs/v2/acceptance/retest/provider-openai-chat.json": {
+      "sha256": "553378543218046a66aad27d0b3878f58d0b50b47e878f0941bf3242d4110f32",
+      "size": 313
+    },
+    "docs/v2/acceptance/retest/provider-openai-responses.json": {
+      "sha256": "8a277db813139aa93fa10eabbd5a50586d451132b4603e08bc1e717aea6cf959",
+      "size": 321
     },
     "docs/v2/acceptance/signoff-liuyilin.jpg": {
       "sha256": "b33e01ba38f89d115a13b623b3f08e4266d9848116ca3ef902bd024b72d9442e",
@@ -332,15 +364,15 @@
       "size": 1370
     },
     "docs/v2/acceptance/test-report.json": {
-      "sha256": "85a9796fe449ebe719c3b6218820a0b10ecf050480437fc33f9d42d6571feb7f",
+      "sha256": "7c46cca293f54ae2ee4de579932ba4bed4c96548ffaf7a6beca88dad3659d5ee",
       "size": 538
     },
     "docs/v2/acceptance/test-report.tap": {
-      "sha256": "23bc92312e52d16e12ce6d5e6372626123d8938fd573da493a2ded61c43b487d",
-      "size": 77049
+      "sha256": "9469fe39c1e183ba246c1c4ac821f83a4c16bb75f754be16c0b8b75664abdfb2",
+      "size": 77046
     },
     "docs/v2/acceptance/v2.2-readiness.json": {
-      "sha256": "d3edaea4c111550b0e74437d9d53ad8bc2dae279df46212255adab1996d438ec",
+      "sha256": "90bd0f0ba86f96d5801ecb9fd4fc98237dce77fbc9b3b0ddb91489e2c236a8cd",
       "size": 8222
     },
     "docs/v2/acceptance/workbench-rendered.html": {

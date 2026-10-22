@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "armorbreak.real-retest/v1",
+  "kind": "provider",
+  "id": "openai-chat",
+  "provider": "OpenAI Chat",
+  "at": "2026-10-22T13:47:30.760Z",
+  "run": false,
+  "model": "gpt-4.1",
+  "status": "PREPARED",
+  "details": {
+    "credentialEnv": "OPENAI_API_KEY",
+    "credentialPresent": false
+  }
+}

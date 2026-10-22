@@ -144,4 +144,7 @@ jobs:
       - name: Evidence-driven release gates
         run: node scripts/v2/release-gates.mjs
 
+      - name: GA blocker root-cause map
+        run: node scripts/v2/check-blocker-map.mjs
+
 
