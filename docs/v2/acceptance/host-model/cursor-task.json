@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "armorbreak/v2",
+  "id": "task_mvjey0mk_d002525a",
+  "title": "MCP 多语言源码危险 API 扫描",
+  "objective": "Run sast.scan on D:\\dsh-ABM\\armorbreak",
+  "workflowId": null,
+  "targetPath": "D:\\dsh-ABM\\armorbreak",
+  "targetKind": "directory",
+  "operator": "cursor-host",
+  "tags": [],
+  "workspace": "D:\\dsh-ABM\\armorbreak",
+  "state": "COMPLETED",
+  "stateHistory": [
+    {
+      "state": "CREATED",
+      "at": "2026-10-22T10:43:41.616Z",
+      "reason": "task created"
+    },
+    {
+      "state": "SCOPE_VALIDATION",
+      "at": "2026-10-22T10:43:41.646Z",
+      "reason": "validating authorization scope"
+    },
+    {
+      "state": "ENVIRONMENT_CHECK",
+      "at": "2026-10-22T10:43:41.659Z",
+      "reason": "scope validated"
+    },
+    {
+      "state": "PLANNING",
+      "at": "2026-10-22T10:43:41.674Z",
+      "reason": "environment checked; riskMax=L0"
+    },
+    {
+      "state": "EXECUTING",
+      "at": "2026-10-22T10:43:41.687Z",
+      "reason": "planned; offline L0 analysis"
+    },
+    {
+      "state": "VERIFYING",
+      "at": "2026-10-22T10:43:42.396Z",
+      "reason": "all steps settled"
+    },
+    {
+      "state": "REPORTING",
+      "at": "2026-10-22T10:43:42.424Z",
+      "reason": "generating report"
+    },
+    {
+      "state": "COMPLETED",
+      "at": "2026-10-22T10:43:42.489Z",
+      "reason": "analysis completed"
+    }
+  ],
+  "steps": [
+    {
+      "id": "analyze",
+      "title": "多语言源码危险 API 扫描",
+      "capabilityId": "sast.scan",
+      "options": {
+        "maxFiles": 400,
+        "minSeverity": "medium"
+      },
+      "dependsOn": null,
+      "failurePolicy": null,
+      "retryPolicy": null,
+      "timeoutMs": null,
+      "status": "DONE",
+      "startedAt": null,
+      "finishedAt": "2026-10-22T10:43:42.379Z",
+      "error": null,
+      "summary": "扫描 132 个源文件（跳过二进制 0，共 26556 行），命中 7 条规则 / 9 条候选发现：critical 0 / high 8 / medium 1 / low 0 / info 0。 问题最集中：D:\\dsh-ABM\\armorbreak\\benchmarks\\bench.mjs、D:\\dsh-ABM\\armorbreak\\fixtures\\gate-b-sample\\src\\app.js、D:\\dsh-ABM\\armorbreak\\lib\\analyzers\\sast\\rules.js、D:\\dsh-ABM\\armorbreak\\lib\\analyzers\\ctf\\hash_id.js。 规则为逐行正则匹配（无数据流分析），taint 相关命中需人工确认可达性。",
+      "evidenceIds": [
+        "ev_mvjey0z2_7643d255",
+        "ev_mvjey0zg_108e4c37"
+      ],
+      "findingIds": [
+        "fnd_mvjey104_3e362335",
+        "fnd_mvjey10z_b8c46b4b",
+        "fnd_mvjey11u_e23a24d8",
+        "fnd_mvjey12l_f7a4856f",
+        "fnd_mvjey13g_b4e1381a",
+        "fnd_mvjey149_70800e8e",
+        "fnd_mvjey152_8e62e61c",
+        "fnd_mvjey15y_041e8770",
+        "fnd_mvjey172_01a10e71"
+      ],
+      "durationMs": 353,
+      "attempt": 0
+    }
+  ],
+  "currentStep": 0,
+  "riskMax": "L0",
+  "approvals": [],
+  "notes": [
+    {
+      "at": "2026-10-22T10:43:42.418Z",
+      "note": "evidence chain verified (11 records)"
+    },
+    {
+      "at": "2026-10-22T10:43:42.482Z",
+      "note": "report generated: D:\\dsh-ABM\\armorbreak\\.armorbreak\\tasks\\task_mvjey0mk_d002525a\\reports\\mcp-多语言源码危险-api-扫描_2026-10-22_10-43-42.md"
+    }
+  ],
+  "createdAt": "2026-10-22T10:43:41.616Z",
+  "updatedAt": "2026-10-22T10:43:42.490Z",
+  "completedAt": "2026-10-22T10:43:42.489Z",
+  "error": null,
+  "report": {
+    "format": "markdown",
+    "path": "D:\\dsh-ABM\\armorbreak\\.armorbreak\\tasks\\task_mvjey0mk_d002525a\\reports\\mcp-多语言源码危险-api-扫描_2026-10-22_10-43-42.md",
+    "sha256": "96c664a076365bdb7a857fe1686e1963725f64972dffa6be494f205a7f3fdf54",
+    "at": "2026-10-22T10:43:42.477Z"
+  },
+  "stats": {
+    "evidence": 11,
+    "findings": 9,
+    "stepsDone": 1,
+    "stepsFailed": 0
+  }
+}

@@ -84,14 +84,14 @@
       "transport": "stdio",
       "installState": "USER_CONFIG_REGISTERED",
       "toolHandshake": "PASS",
-      "taskRunState": "HANDSHAKE_ONLY",
+      "taskRunState": "L0_COMPLETED",
       "policyDeniedTest": "NOT_RUN",
-      "evidenceId": "docs/v2/acceptance/host-e2e-2026-10-22.json",
-      "reportHash": null,
+      "evidenceId": "docs/v2/acceptance/host-model-e2e-2026-10-22.json",
+      "reportHash": "96c664a076365bdb7a857fe1686e1963725f64972dffa6be494f205a7f3fdf54",
       "testAt": "2026-10-21T16:06:00.000Z",
-      "limitation": "Real MCP handshake (cursor-vscode 1.0.0, 7 tools); GUI model tools/call and L0 not captured. Cursor Node 22 regex incompatibility found and fixed.",
+      "limitation": "Real model Cursor Grok 4.6 Medium ran sast.scan + report (task_mvjey0mk_d002525a). Node 22 regex bug found and fixed.",
       "commitSha": "2f0ab8b",
-      "evidenceLevel": "mcp_verified"
+      "evidenceLevel": "real_verified"
     },
     {
       "host": "WorkBuddy",
@@ -100,16 +100,16 @@
       "arch": "x64",
       "integrationMethod": "MCP + Skill UI",
       "transport": "stdio",
-      "installState": "CONFIG_REGISTERED",
-      "toolHandshake": "NOT_RUN",
-      "taskRunState": "NOT_RUN",
+      "installState": "USER_CONFIG_REGISTERED",
+      "toolHandshake": "PASS",
+      "taskRunState": "L0_COMPLETED",
       "policyDeniedTest": "NOT_RUN",
-      "evidenceId": "docs/v2/acceptance/host-e2e-2026-10-22.json",
-      "reportHash": null,
+      "evidenceId": "docs/v2/acceptance/host-model-e2e-2026-10-22.json",
+      "reportHash": "9bf2cbe12c18ed7ae6684bf1d50a1e920ec063509513954e9014d39795faed8f",
       "testAt": "2026-10-21T16:06:00.000Z",
-      "limitation": "MCP registered in root/connector configs; no server audit after restarts. UI MCP/Skill and L0 unverified.",
+      "limitation": "Real model Deepseek-V4.1-Flash ran sast.deps + report (task_mvjewuhz_6d0bc96f).",
       "commitSha": "2f0ab8b",
-      "evidenceLevel": "config_only"
+      "evidenceLevel": "real_verified"
     },
     {
       "host": "ZCode",
@@ -156,14 +156,14 @@
       "transport": "stdio",
       "installState": "USER_CONFIG_REGISTERED",
       "toolHandshake": "PASS",
-      "taskRunState": "HANDSHAKE_ONLY",
+      "taskRunState": "L0_COMPLETED",
       "policyDeniedTest": "NOT_RUN",
-      "evidenceId": "docs/v2/acceptance/host-e2e-2026-10-22.json",
-      "reportHash": null,
+      "evidenceId": "docs/v2/acceptance/host-model-e2e-2026-10-22.json",
+      "reportHash": "f5dc24cd22419bb1c87577faeb4c8e0a704b82ab6a6bc2ba5a90bb9101f1116e",
       "testAt": "2026-10-21T16:06:00.000Z",
-      "limitation": "Real MCP handshake (Trae 3.4.2, 7 tools); no model tools/call captured.",
+      "limitation": "Real model GLM-5.3-Flash Max ran sast.scan + report (task_mvjf4409_3916dfb3).",
       "commitSha": "2f0ab8b",
-      "evidenceLevel": "mcp_verified"
+      "evidenceLevel": "real_verified"
     }
   ]
 }

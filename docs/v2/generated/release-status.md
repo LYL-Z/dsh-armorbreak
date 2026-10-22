@@ -7,11 +7,8 @@ Release tag: **false**
 
 - `ABU-206_NOT_TESTED`: ABU-206 status=IN_PROGRESS
 - `ABU-210_NOT_TESTED`: ABU-210 status=IN_PROGRESS
-- `ABU-301_NOT_TESTED`: ABU-301 status=IN_PROGRESS
 - `ABU-302_NOT_TESTED`: ABU-302 status=NOT_STARTED
 - `ABU-303_NOT_TESTED`: ABU-303 status=IN_PROGRESS
-- `ABU-304_NOT_TESTED`: ABU-304 status=IN_PROGRESS
-- `ABU-305_NOT_TESTED`: ABU-305 status=IN_PROGRESS
 - `ABU-307_NOT_TESTED`: ABU-307 status=NOT_STARTED
 - `ABU-311_NOT_TESTED`: ABU-311 status=NOT_STARTED
 - `ABU-312_NOT_TESTED`: ABU-312 status=IN_PROGRESS
@@ -25,9 +22,6 @@ Release tag: **false**
 - `ABU-408_NOT_TESTED`: ABU-408 status=IN_PROGRESS
 - `ABU-409_NOT_TESTED`: ABU-409 status=IN_PROGRESS
 - `HOST_Claude Code_NOT_VERIFIED`: Claude Code integration is not host-verified
-- `HOST_Cursor_NOT_VERIFIED`: Cursor integration is not host-verified
-- `HOST_WorkBuddy_NOT_VERIFIED`: WorkBuddy integration is not host-verified
 - `HOST_ZCode_NOT_VERIFIED`: ZCode integration is not host-verified
 - `HOST_Pi_NOT_VERIFIED`: Pi integration is not host-verified
-- `HOST_TRAE_NOT_VERIFIED`: TRAE integration is not host-verified
 - `ARTIFACT_UNSIGNED`: portable artifact has no production signature
