@@ -14,6 +14,13 @@ async function mockServer(captured) {
       await new Promise((resolve) => setTimeout(resolve, 500))
     }
     res.setHeader('content-type', 'application/json')
+    if (req.url === '/stream/chat/completions') {
+      res.setHeader('content-type', 'text/event-stream')
+      res.write(`data: ${JSON.stringify({ choices: [{ delta: { content: 'stream ' } }] })}\n\n`)
+      res.write(`data: ${JSON.stringify({ choices: [{ delta: { content: 'ok' }, finish_reason: 'stop' }], usage: { prompt_tokens: 2, completion_tokens: 2, total_tokens: 4 } })}\n\n`)
+      res.end('data: [DONE]\n\n')
+      return
+    }
     if (req.url === '/v1/messages') {
       res.end(JSON.stringify({ content: [{ type: 'text', text: 'anthropic ok' }], usage: { input_tokens: 1, output_tokens: 2 } }))
     } else if (req.url === '/slow/chat/completions') {
@@ -59,6 +66,20 @@ test('Anthropic request separates system and maps tool schema', async () => {
   assert.equal(captured[0].body.system, 'be exact')
   assert.equal(captured[0].body.messages.length, 1)
   assert.equal(captured[0].body.tools[0].input_schema.type, 'object')
+  await new Promise((resolve) => server.close(resolve))
+})
+
+test('OpenAI-compatible SSE stream aggregates text, usage and finish reason', async () => {
+  const captured = []
+  const { server, baseUrl } = await mockServer(captured)
+  const router = createProviderRouter({ providers: [{ id: 'stream', kind: 'openai-compatible', baseUrl: `${baseUrl}/stream`, models: ['gpt-test'], apiKeyEnv: 'OPENAI_API_KEY', supportsTools: true }], env: { OPENAI_API_KEY: 'sk-secret' } })
+  const client = createProviderClient({ router, env: { OPENAI_API_KEY: 'sk-secret' } })
+  const reply = await client.chatStream({ model: 'gpt-test', messages: [{ role: 'user', content: 'hello' }] })
+  assert.equal(reply.text, 'stream ok')
+  assert.equal(reply.finishReason, 'stop')
+  assert.equal(reply.eventCount, 2)
+  assert.deepEqual(reply.usage, { inputTokens: 2, outputTokens: 2, totalTokens: 4 })
+  assert.equal(captured[0].body.stream, true)
   await new Promise((resolve) => server.close(resolve))
 })
 

@@ -39,7 +39,40 @@
   "pass": true,
   "limitations": [
     "Local Ollama only; no paid OpenAI/Anthropic/Gemini endpoint was called.",
-    "Streaming SSE, provider secret vault, cost estimate/fallback and real 429 handling remain partial.",
-    "The normalized OpenAI-compatible tool call arguments are a JSON string from Ollama; the executor accepts both string and object."
-  ]
+    "The normalized OpenAI-compatible tool call arguments are a JSON string from Ollama; the executor accepts both string and object.",
+    "Anthropic streaming is intentionally not implemented in this slice."
+  ],
+  "stream": {
+    "basic": {
+      "text": "OLLAMA_STREAM_OK",
+      "usage": {
+        "inputTokens": 18,
+        "outputTokens": 177,
+        "totalTokens": 195
+      },
+      "eventCount": 164,
+      "finishReason": "stop",
+      "latencyMs": 1662,
+      "pass": true
+    },
+    "toolCall": {
+      "text": "",
+      "toolCalls": [
+        {
+          "id": "call_0pwtf0sn",
+          "name": "armorbreak_health",
+          "arguments": {}
+        }
+      ],
+      "usage": {
+        "inputTokens": 266,
+        "outputTokens": 70,
+        "totalTokens": 336
+      },
+      "eventCount": 53,
+      "finishReason": "tool_calls",
+      "latencyMs": 697,
+      "pass": true
+    }
+  }
 }
