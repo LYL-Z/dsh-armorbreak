@@ -81,7 +81,7 @@ export class ArmorBreakClient {
   capabilities() { return this.request('capabilities') }
   analyze(input) { return this.request('analyze', input) }
   task(taskId) { return this.request('task.get', { taskId }) }
-  tasks() { return this.request('task.list') }
+  async tasks() { const result = await this.request('task.list'); return Array.isArray(result) ? result : (result?.tasks ?? []) }
   evidence(taskId) { return this.request('evidence', { taskId }) }
   report(taskId) { return this.request('report', { taskId }) }
 }
