@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.v2-readiness/v1",
-  "commit": "da15b81321b1ed8bda16dda1531313bed6405d63",
+  "commit": "33aa6896ba00712baa307e6615630f317684ddf3",
   "preReleaseReady": true,
   "gaReady": false,
   "ready": true,
@@ -378,6 +378,6 @@
   "artifact": {
     "version": "2.0.1",
     "signed": false,
-    "sha256": "f756bb8ea37f403441df2272323a5d7a97fcfa5ca23f8904135cdeefcbaeefe5"
+    "sha256": "14b6bd9c276ad2a705a978ff01e5fa818eab14ba0d4c608a639f51a1227b6cbf"
   }
 }
