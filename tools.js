@@ -8,7 +8,7 @@
  * @module dsh-armorbreak/tools
  */
 import { basename } from 'node:path'
-import { getRuntime } from './lib/core/runtime.js'
+import { getRuntime } from './packages/core/index.js'
 import { getWorkflow, listWorkflows } from './lib/core/workflows.js'
 import { generateTaskReport } from './lib/core/reports.js'
 import { listDirectory, readFileBounded, searchFiles, statPath } from './lib/core/files.js'

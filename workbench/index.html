@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ArmorBreak Workbench</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">ARMORBREAK · UNIVERSAL CORE</p>
+      <h1>ArmorBreak Workbench</h1>
+      <p class="subtitle">Hosts, providers, skills and evidence in one read-only console.</p>
+    </div>
+    <div class="top-actions">
+      <span id="status-dot" class="dot"></span>
+      <span id="status-label">loading</span>
+      <button id="refresh" type="button">Refresh</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="summary" aria-label="Summary">
+      <article class="metric"><span>Readiness</span><strong id="m-ready">—</strong><small id="m-ready-note">—</small></article>
+      <article class="metric"><span>Hosts L0</span><strong id="m-hosts">—</strong><small>real model tasks</small></article>
+      <article class="metric"><span>Providers</span><strong id="m-providers">—</strong><small>configured adapters</small></article>
+      <article class="metric"><span>Artifact</span><strong id="m-artifact">—</strong><small id="m-artifact-note">—</small></article>
+    </section>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="hosts" role="tab">Hosts</button>
+      <button class="tab" data-tab="providers" role="tab">Providers</button>
+      <button class="tab" data-tab="skills" role="tab">Skills</button>
+      <button class="tab" data-tab="tasks" role="tab">Tasks</button>
+      <button class="tab" data-tab="evidence" role="tab">Evidence</button>
+      <button class="tab" data-tab="diagnostics" role="tab">Diagnostics</button>
+    </nav>
+
+    <section id="panel-hosts" class="panel active">
+      <div class="panel-head"><h2>Host compatibility</h2><p>Handshake and real model task state, never inferred from config alone.</p></div>
+      <div class="table-wrap"><table><thead><tr><th>Host</th><th>Version</th><th>Install</th><th>Handshake</th><th>Task</th><th>Evidence level</th></tr></thead><tbody id="hosts-body"></tbody></table></div>
+      <div id="host-detail" class="detail">Select a host to inspect limitations and evidence.</div>
+    </section>
+
+    <section id="panel-providers" class="panel">
+      <div class="panel-head"><h2>Provider capability matrix</h2><p>Credential status is boolean only; secrets never reach the browser.</p></div>
+      <div class="table-wrap"><table><thead><tr><th>Provider</th><th>Kind</th><th>Models</th><th>Tools</th><th>Credential</th><th>Action</th></tr></thead><tbody id="providers-body"></tbody></table></div>
+      <div id="provider-detail" class="detail">Select a provider to inspect transport and credential requirements.</div>
+    </section>
+
+    <section id="panel-skills" class="panel">
+      <div class="panel-head"><h2>Skills and plugins</h2><p>Native Agent Skills shipped with this bundle.</p></div>
+      <div id="skills-list" class="cards-list"></div>
+    </section>
+
+    <section id="panel-tasks" class="panel">
+      <div class="panel-head"><h2>Task status</h2><p>Machine-readable task state; status text alone is not a GA claim.</p></div>
+      <div class="table-wrap"><table><thead><tr><th>Task</th><th>Status</th><th>Acceptance</th><th>Real endpoint</th></tr></thead><tbody id="tasks-body"></tbody></table></div>
+    </section>
+
+    <section id="panel-evidence" class="panel">
+      <div class="panel-head"><h2>Evidence center</h2><p>Commit-bound evidence and residual limitations.</p></div>
+      <div class="cards-list" id="evidence-list"></div>
+    </section>
+
+    <section id="panel-diagnostics" class="panel">
+      <div class="panel-head"><h2>API diagnostics</h2><p>Configuration diagnostics only; a live provider call requires a real credential and explicit test.</p></div>
+      <div class="diagnose-row"><select id="diag-provider"></select><button id="diag-run" type="button">Run diagnostic</button></div>
+      <pre id="diag-output" class="output">Choose a provider.</pre>
+    </section>
+  </main>
+  <footer>Read-only Workbench · no secrets rendered · <span id="generated"></span></footer>
+  <script src="/app.js"></script>
+</body>
+</html>

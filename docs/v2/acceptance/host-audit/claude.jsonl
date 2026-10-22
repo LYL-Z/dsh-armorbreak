@@ -1,0 +1,6 @@
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:36:00.088Z","pid":36620,"principal":"claude-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"initialize","protocolVersion":"2025-11-25","clientInfo":{"name":"claude-code","version":"2.1.299"}}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:36:00.090Z","pid":36620,"principal":"claude-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"notifications/initialized"}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:36:00.091Z","pid":36620,"principal":"claude-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"tools/list","tools":7}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:36:24.244Z","pid":32988,"principal":"claude-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"initialize","protocolVersion":"2025-11-25","clientInfo":{"name":"claude-code","version":"2.1.299"}}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:36:24.246Z","pid":32988,"principal":"claude-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"notifications/initialized"}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:36:24.250Z","pid":32988,"principal":"claude-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"tools/list","tools":7}

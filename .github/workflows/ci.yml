@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, feature/abu-universal, feature/v2.2-ga]
     tags: ['v*']
   pull_request:
   workflow_dispatch:
@@ -33,7 +33,11 @@ jobs:
       - name: Environment facts
         run: node --version && node -e "console.log(process.platform, process.arch)"
 
-      # The bundle is intentionally dependency-free: no install step is required.
+      - name: Install locked dev dependencies
+        run: npm ci --no-audit --no-fund
+
+      # Runtime remains dependency-free; TypeScript is a locked dev dependency
+      # used only to compile the SDK contract and consumer fixture.
       - name: Full test suite
         run: node --test
 
@@ -116,4 +120,28 @@ jobs:
           name: l1-docker-verification
           path: docs/acceptance/l1-docker-verification.json
           if-no-files-found: warn
+
+  release-evidence:
+    name: Release evidence checks (commit-bound)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Docs consistency
+        run: node scripts/v2/check-docs-consistency.mjs
+
+      - name: Evidence hashes and references
+        run: node scripts/v2/validate-evidence.mjs
+
+      - name: Evidence-driven release gates
+        run: node scripts/v2/release-gates.mjs
+
 

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "armorbreak.mcp-template/v1",
+  "mcpServers": {
+    "armorbreak": {
+      "command": "node",
+      "args": ["${ARMORBREAK_ROOT}/packages/mcp-server/index.js"],
+      "env": {
+        "ARMORBREAK_STATE_ROOT": "${ARMORBREAK_STATE_ROOT}",
+        "ARMORBREAK_WORKSPACE": "${ARMORBREAK_WORKSPACE}",
+        "ARMORBREAK_PRINCIPAL_ID": "${ARMORBREAK_PRINCIPAL_ID}"
+      }
+    }
+  }
+}

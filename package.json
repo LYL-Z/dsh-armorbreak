@@ -1,6 +1,6 @@
 {
   "name": "dsh-armorbreak",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "module",
   "description": "ArmorBreak (破甲模式): an authorized reverse-engineering and security-research agent preset for DeepSeek Harness — 46 offline capabilities, L0–L3 policy engine, evidence-chain reports",
   "icon": "./icon.svg",
@@ -74,6 +74,10 @@
     "test": "node --test",
     "bench": "node benchmarks/bench.mjs",
     "inventory": "node scripts/file-changes.mjs",
-    "clean-temp": "node scripts/clean-temp.mjs"
+    "clean-temp": "node scripts/clean-temp.mjs",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
   }
 }

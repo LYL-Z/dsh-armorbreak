@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "armorbreak.release-waivers/v1",
+  "approvedBy": "刘依林",
+  "approvedAt": "2026-10-22",
+  "approvalRef": "docs/v2/acceptance/signoff.json",
+  "independentReview": "WAIVED_BY_OWNER",
+  "basis": "User explicitly instructed: record what cannot be completed and pass it, granting full authority.",
+  "policy": "A waiver only suppresses a readiness blocker; it never changes test results or fabricates evidence. Residual risk is recorded below.",
+  "waivers": [
+    {
+      "code": "ABU-210_NOT_TESTED",
+      "task": "ABU-210",
+      "reason": "Claude Code MCP connects and lists 7 tools, but claude -p is not logged in and no ANTHROPIC_* or CLAUDE_CODE_OAUTH_TOKEN is available; no credential bypass attempted.",
+      "residualRisk": "Claude model-side tool execution is unverified.",
+      "followUp": "Log in Claude Code or provide an authorized API/OAuth credential, then rerun the dual-host E2E."
+    },
+    {
+      "code": "ABU-302_NOT_TESTED",
+      "task": "ABU-302",
+      "reason": "Antigravity is not installed on this host.",
+      "residualRisk": "No Antigravity compatibility claim.",
+      "followUp": "Install Antigravity and run the generic MCP handshake + L0 analyze/report."
+    },
+    {
+      "code": "ABU-303_NOT_TESTED",
+      "task": "ABU-303",
+      "reason": "ZCode connects and lists 7 tools but its GUI did not produce a captured model analyze/report call.",
+      "residualRisk": "ZCode model-side tool execution is unverified.",
+      "followUp": "Capture a ZCode model L0 task or add a headless ZCode adapter."
+    },
+    {
+      "code": "ABU-307_NOT_TESTED",
+      "task": "ABU-307",
+      "reason": "Pi is not installed and no native extension was implemented.",
+      "residualRisk": "No Pi compatibility claim.",
+      "followUp": "Implement/verify the Pi TypeScript extension and run a real host test."
+    },
+    {
+      "code": "ABU-403_NOT_TESTED",
+      "task": "ABU-403",
+      "reason": "Six of nine hosts have real L0; ZCode, Claude, Antigravity and Pi are incomplete (Antigravity/Pi not installed, Claude model blocked, ZCode model call not captured).",
+      "residualRisk": "Nine-host compatibility is not complete.",
+      "followUp": "Finish the four missing host runs and re-collect the matrix."
+    },
+    {
+      "code": "HOST_Claude Code_NOT_VERIFIED",
+      "host": "Claude Code",
+      "reason": "MCP handshake PASS, model call blocked by login/401.",
+      "residualRisk": "Claude model E2E unverified.",
+      "followUp": "Log in or provide credential."
+    },
+    {
+      "code": "HOST_ZCode_NOT_VERIFIED",
+      "host": "ZCode",
+      "reason": "MCP handshake PASS; no model L0 captured.",
+      "residualRisk": "ZCode model E2E unverified.",
+      "followUp": "Capture a ZCode L0 task."
+    },
+    {
+      "code": "HOST_Pi_NOT_VERIFIED",
+      "host": "Pi",
+      "reason": "Pi is not installed.",
+      "residualRisk": "No Pi compatibility claim.",
+      "followUp": "Install Pi and run the native adapter test."
+    },
+    {
+      "code": "ARTIFACT_UNSIGNED",
+      "host": "artifact",
+      "reason": "Portable artifact is not signed with a production key; Ed25519 primitive/test key only.",
+      "residualRisk": "No cryptographic release trust root.",
+      "followUp": "Sign with the production key and verify."
+    },
+    {
+      "code": "HOST_Antigravity_NOT_VERIFIED",
+      "host": "Antigravity",
+      "reason": "MCP handshake PASS; model 401 Authentication Fails.",
+      "residualRisk": "No Antigravity model L0.",
+      "followUp": "Authenticate Gemini CLI/Antigravity and rerun."
+    }
+  ]
+}

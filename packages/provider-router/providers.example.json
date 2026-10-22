@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "armorbreak.providers.example/v1",
+  "note": "Keys are never stored here; set the named env vars in the host secret store.",
+  "providers": [
+    {
+      "id": "openai-compatible",
+      "kind": "openai-compatible",
+      "baseUrl": "https://api.openai.com/v1",
+      "models": ["gpt-4.1"],
+      "apiKeyEnv": "OPENAI_API_KEY",
+      "supportsTools": true,
+      "timeoutMs": 60000
+    },
+    {
+      "id": "openai-responses",
+      "kind": "openai-responses",
+      "baseUrl": "https://api.openai.com/v1",
+      "models": ["gpt-5"],
+      "apiKeyEnv": "OPENAI_API_KEY",
+      "supportsTools": true,
+      "timeoutMs": 60000
+    },
+    {
+      "id": "anthropic",
+      "kind": "anthropic",
+      "baseUrl": "https://api.anthropic.com",
+      "models": ["claude-sonnet-4-5"],
+      "apiKeyEnv": "ANTHROPIC_API_KEY",
+      "supportsTools": true,
+      "timeoutMs": 60000
+    },
+    {
+      "id": "gemini",
+      "kind": "gemini",
+      "baseUrl": "https://generativelanguage.googleapis.com/v1beta",
+      "models": ["gemini-2.5-pro"],
+      "apiKeyEnv": "GEMINI_API_KEY",
+      "supportsTools": true,
+      "timeoutMs": 60000
+    },
+    {
+      "id": "ollama",
+      "kind": "ollama",
+      "baseUrl": "http://127.0.0.1:11434/v1",
+      "models": ["qwen3.5:4b"],
+      "supportsTools": true,
+      "timeoutMs": 120000
+    },
+    {
+      "id": "local",
+      "kind": "local",
+      "baseUrl": "http://127.0.0.1:8080/v1",
+      "models": ["local-model"],
+      "supportsTools": true,
+      "timeoutMs": 120000
+    }
+  ]
+}

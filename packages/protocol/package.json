@@ -1,0 +1,8 @@
+{
+  "name": "@armorbreak/protocol",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Versioned ArmorBreak Universal protocol contracts and error codes",
+  "exports": "./index.js"
+}

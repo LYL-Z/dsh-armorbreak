@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "armorbreak.portable-plugin/v1",
+  "name": "armorbreak",
+  "displayName": "ArmorBreak Universal",
+  "version": "2.0.1",
+  "description": "Authorized reverse-engineering and security-research tools over a trusted Core. L0-first; L1/L2 require independent human approval.",
+  "license": "MIT",
+  "entrypoints": {
+    "mcp": {
+      "transport": "stdio",
+      "command": "node",
+      "args": ["packages/mcp-server/index.js"],
+      "config": "plugins/portable/mcp.json"
+    },
+    "cli": {
+      "command": "node",
+      "args": ["packages/cli/index.js"]
+    }
+  },
+  "skills": [
+    "skills/armorbreak-triage/SKILL.md",
+    "skills/armorbreak-binary/SKILL.md",
+    "skills/armorbreak-android/SKILL.md",
+    "skills/armorbreak-sast/SKILL.md",
+    "skills/armorbreak-pcap/SKILL.md",
+    "skills/armorbreak-ai-eval/SKILL.md",
+    "skills/armorbreak-report/SKILL.md"
+  ],
+  "trust": {
+    "principalSource": "host configuration, never tool arguments",
+    "workspaceAclRequired": true,
+    "modelCanAuthorize": false,
+    "l1l2Approval": "independent human/platform approval",
+    "l3": "always denied"
+  },
+  "capabilities": {
+    "count": 46,
+    "riskCeilingWithoutApproval": "L0"
+  }
+}

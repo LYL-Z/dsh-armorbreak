@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "armorbreak.audit-baseline/v1",
+  "generatedAt": "2026-10-21T15:05:00.000Z",
+  "branch": "feature/abu-universal",
+  "baselineCommit": "eb5806057153eed066caaebea9298cf08068b7e4",
+  "baselineTag": "v2.0.0",
+  "packageVersionAtBaseline": "2.0.0",
+  "node": "v24.16.0",
+  "testRun": {
+    "command": "node --test",
+    "tests": 278,
+    "pass": 277,
+    "fail": 0,
+    "skipped": 1,
+    "note": "The one skipped test is retained and is not counted as a pass."
+  },
+  "releaseCheck": {
+    "command": "node scripts/v2/check-release.mjs",
+    "ready": true,
+    "gates": {
+      "security": "PASS",
+      "offline": "PASS",
+      "supplyChain": "PASS",
+      "aiEvaluation": "PASS",
+      "compatibility": "PASS",
+      "performance": "PASS"
+    },
+    "note": "At baseline these are legacy Gate outputs; ABU-002 must replace self-reported PASS with evidence-driven verification."
+  },
+  "ci": {
+    "workflow": "CI",
+    "runId": 39600241123,
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-10-21T12:31:10Z",
+    "commit": "eb5806057153eed066caaebea9298cf08068b7e4"
+  },
+  "knownAuditFindings": [
+    "AUD-01: legacy security gate is a static PASS",
+    "AUD-02: release documents contain conflicting status text",
+    "AUD-03: offline pass rate is not relative online retention",
+    "IsolationVerified was process-local; self-test status was lost across manager processes"
+  ],
+  "existingEvidence": [
+    "docs/v2/acceptance/desktop-e2e.json",
+    "docs/v2/acceptance/release-gates.json",
+    "docs/v2/release/readiness.json",
+    "docs/v2/release/sbom.spdx.json"
+  ]
+}

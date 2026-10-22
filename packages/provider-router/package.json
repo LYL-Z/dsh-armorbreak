@@ -1,0 +1,13 @@
+{
+  "name": "@armorbreak/provider-router",
+  "version": "0.1.0-p3",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./tool-loop": "./toolLoop.js",
+    "./vault": "./vault.js",
+    "./policy": "./policy.js"
+  }
+}

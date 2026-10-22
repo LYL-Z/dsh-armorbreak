@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "armorbreak.provider-contract/v1",
+  "roles": ["system", "user", "assistant", "tool"],
+  "finishReasons": ["stop", "length", "tool_calls", "content_filter", "error"],
+  "streamTypes": ["message_start", "content_delta", "tool_call_delta", "message_stop", "error"],
+  "messageFields": ["role", "content", "toolCallId", "name"],
+  "toolCallFields": ["id", "name", "arguments"],
+  "toolResultFields": ["toolCallId", "content", "isError"],
+  "usageFields": ["inputTokens", "outputTokens", "totalTokens"],
+  "errorFields": ["code", "message", "retryable"]
+}

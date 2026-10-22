@@ -1,0 +1,14 @@
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:45:24.108Z","pid":24048,"principal":"cursor-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"initialize","protocolVersion":"2025-11-25","clientInfo":{"name":"cursor-vscode","version":"1.0.0"}}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:45:24.109Z","pid":24048,"principal":"cursor-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"notifications/initialized"}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:45:24.110Z","pid":24048,"principal":"cursor-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"tools/list","tools":7}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:45:46.386Z","pid":35504,"principal":"cursor-host","workspace":"D:/dsh-ABM/armorbreak","event":"initialize","protocolVersion":"2025-11-25","clientInfo":{"name":"cursor-vscode","version":"1.0.0"}}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:45:46.388Z","pid":35504,"principal":"cursor-host","workspace":"D:/dsh-ABM/armorbreak","event":"notifications/initialized"}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:45:46.389Z","pid":35504,"principal":"cursor-host","workspace":"D:/dsh-ABM/armorbreak","event":"tools/list","tools":7}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:45:46.890Z","pid":22576,"principal":"cursor-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"initialize","protocolVersion":"2025-11-25","clientInfo":{"name":"cursor-vscode","version":"1.0.0"}}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:45:46.892Z","pid":22576,"principal":"cursor-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"notifications/initialized"}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:51:26.353Z","pid":22576,"principal":"cursor-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"tools/list","tools":7}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:51:32.967Z","pid":35504,"principal":"cursor-host","workspace":"D:/dsh-ABM/armorbreak","event":"tools/list","tools":7}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:56:29.470Z","pid":22576,"principal":"cursor-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"tools/list","tools":7}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:56:42.139Z","pid":35504,"principal":"cursor-host","workspace":"D:/dsh-ABM/armorbreak","event":"tools/list","tools":7}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T10:01:42.499Z","pid":35504,"principal":"cursor-host","workspace":"D:/dsh-ABM/armorbreak","event":"tools/list","tools":7}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T10:01:47.409Z","pid":22576,"principal":"cursor-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"tools/list","tools":7}

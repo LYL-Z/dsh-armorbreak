@@ -1,0 +1,22 @@
+﻿工具可用，两次调用均成功。
+
+结果如下：
+
+taskId: task_mvj10y9p_44aab54e
+
+state（任务状态）: COMPLETED
+（报告内部显示任务状态轨迹最终为 REPORTING，analyze 返回的 state 为 COMPLETED）
+
+报告前两行（markdown 正文）：
+
+# ArmorBreak 安全研究报告 — MCP 多算法文件哈希与完整性标识
+
+- 报告 ID：`task_mvj10y9p_44aab54e`
+
+补充关键信息：
+- 目标文件：C:\Users\Lenovo\AppData\Local\Temp\hermes-l0w-e4580bcc-6e5e-410f-acb9-66acce041be9\l0-sample.txt
+- 文件大小 30 字节，类型 text/plain
+- SHA-256：0dbaba1f56a201e9c5c7aadc33a5a05f714e3c6c00f519d8d43d15adc8e3ff9d
+- 发现：0 条（critical 0 / high 0 / medium 0 / low 0 / info 0），留档证据 2 条
+- 风险等级：L0，证据链校验通过（2 条记录）
+

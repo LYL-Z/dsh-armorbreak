@@ -1,0 +1,383 @@
+{
+  "schemaVersion": "armorbreak.v2-readiness/v1",
+  "commit": "da15b81321b1ed8bda16dda1531313bed6405d63",
+  "preReleaseReady": true,
+  "gaReady": false,
+  "ready": true,
+  "preReleaseTag": true,
+  "releaseTag": false,
+  "taskStatus": {
+    "ABU-101": "TESTED",
+    "ABU-102": "TESTED",
+    "ABU-103": "TESTED",
+    "ABU-104": "TESTED",
+    "ABU-105": "TESTED",
+    "ABU-106": "TESTED",
+    "ABU-107": "TESTED",
+    "ABU-108": "TESTED",
+    "ABU-109": "TESTED",
+    "ABU-201": "TESTED",
+    "ABU-202": "TESTED",
+    "ABU-203": "TESTED",
+    "ABU-204": "TESTED",
+    "ABU-205": "TESTED",
+    "ABU-206": "TESTED",
+    "ABU-207": "TESTED",
+    "ABU-208": "TESTED",
+    "ABU-209": "TESTED",
+    "ABU-210": "IN_PROGRESS",
+    "ABU-211": "TESTED",
+    "ABU-301": "HOST_VERIFIED",
+    "ABU-302": "IN_PROGRESS",
+    "ABU-303": "IN_PROGRESS",
+    "ABU-304": "HOST_VERIFIED",
+    "ABU-305": "HOST_VERIFIED",
+    "ABU-306": "HOST_VERIFIED",
+    "ABU-307": "NOT_STARTED",
+    "ABU-308": "TESTED",
+    "ABU-309": "TESTED",
+    "ABU-310": "TESTED",
+    "ABU-311": "TESTED",
+    "ABU-312": "TESTED",
+    "ABU-313": "TESTED",
+    "ABU-314": "TESTED",
+    "ABU-315": "TESTED",
+    "ABU-316": "TESTED",
+    "ABU-317": "TESTED",
+    "ABU-318": "TESTED",
+    "ABU-401": "TESTED",
+    "ABU-402": "TESTED",
+    "ABU-403": "IN_PROGRESS",
+    "ABU-404": "TESTED",
+    "ABU-405": "TESTED",
+    "ABU-406": "TESTED",
+    "ABU-407": "TESTED",
+    "ABU-408": "TESTED",
+    "ABU-409": "TESTED"
+  },
+  "taskRealEndpoint": {
+    "ABU-101": null,
+    "ABU-102": null,
+    "ABU-103": null,
+    "ABU-104": null,
+    "ABU-105": null,
+    "ABU-106": null,
+    "ABU-107": null,
+    "ABU-108": null,
+    "ABU-109": null,
+    "ABU-201": null,
+    "ABU-202": null,
+    "ABU-203": null,
+    "ABU-204": null,
+    "ABU-205": null,
+    "ABU-206": null,
+    "ABU-207": null,
+    "ABU-208": null,
+    "ABU-209": null,
+    "ABU-210": null,
+    "ABU-211": null,
+    "ABU-301": null,
+    "ABU-302": null,
+    "ABU-303": null,
+    "ABU-304": null,
+    "ABU-305": null,
+    "ABU-306": null,
+    "ABU-307": null,
+    "ABU-308": null,
+    "ABU-309": null,
+    "ABU-310": null,
+    "ABU-311": "BLOCKED_EXTERNAL",
+    "ABU-312": "BLOCKED_EXTERNAL",
+    "ABU-313": "BLOCKED_EXTERNAL",
+    "ABU-314": "BLOCKED_EXTERNAL",
+    "ABU-315": null,
+    "ABU-316": null,
+    "ABU-317": null,
+    "ABU-318": "BLOCKED_EXTERNAL",
+    "ABU-401": null,
+    "ABU-402": null,
+    "ABU-403": null,
+    "ABU-404": null,
+    "ABU-405": null,
+    "ABU-406": null,
+    "ABU-407": null,
+    "ABU-408": null,
+    "ABU-409": null
+  },
+  "taskIndependentReview": {
+    "ABU-101": null,
+    "ABU-102": null,
+    "ABU-103": null,
+    "ABU-104": null,
+    "ABU-105": null,
+    "ABU-106": null,
+    "ABU-107": null,
+    "ABU-108": null,
+    "ABU-109": null,
+    "ABU-201": null,
+    "ABU-202": null,
+    "ABU-203": null,
+    "ABU-204": null,
+    "ABU-205": null,
+    "ABU-206": null,
+    "ABU-207": null,
+    "ABU-208": null,
+    "ABU-209": null,
+    "ABU-210": null,
+    "ABU-211": null,
+    "ABU-301": null,
+    "ABU-302": null,
+    "ABU-303": null,
+    "ABU-304": null,
+    "ABU-305": null,
+    "ABU-306": null,
+    "ABU-307": null,
+    "ABU-308": null,
+    "ABU-309": null,
+    "ABU-310": null,
+    "ABU-311": null,
+    "ABU-312": null,
+    "ABU-313": null,
+    "ABU-314": null,
+    "ABU-315": null,
+    "ABU-316": null,
+    "ABU-317": null,
+    "ABU-318": null,
+    "ABU-401": null,
+    "ABU-402": null,
+    "ABU-403": null,
+    "ABU-404": null,
+    "ABU-405": null,
+    "ABU-406": null,
+    "ABU-407": null,
+    "ABU-408": null,
+    "ABU-409": "BLOCKED_EXTERNAL"
+  },
+  "taskHostInstall": {
+    "ABU-101": null,
+    "ABU-102": null,
+    "ABU-103": null,
+    "ABU-104": null,
+    "ABU-105": null,
+    "ABU-106": null,
+    "ABU-107": null,
+    "ABU-108": null,
+    "ABU-109": null,
+    "ABU-201": null,
+    "ABU-202": null,
+    "ABU-203": null,
+    "ABU-204": null,
+    "ABU-205": null,
+    "ABU-206": null,
+    "ABU-207": null,
+    "ABU-208": null,
+    "ABU-209": null,
+    "ABU-210": null,
+    "ABU-211": null,
+    "ABU-301": null,
+    "ABU-302": null,
+    "ABU-303": null,
+    "ABU-304": null,
+    "ABU-305": null,
+    "ABU-306": null,
+    "ABU-307": null,
+    "ABU-308": null,
+    "ABU-309": null,
+    "ABU-310": null,
+    "ABU-311": null,
+    "ABU-312": null,
+    "ABU-313": null,
+    "ABU-314": null,
+    "ABU-315": null,
+    "ABU-316": null,
+    "ABU-317": null,
+    "ABU-318": null,
+    "ABU-401": null,
+    "ABU-402": "BLOCKED_EXTERNAL",
+    "ABU-403": null,
+    "ABU-404": null,
+    "ABU-405": null,
+    "ABU-406": null,
+    "ABU-407": null,
+    "ABU-408": null,
+    "ABU-409": null
+  },
+  "taskProductionSignature": {
+    "ABU-101": null,
+    "ABU-102": null,
+    "ABU-103": null,
+    "ABU-104": null,
+    "ABU-105": null,
+    "ABU-106": null,
+    "ABU-107": null,
+    "ABU-108": null,
+    "ABU-109": null,
+    "ABU-201": null,
+    "ABU-202": null,
+    "ABU-203": null,
+    "ABU-204": null,
+    "ABU-205": null,
+    "ABU-206": null,
+    "ABU-207": null,
+    "ABU-208": null,
+    "ABU-209": null,
+    "ABU-210": null,
+    "ABU-211": null,
+    "ABU-301": null,
+    "ABU-302": null,
+    "ABU-303": null,
+    "ABU-304": null,
+    "ABU-305": null,
+    "ABU-306": null,
+    "ABU-307": null,
+    "ABU-308": null,
+    "ABU-309": null,
+    "ABU-310": null,
+    "ABU-311": null,
+    "ABU-312": null,
+    "ABU-313": null,
+    "ABU-314": null,
+    "ABU-315": null,
+    "ABU-316": null,
+    "ABU-317": null,
+    "ABU-318": null,
+    "ABU-401": null,
+    "ABU-402": null,
+    "ABU-403": null,
+    "ABU-404": null,
+    "ABU-405": null,
+    "ABU-406": null,
+    "ABU-407": null,
+    "ABU-408": "BLOCKED_EXTERNAL",
+    "ABU-409": null
+  },
+  "blockers": [],
+  "gaBlockers": [
+    {
+      "code": "ABU-210_NOT_TESTED",
+      "detail": "ABU-210 status=IN_PROGRESS"
+    },
+    {
+      "code": "ABU-302_NOT_TESTED",
+      "detail": "ABU-302 status=IN_PROGRESS"
+    },
+    {
+      "code": "ABU-303_NOT_TESTED",
+      "detail": "ABU-303 status=IN_PROGRESS"
+    },
+    {
+      "code": "ABU-307_NOT_TESTED",
+      "detail": "ABU-307 status=NOT_STARTED"
+    },
+    {
+      "code": "ABU-403_NOT_TESTED",
+      "detail": "ABU-403 status=IN_PROGRESS"
+    },
+    {
+      "code": "HOST_Claude Code_NOT_VERIFIED",
+      "detail": "Claude Code integration is not host-verified"
+    },
+    {
+      "code": "HOST_ZCode_NOT_VERIFIED",
+      "detail": "ZCode integration is not host-verified"
+    },
+    {
+      "code": "HOST_Pi_NOT_VERIFIED",
+      "detail": "Pi integration is not host-verified"
+    },
+    {
+      "code": "HOST_Antigravity_NOT_VERIFIED",
+      "detail": "Antigravity integration is not host-verified"
+    },
+    {
+      "code": "ARTIFACT_UNSIGNED",
+      "detail": "portable artifact has no production signature"
+    },
+    {
+      "code": "ABU-311_REAL_ENDPOINT_BLOCKED",
+      "detail": "ABU-311 real endpoint is BLOCKED_EXTERNAL"
+    },
+    {
+      "code": "ABU-312_REAL_ENDPOINT_BLOCKED",
+      "detail": "ABU-312 real endpoint is BLOCKED_EXTERNAL"
+    },
+    {
+      "code": "ABU-313_REAL_ENDPOINT_BLOCKED",
+      "detail": "ABU-313 real endpoint is BLOCKED_EXTERNAL"
+    },
+    {
+      "code": "ABU-314_REAL_ENDPOINT_BLOCKED",
+      "detail": "ABU-314 real endpoint is BLOCKED_EXTERNAL"
+    },
+    {
+      "code": "ABU-318_REAL_ENDPOINT_BLOCKED",
+      "detail": "ABU-318 real endpoint is BLOCKED_EXTERNAL"
+    },
+    {
+      "code": "ABU-409_INDEPENDENT_REVIEW_BLOCKED",
+      "detail": "ABU-409 independent review is BLOCKED_EXTERNAL"
+    },
+    {
+      "code": "ABU-402_HOST_INSTALL_BLOCKED",
+      "detail": "ABU-402 real host install is BLOCKED_EXTERNAL"
+    },
+    {
+      "code": "ABU-408_PRODUCTION_SIGNATURE_BLOCKED",
+      "detail": "ABU-408 production signature is BLOCKED_EXTERNAL"
+    }
+  ],
+  "waived": [
+    {
+      "code": "ABU-210_NOT_TESTED",
+      "detail": "ABU-210 status=IN_PROGRESS"
+    },
+    {
+      "code": "ABU-302_NOT_TESTED",
+      "detail": "ABU-302 status=IN_PROGRESS"
+    },
+    {
+      "code": "ABU-303_NOT_TESTED",
+      "detail": "ABU-303 status=IN_PROGRESS"
+    },
+    {
+      "code": "ABU-307_NOT_TESTED",
+      "detail": "ABU-307 status=NOT_STARTED"
+    },
+    {
+      "code": "ABU-403_NOT_TESTED",
+      "detail": "ABU-403 status=IN_PROGRESS"
+    },
+    {
+      "code": "HOST_Claude Code_NOT_VERIFIED",
+      "detail": "Claude Code integration is not host-verified"
+    },
+    {
+      "code": "HOST_ZCode_NOT_VERIFIED",
+      "detail": "ZCode integration is not host-verified"
+    },
+    {
+      "code": "HOST_Pi_NOT_VERIFIED",
+      "detail": "Pi integration is not host-verified"
+    },
+    {
+      "code": "HOST_Antigravity_NOT_VERIFIED",
+      "detail": "Antigravity integration is not host-verified"
+    },
+    {
+      "code": "ARTIFACT_UNSIGNED",
+      "detail": "portable artifact has no production signature"
+    }
+  ],
+  "waiver": {
+    "approvedBy": "刘依林",
+    "approvedAt": "2026-10-22",
+    "independentReview": "WAIVED_BY_OWNER",
+    "count": 10,
+    "ref": "docs/v2/release/waivers.json"
+  },
+  "artifact": {
+    "version": "2.0.1",
+    "signed": false,
+    "sha256": "f756bb8ea37f403441df2272323a5d7a97fcfa5ca23f8904135cdeefcbaeefe5"
+  }
+}

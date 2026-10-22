@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "armorbreak.mcp-inspector/v1",
+  "generatedAt": "2026-10-21T16:07:11.167Z",
+  "inspector": "@modelcontextprotocol/inspector 2.11.0",
+  "protocol": "2025-06-18",
+  "server": "packages/mcp-server/index.js",
+  "command": "npx @modelcontextprotocol/inspector --cli --method {tools/list|tools/call} ... node packages/mcp-server/index.js",
+  "toolsList": [
+    "armorbreak_health",
+    "armorbreak_capabilities",
+    "armorbreak_analyze",
+    "armorbreak_task_get",
+    "armorbreak_evidence",
+    "armorbreak_report",
+    "armorbreak_task_list"
+  ],
+  "capabilities": {
+    "count": 46,
+    "sha256": "245344996eafbbe0258eb976b55274c79b88d0f182c5ec58d77096e8a1f02b9c"
+  },
+  "analyze": {
+    "taskId": "task_mvib1uz2_ef4eba18",
+    "state": "COMPLETED",
+    "capability": "forensics.hash",
+    "targetSha256": "93c5e12d061d83178e1b9f62f7fb41506fb3a34ffcf921dd24f15d78eca2542c",
+    "evidenceIds": [
+      "ev_mvib1v2m_badcaf4a",
+      "ev_mvib1v31_3b84852f"
+    ],
+    "reportPath": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\abm-inspector-ws-08bdc283-54c3-4e28-b34a-397e0bd0b10b\\.armorbreak\\tasks\\task_mvib1uz2_ef4eba18\\reports\\mcp-多算法文件哈希与完整性标识_2026-10-21_16-06-57.md",
+    "sha256": "1d3a33403d14af3a62f900dd227abf26724c1f52464dc2cf274a2cb293cf87ff"
+  },
+  "result": "PASS",
+  "notes": [
+    "Official Inspector CLI 2.11.0 handshake and tools/call verified.",
+    "Raw outputs are represented by SHA-256 to avoid embedding a large capability catalog.",
+    "L0 only; no L1/L2 execution."
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "armorbreak.claude-mcp/v1",
+  "generatedAt": "2026-10-22T09:55:00.000-07:00",
+  "claudeVersion": "2.1.299 (Claude Code)",
+  "scope": "user",
+  "configFile": "C:/Users/Lenovo/.claude.json",
+  "server": {
+    "name": "armorbreak",
+    "type": "stdio",
+    "command": "node",
+    "args": [
+      "D:\\dsh-ABM\\armorbreak\\packages\\mcp-server\\index.js"
+    ],
+    "envKeys": [
+      "ARMORBREAK_STATE_ROOT",
+      "ARMORBREAK_WORKSPACE",
+      "ARMORBREAK_PRINCIPAL_ID",
+      "ARMORBREAK_MCP_AUDIT_LOG"
+    ]
+  },
+  "observed": {
+    "mcpListCommand": "claude mcp list",
+    "listStatus": "Connected",
+    "connected": true,
+    "clientInfo": {
+      "name": "claude-code",
+      "version": "2.1.299"
+    },
+    "initialize": true,
+    "protocolVersion": "2025-11-25",
+    "toolsList": 7,
+    "toolCalls": 0,
+    "auditLog": "docs/v2/acceptance/host-audit/claude.jsonl"
+  },
+  "result": "MCP_CONNECTED_MODEL_BLOCKED",
+  "limitations": [
+    "The real Claude Code MCP client connected and listed all 7 tools.",
+    "claude -p still fails with Not logged in / 401; no ANTHROPIC_* or CLAUDE_CODE_OAUTH_TOKEN is available.",
+    "No model invocation or L0 tool call was made through Claude; no credential bypass was attempted."
+  ],
+  "printMode": {
+    "command": "claude -p \"只回复 OK\" --output-format json",
+    "result": "BLOCKED",
+    "detail": "Not logged in · Please run /login",
+    "proxyAttempt": "ANTHROPIC_BASE_URL=http://127.0.0.1:15721 + PROXY_MANAGED -> 401 Authentication Fails",
+    "envCredentials": "MISSING"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "armorbreak.host-overlay/v1",
+  "host": "cursor",
+  "pluginManifest": "plugins/portable/plugin.json",
+  "mcpConfig": "plugins/portable/mcp.json",
+  "skillsPath": "skills",
+  "notes": ["Portable overlay; Cursor project/user config conflict must be handled by the installer."],
+  "verified": false
+}

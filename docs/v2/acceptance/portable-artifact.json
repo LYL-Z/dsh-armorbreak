@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "armorbreak.portable-artifact/v1",
+  "generatedAt": "2026-10-22T12:10:34.927Z",
+  "sourceCommit": "da15b81321b1ed8bda16dda1531313bed6405d63",
+  "version": "2.0.1",
+  "artifact": "armorbreak-portable-2.0.1.tar.gz",
+  "bytes": 2815122,
+  "sha256": "f756bb8ea37f403441df2272323a5d7a97fcfa5ca23f8904135cdeefcbaeefe5",
+  "sbom": "armorbreak-portable-2.0.1.tar.gz.sbom.cdx.json",
+  "cleanRoom": {
+    "extracted": true,
+    "cliCapabilities": 46,
+    "result": "PASS",
+    "stderr": ""
+  },
+  "signed": false,
+  "limitations": [
+    "Test Ed25519 signature only; no production identity.",
+    "Docker/npm publish not performed."
+  ]
+}

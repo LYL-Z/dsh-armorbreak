@@ -1,0 +1,125 @@
+{
+  "schemaVersion": "armorbreak/v2",
+  "id": "task_mvjewuhz_6d0bc96f",
+  "title": "MCP 依赖清单与供应链启发式审计",
+  "objective": "Run sast.deps on D:\\dsh-ABM\\armorbreak",
+  "workflowId": null,
+  "targetPath": "D:\\dsh-ABM\\armorbreak",
+  "targetKind": "directory",
+  "operator": "workbuddy-host",
+  "tags": [],
+  "workspace": "D:\\dsh-ABM\\armorbreak",
+  "state": "COMPLETED",
+  "stateHistory": [
+    {
+      "state": "CREATED",
+      "at": "2026-10-22T10:42:47.015Z",
+      "reason": "task created"
+    },
+    {
+      "state": "SCOPE_VALIDATION",
+      "at": "2026-10-22T10:42:47.048Z",
+      "reason": "validating authorization scope"
+    },
+    {
+      "state": "ENVIRONMENT_CHECK",
+      "at": "2026-10-22T10:42:47.059Z",
+      "reason": "scope validated"
+    },
+    {
+      "state": "PLANNING",
+      "at": "2026-10-22T10:42:47.069Z",
+      "reason": "environment checked; riskMax=L0"
+    },
+    {
+      "state": "EXECUTING",
+      "at": "2026-10-22T10:42:47.081Z",
+      "reason": "planned; offline L0 analysis"
+    },
+    {
+      "state": "VERIFYING",
+      "at": "2026-10-22T10:42:47.475Z",
+      "reason": "all steps settled"
+    },
+    {
+      "state": "REPORTING",
+      "at": "2026-10-22T10:42:47.500Z",
+      "reason": "generating report"
+    },
+    {
+      "state": "COMPLETED",
+      "at": "2026-10-22T10:42:48.956Z",
+      "reason": "analysis completed"
+    }
+  ],
+  "steps": [
+    {
+      "id": "analyze",
+      "title": "依赖清单与供应链启发式审计",
+      "capabilityId": "sast.deps",
+      "options": {
+        "maxManifests": 30,
+        "maxDepsPerManifest": 200
+      },
+      "dependsOn": null,
+      "failurePolicy": null,
+      "retryPolicy": null,
+      "timeoutMs": null,
+      "status": "DONE",
+      "startedAt": null,
+      "finishedAt": "2026-10-22T10:42:47.463Z",
+      "error": null,
+      "summary": "依赖审计：5 个清单（npm=4, pip=1），共 12 个依赖；未固定 0、范围 0、已知风险版本匹配 10，清单解析错误 0。发现 13 条问题。",
+      "evidenceIds": [
+        "ev_mvjewulu_fd5ce4e6",
+        "ev_mvjewum4_3f87a6c6"
+      ],
+      "findingIds": [
+        "fnd_mvjewumo_c7db06fd",
+        "fnd_mvjewune_7df5ecb0",
+        "fnd_mvjewuo1_9e0a0046",
+        "fnd_mvjewuop_a57e409a",
+        "fnd_mvjewupb_ebb78086",
+        "fnd_mvjewuq0_e86379de",
+        "fnd_mvjewuqo_27e8666f",
+        "fnd_mvjewuri_44b6bc63",
+        "fnd_mvjewus6_8556c554",
+        "fnd_mvjewusu_b991a246",
+        "fnd_mvjewut6_941dfb35",
+        "fnd_mvjewuti_36fbdb57",
+        "fnd_mvjewutx_1126bc91"
+      ],
+      "durationMs": 58,
+      "attempt": 0
+    }
+  ],
+  "currentStep": 0,
+  "riskMax": "L0",
+  "approvals": [],
+  "notes": [
+    {
+      "at": "2026-10-22T10:42:47.495Z",
+      "note": "evidence chain verified (12 records)"
+    },
+    {
+      "at": "2026-10-22T10:42:48.950Z",
+      "note": "report generated: D:\\dsh-ABM\\armorbreak\\.armorbreak\\tasks\\task_mvjewuhz_6d0bc96f\\reports\\mcp-依赖清单与供应链启发式审计_2026-10-22_10-42-48.md"
+    }
+  ],
+  "createdAt": "2026-10-22T10:42:47.015Z",
+  "updatedAt": "2026-10-22T10:42:48.956Z",
+  "completedAt": "2026-10-22T10:42:48.956Z",
+  "error": null,
+  "report": {
+    "format": "markdown",
+    "path": "D:\\dsh-ABM\\armorbreak\\.armorbreak\\tasks\\task_mvjewuhz_6d0bc96f\\reports\\mcp-依赖清单与供应链启发式审计_2026-10-22_10-42-48.md",
+    "sha256": "9bf2cbe12c18ed7ae6684bf1d50a1e920ec063509513954e9014d39795faed8f",
+    "at": "2026-10-22T10:42:48.945Z"
+  },
+  "stats": {
+    "evidence": 12,
+    "findings": 13,
+    "stepsDone": 1,
+    "stepsFailed": 0
+  }
+}

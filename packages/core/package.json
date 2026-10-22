@@ -1,0 +1,8 @@
+{
+  "name": "@armorbreak/core",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "ArmorBreak Universal Core facade: independent of DSH/Cordis/DOM/Electron",
+  "exports": "./index.js"
+}

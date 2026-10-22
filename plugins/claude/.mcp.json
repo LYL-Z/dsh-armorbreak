@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "armorbreak": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/../../packages/mcp-server/index.js"],
+      "env": {
+        "ARMORBREAK_STATE_ROOT": "${CLAUDE_PLUGIN_DATA}/state",
+        "ARMORBREAK_WORKSPACE": "${CLAUDE_PROJECT_DIR}",
+        "ARMORBREAK_PRINCIPAL_ID": "claude-plugin"
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ArmorBreak MCP HTTP",
+    "version": "armorbreak.sdk-contract/v1"
+  },
+  "servers": [
+    {
+      "url": "https://127.0.0.1:0/mcp"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "description": "ok"
+          }
+        }
+      }
+    },
+    "/mcp": {
+      "post": {
+        "operationId": "mcp",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "JSON-RPC or SSE response"
+          },
+          "401": {
+            "description": "unauthorized"
+          },
+          "403": {
+            "description": "origin/host denied"
+          }
+        }
+      }
+    }
+  },
+  "x-armorbreak-methods": [
+    "analyze",
+    "capabilities",
+    "evidence",
+    "health",
+    "report",
+    "task",
+    "tasks"
+  ],
+  "x-armorbreak-security": {
+    "modelIsAuthority": false,
+    "tokenSource": "host configuration"
+  }
+}

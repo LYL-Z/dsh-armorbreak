@@ -1,13 +1,13 @@
 {
   "schemaVersion": "armorbreak.offline-score-final/v1",
-  "generatedAt": "2026-10-21T11:19:36.161Z",
+  "generatedAt": "2026-10-21T15:04:40.498Z",
   "source": "docs/v2/acceptance/offline-score.json",
   "frozenScenarioSet": "docs/v2/benchmark/core-scenarios.json",
   "environment": {
-    "platform": "linux",
+    "platform": "win32",
     "arch": "x64",
-    "node": "v24.22.0",
-    "offlineEnv": "1"
+    "node": "v24.16.0",
+    "offlineEnv": null
   },
   "denominator": {
     "targetTotal": 62,
@@ -15,7 +15,12 @@
     "extraScenarios": 6
   },
   "targetPass": 62,
+  "coreOfflinePassRate": 1,
   "coreL0OfflineRate": 1,
+  "relativeOfflineRetention": null,
+  "onlineOnlyFeatureShare": null,
+  "offlineCoverageWeighted": null,
+  "metricStatus": "relative/weighted metrics N/A without a frozen online reference",
   "rOffline": null,
   "rOfflineReason": "No frozen online-reference run; architecture formula requires A_online(i)=1 for the same target set. Not reported as 100%.",
   "excluded": [

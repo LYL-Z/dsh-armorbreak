@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "armorbreak.host-model-e2e/v1",
+  "generatedAt": "2026-10-22T10:55:00.000-07:00",
+  "method": "Real host model called armorbreak_analyze and armorbreak_report through MCP; server audit, task state, report hash and evidence chain were checked in .armorbreak/tasks.",
+  "hosts": [
+    {
+      "host": "Cursor",
+      "model": "Cursor Grok 4.6 Medium",
+      "taskId": "task_mvjey0mk_d002525a",
+      "state": "COMPLETED",
+      "operator": "cursor-host",
+      "capability": "sast.scan",
+      "target": "D:\\dsh-ABM\\armorbreak",
+      "stats": {
+        "evidence": 11,
+        "findings": 9,
+        "stepsDone": 1,
+        "stepsFailed": 0
+      },
+      "report": {
+        "sha256": "96c664a076365bdb7a857fe1686e1963725f64972dffa6be494f205a7f3fdf54",
+        "path": "docs/v2/acceptance/host-model/cursor-report.md",
+        "sourcePath": "D:\\dsh-ABM\\armorbreak\\.armorbreak\\tasks\\task_mvjey0mk_d002525a\\reports\\mcp-多语言源码危险-api-扫描_2026-10-22_10-43-42.md"
+      },
+      "evidenceChainVerified": true,
+      "files": {
+        "task": {
+          "path": "docs/v2/acceptance/host-model/cursor-task.json",
+          "sha256": "1e113ac9de8b216055615711715fc854e4c779ab1e78280be5cdcd9289ff485e",
+          "size": 3799
+        },
+        "report": {
+          "path": "docs/v2/acceptance/host-model/cursor-report.md",
+          "sha256": "96c664a076365bdb7a857fe1686e1963725f64972dffa6be494f205a7f3fdf54",
+          "size": 25356
+        },
+        "audit": {
+          "path": "docs/v2/acceptance/host-model/cursor-audit.jsonl",
+          "sha256": "2a72017dc9a97a900ef43390e51b07c732d29c13bb09e520c9193abc4e41458d",
+          "size": 7122
+        }
+      }
+    },
+    {
+      "host": "WorkBuddy",
+      "model": "Deepseek-V4.1-Flash",
+      "taskId": "task_mvjewuhz_6d0bc96f",
+      "state": "COMPLETED",
+      "operator": "workbuddy-host",
+      "capability": "sast.deps",
+      "target": "D:\\dsh-ABM\\armorbreak",
+      "stats": {
+        "evidence": 12,
+        "findings": 13,
+        "stepsDone": 1,
+        "stepsFailed": 0
+      },
+      "report": {
+        "sha256": "9bf2cbe12c18ed7ae6684bf1d50a1e920ec063509513954e9014d39795faed8f",
+        "path": "docs/v2/acceptance/host-model/workbuddy-report.md",
+        "sourcePath": "D:\\dsh-ABM\\armorbreak\\.armorbreak\\tasks\\task_mvjewuhz_6d0bc96f\\reports\\mcp-依赖清单与供应链启发式审计_2026-10-22_10-42-48.md"
+      },
+      "evidenceChainVerified": true,
+      "files": {
+        "task": {
+          "path": "docs/v2/acceptance/host-model/workbuddy-task.json",
+          "sha256": "395b9020a79f58234dee0601e67f616becc1a6a269cafc691cbec02ef0c29c79",
+          "size": 3628
+        },
+        "report": {
+          "path": "docs/v2/acceptance/host-model/workbuddy-report.md",
+          "sha256": "9bf2cbe12c18ed7ae6684bf1d50a1e920ec063509513954e9014d39795faed8f",
+          "size": 33371
+        },
+        "audit": {
+          "path": "docs/v2/acceptance/host-model/workbuddy-audit.jsonl",
+          "sha256": "e356f488d6ad5d696ffc0ddde5d278be60e7d71d3289462ae37a266ee593a8e2",
+          "size": 4826
+        }
+      }
+    },
+    {
+      "host": "TRAE",
+      "model": "GLM-5.3-Flash Max",
+      "taskId": "task_mvjf4409_3916dfb3",
+      "state": "COMPLETED",
+      "operator": "trae-host",
+      "capability": "sast.scan",
+      "target": "D:\\dsh-ABM\\armorbreak",
+      "stats": {
+        "evidence": 11,
+        "findings": 9,
+        "stepsDone": 1,
+        "stepsFailed": 0
+      },
+      "report": {
+        "sha256": "f5dc24cd22419bb1c87577faeb4c8e0a704b82ab6a6bc2ba5a90bb9101f1116e",
+        "path": "docs/v2/acceptance/host-model/trae-report.md",
+        "sourcePath": "D:\\dsh-ABM\\armorbreak\\.armorbreak\\tasks\\task_mvjf4409_3916dfb3\\reports\\mcp-多语言源码危险-api-扫描_2026-10-22_10-48-28.md"
+      },
+      "evidenceChainVerified": true,
+      "files": {
+        "task": {
+          "path": "docs/v2/acceptance/host-model/trae-task.json",
+          "sha256": "b883ea2fb11d6e146d80aba289580ef9c369ded86e94448072ca918bec9fc0c0",
+          "size": 3797
+        },
+        "report": {
+          "path": "docs/v2/acceptance/host-model/trae-report.md",
+          "sha256": "f5dc24cd22419bb1c87577faeb4c8e0a704b82ab6a6bc2ba5a90bb9101f1116e",
+          "size": 25367
+        },
+        "audit": {
+          "path": "docs/v2/acceptance/host-model/trae-audit.jsonl",
+          "sha256": "9f7dde35509dd054cb6c6f2c38ccb8ce5adac16e4dd25cccaf6f6d5aeb2d3a18",
+          "size": 3128
+        }
+      }
+    }
+  ]
+}

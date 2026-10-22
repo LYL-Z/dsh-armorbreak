@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://armorbreak.dev/schemas/v1/error.schema.json",
+  "title": "ArmorBreak Error",
+  "type": "object",
+  "required": ["code", "message"],
+  "properties": {
+    "code": {
+      "enum": [
+        "INVALID_REQUEST", "UNKNOWN_CAPABILITY", "POLICY_DENIED", "APPROVAL_REQUIRED",
+        "TARGET_OUT_OF_SCOPE", "CANCELLED", "TIMEOUT", "ENGINE_UNAVAILABLE", "EVIDENCE_MISMATCH"
+      ]
+    },
+    "message": { "type": "string" },
+    "traceId": { "type": "string" },
+    "retryable": { "type": "boolean" }
+  },
+  "additionalProperties": false
+}

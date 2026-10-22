@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "armorbreak.signoff/v1",
+  "signer": "刘依林",
+  "role": "project owner / user-provided handwritten signature",
+  "signedAt": "2026-10-22",
+  "source": "user-provided image in DSH attachment b33e01ba...",
+  "image": "signoff-liuyilin.jpg",
+  "imageSha256": "b33e01ba38f89d115a13b623b3f08e4266d9848116ca3ef902bd024b72d9442e",
+  "statement": "用户提供手写签名，并明确表示“签字我也签了，所有东西都由你来完成，我给你所有权限”。本记录作为 owner approval 使用。",
+  "independent": false,
+  "scope": "V2.2 owner approval / authorization to proceed",
+  "limitation": "不是独立第三方审查签字；不能替代 ABU-409 要求的独立审查、灰度计划和旧数据只读演练。"
+}

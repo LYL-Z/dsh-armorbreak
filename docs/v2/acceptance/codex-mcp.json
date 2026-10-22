@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "armorbreak.codex-mcp/v1",
+  "generatedAt": "2026-10-21T09:10:21.2944826-07:00",
+  "codexVersion": "codex-cli 0.154.0",
+  "codexHome": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\codex-abm-home-5dc8eb68-4acf-4bcb-94ca-25ff4f03dca6",
+  "registered": true,
+  "server": {
+    "name": "armorbreak",
+    "enabled": true,
+    "disabled_reason": null,
+    "transport": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "D:\\dsh-ABM\\armorbreak\\packages\\mcp-server\\index.js"
+      ],
+      "env": {
+        "ARMORBREAK_PRINCIPAL_ID": "codex-verifier",
+        "ARMORBREAK_STATE_ROOT": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\codex-abm-state-bcc1ae58-0e73-4062-a89c-e3cfdb2149ab",
+        "ARMORBREAK_WORKSPACE": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\codex-abm-ws-db25110f-5a8c-4c2e-9e03-d4dfdee6ccae"
+      },
+      "env_vars": [],
+      "cwd": null
+    },
+    "startup_timeout_sec": null,
+    "tool_timeout_sec": null,
+    "auth_status": "unsupported"
+  },
+  "scope": "global (isolated CODEX_HOME)",
+  "note": "Codex CLI configuration registration verified; model invocation/auth not exercised."
+}

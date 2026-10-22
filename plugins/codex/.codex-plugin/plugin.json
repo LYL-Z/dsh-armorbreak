@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "armorbreak.host-overlay/v1",
+  "host": "codex",
+  "pluginManifest": "plugins/portable/plugin.json",
+  "mcpConfig": "plugins/portable/mcp.json",
+  "skillsPath": "skills",
+  "notes": ["Portable plugin plus MCP; Codex-specific plugin schema must be checked against the installed Codex version before claiming integration."],
+  "verified": false
+}

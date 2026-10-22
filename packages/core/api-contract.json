@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "armorbreak.core-contract/v1",
+  "package": "@armorbreak/core",
+  "version": "0.1.0-p1",
+  "protocolVersion": "1.0.0",
+  "exports": [
+    "CORE_VERSION",
+    "ArmorBreakRuntime",
+    "getRuntime",
+    "CapabilityRegistry",
+    "TaskStore",
+    "EvidenceStore",
+    "PolicyGateway",
+    "PROTOCOL_VERSION",
+    "validateInvocation",
+    "createEvidenceEnvelope",
+    "createEventEnvelope",
+    "sanitizeEvidencePayload",
+    "createCore"
+  ],
+  "coreMethods": ["capabilities", "health", "close"],
+  "invocationRequiredFields": ["principal", "workspaceId", "requestId", "traceId"],
+  "invocationResultFields": {
+    "capability": ["id", "title", "riskLevel", "domain"],
+    "health": ["workspace", "tasks", "policy"],
+    "task": ["id", "workspace", "state", "operator", "createdAt"]
+  },
+  "forbiddenDependencies": ["@deepseek-ai", "cordis", "electron", "document.", "window."],
+  "dependencyGraph": "packages/core/dependency-graph.json"
+}

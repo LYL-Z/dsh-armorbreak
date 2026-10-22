@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "armorbreak.cursor-mcp/v1",
+  "generatedAt": "2026-10-22T09:55:00.000-07:00",
+  "host": "Cursor 3.17.8",
+  "realCursorConfigModified": true,
+  "configFiles": [
+    "C:/Users/Lenovo/AppData/Roaming/Cursor/User/settings.json (mcp.servers)",
+    "C:/Users/Lenovo/.cursor/mcp.json (mcpServers)"
+  ],
+  "server": {
+    "name": "armorbreak",
+    "command": "cmd.exe",
+    "args": [
+      "/c",
+      "D:/dsh-ABM/host-evidence/cursor/run-mcp.cmd"
+    ],
+    "envKeys": [
+      "ARMORBREAK_STATE_ROOT",
+      "ARMORBREAK_WORKSPACE",
+      "ARMORBREAK_PRINCIPAL_ID",
+      "ARMORBREAK_MCP_AUDIT_LOG"
+    ]
+  },
+  "observed": {
+    "clientInfo": {
+      "name": "cursor-vscode",
+      "version": "1.0.0"
+    },
+    "initialize": true,
+    "protocolVersion": "2025-11-25",
+    "toolsList": 7,
+    "toolCalls": 0,
+    "auditLog": "docs/v2/acceptance/host-audit/cursor.jsonl"
+  },
+  "result": "MCP_HANDSHAKE_PASS_MODEL_TOOL_CALL_PENDING",
+  "limitations": [
+    "Cursor's bundled Node 22 rejected the previous (?i:...) inline regex in packages/core/src/util.js; the regex was fixed and regression-tested.",
+    "The real Cursor host launched the MCP server and listed all 7 tools.",
+    "A GUI model tools/call (analyze/report) was not captured; no L0 task was created through Cursor."
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "armorbreak.sdk-contract/v1",
+  "package": "@armorbreak/sdk-ts",
+  "transports": ["engine", "mcp-http"],
+  "methods": {
+    "health": { "params": [], "result": "object" },
+    "capabilities": { "params": [], "result": "Capability[]" },
+    "analyze": { "params": ["capability", "target", "options"], "result": "AnalyzeResult" },
+    "task": { "params": ["taskId"], "result": "TaskResult" },
+    "tasks": { "params": [], "result": "TaskResult[]" },
+    "evidence": { "params": ["taskId"], "result": "EvidenceResult" },
+    "report": { "params": ["taskId"], "result": "ReportResult" }
+  },
+  "security": { "modelIsAuthority": false, "tokenSource": "host configuration" }
+}

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "armorbreak.overhead-benchmark/v1",
+  "generatedAt": "2026-10-22T10:19:47.874Z",
+  "hardware": {
+    "platform": "win32",
+    "arch": "x64",
+    "cpu": "Intel(R) Core(TM) Ultra 9 290HX Plus",
+    "node": "v24.16.0"
+  },
+  "iterations": 3,
+  "metrics": {
+    "cliStartupMs": {
+      "p50": 371.9,
+      "p95": 376.13,
+      "min": 356.45,
+      "max": 376.13
+    },
+    "coreCapabilitiesMs": {
+      "p50": 0.08,
+      "p95": 0.56,
+      "min": 0.07,
+      "max": 0.56
+    },
+    "httpCapabilitiesMs": {
+      "p50": 3.15,
+      "p95": 3.82,
+      "min": 2.26,
+      "max": 3.82
+    },
+    "capabilitiesPayloadBytes": 39253
+  },
+  "realModelCalls": true,
+  "model": {
+    "model": "qwen3.5:4b",
+    "provider": "ollama",
+    "basicMs": {
+      "p50": 655.32,
+      "p95": 681.66,
+      "min": 640.51,
+      "max": 681.66
+    },
+    "streamMs": {
+      "p50": 669.9,
+      "p95": 669.9,
+      "min": 669.9,
+      "max": 669.9
+    },
+    "usage": {
+      "inputTokens": 16,
+      "outputTokens": 64,
+      "totalTokens": 80
+    },
+    "streamEventCount": 62,
+    "protocolOverheadRatio": 0.0048
+  },
+  "limitations": [
+    "Real local Ollama qwen3.5:4b calls were measured; no paid OpenAI/Anthropic/Gemini endpoint was called.",
+    "Timings vary by machine load and are not a cross-host benchmark."
+  ]
+}

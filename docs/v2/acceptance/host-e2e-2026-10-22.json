@@ -1,0 +1,221 @@
+{
+  "schemaVersion": "armorbreak.host-e2e/v1",
+  "generatedAt": "2026-10-22T09:55:00.000-07:00",
+  "environment": {
+    "os": "win32",
+    "arch": "x64",
+    "stateRoots": "D:/dsh-ABM/host-evidence",
+    "workspace": "D:/dsh-ABM/armorbreak"
+  },
+  "method": "Each host launched the real ArmorBreak stdio MCP server; the server wrote an optional JSONL audit containing initialize clientInfo, tools/list and tools/call status (never arguments or secrets).",
+  "hosts": [
+    {
+      "host": "DSH",
+      "hostVersion": "DeepSeek Harness Desktop",
+      "clientInfo": null,
+      "initialize": true,
+      "toolsList": 46,
+      "toolCalls": [],
+      "modelE2E": true,
+      "status": "HOST_VERIFIED",
+      "evidence": [
+        "docs/v2/acceptance/desktop-e2e.json"
+      ],
+      "limitation": "Prior real Desktop E2E; not re-run in this collection."
+    },
+    {
+      "host": "Hermes Agent",
+      "hostVersion": "0.19.0",
+      "clientInfo": {
+        "name": "mcp",
+        "version": "0.1.0"
+      },
+      "initialize": true,
+      "toolsList": 7,
+      "toolCalls": [
+        {
+          "tool": "armorbreak_health",
+          "ok": true,
+          "at": "2026-10-22T09:39:50.201Z"
+        }
+      ],
+      "modelE2E": true,
+      "model": "deepseek-v4-pro",
+      "modelOutput": "ARMORBREAK_HERMES_OK undefined (model called the tool; health has no top-level ok field)",
+      "status": "HOST_VERIFIED",
+      "evidence": [
+        "host-audit/hermes.jsonl",
+        "hermes-model-out.txt"
+      ],
+      "limitation": "Health call only in this run; prior run executed full L0 analyze + report."
+    },
+    {
+      "host": "Codex",
+      "hostVersion": "codex-cli 0.154.0",
+      "clientInfo": {
+        "name": "codex-mcp-client",
+        "version": "0.154.0"
+      },
+      "initialize": true,
+      "toolsList": 7,
+      "toolCalls": [
+        {
+          "tool": "armorbreak_health",
+          "ok": true,
+          "at": "2026-10-22T09:41:26.967Z"
+        }
+      ],
+      "modelE2E": true,
+      "model": "gpt-6-astra",
+      "modelOutput": "D:\\dsh-ABM\\armorbreak",
+      "status": "HOST_VERIFIED",
+      "evidence": [
+        "host-audit/codex.jsonl",
+        "codex-events2.jsonl"
+      ],
+      "limitation": "Health call only in this run; prior run executed full L0 analyze + report. Model gpt-6-luna is not supported by the ChatGPT account."
+    },
+    {
+      "host": "Claude Code",
+      "hostVersion": "2.1.299",
+      "clientInfo": {
+        "name": "claude-code",
+        "version": "2.1.299"
+      },
+      "initialize": true,
+      "toolsList": 7,
+      "toolCalls": [],
+      "modelE2E": false,
+      "status": "MCP_HANDSHAKE_ONLY_MODEL_BLOCKED",
+      "evidence": [
+        "host-audit/claude.jsonl"
+      ],
+      "limitation": "claude -p: Not logged in / 401; no ANTHROPIC_* or CLAUDE_CODE_OAUTH_TOKEN. MCP itself connected."
+    },
+    {
+      "host": "Cursor",
+      "hostVersion": "3.17.8",
+      "clientInfo": {
+        "name": "cursor-vscode",
+        "version": "1.0.0"
+      },
+      "initialize": true,
+      "toolsList": 7,
+      "toolCalls": [],
+      "modelE2E": false,
+      "status": "MCP_HANDSHAKE_ONLY",
+      "evidence": [
+        "host-audit/cursor.jsonl"
+      ],
+      "limitation": "Cursor launched the server; no GUI model tools/call captured. Node 22 regex bug found and fixed."
+    },
+    {
+      "host": "ZCode",
+      "hostVersion": "3.14.4",
+      "clientInfo": {
+        "name": "zcode",
+        "version": "0.16.9"
+      },
+      "initialize": true,
+      "toolsList": 7,
+      "toolCalls": [],
+      "modelE2E": false,
+      "status": "MCP_HANDSHAKE_ONLY",
+      "evidence": [
+        "host-audit/zcode.jsonl"
+      ],
+      "limitation": "MCP config loaded via .zcode/cli/config.json; no model tools/call captured."
+    },
+    {
+      "host": "TRAE",
+      "hostVersion": "3.4.2",
+      "clientInfo": {
+        "name": "Trae",
+        "version": "3.4.2"
+      },
+      "initialize": true,
+      "toolsList": 7,
+      "toolCalls": [],
+      "modelE2E": false,
+      "status": "MCP_HANDSHAKE_ONLY",
+      "evidence": [
+        "host-audit/trae.jsonl"
+      ],
+      "limitation": "MCP config loaded via %APPDATA%\\Trae CN\\User\\mcp.json; no model tools/call captured."
+    },
+    {
+      "host": "WorkBuddy",
+      "hostVersion": "5.5.2",
+      "clientInfo": null,
+      "initialize": false,
+      "toolsList": 0,
+      "toolCalls": [],
+      "modelE2E": false,
+      "status": "CONFIG_ONLY",
+      "evidence": [],
+      "limitation": "MCP registered in .workbuddy-ai root and connector configs; no server audit after restarts."
+    },
+    {
+      "host": "Antigravity",
+      "hostVersion": null,
+      "clientInfo": null,
+      "initialize": false,
+      "toolsList": 0,
+      "toolCalls": [],
+      "modelE2E": false,
+      "status": "NOT_INSTALLED",
+      "evidence": [],
+      "limitation": "Not installed on this host."
+    },
+    {
+      "host": "Pi",
+      "hostVersion": null,
+      "clientInfo": null,
+      "initialize": false,
+      "toolsList": 0,
+      "toolCalls": [],
+      "modelE2E": false,
+      "status": "NOT_INSTALLED",
+      "evidence": [],
+      "limitation": "Not installed on this host."
+    }
+  ],
+  "files": {
+    "host-audit/hermes.jsonl": {
+      "sha256": "ab44304286faa6e5494a125618299ea488f11acda39d55a67801277892e23811",
+      "size": 3315
+    },
+    "host-audit/codex.jsonl": {
+      "sha256": "99b8fd93cc5b30b254bdd143c93d4daa4ab354c89ddcb85e21f9d6928e46fbc3",
+      "size": 3401
+    },
+    "host-audit/cursor.jsonl": {
+      "sha256": "741d0ff4263e551d1a6070187829f9876c990fcf62c8dc45b873f99df1fda0b4",
+      "size": 2796
+    },
+    "host-audit/claude.jsonl": {
+      "sha256": "d5c3e712b343912ce29e7a7dd00fc8cffb50566fd5a946d06fba75340220bc16",
+      "size": 1262
+    },
+    "host-audit/zcode.jsonl": {
+      "sha256": "6ed547e9a5905a196624fc4234b905cb255092b69e6d90d9fa3fb2b9423ace74",
+      "size": 615
+    },
+    "host-audit/trae.jsonl": {
+      "sha256": "54aca792c1b3b3c35c19d056ba791e6ccfb868738bb532a5bcf5f09766627739",
+      "size": 789
+    },
+    "hermes-model-out.txt": {
+      "sha256": "c8419a85bef2732ee315d4eb12013dec76f3c7fa3b16e0975b54a85d17112a15",
+      "size": 506
+    },
+    "codex-events2.jsonl": {
+      "sha256": "e11bec8089b168335b7e445106f5a90621b1d88bf504141e1dc626f68d0149d7",
+      "size": 46246
+    },
+    "signoff-liuyilin.jpg": {
+      "sha256": "b33e01ba38f89d115a13b623b3f08e4266d9848116ca3ef902bd024b72d9442e",
+      "size": 23870
+    }
+  }
+}

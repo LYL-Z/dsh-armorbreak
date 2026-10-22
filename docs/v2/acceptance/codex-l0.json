@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "armorbreak.codex-l0/v1",
+  "generatedAt": "2026-10-22T04:20:58.317Z",
+  "host": "codex-cli 0.154.0",
+  "command": "codex exec --json --ephemeral --skip-git-repo-check --dangerously-bypass-approvals-and-sandbox -C <repo> -",
+  "isolated": {
+    "tempCodexHome": true,
+    "realConfigModified": false,
+    "authCopiedFromExistingCodexHome": true,
+    "sessionEphemeral": true
+  },
+  "taskId": "task_mvj19esz_01abbdfd",
+  "state": "COMPLETED",
+  "capability": "forensics.hash",
+  "riskLevel": "L0",
+  "targetSha256": "806ca18c19f5e682159cb3ff0721c76dfc30b3ae804fc34937871d0788825637",
+  "evidenceIds": [
+    "ev_mvj19etu_d7a50b59",
+    "ev_mvj19etz_fa48943a"
+  ],
+  "evidenceCount": 2,
+  "report": {
+    "committedCopy": "docs/v2/acceptance/codex-l0-report.md",
+    "bytes": 7794,
+    "sha256": "27734e551aaabf2359512fcffed891edb8269e3a608c711a2e6baeee72eb2bc5",
+    "originalTaskSha256": "27734e551aaabf2359512fcffed891edb8269e3a608c711a2e6baeee72eb2bc5"
+  },
+  "rawOutput": {
+    "committedCopy": "docs/v2/acceptance/codex-l0.txt",
+    "bytes": 12947,
+    "sha256": "ebd9bcfc3a86ee2a043285f70fba70a67525c5d6dd7043a981ee56ecb524a294"
+  },
+  "pathDefectFoundAndFixed": "Engine compared C:/... vs C:\\... as strings; report failed before fix. Added samePath normalization and regression test.",
+  "result": "PASS",
+  "limitations": [
+    "L0 only; no L1/L2 execution.",
+    "Codex may emit unrelated cloud MCP auth warnings from other configured servers; ArmorBreak calls remained isolated in the temporary config.",
+    "Temp CODEX_HOME/workspace removed after evidence copy."
+  ]
+}

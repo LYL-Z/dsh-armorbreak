@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "armorbreak.zcode-headless/v1",
+  "generatedAt": "2026-10-22T12:03:03.396Z",
+  "hostVersion": "ZCode 3.14.4",
+  "cliVersion": "zcode 0.16.9",
+  "command": "zcode -p <prompt> --cwd D:\\dsh-ABM\\armorbreak --mode yolo --json --surface terminal",
+  "mcp": {
+    "clientInfo": {
+      "name": "zcode",
+      "version": "0.16.9"
+    },
+    "initialize": true,
+    "toolsList": 7,
+    "audit": "docs/v2/acceptance/host-audit/zcode.jsonl"
+  },
+  "model": {
+    "providerId": "zai-api",
+    "providerKind": "anthropic",
+    "httpStatus": 429,
+    "providerCode": "1113",
+    "message": "[1113][Insufficient balance or no resource package. Please recharge.]",
+    "taskCreated": false
+  },
+  "result": "BLOCKED_EXTERNAL",
+  "limitation": "MCP handshake and 7-tool discovery pass; model provider account has insufficient balance. No task/evidence/report was produced; not counted as L0."
+}

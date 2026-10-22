@@ -27,9 +27,13 @@
 
 ## Current blockers
 
-- M4-06 real Desktop/model E2E BLOCKED.
-- M4-03/04/07/10/11/12 remain REVIEW; no signed release artifact.
-- Performance regressions >10% (sast/workflow) unresolved.
+- **None for V2.0.0.** Real Desktop health + L0 E2E is recorded; all six legacy
+  gates were PASS at v2.0.0.
+- V2.0.1 evidence hardening is in progress on `feature/abu-universal`; this does
+  not move the existing v2.0.0 tag.
+- Performance regressions >10% (sast/workflow) unresolved is historical text;
+  the latest comparison has no >10% regression. Verify with
+  `performance-compare.json` before quoting this bullet.
 
 ## Commands
 

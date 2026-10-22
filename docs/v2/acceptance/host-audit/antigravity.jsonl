@@ -1,0 +1,3 @@
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T12:04:36.110Z","pid":79868,"principal":"antigravity-host","workspace":"D:/dsh-ABM/armorbreak","event":"initialize","protocolVersion":"2025-06-18","clientInfo":{"name":"gemini-cli-mcp-client","version":"0.64.0"}}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T12:04:36.116Z","pid":79868,"principal":"antigravity-host","workspace":"D:/dsh-ABM/armorbreak","event":"notifications/initialized"}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T12:04:36.120Z","pid":79868,"principal":"antigravity-host","workspace":"D:/dsh-ABM/armorbreak","event":"tools/list","tools":7}

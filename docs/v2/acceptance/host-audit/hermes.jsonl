@@ -1,0 +1,16 @@
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:35:46.717Z","pid":20760,"principal":"hermes-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"initialize","protocolVersion":"2025-11-25","clientInfo":{"name":"mcp","version":"0.1.0"}}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:35:46.719Z","pid":20760,"principal":"hermes-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"notifications/initialized"}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:35:46.720Z","pid":20760,"principal":"hermes-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"tools/list","tools":7}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:36:13.099Z","pid":80592,"principal":"hermes-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"initialize","protocolVersion":"2025-11-25","clientInfo":{"name":"mcp","version":"0.1.0"}}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:36:13.101Z","pid":80592,"principal":"hermes-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"notifications/initialized"}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:36:13.102Z","pid":80592,"principal":"hermes-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"tools/list","tools":7}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:39:38.131Z","pid":68812,"principal":"hermes-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"initialize","protocolVersion":"2025-11-25","clientInfo":{"name":"mcp","version":"0.1.0"}}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:39:38.134Z","pid":68812,"principal":"hermes-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"notifications/initialized"}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:39:38.135Z","pid":68812,"principal":"hermes-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"tools/list","tools":7}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:39:50.201Z","pid":68812,"principal":"hermes-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"tools/call","tool":"armorbreak_health","ok":true}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:41:17.659Z","pid":27728,"principal":"hermes-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"initialize","protocolVersion":"2025-11-25","clientInfo":{"name":"mcp","version":"0.1.0"}}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:41:17.661Z","pid":27728,"principal":"hermes-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"notifications/initialized"}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:41:17.662Z","pid":27728,"principal":"hermes-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"tools/list","tools":7}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:52:17.462Z","pid":46928,"principal":"hermes-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"initialize","protocolVersion":"2025-11-25","clientInfo":{"name":"mcp","version":"0.1.0"}}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:52:17.465Z","pid":46928,"principal":"hermes-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"notifications/initialized"}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:52:17.467Z","pid":46928,"principal":"hermes-host","workspace":"D:\\dsh-ABM\\armorbreak","event":"tools/list","tools":7}

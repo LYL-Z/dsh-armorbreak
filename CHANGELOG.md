@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.1 — 2026-10-21
+
+证据与文档硬化：release gates 改为 commit-bound evidence manifest + raw TAP；新增 tamper/missing/stale/failing 负例；docs consistency 检查；隔离自检状态持久化（IsolationVerified）；离线指标拆分，相对保持率仍为 N/A。
+
 ## 2.0.0 — 2026-10-21
 
 V2 安全研究版：L0–L3 策略网关、46 能力 / 9 工作流、真实 Garak/PyRIT/JailbreakBench、签名供应链、事务化安装/回滚、工作台、完整发布门与真实 Windows Desktop GUI E2E。

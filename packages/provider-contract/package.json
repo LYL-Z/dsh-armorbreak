@@ -1,0 +1,11 @@
+{
+  "name": "@armorbreak/provider-contract",
+  "version": "0.1.0-p3",
+  "private": true,
+  "type": "module",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": { "types": "./index.d.ts", "default": "./index.js" },
+    "./contract": "./contract.json"
+  }
+}

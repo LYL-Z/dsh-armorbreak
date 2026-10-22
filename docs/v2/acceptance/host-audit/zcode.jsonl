@@ -1,0 +1,12 @@
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:52:01.831Z","pid":63916,"principal":"zcode-host","workspace":"D:/dsh-ABM/armorbreak","event":"initialize","protocolVersion":"2025-11-25","clientInfo":{"name":"zcode","version":"0.16.9"}}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:52:01.835Z","pid":63916,"principal":"zcode-host","workspace":"D:/dsh-ABM/armorbreak","event":"notifications/initialized"}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:52:01.836Z","pid":63916,"principal":"zcode-host","workspace":"D:/dsh-ABM/armorbreak","event":"tools/list","tools":7}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T10:46:10.090Z","pid":42352,"principal":"zcode-host","workspace":"D:/dsh-ABM/armorbreak","event":"initialize","protocolVersion":"2025-11-25","clientInfo":{"name":"zcode","version":"0.16.9"}}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T10:46:10.093Z","pid":42352,"principal":"zcode-host","workspace":"D:/dsh-ABM/armorbreak","event":"notifications/initialized"}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T10:46:10.095Z","pid":42352,"principal":"zcode-host","workspace":"D:/dsh-ABM/armorbreak","event":"tools/list","tools":7}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T10:46:43.143Z","pid":11212,"principal":"zcode-host","workspace":"D:/dsh-ABM/armorbreak","event":"initialize","protocolVersion":"2025-11-25","clientInfo":{"name":"zcode","version":"0.16.9"}}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T10:46:43.880Z","pid":11212,"principal":"zcode-host","workspace":"D:/dsh-ABM/armorbreak","event":"notifications/initialized"}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T10:46:43.882Z","pid":11212,"principal":"zcode-host","workspace":"D:/dsh-ABM/armorbreak","event":"tools/list","tools":7}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T12:02:37.011Z","pid":84132,"principal":"zcode-host","workspace":"D:/dsh-ABM/armorbreak","event":"initialize","protocolVersion":"2025-11-25","clientInfo":{"name":"zcode","version":"0.16.9"}}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T12:02:37.014Z","pid":84132,"principal":"zcode-host","workspace":"D:/dsh-ABM/armorbreak","event":"notifications/initialized"}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T12:02:37.015Z","pid":84132,"principal":"zcode-host","workspace":"D:/dsh-ABM/armorbreak","event":"tools/list","tools":7}
