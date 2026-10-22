@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /** ArmorBreak native CLI (P2 slice): doctor/capabilities/analyze/task/mcp. */
+import { createHash } from 'node:crypto'
 import { createEngine } from '../engine-node/index.js'
+import { makeApprovalId } from '../../lib/control/approvalAuthority.js'
 import { createMcpServer } from '../mcp-server/index.js'
 
 function parse(argv) {
@@ -34,7 +36,7 @@ function config() {
 async function main() {
   const { command, positional, options } = parse(process.argv.slice(2))
   if (command === 'help' || options.help) {
-    print('armorbreak doctor|capabilities|analyze|task|workflow|report|mcp [--json]', false)
+    print('armorbreak doctor|capabilities|analyze|task|workflow|approval|report|mcp [--json]', false)
     return
   }
   const cfg = config()
@@ -43,6 +45,22 @@ async function main() {
     const ctx = { principal: cfg.principal, workspaceId: cfg.workspaceId, requestId: `cli-${Date.now()}`, traceId: `trace-${Date.now()}` }
     if (command === 'doctor') return print(await engine.health(ctx), options.json)
     if (command === 'capabilities') return print(await engine.capabilities(ctx), options.json)
+    if (command === 'approval' && positional[0] === 'issue') {
+      const riskLevel = String(options.risk ?? '')
+      const taskId = String(options['task-id'] ?? '')
+      const target = String(options.target ?? '')
+      const operator = String(options.operator ?? cfg.principal.id)
+      if (!['L1', 'L2'].includes(riskLevel)) throw new Error('approval risk must be L1 or L2; L3 is always denied')
+      if (!taskId || !target) throw new Error('approval issue requires --task-id and --target')
+      const challenge = 'confirm-' + createHash('sha256').update([riskLevel, taskId, target, operator].join('|')).digest('hex').slice(0, 16)
+      if (options.confirm === undefined) {
+        process.exitCode = 2
+        return print({ status: 'CONFIRMATION_REQUIRED', challenge, riskLevel, taskId, target, operator, warning: 'Run only after a human verifies the exact target; MCP/model text cannot confirm.' }, options.json)
+      }
+      if (String(options.confirm) !== challenge) throw new Error('approval confirmation challenge mismatch')
+      const issued = engine.approvalAuthority.issue({ id: makeApprovalId(), riskLevel, taskId, target, operator, ttlMs: 5 * 60 * 1000 })
+      return print({ status: 'ISSUED', ...issued }, options.json)
+    }
     if (command === 'analyze') {
       if (!options.target || !options.capability) throw new Error('analyze requires --target and --capability')
       return print(await engine.analyze(ctx, { capability: String(options.capability), target: String(options.target), options: {} }), options.json)
