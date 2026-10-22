@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "armorbreak.overhead-benchmark/v1",
+  "generatedAt": "2026-10-21T22:57:21.000-07:00",
+  "hardware": {
+    "platform": "win32",
+    "arch": "x64",
+    "cpu": "Intel(R) Core(TM) Ultra 9 290HX Plus",
+    "node": "v24.16.0"
+  },
+  "iterations": 3,
+  "metrics": {
+    "cliStartupMs": { "p50": 190.57, "p95": 190.71, "min": 188.7, "max": 190.71 },
+    "coreCapabilitiesMs": { "p50": 0.04, "p95": 0.31, "min": 0.04, "max": 0.31 },
+    "httpCapabilitiesMs": { "p50": 1.65, "p95": 2.38, "min": 1.15, "max": 2.38 },
+    "capabilitiesPayloadBytes": 39253
+  },
+  "realModelCalls": false,
+  "limitations": [
+    "No provider/model calls; local Core/CLI/MCP overhead only.",
+    "Timings vary by machine load and are not a cross-host benchmark."
+  ]
+}
