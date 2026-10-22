@@ -6,9 +6,9 @@ The model is never an approval principal.
 
 | Provider | Kind | Example model | Credential | Tools | Verification |
 |---|---|---|---|---|---|
-| OpenAI-compatible | `openai-compatible` | `gpt-4.1` | `OPENAI_API_KEY` | yes | Unit-tested router; no live call |
-| Anthropic | `anthropic` | `claude-sonnet-4-5` | `ANTHROPIC_API_KEY` | yes | Unit-tested router; no live call |
-| Ollama | `ollama` | `qwen2.5-coder:14b` | none | no | Unit-tested router; no live call |
+| OpenAI-compatible | `openai-compatible` | `gpt-4.1` | `OPENAI_API_KEY` | yes | Unit-tested router; no live paid call |
+| Anthropic | `anthropic` | `claude-sonnet-4-5` | `ANTHROPIC_API_KEY` | yes | Unit-tested router; no live paid call |
+| Ollama | `ollama` | `qwen3.5:4b` | none | yes | **Live local**: basic chat `OLLAMA_BASIC_OK`, tool call `armorbreak_health`, 3-turn loop, usage 1421 tokens; `provider-live-ollama.json` |
 | Local OpenAI-compatible | `local` | `local-model` | none | yes | Unit-tested router; no live call |
 
 ## Router guarantees

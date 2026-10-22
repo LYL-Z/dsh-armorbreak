@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "armorbreak.provider-live/v1",
+  "generatedAt": "2026-10-22T10:12:56.329Z",
+  "host": "Windows / local Ollama",
+  "endpoint": "http://127.0.0.1:11434/v1",
+  "provider": {
+    "id": "ollama",
+    "kind": "ollama",
+    "model": "qwen3.5:4b",
+    "supportsTools": true
+  },
+  "startedAt": "2026-10-22T10:12:49.019Z",
+  "basic": {
+    "text": "OLLAMA_BASIC_OK",
+    "usage": {
+      "inputTokens": 18,
+      "outputTokens": 160,
+      "totalTokens": 178
+    },
+    "latencyMs": 1428,
+    "pass": true
+  },
+  "toolCall": {
+    "toolCalls": [],
+    "executed": {
+      "id": "call_ehfdshye",
+      "name": "armorbreak_health",
+      "arguments": "{}"
+    },
+    "final": "DONE",
+    "turns": 3,
+    "usage": {
+      "inputTokens": 945,
+      "outputTokens": 476,
+      "totalTokens": 1421
+    },
+    "latencyMs": 5740
+  },
+  "pass": true,
+  "limitations": [
+    "Local Ollama only; no paid OpenAI/Anthropic/Gemini endpoint was called.",
+    "Streaming SSE, provider secret vault, cost estimate/fallback and real 429 handling remain partial.",
+    "The normalized OpenAI-compatible tool call arguments are a JSON string from Ollama; the executor accepts both string and object."
+  ]
+}

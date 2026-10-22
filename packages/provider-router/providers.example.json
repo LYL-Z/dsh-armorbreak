@@ -24,8 +24,8 @@
       "id": "ollama",
       "kind": "ollama",
       "baseUrl": "http://127.0.0.1:11434/v1",
-      "models": ["qwen2.5-coder:14b"],
-      "supportsTools": false,
+      "models": ["qwen3.5:4b"],
+      "supportsTools": true,
       "timeoutMs": 120000
     },
     {

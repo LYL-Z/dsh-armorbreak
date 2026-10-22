@@ -13,6 +13,14 @@ function messageText(messages) {
   })
 }
 
+function normalizedUsage(raw) {
+  if (!raw || typeof raw !== 'object') return null
+  const inputTokens = Number(raw.inputTokens ?? raw.prompt_tokens ?? raw.input_tokens ?? 0)
+  const outputTokens = Number(raw.outputTokens ?? raw.completion_tokens ?? raw.output_tokens ?? 0)
+  const totalTokens = Number(raw.totalTokens ?? raw.total_tokens ?? inputTokens + outputTokens)
+  return { inputTokens, outputTokens, totalTokens }
+}
+
 export class ProviderClient {
   constructor({ router, env = process.env, fetchImpl = globalThis.fetch } = {}) {
     if (!router) throw fail('CLIENT_INVALID', 'router is required')
@@ -73,13 +81,13 @@ export class ProviderClient {
     if (route.kind === 'anthropic') {
       const text = (payload.content ?? []).filter((block) => block.type === 'text').map((block) => block.text).join('')
       const toolCalls = (payload.content ?? []).filter((block) => block.type === 'tool_use').map((block) => ({ id: block.id, name: block.name, arguments: block.input }))
-      return { text, toolCalls, usage: payload.usage ?? null }
+      return { text, toolCalls, usage: normalizedUsage(payload.usage) }
     }
     const message = payload.choices?.[0]?.message ?? {}
     return {
       text: typeof message.content === 'string' ? message.content : '',
       toolCalls: (message.tool_calls ?? []).map((call) => ({ id: call.id, name: call.function?.name, arguments: call.function?.arguments })),
-      usage: payload.usage ?? null,
+      usage: normalizedUsage(payload.usage),
     }
   }
 }
