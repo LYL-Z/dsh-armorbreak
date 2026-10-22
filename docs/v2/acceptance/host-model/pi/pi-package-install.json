@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "armorbreak.pi-package-install/v1",
+  "generatedAt": "2026-10-22T12:44:50.762Z",
+  "host": "Pi",
+  "hostVersion": "@mariozechner/pi-coding-agent 0.73.1",
+  "package": "@armorbreak/pi-extension 0.1.0",
+  "installMethod": "pi install D:\\dsh-ABM\\armorbreak\\plugins\\pi",
+  "profile": "D:/dsh-ABM/pi-install-home/agent",
+  "install": {
+    "result": "PASS"
+  },
+  "listInstalled": {
+    "result": "PASS"
+  },
+  "headlessWithoutExtensionFlag": {
+    "result": "PASS",
+    "evidence": "install-uninstall.log"
+  },
+  "remove": {
+    "result": "PASS"
+  },
+  "after": {
+    "packages": [],
+    "result": "ROLLED_BACK"
+  },
+  "settingsSha256": "30d4e841faeed589c70227bed958aba76df25ac739728dea1b4233acee9211fc",
+  "logSha256": "80e7fd021a420d63d809282ca0a0ca54de9872fd1b32621c6e011384e2d879dd",
+  "result": "PASS",
+  "limitation": "Pi package install/uninstall; model is local Ollama. L3 denial not re-run."
+}

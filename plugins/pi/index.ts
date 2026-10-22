@@ -3,17 +3,23 @@
  * Pi has no built-in MCP; this registers native tools instead.
  */
 import { resolve, sep } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { Type } from 'typebox'
-import { createEngine } from '../../packages/engine-node/index.js'
 
 const stateRoot = process.env.ARMORBREAK_STATE_ROOT || 'D:/dsh-ABM/host-evidence/pi/state'
 const workspace = resolve(process.env.ARMORBREAK_WORKSPACE || 'D:/dsh-ABM/armorbreak')
 const principalId = process.env.ARMORBREAK_PRINCIPAL_ID || 'pi-host'
 const principal = { id: principalId, kind: 'local-user', workspaces: [workspace] }
+const coreUrl = process.env.ARMORBREAK_CORE_PATH
+  ? pathToFileURL(resolve(process.env.ARMORBREAK_CORE_PATH)).href
+  : new URL('../../packages/engine-node/index.js', import.meta.url).href
 let enginePromise
 
-function engine() {
-  enginePromise ??= createEngine({ stateRoot, workspaceId: workspace, principal, principals: [principal] })
+async function engine() {
+  if (!enginePromise) {
+    const { createEngine } = await import(coreUrl)
+    enginePromise = createEngine({ stateRoot, workspaceId: workspace, principal, principals: [principal] })
+  }
   return enginePromise
 }
 

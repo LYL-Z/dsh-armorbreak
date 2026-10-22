@@ -1,0 +1,15 @@
+{
+  "name": "@armorbreak/pi-extension",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "ArmorBreak Universal Core tools for the Pi coding agent",
+  "keywords": ["pi-package", "armorbreak", "security"],
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*",
+    "typebox": "*"
+  },
+  "pi": {
+    "extensions": ["./index.ts"]
+  }
+}
