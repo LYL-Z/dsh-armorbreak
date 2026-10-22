@@ -22,6 +22,30 @@ test('tool loop preserves tool IDs and returns final text', async () => {
   assert.equal(toolMessage.content, 'result:call_1')
 })
 
+test('tool loop rejects duplicate and replayed tool call ids', async () => {
+  const duplicate = { async chat() { return { text: '', toolCalls: [{ id: 'same', name: 'tool' }, { id: 'same', name: 'tool' }] } } }
+  await assert.rejects(() => runToolLoop({ client: duplicate, model: 'm', messages: message, tools: [], executeTool: async () => 'x' }), (error) => error.code === 'TOOL_CALL_DUPLICATE')
+  let turns = 0
+  const replay = { async chat() {
+    turns += 1
+    return { text: '', toolCalls: [{ id: 'call_replay', name: 'tool' }] }
+  } }
+  await assert.rejects(() => runToolLoop({ client: replay, model: 'm', messages: message, tools: [], executeTool: async () => 'x', maxTurns: 3 }), (error) => error.code === 'TOOL_CALL_REPLAY')
+})
+
+test('tool loop consumes streamed tool calls and accumulates stream events', async () => {
+  let turns = 0
+  const client = { async chat() { throw new Error('non-stream chat must not be used') }, async chatStream() {
+    turns += 1
+    if (turns === 1) return { text: '', toolCalls: [{ id: 'stream_1', name: 'armorbreak_health', arguments: {} }], eventCount: 2, usage: { inputTokens: 5, outputTokens: 1, totalTokens: 6 } }
+    return { text: 'done', toolCalls: [], eventCount: 3, usage: { inputTokens: 4, outputTokens: 1, totalTokens: 5 } }
+  } }
+  const result = await runToolLoop({ client, model: 'm', messages: message, tools: [tool], executeTool: async () => 'ok', stream: true })
+  assert.equal(result.final, 'done')
+  assert.equal(result.turns, 2)
+  assert.equal(result.streamEvents, 5)
+  assert.equal(result.usage.totalTokens, 11)
+})
 test('tool loop enforces max turns, budget, deadline and retries 429', async () => {
   const endless = { async chat() { return { text: '', toolCalls: [{ id: 'call_x', name: 'tool', arguments: {} }], usage: { inputTokens: 1, outputTokens: 1 } } } }
   await assert.rejects(() => runToolLoop({ client: endless, model: 'm', messages: message, tools: [], executeTool: async () => 'x', maxTurns: 1 }), (error) => error.code === 'TOOL_LOOP_LIMIT')

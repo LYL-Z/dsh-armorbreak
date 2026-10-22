@@ -39,8 +39,7 @@
   "pass": true,
   "limitations": [
     "Local Ollama only; no paid OpenAI/Anthropic/Gemini endpoint was called.",
-    "The normalized OpenAI-compatible tool call arguments are a JSON string from Ollama; the executor accepts both string and object.",
-    "Anthropic streaming is intentionally not implemented in this slice."
+    "The normalized OpenAI-compatible tool call arguments are a JSON string from Ollama; the executor accepts both string and object."
   ],
   "stream": {
     "basic": {
@@ -74,5 +73,19 @@
       "latencyMs": 697,
       "pass": true
     }
+  },
+  "streamToolLoop": {
+    "final": "STREAM_DONE",
+    "turns": 2,
+    "streamEvents": 117,
+    "usage": {
+      "inputTokens": 589,
+      "outputTokens": 138,
+      "totalTokens": 727
+    },
+    "toolCalls": 0,
+    "executed": 1,
+    "latencyMs": 8733,
+    "pass": true
   }
 }
