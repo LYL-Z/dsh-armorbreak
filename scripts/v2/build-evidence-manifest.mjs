@@ -9,16 +9,20 @@ const root = process.cwd()
 const dir = 'docs/v2/acceptance'
 const commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
 const files = {}
-for (const name of readdirSync(dir).sort()) {
-  if (name === 'evidence-manifest.json' || name === 'release-gates.json' || name === 'release-smoke.json' || name.endsWith('.log')) continue
-  const full = join(dir, name)
-  if (!statSync(full).isFile()) continue
-  const relativePath = relative(root, full).replaceAll('\\', '/')
-  files[relativePath] = {
-    sha256: createHash('sha256').update(readFileSync(full)).digest('hex'),
-    size: statSync(full).size,
+const skip = (name) => name === 'evidence-manifest.json' || name === 'release-gates.json' || name === 'release-smoke.json' || name.endsWith('.log')
+function walk(current) {
+  for (const name of readdirSync(current).sort()) {
+    if (skip(name)) continue
+    const full = join(current, name)
+    if (statSync(full).isDirectory()) { walk(full); continue }
+    const relativePath = relative(root, full).replaceAll('\\', '/')
+    files[relativePath] = {
+      sha256: createHash('sha256').update(readFileSync(full)).digest('hex'),
+      size: statSync(full).size,
+    }
   }
 }
+walk(dir)
 const manifest = {
   schemaVersion: 'armorbreak.evidence-manifest/v1',
   commit,
