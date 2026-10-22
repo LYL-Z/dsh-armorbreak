@@ -1,12 +1,12 @@
 {
   "schemaVersion": "armorbreak.release-build/v1",
   "generatedAt": "2026-10-22T12:59:37.581Z",
-  "commit": "c4fd1dc4106c57b603d877e1a7211978b3c2a2d3",
+  "commit": "f885d6c7f9be951654bb6447a6e0a71b6b436107",
   "package": "dsh-armorbreak",
   "version": "2.2.0-rc.1",
   "artifact": "armorbreak-portable-2.2.0-rc.1.tar.gz",
-  "bytes": 2823989,
-  "sha256": "5ea765bf0cba2adfc66779c5dcb9ed646f1ea2f110ec238ee80a73d355edfea1",
+  "bytes": 2825101,
+  "sha256": "cf59bddb9cb46f505d6784f5c1ce2acad68505ccbe9cce4c3ca48007261d1897",
   "reproducible": true,
   "sbom": "armorbreak-portable-2.2.0-rc.1.tar.gz.sbom.cdx.json",
   "sbomSha256": "548419bc1bff0ab952073c6a4c69b8a381254ce17ad3316ecc928f166cf38d23",
@@ -25,9 +25,9 @@
     "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEABCwzQrE31qwAzPVlhXJ3fjY97dFZc9Cw9+ob4UUhzr0=\n-----END PUBLIC KEY-----\n",
     "github": {
       "verified": true,
-      "subjectSha256": "5ea765bf0cba2adfc66779c5dcb9ed646f1ea2f110ec238ee80a73d355edfea1",
-      "workflowRun": "39806270150",
-      "commit": "c4fd1dc4106c57b603d877e1a7211978b3c2a2d3",
+      "subjectSha256": "cf59bddb9cb46f505d6784f5c1ce2acad68505ccbe9cce4c3ca48007261d1897",
+      "workflowRun": "39810199607",
+      "commit": "f885d6c7f9be951654bb6447a6e0a71b6b436107",
       "kind": "github-oidc-sigstore-attestation",
       "evidence": "docs/v2/acceptance/github-attestation.json"
     }
