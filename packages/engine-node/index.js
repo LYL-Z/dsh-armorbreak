@@ -70,9 +70,16 @@ export class TrustedEngine {
   bounded(ctx, operation) {
     const signal = ctx?.cancellation ?? ctx?.signal
     if (signal?.aborted) return Promise.reject(new EngineError('CANCELLED', 'request was cancelled before execution'))
+    let timeoutMs = this.requestTimeoutMs
+    if (ctx?.deadline !== undefined) {
+      const deadline = Date.parse(String(ctx.deadline))
+      if (!Number.isFinite(deadline)) return Promise.reject(new EngineError('INVALID_REQUEST', 'deadline must be an ISO timestamp'))
+      timeoutMs = Math.min(timeoutMs, deadline - Date.now())
+      if (timeoutMs <= 0) return Promise.reject(new EngineError('TIMEOUT', 'request deadline has passed'))
+    }
     let timer
     const timeout = new Promise((_, reject) => {
-      timer = setTimeout(() => reject(new EngineError('TIMEOUT', `request exceeded ${this.requestTimeoutMs}ms`)), this.requestTimeoutMs)
+      timer = setTimeout(() => reject(new EngineError('TIMEOUT', `request exceeded ${timeoutMs}ms`)), timeoutMs)
       timer.unref?.()
     })
     let abortHandler
@@ -244,6 +251,7 @@ export class TrustedEngine {
         task, capabilityId, targetPath, options: options && typeof options === 'object' ? options : {},
         stepId: task.steps.find((step) => step.status === 'PENDING')?.id ?? null,
         requestApproval: async () => false,
+        signal: ctx.cancellation ?? ctx.signal,
       })
       let finalized = task
       if (!task.steps.some((step) => step.status === 'PENDING' || step.status === 'RUNNING')) finalized = await this.runtime.runner.finalizeTask(task, { generateReport: true })
@@ -262,7 +270,13 @@ export class TrustedEngine {
 }
 
 export async function createEngine(options) {
-  return new TrustedEngine(options).init()
+  const engine = await new TrustedEngine(options).init()
+  const methods = ['createTask', 'getTask', 'listTasks', 'cancelTask', 'getEvidence', 'getReport', 'recordEnvelope', 'analyze', 'capabilities', 'health', 'listWorkflows', 'verifyApproval']
+  for (const name of methods) {
+    const original = engine[name].bind(engine)
+    engine[name] = (ctx, ...args) => engine.bounded(ctx, () => original(ctx, ...args))
+  }
+  return engine
 }
 
 export { CORE_VERSION }

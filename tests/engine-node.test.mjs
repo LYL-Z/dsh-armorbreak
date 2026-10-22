@@ -121,3 +121,13 @@ test('forward-slash workspace paths are equivalent to backslash paths', async ()
   assert.equal(loaded.id, task.id)
   await engine.close()
 })
+
+
+test('deadline bounds are enforced on public Engine methods', async () => {
+  const { engine, workspace } = await fixture()
+  const alice = { ...ctx({ id: 'alice', kind: 'local-user' }, workspace, 'deadline-1'), deadline: new Date(Date.now() - 1000).toISOString() }
+  await assert.rejects(() => engine.capabilities(alice), (error) => error.code === 'TIMEOUT')
+  const invalid = { ...alice, deadline: 'not-a-date' }
+  await assert.rejects(() => engine.capabilities(invalid), (error) => error.code === 'INVALID_REQUEST')
+  await engine.close()
+})
