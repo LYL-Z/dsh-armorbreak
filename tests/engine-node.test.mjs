@@ -110,3 +110,14 @@ test('sanitized evidence envelopes are persisted and abort is fail-closed', asyn
   await engine.close()
 })
 
+
+
+test('forward-slash workspace paths are equivalent to backslash paths', async () => {
+  const { engine, workspace } = await fixture()
+  const forward = workspace.replaceAll('\\', '/')
+  const alice = ctx({ id: 'alice', kind: 'local-user' }, forward, 'slash-1')
+  const task = await engine.createTask(alice, { title: 'slash task', targetKind: 'none' })
+  const loaded = await engine.getTask(alice, task.id)
+  assert.equal(loaded.id, task.id)
+  await engine.close()
+})

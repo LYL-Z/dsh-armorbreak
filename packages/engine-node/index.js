@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @armorbreak/engine-node (P1 slice)
  *
  * The Engine is the only host-facing entry that resolves a trusted principal and
@@ -19,6 +19,12 @@ const MAX_TITLE = 300
 const MAX_OBJECTIVE = 5000
 const MAX_TARGET = 4096
 const MAX_IDEMPOTENCY = 10_000
+
+function samePath(a, b) {
+  const left = resolve(String(a))
+  const right = resolve(String(b))
+  return process.platform === 'win32' ? left.toLowerCase() === right.toLowerCase() : left === right
+}
 
 function hash(value) {
   return createHash('sha256').update(JSON.stringify(value)).digest('hex')
@@ -88,7 +94,9 @@ export class TrustedEngine {
     if (!validation.ok) throw new EngineError('INVALID_REQUEST', validation.issues.join('; '))
     const configured = this.principals.get(ctx.principal.id)
     if (!configured || configured.kind !== ctx.principal.kind) throw new EngineError('POLICY_DENIED', 'unknown principal or kind mismatch')
-    if (!configured.workspaces.has('*') && !configured.workspaces.has(ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'principal is not allowed to access this workspace')
+    const requestedWorkspace = resolve(String(ctx.workspaceId))
+    const allowed = [...configured.workspaces].some((entry) => entry === '*' || samePath(entry, requestedWorkspace))
+    if (!allowed) throw new EngineError('POLICY_DENIED', 'principal is not allowed to access this workspace')
     return configured
   }
 
@@ -141,7 +149,7 @@ export class TrustedEngine {
       this.authenticate(ctx)
       const store = this.runtime.workspace(ctx.workspaceId).taskStore
       const task = await store.get(String(taskId))
-      if (!task || task.workspace !== ctx.workspaceId) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
+      if (!task || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
       const envelope = event
         ? createEventEnvelope({ ctx, taskId: task.id, origin, targetHash, event, payload })
         : createEvidenceEnvelope({ ctx, taskId: task.id, origin, targetHash, payload })
@@ -154,7 +162,7 @@ export class TrustedEngine {
     const principal = this.authenticate(ctx)
     let task
     try { task = await this.runtime.workspace(ctx.workspaceId).taskStore.get(String(taskId)) } catch { throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace') }
-    if (!task || task.workspace !== ctx.workspaceId) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
+    if (!task || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
     return task
   }
 
@@ -168,7 +176,7 @@ export class TrustedEngine {
     const store = this.runtime.workspace(ctx.workspaceId).taskStore
     let task
     try { task = await store.get(String(taskId)) } catch { throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace') }
-    if (!task || task.workspace !== ctx.workspaceId) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
+    if (!task || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
     await store.cancel(task, reason.slice(0, 300))
     return { taskId: task.id, state: 'CANCELLED', principalId: principal.id, traceId: ctx.traceId }
   }
@@ -179,7 +187,7 @@ export class TrustedEngine {
       const store = this.runtime.workspace(ctx.workspaceId).taskStore
       let task
       try { task = await store.get(String(taskId)) } catch { throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace') }
-      if (!task || task.workspace !== ctx.workspaceId) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
+      if (!task || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
       const records = await store.evidenceStore(task.id).readEvidence(200)
       return { taskId: task.id, evidence: records.map((record) => ({ id: record.id, title: record.title, kind: record.kind, excerpt: record.excerpt, hash: record.hash, targetSha256: record.targetSha256 })) }
     })
@@ -191,7 +199,7 @@ export class TrustedEngine {
       const store = this.runtime.workspace(ctx.workspaceId).taskStore
       let task
       try { task = await store.get(String(taskId)) } catch { throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace') }
-      if (!task || task.workspace !== ctx.workspaceId) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
+      if (!task || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
       if (!task.report?.path) throw new EngineError('INVALID_REQUEST', 'task has no report')
       const { readFile } = await import('node:fs/promises')
       const content = await readFile(task.report.path, 'utf8')

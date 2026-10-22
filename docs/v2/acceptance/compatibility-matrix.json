@@ -28,14 +28,14 @@
       "integrationMethod": "MCP stdio",
       "transport": "stdio",
       "installState": "CONFIG_REGISTERED_ISOLATED_HOME",
-      "toolHandshake": "NOT_RUN",
-      "taskRunState": "NOT_RUN",
+      "toolHandshake": "PASS",
+      "taskRunState": "L0_COMPLETED",
       "policyDeniedTest": "NOT_RUN",
-      "evidenceId": "docs/v2/acceptance/codex-mcp.json",
-      "reportHash": null,
-      "testAt": "2026-10-21T16:10:21.294Z",
-      "limitation": "Config registration only; no Codex model/MCP handshake or L0 task.",
-      "commitSha": "2f0ab8b"
+      "evidenceId": "docs/v2/acceptance/codex-l0.json",
+      "reportHash": "27734e551aaabf2359512fcffed891edb8269e3a608c711a2e6baeee72eb2bc5",
+      "testAt": "2026-10-22T04:20:39.000-07:00",
+      "limitation": "L0 only; Codex config was injected via isolated CODEX_HOME, not the real user config. Path normalization bug found and fixed before PASS.",
+      "commitSha": "6150ad0"
     },
     {
       "host": "Claude Code",

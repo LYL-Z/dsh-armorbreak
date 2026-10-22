@@ -1,0 +1,64 @@
+# ArmorBreak 安全研究报告 — MCP 多算法文件哈希与完整性标识
+
+- 报告 ID：`task_mvj19esz_01abbdfd`
+- 生成时间：2026-10-22T04:20:39.248Z
+- 任务状态：**REPORTING**
+- 工作区：`D:\dsh-ABM\abm-artifacts\codex-ws-3d9e662f-67f3-4502-8168-4cd9f8b82f58`
+- 目标：`D:\dsh-ABM\abm-artifacts\codex-ws-3d9e662f-67f3-4502-8168-4cd9f8b82f58\codex-l0.txt`
+- 操作者：codex-l0
+- 证据链：校验通过，2 条记录
+
+## 1. 摘要
+
+共 0 条发现：critical 0 · high 0 · medium 0 · low 0 · info 0。留档证据 2 条。
+
+## 2. 授权与范围
+
+- 本任务未使用跨工作区授权；分析限制在任务工作区内。
+
+## 3. 任务与工作流
+
+- 风险上限：L0
+- 状态轨迹：CREATED(2026-10-22T04:20:38.579Z) → SCOPE_VALIDATION(2026-10-22T04:20:38.587Z) → ENVIRONMENT_CHECK(2026-10-22T04:20:38.591Z) → PLANNING(2026-10-22T04:20:38.597Z) → EXECUTING(2026-10-22T04:20:38.600Z) → VERIFYING(2026-10-22T04:20:38.625Z) → REPORTING(2026-10-22T04:20:38.634Z)
+
+| 步骤 | 能力 | 状态 | 耗时 | 摘要 |
+|---|---|---|---|---|
+| analyze | forensics.hash | DONE | 5 ms | 文件大小 40 字节。 类型：text（text，high）。 md5: fc43334a5118ea7805ce42080ac648b2 sha1: a41c2c9499343f055d2b40f8bd2343bc7eb91bbc sha256: 806ca18c19f5e682159cb3ff0721c76dfc30b3ae804fc34937871d0788825637 sha512: 056702fdc4bb22f58b59b9d0adb5024bbbf02ae54e895d4a4ec09a7986a935d85d6714705119d57c622637f061059df919d464d99cd8316725980249514b73eb |
+
+## 4. 发现
+
+没有记录到带证据的发现。这不等于目标安全：未覆盖的检测能力与未验证的假设见第 7 节。
+## 5. 证据附录
+
+| # | 证据 ID | 类型 | 来源能力 | 目标 SHA-256 | 摘要 |
+|---|---|---|---|---|---|
+| 1 | `ev_mvj19etu_d7a50b59` | execution | forensics.hash | `806ca18c19f5e682159cb3ff0721c76dfc30b3ae804fc34937871d0788825637` | 文件大小 40 字节。 类型：text（text，high）。 md5: fc43334a5118ea7805ce42080ac648b2 sha1: a41c2c9499343f055d2b40f8bd2343bc7eb91bbc sha256: 806ca18c19f5e682159cb3ff0721c76dfc30b3ae804fc34937871d0788825637 sha512: 056702fdc4bb22f58b59b9d0adb5024bbbf02ae54e895d4a4ec09a7986a935d85d6714705119d57c622637f061059df919d464d99cd8316725980249514b73eb |
+| 2 | `ev_mvj19etz_fa48943a` | file-hashes | forensics.hash | `806ca18c19f5e682159cb3ff0721c76dfc30b3ae804fc34937871d0788825637` | size=40 fileSize=40 truncated=false type=text (text/plain) md5=fc43334a5118ea7805ce42080ac648b2 sha1=a41c2c9499343f055d2b40f8bd2343bc7eb91bbc sha256=806ca18c19f5e682159cb3ff0721c76dfc30b3ae804fc34937871d0788825637 sha512=056702fdc4bb22f58b59b9d0adb5024bbbf02ae54e895d4a4ec09a7986a935d85d6714705119d57c622637f061059df919d464d99cd8316725980249514b73eb |
+
+## 6. 审计记录（脱敏）
+
+| 序号 | 时间 | 动作 | 详情 |
+|---|---|---|---|
+| 1 | 2026-10-22T04:20:38.583Z | task.create | {"seq":1,"at":"2026-10-22T04:20:38.583Z","prevHash":"genesis","action":"task.create","taskId":"task_mvj19esz_01abbdfd","title":"MCP 多算法文件哈希与完整性标识","workflowId":null,"target":"D:\\dsh-ABM\\abm-artifacts\\codex-ws-3d9e662f-67f3-4502-8168-4cd9f8b82f58\\codex-l0.txt","hash":"65906a092eb0eb62c6bb0d9fad02d88519381ebe00ce6a30318bd08015a47205"} |
+| 2 | 2026-10-22T04:20:38.590Z | task.transition | {"seq":2,"at":"2026-10-22T04:20:38.590Z","prevHash":"65906a092eb0eb62c6bb0d9fad02d88519381ebe00ce6a30318bd08015a47205","action":"task.transition","taskId":"task_mvj19esz_01abbdfd","to":"SCOPE_VALIDATION","reason":"validating authorization scope","hash":"348881721554e131aca9a787982e0f34324d20df54fa3d0e046a6defc687f876"} |
+| 3 | 2026-10-22T04:20:38.595Z | task.transition | {"seq":3,"at":"2026-10-22T04:20:38.595Z","prevHash":"348881721554e131aca9a787982e0f34324d20df54fa3d0e046a6defc687f876","action":"task.transition","taskId":"task_mvj19esz_01abbdfd","to":"ENVIRONMENT_CHECK","reason":"scope validated","hash":"8fd376e17ac98def182016ef0e3273f07a9a3cf43320c54d3dcfdab287eac29a"} |
+| 4 | 2026-10-22T04:20:38.599Z | task.transition | {"seq":4,"at":"2026-10-22T04:20:38.599Z","prevHash":"8fd376e17ac98def182016ef0e3273f07a9a3cf43320c54d3dcfdab287eac29a","action":"task.transition","taskId":"task_mvj19esz_01abbdfd","to":"PLANNING","reason":"environment checked; riskMax=L0","hash":"e0973433be63a01a31527a0f82d821baa8043b62d44492cbbf91db73a80e11f7"} |
+| 5 | 2026-10-22T04:20:38.603Z | task.transition | {"seq":5,"at":"2026-10-22T04:20:38.603Z","prevHash":"e0973433be63a01a31527a0f82d821baa8043b62d44492cbbf91db73a80e11f7","action":"task.transition","taskId":"task_mvj19esz_01abbdfd","to":"EXECUTING","reason":"planned; offline L0 analysis","hash":"ffc97c562eb13e6f02dbe03365c827b44397685451481cee928c4bd7bf0f32a0"} |
+| 6 | 2026-10-22T04:20:38.605Z | capability.run.start | {"seq":6,"at":"2026-10-22T04:20:38.605Z","prevHash":"ffc97c562eb13e6f02dbe03365c827b44397685451481cee928c4bd7bf0f32a0","action":"capability.run.start","taskId":"task_mvj19esz_01abbdfd","stepId":"analyze","capability":"forensics.hash","riskLevel":"L0","policy":"WORKSPACE_ALLOWED","target":"D:\\dsh-ABM\\abm-artifacts\\codex-ws-3d9e662f-67f3-4502-8168-4cd9f8b82f58\\codex-l0.txt","options":{},"hash":" |
+| 7 | 2026-10-22T04:20:38.613Z | evidence.add | {"seq":7,"at":"2026-10-22T04:20:38.613Z","prevHash":"187d591c0776f38d435b8179ddb292442ee4d038d3f045c8590d677003b5ee6c","action":"evidence.add","taskId":"task_mvj19esz_01abbdfd","evidenceId":"ev_mvj19etu_d7a50b59","title":"forensics.hash execution","target":"D:\\dsh-ABM\\abm-artifacts\\codex-ws-3d9e662f-67f3-4502-8168-4cd9f8b82f58\\codex-l0.txt","hash":"f94fadc8edb5b870b922f769e94e2d78114567c1ef789 |
+| 8 | 2026-10-22T04:20:38.616Z | evidence.add | {"seq":8,"at":"2026-10-22T04:20:38.616Z","prevHash":"f94fadc8edb5b870b922f769e94e2d78114567c1ef78957beb99c6f57807105f","action":"evidence.add","taskId":"task_mvj19esz_01abbdfd","evidenceId":"ev_mvj19etz_fa48943a","title":"文件哈希","target":"D:\\dsh-ABM\\abm-artifacts\\codex-ws-3d9e662f-67f3-4502-8168-4cd9f8b82f58\\codex-l0.txt","hash":"db9f18c8622231ef585098a42f611471ad35f95630a65411f37c52aafa7b7ee5" |
+| 9 | 2026-10-22T04:20:38.623Z | capability.run.end | {"seq":9,"at":"2026-10-22T04:20:38.623Z","prevHash":"db9f18c8622231ef585098a42f611471ad35f95630a65411f37c52aafa7b7ee5","action":"capability.run.end","taskId":"task_mvj19esz_01abbdfd","capability":"forensics.hash","status":"ok","durationMs":18,"evidence":2,"findings":0,"targetSha256":"806ca18c19f5e682159cb3ff0721c76dfc30b3ae804fc34937871d0788825637","hash":"56e3bc2cb771a12ca5b7ef1df59c20e040740ece9 |
+| 10 | 2026-10-22T04:20:38.628Z | task.transition | {"seq":10,"at":"2026-10-22T04:20:38.628Z","prevHash":"56e3bc2cb771a12ca5b7ef1df59c20e040740ece92829aed43d735d004a14d1a","action":"task.transition","taskId":"task_mvj19esz_01abbdfd","to":"VERIFYING","reason":"all steps settled","hash":"da89e512d0f187337af01fb4143a942c3d9cba87b0975607e3cd180279e6f11d"} |
+| 11 | 2026-10-22T04:20:38.637Z | task.transition | {"seq":11,"at":"2026-10-22T04:20:38.637Z","prevHash":"da89e512d0f187337af01fb4143a942c3d9cba87b0975607e3cd180279e6f11d","action":"task.transition","taskId":"task_mvj19esz_01abbdfd","to":"REPORTING","reason":"generating report","hash":"43f7ed8b035bfa0856e2c26e6bffb0b7ca57f72ec48c2343957624f6646d30ca"} |
+
+## 7. 复现条件、限制与不确定性
+
+- 运行环境：win32/x64，Node v24.16.0，DSH unknown，Profile n/a。
+- 隔离提供者：不可用（L1 动态分析保持拒绝）。
+- 本报告仅基于离线静态分析能力；没有执行样本，也没有对未授权目标发起任何主动流量。
+- 启发式结论（verification=hypothesis/unverified）需要人工复核后再作为漏洞处置。
+- evidence chain verified (2 records)
+
+---
+
+由 DeepSeek Harness「破甲模式 (ArmorBreak)」生成。证据哈希链与审计日志可复核；不包含伪造的工具输出。
