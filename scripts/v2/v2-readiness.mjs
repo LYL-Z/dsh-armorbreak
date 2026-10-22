@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url'
 
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)))
 const rank = { NOT_STARTED: 0, IN_PROGRESS: 1, IMPLEMENTED: 2, TESTED: 3, HOST_VERIFIED: 4, RELEASED: 5, BLOCKED: -1 }
-const required = ['ABU-101', 'ABU-102', 'ABU-103', 'ABU-104', 'ABU-105', 'ABU-106', 'ABU-107', 'ABU-108', 'ABU-109', 'ABU-201', 'ABU-202', 'ABU-205', 'ABU-207', 'ABU-208', 'ABU-210', 'ABU-301', 'ABU-302', 'ABU-303', 'ABU-402', 'ABU-408', 'ABU-409']
+const required = ["ABU-101","ABU-102","ABU-103","ABU-104","ABU-105","ABU-106","ABU-107","ABU-108","ABU-109","ABU-201","ABU-202","ABU-203","ABU-204","ABU-205","ABU-206","ABU-207","ABU-208","ABU-209","ABU-210","ABU-211","ABU-301","ABU-302","ABU-303","ABU-304","ABU-305","ABU-306","ABU-307","ABU-308","ABU-309","ABU-310","ABU-311","ABU-312","ABU-313","ABU-314","ABU-315","ABU-316","ABU-317","ABU-318","ABU-401","ABU-402","ABU-403","ABU-404","ABU-405","ABU-406","ABU-407","ABU-408","ABU-409"]
 const taskStatus = {}
 const blockers = []
 for (const id of required) {
