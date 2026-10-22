@@ -6,6 +6,7 @@
   "description": "Transactional JSON MCP config installer with dry-run, backup and rollback",
   "exports": {
     ".": "./index.js",
-    "./toml": "./toml.js"
+    "./toml": "./toml.js",
+    "./yaml": "./yaml.js"
   }
 }
