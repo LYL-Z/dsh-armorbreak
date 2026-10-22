@@ -5,6 +5,7 @@
  * - POST /mcp, JSON-RPC responses as application/json (no SSE in this slice)
  */
 import { createServer } from 'node:http'
+import { createServer as createHttpsServer } from 'node:https'
 import { randomUUID, timingSafeEqual } from 'node:crypto'
 import { McpServer } from './index.js'
 
@@ -18,14 +19,15 @@ function bearerMatches(header, token) {
   return a.length === b.length && timingSafeEqual(a, b)
 }
 
-export async function createMcpHttpServer({ engine, principal, workspaceId, host = '127.0.0.1', port = 0, token = null } = {}) {
+export async function createMcpHttpServer({ engine, principal, workspaceId, host = '127.0.0.1', port = 0, token = null, tls = null } = {}) {
   if (!LOOPBACK.has(host)) throw new Error('HTTP MCP must bind loopback by default; remote binding is not enabled')
   if (!engine) throw new Error('engine is required')
   if (!principal?.id || !principal?.kind) throw new Error('trusted principal is required')
   if (!workspaceId) throw new Error('workspaceId is required')
+  if (tls && (!tls.key || !tls.cert)) throw new Error('tls requires key and cert')
   const mcp = new McpServer({ engine, principal, workspaceId })
   const sessionId = randomUUID()
-  const http = createServer(async (req, res) => {
+  const handler = async (req, res) => {
     const send = (status, value) => {
       res.statusCode = status
       res.setHeader('content-type', 'application/json; charset=utf-8')
@@ -59,7 +61,8 @@ export async function createMcpHttpServer({ engine, principal, workspaceId, host
       return
     }
     return send(200, response)
-  })
+  }
+  const http = tls ? createHttpsServer(tls, handler) : createServer(handler)
   await new Promise((resolve, reject) => {
     http.once('error', reject)
     http.listen(port, host, resolve)
@@ -67,7 +70,7 @@ export async function createMcpHttpServer({ engine, principal, workspaceId, host
   return {
     host,
     port: http.address().port,
-    url: `http://${host}:${http.address().port}/mcp`,
+    url: `${tls ? 'https' : 'http'}://${host}:${http.address().port}/mcp`,
     async close() { await new Promise((resolve) => http.close(resolve)) },
   }
 }
