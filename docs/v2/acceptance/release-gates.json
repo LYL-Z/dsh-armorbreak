@@ -1,32 +1,32 @@
 {
   "schemaVersion": "armorbreak.release-gates/v2",
-  "generatedAt": "2026-10-22T05:44:52.813Z",
-  "commit": "0c341f24b5f29dd069f0406c2a1fc5ed0f0a8612",
+  "generatedAt": "2026-10-22T05:46:03.803Z",
+  "commit": "7a907c974061e1af423b0cc993099f1130bb87ca",
   "evidenceManifest": {
-    "commit": "0c341f24b5f29dd069f0406c2a1fc5ed0f0a8612",
-    "currentCommit": "0c341f24b5f29dd069f0406c2a1fc5ed0f0a8612",
+    "commit": "7a907c974061e1af423b0cc993099f1130bb87ca",
+    "currentCommit": "7a907c974061e1af423b0cc993099f1130bb87ca",
     "valid": true,
     "ancestorEvidence": false,
     "reason": "evidence manifest matches current commit"
   },
   "testReport": {
     "tests": 348,
-    "pass": 346,
-    "fail": 1,
+    "pass": 347,
+    "fail": 0,
     "skipped": 1,
     "cancelled": 0,
     "todo": 0,
-    "status": "FAIL",
-    "reason": "tests not green: {\"tests\":348,\"pass\":346,\"fail\":1,\"skipped\":1,\"cancelled\":0,\"todo\":0}"
+    "status": "PASS",
+    "reason": "test report and raw TAP pinned"
   },
   "gates": {
     "security": {
-      "status": "FAIL",
-      "reason": "tests not green: {\"tests\":348,\"pass\":346,\"fail\":1,\"skipped\":1,\"cancelled\":0,\"todo\":0}; all evidence pinned"
+      "status": "PASS",
+      "reason": "all evidence pinned"
     },
     "offline": {
-      "status": "FAIL",
-      "reason": "tests not green: {\"tests\":348,\"pass\":346,\"fail\":1,\"skipped\":1,\"cancelled\":0,\"todo\":0}; airgap + 62/62 offline target",
+      "status": "PASS",
+      "reason": "airgap + 62/62 offline target",
       "evidence": [
         {
           "available": true,
@@ -47,8 +47,8 @@
       ]
     },
     "supplyChain": {
-      "status": "FAIL",
-      "reason": "tests not green: {\"tests\":348,\"pass\":346,\"fail\":1,\"skipped\":1,\"cancelled\":0,\"todo\":0}; signed index + installer rollback + live supply-chain",
+      "status": "PASS",
+      "reason": "signed index + installer rollback + live supply-chain",
       "evidence": [
         {
           "available": true,
@@ -69,8 +69,8 @@
       ]
     },
     "aiEvaluation": {
-      "status": "FAIL",
-      "reason": "tests not green: {\"tests\":348,\"pass\":346,\"fail\":1,\"skipped\":1,\"cancelled\":0,\"todo\":0}; Garak/PyRIT/JailbreakBench evidence PASS; mock/local endpoint only",
+      "status": "PASS",
+      "reason": "Garak/PyRIT/JailbreakBench evidence PASS; mock/local endpoint only",
       "evidence": [
         {
           "available": true,
@@ -99,8 +99,8 @@
       ]
     },
     "compatibility": {
-      "status": "FAIL",
-      "reason": "tests not green: {\"tests\":348,\"pass\":346,\"fail\":1,\"skipped\":1,\"cancelled\":0,\"todo\":0}; real Desktop health + L0 report/screenshot hashes",
+      "status": "PASS",
+      "reason": "real Desktop health + L0 report/screenshot hashes",
       "evidence": [
         {
           "available": true,
@@ -129,8 +129,8 @@
       ]
     },
     "performance": {
-      "status": "FAIL",
-      "reason": "tests not green: {\"tests\":348,\"pass\":346,\"fail\":1,\"skipped\":1,\"cancelled\":0,\"todo\":0}; no >10% regression",
+      "status": "PASS",
+      "reason": "no >10% regression",
       "evidence": [
         {
           "available": true,
@@ -173,6 +173,6 @@
       "status": "DONE"
     }
   ],
-  "releasable": false,
-  "reason": "blocked: gates=security,offline,supplyChain,aiEvaluation,compatibility,performance; mandatory="
+  "releasable": true,
+  "reason": "all gates are evidence-verified and mandatory M4 tasks are DONE"
 }

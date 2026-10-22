@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.release-smoke/v1",
-  "generatedAt": "2026-10-22T05:44:53.328Z",
-  "commit": "0c341f24b5f29dd069f0406c2a1fc5ed0f0a8612",
+  "generatedAt": "2026-10-22T05:46:04.311Z",
+  "commit": "7a907c974061e1af423b0cc993099f1130bb87ca",
   "version": "2.0.1",
   "checks": [
     {
@@ -36,8 +36,8 @@
     },
     {
       "id": "release-gates",
-      "status": "FAIL",
-      "detail": "blocked: gates=security,offline,supplyChain,aiEvaluation,compatibility,performance; mandatory="
+      "status": "PASS",
+      "detail": "all gates are evidence-verified and mandatory M4 tasks are DONE"
     },
     {
       "id": "tag-immutable",
@@ -45,5 +45,5 @@
       "detail": "v2.0.0 tag still points at the published merge commit"
     }
   ],
-  "result": "FAIL"
+  "result": "PASS"
 }
