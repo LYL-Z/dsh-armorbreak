@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto'
 import { createEngine } from '../engine-node/index.js'
 import { makeApprovalId } from '../../lib/control/approvalAuthority.js'
 import { createMcpServer } from '../mcp-server/index.js'
-import { copyFileSync, existsSync } from 'node:fs'
+import { copyFileSync, existsSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { applyJsonInstall, planJsonInstall, uninstallJsonServer } from '../installer/index.js'
 import { applyTomlInstall, planTomlInstall, uninstallTomlServer } from '../installer/toml.js'
@@ -50,11 +50,30 @@ async function main() {
     const ctx = { principal: cfg.principal, workspaceId: cfg.workspaceId, requestId: `cli-${Date.now()}`, traceId: `trace-${Date.now()}` }
     if (command === 'doctor') return print(await engine.health(ctx), options.json)
     if (command === 'capabilities') return print(await engine.capabilities(ctx), options.json)
+    if (command === 'agent' && positional[0] === 'doctor') {
+      const configPath = String(options.config ?? '')
+      if (!configPath) throw new Error('agent doctor requires --config <path>')
+      if (!existsSync(configPath)) throw new Error('config path does not exist')
+      let document
+      try { document = JSON.parse(readFileSync(configPath, 'utf8')) } catch { throw new Error('agent doctor config is not valid JSON') }
+      const servers = document.mcpServers ?? document.mcp?.servers ?? {}
+      const entry = servers.armorbreak ?? null
+      const problems = []
+      if (!entry) problems.push('armorbreak MCP entry is missing')
+      else {
+        if (typeof entry.command !== 'string' && typeof entry.url !== 'string') problems.push('entry needs command or url')
+        const env = entry.env ?? {}
+        for (const key of ['ARMORBREAK_STATE_ROOT', 'ARMORBREAK_WORKSPACE', 'ARMORBREAK_PRINCIPAL_ID']) if (!(key in env)) problems.push(`entry env is missing ${key}`)
+      }
+      print({ status: problems.length === 0 ? 'OK' : 'FAIL', configPath, transport: entry?.url ? 'http' : 'stdio', serverNames: Object.keys(servers), problems }, options.json)
+      if (problems.length > 0) process.exitCode = 1
+      return
+    }
     if (command === 'agent' && positional[0] === 'install') {
       const target = String(options.target ?? '')
       const configPath = String(options.config ?? '')
       const scope = String(options.scope ?? 'project')
-      if (!['claude', 'codex', 'hermes'].includes(target)) throw new Error('agent install target must be claude, codex or hermes')
+      if (!['claude', 'codex', 'hermes', 'generic'].includes(target)) throw new Error('agent install target must be claude, codex, hermes or generic')
       if (!configPath) throw new Error('agent install requires --config <path>; no host path is guessed')
       if (!['user', 'project'].includes(scope)) throw new Error('agent install --scope must be user or project')
       const uninstall = Boolean(options.uninstall || options.disable)
