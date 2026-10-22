@@ -1,24 +1,24 @@
 {
   "schemaVersion": "armorbreak.release-readiness/v1",
-  "generatedAt": "2026-10-22T10:56:45.055Z",
+  "generatedAt": "2026-10-22T10:57:39.842Z",
   "package": {
     "name": "dsh-armorbreak",
     "version": "2.0.1"
   },
   "sbom": true,
-  "commit": "c4a029c7c21d1182fcc5e395895121ede4478095",
+  "commit": "4afc7978a61f18a0c50bd043bdd4d8d4f89c3618",
   "evidence": {
-    "manifestCommit": "c4a029c7c21d1182fcc5e395895121ede4478095",
-    "testReportCommit": "c4a029c7c21d1182fcc5e395895121ede4478095",
+    "manifestCommit": "4afc7978a61f18a0c50bd043bdd4d8d4f89c3618",
+    "testReportCommit": "4afc7978a61f18a0c50bd043bdd4d8d4f89c3618",
     "testCounts": {
-      "tests": 364,
-      "pass": 363,
-      "fail": 0,
+      "tests": 361,
+      "pass": 359,
+      "fail": 1,
       "skipped": 1,
       "cancelled": 0,
       "todo": 0
     },
-    "current": true
+    "current": false
   },
   "gates": {
     "security": {
@@ -159,6 +159,6 @@
     "AB2-M4-12.md": "DONE"
   },
   "incomplete": [],
-  "ready": true,
-  "reason": "all required gates/tasks/evidence match the current commit"
+  "ready": false,
+  "reason": "release blocked by incomplete gates/tasks or stale/missing evidence; not a failure of the build"
 }

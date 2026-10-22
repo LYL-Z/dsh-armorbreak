@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.release-smoke/v1",
-  "generatedAt": "2026-10-22T10:56:46.178Z",
-  "commit": "c4a029c7c21d1182fcc5e395895121ede4478095",
+  "generatedAt": "2026-10-22T10:57:40.747Z",
+  "commit": "4afc7978a61f18a0c50bd043bdd4d8d4f89c3618",
   "version": "2.0.1",
   "checks": [
     {
@@ -27,7 +27,7 @@
     {
       "id": "readiness-evidence-current",
       "status": "PASS",
-      "detail": "readiness=c4a029c7c21d1182fcc5e395895121ede4478095 manifest=c4a029c7c21d1182fcc5e395895121ede4478095 tests=c4a029c7c21d1182fcc5e395895121ede4478095"
+      "detail": "readiness=4afc7978a61f18a0c50bd043bdd4d8d4f89c3618 manifest=4afc7978a61f18a0c50bd043bdd4d8d4f89c3618 tests=4afc7978a61f18a0c50bd043bdd4d8d4f89c3618"
     },
     {
       "id": "docs-consistency",
@@ -37,12 +37,12 @@
     {
       "id": "evidence-hashes",
       "status": "PASS",
-      "detail": "57 files verified"
+      "detail": "72 files verified"
     },
     {
       "id": "release-gates",
-      "status": "PASS",
-      "detail": "all gates are evidence-verified and mandatory M4 tasks are DONE"
+      "status": "FAIL",
+      "detail": "blocked: gates=security,offline,supplyChain,aiEvaluation,compatibility,performance; mandatory="
     },
     {
       "id": "tag-immutable",
@@ -50,5 +50,5 @@
       "detail": "v2.0.0 tag still points at the published merge commit"
     }
   ],
-  "result": "PASS"
+  "result": "FAIL"
 }
