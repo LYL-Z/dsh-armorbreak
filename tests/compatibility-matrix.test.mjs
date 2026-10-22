@@ -10,6 +10,8 @@ test('compatibility matrix has nine hosts and makes no unverified claims', async
   for (const row of matrix.hosts) {
     for (const field of required) assert.ok(field in row, `${row.host} missing ${field}`)
     assert.ok(row.limitation && row.limitation.length > 5)
+    assert.ok(['real_verified', 'mock_verified', 'docs_only', 'blocked', 'not_installed'].includes(row.evidenceLevel))
+    if (row.evidenceLevel === 'real_verified') assert.equal(row.taskRunState, 'L0_COMPLETED')
     if (row.installState === 'NOT_INSTALLED') {
       assert.equal(row.toolHandshake, 'NOT_RUN')
       assert.equal(row.taskRunState, 'NOT_RUN')

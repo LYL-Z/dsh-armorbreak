@@ -18,7 +18,8 @@
       "reportHash": "a6d4ea9b230e83451ee85bce6bddec6810b55173ba2b585d03483461ca89ebee",
       "testAt": "2026-10-21T15:31:30.273Z",
       "limitation": "L0 only; L1/L2 not executed in this host evidence.",
-      "commitSha": "2f0ab8b"
+      "commitSha": "2f0ab8b",
+      "evidenceLevel": "real_verified"
     },
     {
       "host": "Codex",
@@ -35,7 +36,8 @@
       "reportHash": "27734e551aaabf2359512fcffed891edb8269e3a608c711a2e6baeee72eb2bc5",
       "testAt": "2026-10-22T04:20:39.000-07:00",
       "limitation": "L0 only; Codex config was injected via isolated CODEX_HOME, not the real user config. Path normalization bug found and fixed before PASS.",
-      "commitSha": "6150ad0"
+      "commitSha": "6150ad0",
+      "evidenceLevel": "real_verified"
     },
     {
       "host": "Claude Code",
@@ -52,7 +54,8 @@
       "reportHash": null,
       "testAt": "2026-10-21T16:12:00.000Z",
       "limitation": "Claude print mode is BLOCKED: not logged in and no API key/OAuth env; project MCP remains pending approval. No L0 executed.",
-      "commitSha": "2f0ab8b"
+      "commitSha": "2f0ab8b",
+      "evidenceLevel": "blocked"
     },
     {
       "host": "Hermes Agent",
@@ -69,7 +72,8 @@
       "reportHash": "1b65e4df6c3f72005d70d46a2ad49ef7f114139df701815fde157fea80210594",
       "testAt": "2026-10-21T21:14:05.000-07:00",
       "limitation": "L0 only; no L1/L2 execution. Report snapshot header says REPORTING while task metadata says COMPLETED.",
-      "commitSha": "6150ad0"
+      "commitSha": "6150ad0",
+      "evidenceLevel": "real_verified"
     },
     {
       "host": "Cursor",
@@ -86,7 +90,8 @@
       "reportHash": null,
       "testAt": "2026-10-21T16:06:00.000Z",
       "limitation": "MCP config registered in isolated --user-data-dir; no GUI connection, handshake or L0.",
-      "commitSha": "2f0ab8b"
+      "commitSha": "2f0ab8b",
+      "evidenceLevel": "docs_only"
     },
     {
       "host": "WorkBuddy",
@@ -103,7 +108,8 @@
       "reportHash": null,
       "testAt": "2026-10-21T16:06:00.000Z",
       "limitation": "Host not installed; no compatibility claim.",
-      "commitSha": "2f0ab8b"
+      "commitSha": "2f0ab8b",
+      "evidenceLevel": "not_installed"
     },
     {
       "host": "ZCode",
@@ -120,7 +126,8 @@
       "reportHash": null,
       "testAt": "2026-10-21T16:06:00.000Z",
       "limitation": "Host not installed; official ZCode manifest not verified.",
-      "commitSha": "2f0ab8b"
+      "commitSha": "2f0ab8b",
+      "evidenceLevel": "not_installed"
     },
     {
       "host": "Pi",
@@ -137,7 +144,8 @@
       "reportHash": null,
       "testAt": "2026-10-21T16:06:00.000Z",
       "limitation": "No Pi extension implemented; no built-in MCP assumption.",
-      "commitSha": "2f0ab8b"
+      "commitSha": "2f0ab8b",
+      "evidenceLevel": "not_installed"
     },
     {
       "host": "TRAE",
@@ -154,7 +162,8 @@
       "reportHash": null,
       "testAt": "2026-10-21T16:06:00.000Z",
       "limitation": "Host not installed; project MCP enablement not tested.",
-      "commitSha": "2f0ab8b"
+      "commitSha": "2f0ab8b",
+      "evidenceLevel": "not_installed"
     }
   ]
 }
