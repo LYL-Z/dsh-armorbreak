@@ -2,7 +2,7 @@
 
 Pre-release ready: **true**
 GA ready: **false**
-Release tag: **true**
+Release tag: **false**
 
 ## Active blockers
 

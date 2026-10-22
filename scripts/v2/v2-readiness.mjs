@@ -63,7 +63,8 @@ try {
 }
 let tags = []
 try { tags = execFileSync('git', ['tag', '--list'], { cwd: root, encoding: 'utf8' }).trim().split(/\r?\n/).filter(Boolean) } catch { /* git may be absent in a source archive */ }
-const releaseTag = tags.includes('v2.2.0') || tags.includes('v2.2.0-owner-waiver')
+const releaseTag = tags.includes('v2.2.0')
+const preReleaseTag = tags.includes('v2.2.0-owner-waiver')
 const noWaivers = process.argv.includes('--no-waivers')
 let waiverDoc = null
 let waiverCodes = new Set()
@@ -104,6 +105,7 @@ const report = {
   preReleaseReady,
   gaReady,
   ready: preReleaseReady,
+  preReleaseTag,
   releaseTag,
   taskStatus,
   taskRealEndpoint,
