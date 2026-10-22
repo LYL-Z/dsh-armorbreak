@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "armorbreak.release-scope/v1",
+  "generatedAt": "2026-10-22T16:16:45.324Z",
+  "recommendation": "publish an explicitly scoped Core GA only after independent security review; keep Provider Live Certification separate",
+  "scopeA": {
+    "name": "ArmorBreak Core GA",
+    "version": "2.2.0-core",
+    "includes": [
+      "Universal Core",
+      "MCP",
+      "Skills",
+      "Hosts",
+      "Offline Golden",
+      "Local Ollama loop",
+      "install/rollback",
+      "security boundaries"
+    ],
+    "requires": [
+      "independent security review",
+      "Core GA gate pass"
+    ],
+    "excludes": [
+      "official paid Provider endpoints"
+    ]
+  },
+  "scopeB": {
+    "name": "Provider Live Certification",
+    "version": "provider-live/2026",
+    "providers": [
+      "OpenAI Chat",
+      "OpenAI Responses",
+      "Anthropic Messages",
+      "Gemini Native"
+    ],
+    "requires": [
+      "real authorized endpoints",
+      "per-provider LIVE_GOLDEN_PASS"
+    ],
+    "status": "EXTERNAL_UNVERIFIED"
+  },
+  "v22FullGa": {
+    "status": "BLOCKED_EXTERNAL",
+    "blockers": 6,
+    "ownerWaivers": 0
+  }
+}

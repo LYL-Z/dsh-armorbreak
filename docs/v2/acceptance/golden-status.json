@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "armorbreak.golden-status/v1",
+  "generatedAt": "2026-10-22T16:16:45.324Z",
+  "states": {
+    "MOCK_GOLDEN_PASS": {
+      "status": "PASS",
+      "scope": "four protocol families x text/tool/SSE/error",
+      "evidence": [
+        "docs/v2/acceptance/test-report.json",
+        "tests/provider-golden.test.mjs",
+        "tests/provider-protocols.test.mjs",
+        "tests/provider-client.test.mjs",
+        "tests/provider-golden-advanced.test.mjs"
+      ]
+    },
+    "LOCAL_MODEL_PASS": {
+      "status": "PASS",
+      "scope": "Ollama qwen3.5:4b real tool loop + controlled L0 Core",
+      "model": "qwen3.5:4b",
+      "runtime": "Ollama http://127.0.0.1:11434/v1",
+      "taskId": "task_mvjistyn_dda26919",
+      "reportSha256": "bbb692e35a356d5d2680891f824a28ac48f9875f3798a86f99967699a9b4190d",
+      "evidence": [
+        "docs/v2/acceptance/provider-live-ollama.json",
+        "docs/v2/acceptance/host-model/pi/l0.json"
+      ]
+    },
+    "LIVE_GOLDEN_PASS": {
+      "status": "EXTERNAL_UNVERIFIED",
+      "scope": "official OpenAI/Anthropic/Gemini endpoints",
+      "reason": "no paid authorized credentials"
+    },
+    "EXTERNAL_UNVERIFIED": {
+      "status": "EXTERNAL_UNVERIFIED",
+      "reason": "paid API credentials and independent review remain external"
+    }
+  },
+  "abu318": {
+    "offlineGolden": "MOCK_GOLDEN_PASS",
+    "localModel": "LOCAL_MODEL_PASS",
+    "liveGolden": "EXTERNAL_UNVERIFIED",
+    "blockers": [
+      "ABU-311_REAL_ENDPOINT_BLOCKED",
+      "ABU-312_REAL_ENDPOINT_BLOCKED",
+      "ABU-313_REAL_ENDPOINT_BLOCKED",
+      "ABU-314_REAL_ENDPOINT_BLOCKED",
+      "ABU-318_REAL_ENDPOINT_BLOCKED"
+    ]
+  },
+  "limitations": [
+    "Offline and local model results are not official Provider certification."
+  ]
+}

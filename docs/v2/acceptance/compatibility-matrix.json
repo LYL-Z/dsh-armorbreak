@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.compatibility-matrix/v2",
-  "generatedAt": "2026-10-22T15:56:17.882Z",
-  "commitSha": "c4fd1dc4106c57b603d877e1a7211978b3c2a2d3",
+  "generatedAt": "2026-10-22T16:17:02.384Z",
+  "commitSha": "f885d6c7f9be951654bb6447a6e0a71b6b436107",
   "source": "docs/v2/acceptance/host-model + real host tasks; generated after 2026-10-22 host tests",
   "evidenceWindow": {
     "earliest": "2026-10-21T15:31:30.273Z",
