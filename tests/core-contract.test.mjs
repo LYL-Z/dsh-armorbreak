@@ -16,7 +16,7 @@ test('Core public API contract, dependency graph and result shapes are frozen', 
   const graph = JSON.parse(await readFile('packages/core/dependency-graph.json', 'utf8'))
   assert.deepEqual(graph.roots, ['packages/core/index.js', 'packages/core/evidenceEnvelope.js'])
   assert.equal(graph.forbiddenHits.length, 0)
-  assert.ok(graph.files.includes('lib/core/runtime.js'))
+  assert.ok(graph.files.includes('packages/core/src/runtime.js'))
   assert.ok(graph.files.includes('packages/core/index.js'))
 
   const stateRoot = await mkdtemp(join(tmpdir(), 'abm-core-contract-'))

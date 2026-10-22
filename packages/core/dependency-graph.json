@@ -14,26 +14,27 @@
     "lib/connectivity/syncManager.js",
     "lib/control/approvalAuthority.js",
     "lib/control/policyGateway.js",
-    "lib/core/audit.js",
-    "lib/core/capabilities.js",
-    "lib/core/dag.js",
-    "lib/core/evidence.js",
-    "lib/core/health.js",
-    "lib/core/isolation.js",
-    "lib/core/presentation.js",
-    "lib/core/reports.js",
-    "lib/core/runner.js",
-    "lib/core/runtime.js",
-    "lib/core/scope.js",
-    "lib/core/taskQueue.js",
-    "lib/core/tasks.js",
     "lib/core/util.js",
-    "lib/core/workflows.js",
     "lib/install/installer.js",
     "lib/knowledge/index.js",
     "lib/workers/contentStore.js",
     "packages/core/evidenceEnvelope.js",
     "packages/core/index.js",
+    "packages/core/src/audit.js",
+    "packages/core/src/capabilities.js",
+    "packages/core/src/dag.js",
+    "packages/core/src/evidence.js",
+    "packages/core/src/health.js",
+    "packages/core/src/isolation.js",
+    "packages/core/src/presentation.js",
+    "packages/core/src/reports.js",
+    "packages/core/src/runner.js",
+    "packages/core/src/runtime.js",
+    "packages/core/src/scope.js",
+    "packages/core/src/taskQueue.js",
+    "packages/core/src/tasks.js",
+    "packages/core/src/util.js",
+    "packages/core/src/workflows.js",
     "packages/protocol/index.js"
   ],
   "edges": {
@@ -50,73 +51,9 @@
     ],
     "lib/control/approvalAuthority.js": [],
     "lib/control/policyGateway.js": [],
-    "lib/core/audit.js": [
-      "lib/core/util.js"
+    "lib/core/util.js": [
+      "packages/core/src/util.js"
     ],
-    "lib/core/capabilities.js": [
-      "lib/core/scope.js",
-      "lib/core/health.js"
-    ],
-    "lib/core/dag.js": [],
-    "lib/core/evidence.js": [
-      "lib/core/util.js",
-      "lib/core/audit.js"
-    ],
-    "lib/core/health.js": [
-      "lib/core/util.js"
-    ],
-    "lib/core/isolation.js": [],
-    "lib/core/presentation.js": [],
-    "lib/core/reports.js": [
-      "lib/core/util.js",
-      "lib/core/evidence.js",
-      "lib/core/runtime.js",
-      "lib/core/runtime.js"
-    ],
-    "lib/core/runner.js": [
-      "lib/control/approvalAuthority.js",
-      "lib/core/util.js",
-      "lib/core/workflows.js",
-      "lib/core/dag.js",
-      "lib/core/runtime.js",
-      "lib/core/dag.js",
-      "lib/core/reports.js"
-    ],
-    "lib/core/runtime.js": [
-      "lib/core/audit.js",
-      "lib/core/capabilities.js",
-      "lib/core/health.js",
-      "lib/core/isolation.js",
-      "lib/control/approvalAuthority.js",
-      "lib/control/policyGateway.js",
-      "lib/connectivity/resourceFetcher.js",
-      "lib/connectivity/networkState.js",
-      "lib/connectivity/connectorHealth.js",
-      "lib/connectivity/syncManager.js",
-      "lib/aisec/evaluationStore.js",
-      "lib/knowledge/index.js",
-      "lib/install/installer.js",
-      "lib/core/runner.js",
-      "lib/core/scope.js",
-      "lib/core/taskQueue.js",
-      "lib/core/tasks.js",
-      "lib/core/presentation.js",
-      "lib/core/util.js"
-    ],
-    "lib/core/scope.js": [
-      "lib/core/util.js",
-      "lib/core/audit.js"
-    ],
-    "lib/core/taskQueue.js": [
-      "lib/core/util.js"
-    ],
-    "lib/core/tasks.js": [
-      "lib/core/evidence.js",
-      "lib/core/util.js",
-      "lib/core/audit.js"
-    ],
-    "lib/core/util.js": [],
-    "lib/core/workflows.js": [],
     "lib/install/installer.js": [
       "lib/catalog/licenseGate.js",
       "lib/workers/contentStore.js"
@@ -127,14 +64,81 @@
       "packages/protocol/index.js"
     ],
     "packages/core/index.js": [
-      "lib/core/runtime.js",
-      "lib/core/capabilities.js",
-      "lib/core/tasks.js",
-      "lib/core/evidence.js",
+      "packages/core/src/runtime.js",
+      "packages/core/src/capabilities.js",
+      "packages/core/src/tasks.js",
+      "packages/core/src/evidence.js",
       "lib/control/policyGateway.js",
       "packages/protocol/index.js",
       "packages/core/evidenceEnvelope.js"
     ],
+    "packages/core/src/audit.js": [
+      "packages/core/src/util.js"
+    ],
+    "packages/core/src/capabilities.js": [
+      "packages/core/src/scope.js",
+      "packages/core/src/health.js"
+    ],
+    "packages/core/src/dag.js": [],
+    "packages/core/src/evidence.js": [
+      "packages/core/src/util.js",
+      "packages/core/src/audit.js"
+    ],
+    "packages/core/src/health.js": [
+      "packages/core/src/util.js"
+    ],
+    "packages/core/src/isolation.js": [],
+    "packages/core/src/presentation.js": [],
+    "packages/core/src/reports.js": [
+      "packages/core/src/util.js",
+      "packages/core/src/evidence.js",
+      "packages/core/src/runtime.js",
+      "packages/core/src/runtime.js"
+    ],
+    "packages/core/src/runner.js": [
+      "lib/control/approvalAuthority.js",
+      "packages/core/src/util.js",
+      "packages/core/src/workflows.js",
+      "packages/core/src/dag.js",
+      "packages/core/src/runtime.js",
+      "packages/core/src/dag.js",
+      "packages/core/src/reports.js"
+    ],
+    "packages/core/src/runtime.js": [
+      "packages/core/src/audit.js",
+      "packages/core/src/capabilities.js",
+      "packages/core/src/health.js",
+      "packages/core/src/isolation.js",
+      "lib/control/approvalAuthority.js",
+      "lib/control/policyGateway.js",
+      "lib/connectivity/resourceFetcher.js",
+      "lib/connectivity/networkState.js",
+      "lib/connectivity/connectorHealth.js",
+      "lib/connectivity/syncManager.js",
+      "lib/aisec/evaluationStore.js",
+      "lib/knowledge/index.js",
+      "lib/install/installer.js",
+      "packages/core/src/runner.js",
+      "packages/core/src/scope.js",
+      "packages/core/src/taskQueue.js",
+      "packages/core/src/tasks.js",
+      "packages/core/src/presentation.js",
+      "packages/core/src/util.js"
+    ],
+    "packages/core/src/scope.js": [
+      "packages/core/src/util.js",
+      "packages/core/src/audit.js"
+    ],
+    "packages/core/src/taskQueue.js": [
+      "packages/core/src/util.js"
+    ],
+    "packages/core/src/tasks.js": [
+      "packages/core/src/evidence.js",
+      "packages/core/src/util.js",
+      "packages/core/src/audit.js"
+    ],
+    "packages/core/src/util.js": [],
+    "packages/core/src/workflows.js": [],
     "packages/protocol/index.js": []
   },
   "external": [],

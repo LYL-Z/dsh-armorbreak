@@ -6,10 +6,10 @@
  * DSH plugin remains in index.js/tools.js and will be converted to adapter-dsh
  * only after this boundary is contract-tested.
  */
-import { ArmorBreakRuntime, getRuntime } from '../../lib/core/runtime.js'
-import { CapabilityRegistry } from '../../lib/core/capabilities.js'
-import { TaskStore } from '../../lib/core/tasks.js'
-import { EvidenceStore } from '../../lib/core/evidence.js'
+import { ArmorBreakRuntime, getRuntime } from './src/runtime.js'
+import { CapabilityRegistry } from './src/capabilities.js'
+import { TaskStore } from './src/tasks.js'
+import { EvidenceStore } from './src/evidence.js'
 import { PolicyGateway } from '../../lib/control/policyGateway.js'
 import { PROTOCOL_VERSION, validateInvocation } from '../protocol/index.js'
 import { createEvidenceEnvelope, createEventEnvelope, sanitizeEvidencePayload } from './evidenceEnvelope.js'
