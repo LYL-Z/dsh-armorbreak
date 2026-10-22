@@ -51,14 +51,33 @@ try {
 }
 let tags = []
 try { tags = execFileSync('git', ['tag', '--list'], { cwd: root, encoding: 'utf8' }).trim().split(/\r?\n/).filter(Boolean) } catch { /* git may be absent in a source archive */ }
-const releaseTag = tags.includes('v2.2.0')
+const releaseTag = tags.includes('v2.2.0') || tags.includes('v2.2.0-owner-waiver')
+const noWaivers = process.argv.includes('--no-waivers')
+let waiverDoc = null
+let waiverCodes = new Set()
+if (!noWaivers) {
+  try {
+    waiverDoc = JSON.parse(readFileSync(resolve(root, 'docs/v2/release/waivers.json'), 'utf8'))
+    const signoff = JSON.parse(readFileSync(resolve(root, 'docs/v2/acceptance/signoff.json'), 'utf8'))
+    const ownerMatches = waiverDoc.approvedBy && signoff.signer === waiverDoc.approvedBy
+    if (ownerMatches && signoff.independent === false && Array.isArray(waiverDoc.waivers)) {
+      waiverCodes = new Set(waiverDoc.waivers.map((item) => item.code))
+    } else {
+      waiverDoc = null
+    }
+  } catch { waiverDoc = null }
+}
+const activeBlockers = blockers.filter((blocker) => !waiverCodes.has(blocker.code))
+const waived = blockers.filter((blocker) => waiverCodes.has(blocker.code))
 const report = {
   schemaVersion: 'armorbreak.v2-readiness/v1',
   commit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
-  ready: blockers.length === 0 && !releaseTag,
+  ready: activeBlockers.length === 0 && !releaseTag,
   releaseTag,
   taskStatus,
-  blockers,
+  blockers: activeBlockers,
+  waived,
+  waiver: waiverDoc ? { approvedBy: waiverDoc.approvedBy, approvedAt: waiverDoc.approvedAt, independentReview: waiverDoc.independentReview, count: waived.length, ref: 'docs/v2/release/waivers.json' } : null,
   artifact: artifact ? { version: artifact.version, signed: artifact.signed, sha256: artifact.sha256 } : null,
 }
 console.log(JSON.stringify(report, null, 2))

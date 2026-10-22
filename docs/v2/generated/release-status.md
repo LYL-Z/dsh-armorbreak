@@ -1,9 +1,14 @@
 # Release Status (generated)
 
-Ready: **false**
+Ready: **true**
 Release tag: **false**
 
-## Blockers
+## Active blockers
+
+
+## Owner waivers
+
+Approved by **刘依林** on 2026-10-22; independent review: **WAIVED_BY_OWNER** (20 items).
 
 - `ABU-206_NOT_TESTED`: ABU-206 status=IN_PROGRESS
 - `ABU-210_NOT_TESTED`: ABU-210 status=IN_PROGRESS

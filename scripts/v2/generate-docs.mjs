@@ -43,8 +43,12 @@ function skillList() {
 function releaseStatus() {
   const raw = execFileSync(process.execPath, [resolve(root, 'scripts/v2/v2-readiness.mjs')], { cwd: root, encoding: 'utf8' })
   const report = JSON.parse(raw)
-  const lines = ['# Release Status (generated)', '', `Ready: **${report.ready}**`, `Release tag: **${report.releaseTag}**`, '', '## Blockers', '']
+  const lines = ['# Release Status (generated)', '', `Ready: **${report.ready}**`, `Release tag: **${report.releaseTag}**`, '', '## Active blockers', '']
   for (const blocker of report.blockers) lines.push(`- \`${blocker.code}\`: ${blocker.detail}`)
+  if (report.waived?.length) {
+    lines.push('', '## Owner waivers', '', `Approved by **${report.waiver.approvedBy}** on ${report.waiver.approvedAt}; independent review: **${report.waiver.independentReview}** (${report.waiver.count} items).`, '')
+    for (const blocker of report.waived) lines.push(`- \`${blocker.code}\`: ${blocker.detail}`)
+  }
   return `${lines.join('\n')}\n`
 }
 

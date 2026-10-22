@@ -14,5 +14,7 @@ test('generated docs are reproducible and include host/API/Skill/release status'
   const skills = await readFile('docs/v2/generated/skill-list.md', 'utf8')
   assert.match(skills, /armorbreak-triage/)
   const release = await readFile('docs/v2/generated/release-status.md', 'utf8')
-  assert.match(release, /Ready: \*\*false\*\*/)
+  assert.match(release, /Ready: \*\*true\*\*/)
+  assert.match(release, /Owner waivers/)
+  assert.match(release, /WAIVED_BY_OWNER/)
 })
