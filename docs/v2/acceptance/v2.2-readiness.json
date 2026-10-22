@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.v2-readiness/v1",
-  "commit": "63018a795a461ac561a04a72ee4451d833b59a34",
+  "commit": "c4a029c7c21d1182fcc5e395895121ede4478095",
   "ready": false,
   "releaseTag": false,
   "taskStatus": {
@@ -24,11 +24,11 @@
     "ABU-209": "TESTED",
     "ABU-210": "IN_PROGRESS",
     "ABU-211": "TESTED",
-    "ABU-301": "IN_PROGRESS",
+    "ABU-301": "HOST_VERIFIED",
     "ABU-302": "NOT_STARTED",
     "ABU-303": "IN_PROGRESS",
-    "ABU-304": "IN_PROGRESS",
-    "ABU-305": "IN_PROGRESS",
+    "ABU-304": "HOST_VERIFIED",
+    "ABU-305": "HOST_VERIFIED",
     "ABU-306": "HOST_VERIFIED",
     "ABU-307": "NOT_STARTED",
     "ABU-308": "TESTED",
@@ -62,24 +62,12 @@
       "detail": "ABU-210 status=IN_PROGRESS"
     },
     {
-      "code": "ABU-301_NOT_TESTED",
-      "detail": "ABU-301 status=IN_PROGRESS"
-    },
-    {
       "code": "ABU-302_NOT_TESTED",
       "detail": "ABU-302 status=NOT_STARTED"
     },
     {
       "code": "ABU-303_NOT_TESTED",
       "detail": "ABU-303 status=IN_PROGRESS"
-    },
-    {
-      "code": "ABU-304_NOT_TESTED",
-      "detail": "ABU-304 status=IN_PROGRESS"
-    },
-    {
-      "code": "ABU-305_NOT_TESTED",
-      "detail": "ABU-305 status=IN_PROGRESS"
     },
     {
       "code": "ABU-307_NOT_TESTED",
@@ -134,24 +122,12 @@
       "detail": "Claude Code integration is not host-verified"
     },
     {
-      "code": "HOST_Cursor_NOT_VERIFIED",
-      "detail": "Cursor integration is not host-verified"
-    },
-    {
-      "code": "HOST_WorkBuddy_NOT_VERIFIED",
-      "detail": "WorkBuddy integration is not host-verified"
-    },
-    {
       "code": "HOST_ZCode_NOT_VERIFIED",
       "detail": "ZCode integration is not host-verified"
     },
     {
       "code": "HOST_Pi_NOT_VERIFIED",
       "detail": "Pi integration is not host-verified"
-    },
-    {
-      "code": "HOST_TRAE_NOT_VERIFIED",
-      "detail": "TRAE integration is not host-verified"
     },
     {
       "code": "ARTIFACT_UNSIGNED",
