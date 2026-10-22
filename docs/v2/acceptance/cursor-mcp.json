@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "armorbreak.cursor-mcp/v1",
+  "generatedAt": "2026-10-22T04:34:15.055Z",
+  "host": "Cursor 3.17.8",
+  "command": "cursor --user-data-dir <isolated> --add-mcp <json>",
+  "result": "CONFIG_REGISTERED",
+  "addedOutput": "Added MCP servers: armorbreak",
+  "isolatedUserData": true,
+  "realCursorConfigModified": false,
+  "server": {
+    "name": "armorbreak",
+    "command": "node",
+    "args": [
+      "D:/dsh-ABM/armorbreak/packages/mcp-server/index.js"
+    ],
+    "envKeys": [
+      "ARMORBREAK_STATE_ROOT",
+      "ARMORBREAK_WORKSPACE",
+      "ARMORBREAK_PRINCIPAL_ID"
+    ]
+  },
+  "limitations": [
+    "Configuration registration only.",
+    "Cursor GUI connection, tool handshake and L0 were not tested.",
+    "Settings file was in an isolated --user-data-dir and removed after extraction."
+  ],
+  "settingsShape": "mcp.servers"
+}

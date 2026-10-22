@@ -78,14 +78,14 @@
       "arch": "x64",
       "integrationMethod": "MCP + cursor skills/plugin",
       "transport": "stdio",
-      "installState": "DETECTED_UNVERIFIED",
+      "installState": "CONFIG_REGISTERED_UNVERIFIED",
       "toolHandshake": "NOT_RUN",
       "taskRunState": "NOT_RUN",
       "policyDeniedTest": "NOT_RUN",
-      "evidenceId": "binary-version-only",
+      "evidenceId": "docs/v2/acceptance/cursor-mcp.json",
       "reportHash": null,
       "testAt": "2026-10-21T16:06:00.000Z",
-      "limitation": "Binary version detected; MCP configuration/connection not tested.",
+      "limitation": "MCP config registered in isolated --user-data-dir; no GUI connection, handshake or L0.",
       "commitSha": "2f0ab8b"
     },
     {
