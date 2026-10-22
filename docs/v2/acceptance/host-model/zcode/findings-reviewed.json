@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "armorbreak.finding-review/v1",
+  "generatedAt": "2026-10-22T15:55:46.997Z",
+  "taskId": "task_mvjo2nqy_726bd805",
+  "originalFindingsSha256": "ad605a0e30ee8abe32969e0cfd8503e3288f5b1ccf666248486b5d2c65377e03",
+  "originalPreserved": "original task findings are unchanged; this is a review overlay",
+  "findings": [
+    {
+      "schemaVersion": "armorbreak/v2",
+      "id": "fnd_mvjo2o23_80b5a937",
+      "taskId": "task_mvjo2nqy_726bd805",
+      "fingerprint": "13cde5e0e6e4227443974fa974d304ad19b6c5bcac2856fcc29aa35cb1fcf3de",
+      "title": "[secret:private-key-block] 私钥内容",
+      "severity": "critical",
+      "severityScore": 9.5,
+      "cvss": null,
+      "cwe": "CWE-321",
+      "verification": "observed",
+      "method": "regex-entropy-secret-scan",
+      "description": "在源码中观察到符合 “私钥内容” 形态的凭据字符串（已脱敏显示为 -----BEGIN PRIVATE KEY----- [内容已省略]）。 可能是真实凭据，也可能是测试数据/占位符；请人工确认有效性。若为真实凭据，任何读过仓库的人都应视为已泄露。",
+      "remediation": "立即在对应平台轮换/吊销该凭据，从 git 历史中清除（filter-repo/BFG），改用环境变量或密钥管理服务（Vault/KMS/Secrets Manager），并启用 secret scanning 防止再次提交。",
+      "target": "D:\\dsh-ABM\\armorbreak\\lib\\analyzers\\sast\\secrets.js:209",
+      "evidenceIds": [
+        "ev_mvjo2o1y_770980b2",
+        "ev_mvjo2o1h_3b961c52"
+      ],
+      "capabilityId": "sast.secrets",
+      "occurrences": 1,
+      "createdAt": "2026-10-22T14:59:15.147Z",
+      "updatedAt": "2026-10-22T14:59:15.147Z",
+      "review": {
+        "status": "FALSE_POSITIVE",
+        "reason": "scanner-own-redaction-rule-text",
+        "detail": "lib/analyzers/sast/secrets.js:209 is the scanner’s own redaction regex/literal, not credential material.",
+        "source": "lib/analyzers/sast/secrets.js:209",
+        "test": "tests/sast-secrets-fp.test.mjs"
+      }
+    },
+    {
+      "schemaVersion": "armorbreak/v2",
+      "id": "fnd_mvjo2o2h_8d50fb4b",
+      "taskId": "task_mvjo2nqy_726bd805",
+      "fingerprint": "06ed51d64c31b5d99cc643bda60740c7b1af07197ed78998bcabaad9c2487eaf",
+      "title": "[secret:aws-access-key] AWS Access Key ID",
+      "severity": "high",
+      "severityScore": 8,
+      "cvss": null,
+      "cwe": "CWE-798",
+      "verification": "observed",
+      "method": "regex-entropy-secret-scan",
+      "description": "在源码中观察到符合 “AWS Access Key ID” 形态的凭据字符串（已脱敏显示为 AKIA***）。 可能是真实凭据，也可能是测试数据/占位符；请人工确认有效性。若为真实凭据，任何读过仓库的人都应视为已泄露。",
+      "remediation": "立即在对应平台轮换/吊销该凭据，从 git 历史中清除（filter-repo/BFG），改用环境变量或密钥管理服务（Vault/KMS/Secrets Manager），并启用 secret scanning 防止再次提交。",
+      "target": "D:\\dsh-ABM\\armorbreak\\scripts\\v2\\core-benchmark.mjs:100",
+      "evidenceIds": [
+        "ev_mvjo2o2a_c5562f7a",
+        "ev_mvjo2o1h_3b961c52"
+      ],
+      "capabilityId": "sast.secrets",
+      "occurrences": 1,
+      "createdAt": "2026-10-22T14:59:15.161Z",
+      "updatedAt": "2026-10-22T14:59:15.161Z",
+      "review": {
+        "status": "FALSE_POSITIVE",
+        "reason": "aws-documentation-example",
+        "detail": "scripts/v2/core-benchmark.mjs:100 contains AKIAIOSFODNN7EXAMPLE, the AWS documentation example key.",
+        "source": "scripts/v2/core-benchmark.mjs:100",
+        "test": "tests/sast-secrets-fp.test.mjs"
+      }
+    }
+  ],
+  "summary": {
+    "total": 2,
+    "falsePositive": 2,
+    "truePositive": 0,
+    "confirmed": false,
+    "policy": "narrow rules only; do not disable the entire secret-scan class"
+  }
+}

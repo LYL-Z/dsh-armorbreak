@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "armorbreak.gemini-cli-mcp/v1",
+  "generatedAt": "2026-10-22T15:56:17.882Z",
+  "host": "Gemini CLI",
+  "hostVersion": "0.64.0",
+  "clientInfo": {
+    "name": "gemini-cli-mcp-client",
+    "version": "0.64.0"
+  },
+  "mcp": {
+    "initialize": true,
+    "protocolVersion": "2025-06-18",
+    "toolsList": 7,
+    "audit": "docs/v2/acceptance/host-audit/antigravity.jsonl"
+  },
+  "model": {
+    "httpStatus": 401,
+    "error": "Authentication Fails (governor)",
+    "taskCreated": false
+  },
+  "result": "MCP_HANDSHAKE_ONLY_MODEL_BLOCKED",
+  "sharedAuditWith": "Antigravity",
+  "limitation": "Separate Gemini CLI entry; MCP handshake PASS, no model L0."
+}

@@ -1,7 +1,12 @@
 {
-  "schemaVersion": "armorbreak.compatibility-matrix/v1",
-  "generatedAt": "2026-10-22T09:55:00.000-07:00",
-  "commitSha": "6150ad0",
+  "schemaVersion": "armorbreak.compatibility-matrix/v2",
+  "generatedAt": "2026-10-22T15:56:17.882Z",
+  "commitSha": "c4fd1dc4106c57b603d877e1a7211978b3c2a2d3",
+  "source": "docs/v2/acceptance/host-model + real host tasks; generated after 2026-10-22 host tests",
+  "evidenceWindow": {
+    "earliest": "2026-10-21T15:31:30.273Z",
+    "latest": "2026-10-22T15:17:28.948Z"
+  },
   "hosts": [
     {
       "host": "DSH",
@@ -19,7 +24,10 @@
       "testAt": "2026-10-21T15:31:30.273Z",
       "limitation": "L0 only; L1/L2 not executed in this host evidence.",
       "commitSha": "2f0ab8b",
-      "evidenceLevel": "real_verified"
+      "evidenceLevel": "real_verified",
+      "runtime": "DSH Desktop",
+      "modelExecution": "NATIVE_MODEL",
+      "coreExecution": "NATIVE_CORE"
     },
     {
       "host": "Codex",
@@ -37,7 +45,10 @@
       "testAt": "2026-10-22T04:20:39.000-07:00",
       "limitation": "Real user config. Model gpt-6-astra called armorbreak_health (audit ok:true); prior run executed full L0 analyze + report.",
       "commitSha": "6150ad0",
-      "evidenceLevel": "real_verified"
+      "evidenceLevel": "real_verified",
+      "runtime": "Codex CLI",
+      "modelExecution": "MCP_MODEL",
+      "coreExecution": "MCP_CORE"
     },
     {
       "host": "Claude Code",
@@ -48,14 +59,38 @@
       "transport": "stdio",
       "installState": "USER_CONFIG_REGISTERED",
       "toolHandshake": "PASS",
+      "taskRunState": "NOT_RUN",
+      "policyDeniedTest": "NOT_RUN",
+      "evidenceId": "docs/v2/acceptance/claude-mcp.json",
+      "reportHash": null,
+      "testAt": "2026-10-22T12:20:43.585Z",
+      "limitation": "Claude Code MCP handshake/plugin/7 skills PASS; no model L0 through MCP. The Cowork CLI L0 is a separate row.",
+      "commitSha": "2f0ab8b",
+      "evidenceLevel": "mcp_verified",
+      "runtime": "Claude Code",
+      "modelExecution": "NOT_RUN",
+      "coreExecution": "NOT_RUN"
+    },
+    {
+      "host": "Claude Cowork",
+      "runtime": "Claude Cowork sandbox",
+      "hostVersion": "Claude Cowork / Claude Code 2.1.299",
+      "os": "win32",
+      "arch": "x64",
+      "integrationMethod": "repository CLI in Cowork sandbox",
+      "transport": "CLI",
+      "installState": "SESSION",
+      "toolHandshake": "NOT_APPLICABLE",
       "taskRunState": "L0_COMPLETED",
+      "modelExecution": "CLI_MODEL",
+      "coreExecution": "CLI_CORE",
       "policyDeniedTest": "NOT_RUN",
       "evidenceId": "docs/v2/acceptance/host-model/claude-cowork/l0.json",
       "reportHash": "2d5ca83af7a03584a1e2e28327ca3cc1d86a978b587fb7e1973ba149697c2753",
       "testAt": "2026-10-22T15:00:54.768Z",
-      "limitation": "Real Claude host L0 via repository CLI in Cowork sandbox; ArmorBreak MCP was not mounted in that session (MCP handshake verified separately).",
-      "commitSha": "2f0ab8b",
-      "evidenceLevel": "cli_verified_l0"
+      "commitSha": "c4fd1dc",
+      "evidenceLevel": "cli_verified_l0",
+      "limitation": "Real Claude host model L0 through repository CLI; ArmorBreak MCP was not mounted in that Cowork session."
     },
     {
       "host": "Hermes Agent",
@@ -73,7 +108,10 @@
       "testAt": "2026-10-21T21:14:05.000-07:00",
       "limitation": "Real MCP + model deepseek-v4-pro called armorbreak_health (ok:true); prior run executed full L0 analyze + report.",
       "commitSha": "6150ad0",
-      "evidenceLevel": "real_verified"
+      "evidenceLevel": "real_verified",
+      "runtime": "Hermes Agent",
+      "modelExecution": "MCP_MODEL",
+      "coreExecution": "MCP_CORE"
     },
     {
       "host": "Cursor",
@@ -91,7 +129,10 @@
       "testAt": "2026-10-21T16:06:00.000Z",
       "limitation": "Real model Cursor Grok 4.6 Medium ran sast.scan + report (task_mvjey0mk_d002525a). Node 22 regex bug found and fixed.",
       "commitSha": "2f0ab8b",
-      "evidenceLevel": "real_verified"
+      "evidenceLevel": "real_verified",
+      "runtime": "Cursor",
+      "modelExecution": "MCP_MODEL",
+      "coreExecution": "MCP_CORE"
     },
     {
       "host": "WorkBuddy",
@@ -109,7 +150,10 @@
       "testAt": "2026-10-21T16:06:00.000Z",
       "limitation": "Real model Deepseek-V4.1-Flash ran sast.deps + report (task_mvjewuhz_6d0bc96f).",
       "commitSha": "2f0ab8b",
-      "evidenceLevel": "real_verified"
+      "evidenceLevel": "real_verified",
+      "runtime": "WorkBuddy",
+      "modelExecution": "MCP_MODEL",
+      "coreExecution": "MCP_CORE"
     },
     {
       "host": "ZCode",
@@ -125,9 +169,12 @@
       "evidenceId": "docs/v2/acceptance/host-model/zcode/l0.json",
       "reportHash": "dfd39cd70fb8f7742baa44bd8114006cff5aa422ba1f159d9983da47dfabe78d",
       "testAt": "2026-10-22T14:59:15.216Z",
-      "limitation": "Real MCP L0: sast.secrets, 4 evidence, 2 findings; ZCode DeepSeek flash.",
+      "limitation": "Real MCP L0: sast.secrets, 4 evidence, 2 findings reviewed as false positives (scanner-rule text + AWS documentation example).",
       "commitSha": "2f0ab8b",
-      "evidenceLevel": "real_verified"
+      "evidenceLevel": "real_verified",
+      "runtime": "ZCode Desktop/CLI",
+      "modelExecution": "MCP_MODEL",
+      "coreExecution": "MCP_CORE"
     },
     {
       "host": "Pi",
@@ -145,7 +192,10 @@
       "testAt": "2026-10-22T12:32:39.914Z",
       "limitation": "Real Pi headless analyze+report on local Ollama qwen3.5:4b; native extension, L3 policy denial not re-run.",
       "commitSha": "f458732",
-      "evidenceLevel": "real_verified"
+      "evidenceLevel": "real_verified",
+      "runtime": "Pi CLI",
+      "modelExecution": "LOCAL_MODEL",
+      "coreExecution": "NATIVE_CORE"
     },
     {
       "host": "TRAE",
@@ -163,14 +213,38 @@
       "testAt": "2026-10-21T16:06:00.000Z",
       "limitation": "Real model GLM-5.3-Flash Max ran sast.scan + report (task_mvjf4409_3916dfb3).",
       "commitSha": "2f0ab8b",
-      "evidenceLevel": "real_verified"
+      "evidenceLevel": "real_verified",
+      "runtime": "TRAE",
+      "modelExecution": "MCP_MODEL",
+      "coreExecution": "MCP_CORE"
+    },
+    {
+      "host": "Gemini CLI",
+      "runtime": "Gemini CLI 0.64.0",
+      "hostVersion": "0.64.0",
+      "os": "win32",
+      "arch": "x64",
+      "integrationMethod": "MCP + Gemini settings",
+      "transport": "stdio",
+      "installState": "USER_CONFIG_REGISTERED",
+      "toolHandshake": "PASS",
+      "taskRunState": "NOT_RUN",
+      "modelExecution": "NOT_RUN",
+      "coreExecution": "NOT_RUN",
+      "policyDeniedTest": "NOT_RUN",
+      "evidenceId": "docs/v2/acceptance/gemini-cli-mcp.json",
+      "reportHash": null,
+      "testAt": "2026-10-22T12:04:36.110Z",
+      "commitSha": "c4fd1dc",
+      "evidenceLevel": "mcp_verified",
+      "limitation": "Independent Gemini CLI MCP handshake (7 tools); model auth was 401, so no L0. The Antigravity Desktop L0 is a separate row."
     },
     {
       "host": "Antigravity",
       "hostVersion": "Antigravity / Gemini CLI 0.64.0",
       "os": "win32",
       "arch": "x64",
-      "integrationMethod": "MCP + Gemini settings",
+      "integrationMethod": "MCP stdio (antigravity-client)",
       "transport": "stdio",
       "installState": "USER_CONFIG_REGISTERED",
       "toolHandshake": "PASS",
@@ -179,9 +253,12 @@
       "evidenceId": "docs/v2/acceptance/host-model/antigravity/l0.json",
       "reportHash": "da84f617070250ae69c51af7dca81d378b620b3d1582a29116cd7ca15acdf6a0",
       "testAt": "2026-10-22T15:17:28.948Z",
-      "limitation": "Real MCP L0: forensics.hash README, 2 evidence; Gemini 3.8 Flash High.",
+      "limitation": "Real Antigravity Desktop MCP L0: forensics.hash README, 2 evidence; Gemini 3.8 Flash High.",
       "commitSha": "7b158cb",
-      "evidenceLevel": "real_verified"
+      "evidenceLevel": "real_verified",
+      "runtime": "Antigravity Desktop",
+      "modelExecution": "MCP_MODEL",
+      "coreExecution": "MCP_CORE"
     }
   ]
 }
