@@ -1,15 +1,15 @@
 {
   "schemaVersion": "armorbreak.release-readiness/v1",
-  "generatedAt": "2026-10-22T06:18:02.716Z",
+  "generatedAt": "2026-10-22T06:20:01.325Z",
   "package": {
     "name": "dsh-armorbreak",
     "version": "2.0.1"
   },
   "sbom": true,
-  "commit": "28765de2f6d10aa59b0f93ff0c5aadf5de0f9cd9",
+  "commit": "351538520a55f38aa64168fe79b6e28d5aacd4ac",
   "evidence": {
-    "manifestCommit": "28765de2f6d10aa59b0f93ff0c5aadf5de0f9cd9",
-    "testReportCommit": "28765de2f6d10aa59b0f93ff0c5aadf5de0f9cd9",
+    "manifestCommit": "351538520a55f38aa64168fe79b6e28d5aacd4ac",
+    "testReportCommit": "351538520a55f38aa64168fe79b6e28d5aacd4ac",
     "testCounts": {
       "tests": 356,
       "pass": 355,
