@@ -200,7 +200,7 @@ export class ArmorBreakRuntime {
       externalTools: capability.externalTools ?? [],
     }))
     return {
-      version: '2.0.1',
+      version: '2.2.0-rc.1',
       generatedAt: nowIso(),
       workspace: root,
       workspaceBinding: 'most-recently-used (call an ArmorBreak tool to bind this session)',

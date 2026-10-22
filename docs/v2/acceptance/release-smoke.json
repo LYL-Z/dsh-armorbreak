@@ -1,33 +1,33 @@
 {
   "schemaVersion": "armorbreak.release-smoke/v1",
-  "generatedAt": "2026-10-22T12:48:58.138Z",
-  "commit": "39017f3e75d1e37c93abae90a5d5330ebb5c5e8b",
-  "version": "2.0.1",
+  "generatedAt": "2026-10-22T13:01:26.761Z",
+  "commit": "0392a521c1bd6d58e509e9e2ad2fa06737994368",
+  "version": "2.2.0-rc.1",
   "checks": [
     {
       "id": "package-version",
       "status": "PASS",
-      "detail": "2.0.1"
+      "detail": "2.2.0-rc.1"
     },
     {
       "id": "bundle-version",
       "status": "PASS",
-      "detail": "2.0.1"
+      "detail": "2.2.0-rc.1"
     },
     {
       "id": "sbom-version",
       "status": "PASS",
-      "detail": "dsh-armorbreak-2.0.1"
+      "detail": "dsh-armorbreak-2.2.0-rc.1"
     },
     {
       "id": "readiness-version",
       "status": "PASS",
-      "detail": "2.0.1"
+      "detail": "2.2.0-rc.1"
     },
     {
       "id": "readiness-evidence-current",
       "status": "PASS",
-      "detail": "readiness=39017f3e75d1e37c93abae90a5d5330ebb5c5e8b manifest=39017f3e75d1e37c93abae90a5d5330ebb5c5e8b tests=39017f3e75d1e37c93abae90a5d5330ebb5c5e8b"
+      "detail": "readiness=0392a521c1bd6d58e509e9e2ad2fa06737994368 manifest=0392a521c1bd6d58e509e9e2ad2fa06737994368 tests=0392a521c1bd6d58e509e9e2ad2fa06737994368"
     },
     {
       "id": "docs-consistency",

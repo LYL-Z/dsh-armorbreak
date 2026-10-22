@@ -786,6 +786,7 @@ armorbreak_analyze capability=live.http_probe taskId=<id> options={"url":"http:/
 | **v1.1.0（发布）** | Research Workbench | A/B/C/D/D2 全部合并；会话级工作区绑定（首次工具调用后生效）；178 测试；真实模型 GUI/浏览器视觉验证未完成 |
 | **v1.2.0（发布）** | Advanced Research | 4 个真实适配器、provider-backed L1 门、真实 L2 loopback、工作台环境/证据/报告、190 测试 |
 | **v2.0.0（发布）** | Security Research V2 | L0–L3 策略网关、46 能力/9 工作流、真实 Garak/PyRIT/JailbreakBench、Ed25519 供应链、事务化安装/回滚、真实 Desktop GUI E2E；278 测试 |
+| **v2.2.0-rc.1（main，未发布）** | V2.2 GA 工程候选；未打正式 tag |
 | **v2.0.1（分支）** | V2 证据硬化 | commit-bound Gate、raw TAP、evidence manifest、docs consistency、IsolationVerified 持久化；284 测试 |
 | v1.1.1（发布） | 热修复 | 修复状态卡 TDZ 崩溃与 external 分析器诊断；真实模型 GUI 验证 armorbreak_health 成功；178 测试 |
 

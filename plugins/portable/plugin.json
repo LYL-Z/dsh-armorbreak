@@ -2,19 +2,23 @@
   "schemaVersion": "armorbreak.portable-plugin/v1",
   "name": "armorbreak",
   "displayName": "ArmorBreak Universal",
-  "version": "2.0.1",
+  "version": "2.2.0-rc.1",
   "description": "Authorized reverse-engineering and security-research tools over a trusted Core. L0-first; L1/L2 require independent human approval.",
   "license": "MIT",
   "entrypoints": {
     "mcp": {
       "transport": "stdio",
       "command": "node",
-      "args": ["packages/mcp-server/index.js"],
+      "args": [
+        "packages/mcp-server/index.js"
+      ],
       "config": "plugins/portable/mcp.json"
     },
     "cli": {
       "command": "node",
-      "args": ["packages/cli/index.js"]
+      "args": [
+        "packages/cli/index.js"
+      ]
     }
   },
   "skills": [

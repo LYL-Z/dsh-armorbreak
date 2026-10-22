@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** ABU-007: reproducible v2.0.1 release smoke over the evidence chain. */
+/** ABU-007: reproducible 2.2.0-rc.1 release smoke over the evidence chain. */
 import { execFileSync } from 'node:child_process'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -18,7 +18,7 @@ const manifest = json('docs/v2/acceptance/evidence-manifest.json')
 const counts = (value) => JSON.stringify(value ?? null)
 const checks = []
 const add = (id, ok, detail) => checks.push({ id, status: ok ? 'PASS' : 'FAIL', detail })
-add('package-version', pkg.version === '2.0.1', pkg.version)
+add('package-version', pkg.version === '2.2.0-rc.1', pkg.version)
 add('bundle-version', lock.version === pkg.version, lock.version)
 add('sbom-version', String(sbom.name ?? '').includes(pkg.version), sbom.name)
 add('readiness-version', readiness.package?.version === pkg.version, readiness.package?.version)
