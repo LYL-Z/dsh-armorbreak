@@ -4,6 +4,11 @@ import { createHash } from 'node:crypto'
 import { createEngine } from '../engine-node/index.js'
 import { makeApprovalId } from '../../lib/control/approvalAuthority.js'
 import { createMcpServer } from '../mcp-server/index.js'
+import { copyFileSync, existsSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import { applyJsonInstall, planJsonInstall, uninstallJsonServer } from '../installer/index.js'
+import { applyTomlInstall, planTomlInstall, uninstallTomlServer } from '../installer/toml.js'
+import { applyYamlInstall, planYamlInstall, uninstallYamlServer } from '../installer/yaml.js'
 
 function parse(argv) {
   const positional = []
@@ -36,7 +41,7 @@ function config() {
 async function main() {
   const { command, positional, options } = parse(process.argv.slice(2))
   if (command === 'help' || options.help) {
-    print('armorbreak doctor|capabilities|analyze|task|workflow|approval|report|mcp [--json]', false)
+    print('armorbreak doctor|capabilities|analyze|task|workflow|approval|agent|report|mcp [--json]', false)
     return
   }
   const cfg = config()
@@ -45,6 +50,44 @@ async function main() {
     const ctx = { principal: cfg.principal, workspaceId: cfg.workspaceId, requestId: `cli-${Date.now()}`, traceId: `trace-${Date.now()}` }
     if (command === 'doctor') return print(await engine.health(ctx), options.json)
     if (command === 'capabilities') return print(await engine.capabilities(ctx), options.json)
+    if (command === 'agent' && positional[0] === 'install') {
+      const target = String(options.target ?? '')
+      const configPath = String(options.config ?? '')
+      const scope = String(options.scope ?? 'project')
+      if (!['claude', 'codex', 'hermes'].includes(target)) throw new Error('agent install target must be claude, codex or hermes')
+      if (!configPath) throw new Error('agent install requires --config <path>; no host path is guessed')
+      if (!['user', 'project'].includes(scope)) throw new Error('agent install --scope must be user or project')
+      const uninstall = Boolean(options.uninstall || options.disable)
+      const server = {
+        command: 'node',
+        args: [fileURLToPath(new URL('../mcp-server/index.js', import.meta.url))],
+        env: {
+          ARMORBREAK_STATE_ROOT: String(options['state-root'] ?? '${ARMORBREAK_STATE_ROOT}'),
+          ARMORBREAK_WORKSPACE: String(options.workspace ?? '${ARMORBREAK_WORKSPACE}'),
+          ARMORBREAK_PRINCIPAL_ID: String(options.principal ?? 'armorbreak-host'),
+        },
+      }
+      if (uninstall) {
+        if (!existsSync(configPath)) throw new Error('config path does not exist')
+        const backup = configPath + '.armorbreak.bak'
+        copyFileSync(configPath, backup)
+        let result
+        if (target === 'codex') result = await uninstallTomlServer({ configPath })
+        else if (target === 'hermes') result = await uninstallYamlServer({ configPath })
+        else result = await uninstallJsonServer({ configPath })
+        return print({ status: Boolean(options.disable) ? 'DISABLED' : 'UNINSTALLED', target, scope, configPath, backup, ...result }, options.json)
+      }
+      let plan
+      if (target === 'codex') plan = await planTomlInstall({ configPath, server, force: Boolean(options.force) })
+      else if (target === 'hermes') plan = await planYamlInstall({ configPath, server, force: Boolean(options.force) })
+      else plan = await planJsonInstall({ configPath, server, force: Boolean(options.force) })
+      if (!options.apply) return print({ status: 'DRY_RUN', target, scope, configPath, changed: plan.changed, before: plan.before, after: plan.after, warning: 'No file written. Pass --apply after reviewing the diff.' }, options.json)
+      let applied
+      if (target === 'codex') applied = await applyTomlInstall(plan)
+      else if (target === 'hermes') applied = await applyYamlInstall(plan)
+      else applied = await applyJsonInstall(plan)
+      return print({ status: 'INSTALLED', target, scope, configPath, ...applied }, options.json)
+    }
     if (command === 'approval' && positional[0] === 'issue') {
       const riskLevel = String(options.risk ?? '')
       const taskId = String(options['task-id'] ?? '')
