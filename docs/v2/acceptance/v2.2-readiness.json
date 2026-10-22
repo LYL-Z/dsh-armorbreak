@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.v2-readiness/v1",
-  "commit": "d3e5edcd5b022bb3401e0c7581ced2fb2950e16f",
+  "commit": "39017f3e75d1e37c93abae90a5d5330ebb5c5e8b",
   "preReleaseReady": true,
   "gaReady": false,
   "ready": true,
@@ -193,7 +193,7 @@
     "ABU-317": null,
     "ABU-318": null,
     "ABU-401": null,
-    "ABU-402": "BLOCKED_EXTERNAL",
+    "ABU-402": null,
     "ABU-403": null,
     "ABU-404": null,
     "ABU-405": null,
@@ -310,10 +310,6 @@
       "detail": "ABU-409 independent review is BLOCKED_EXTERNAL"
     },
     {
-      "code": "ABU-402_HOST_INSTALL_BLOCKED",
-      "detail": "ABU-402 real host install is BLOCKED_EXTERNAL"
-    },
-    {
       "code": "ABU-408_PRODUCTION_SIGNATURE_BLOCKED",
       "detail": "ABU-408 production signature is BLOCKED_EXTERNAL"
     }
@@ -362,6 +358,6 @@
   "artifact": {
     "version": "2.0.1",
     "signed": false,
-    "sha256": "071fe6b2424b20a1c40e3793ef26f2142b4658eff29114e16b999df1dfada64f"
+    "sha256": "891ce9e43962e3d6d72e6c537616c60d29ccd46ec0dcb2c2d7f45404c0841774"
   }
 }
