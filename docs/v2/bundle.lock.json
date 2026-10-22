@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.bundle/v1",
   "name": "dsh-armorbreak",
-  "version": "2.0.1",
+  "version": "2.2.0-rc.1",
   "preset": {
     "id": "armorbreak",
     "preserved": true
@@ -24,8 +24,8 @@
     },
     {
       "path": "index.js",
-      "sha256": "f3b4e257b1193f2c58a07c4e65654778b133c8e46e1d43f1f00bc295fcfee389",
-      "bytes": 29211
+      "sha256": "29998e8c4fa12bfa0d4a4bb887cf42bbb63d7d9f689f96442f4e25d84d29a984",
+      "bytes": 29214
     },
     {
       "path": "lib/aisec/agentDojo.js",
@@ -489,93 +489,93 @@
     },
     {
       "path": "lib/core/audit.js",
-      "sha256": "76b07268e3e0388a308bba2c5730ec355001593bdd79db8f5e3d301678b3a8fc",
-      "bytes": 3450
+      "sha256": "71f30815126c7983a405677ea51be9ed81227dba3ddc39c2fab085fc4aad7243",
+      "bytes": 217
     },
     {
       "path": "lib/core/capabilities.js",
-      "sha256": "b0a1487fdb423e05898c3385a233641fd6cb457483aa7935c9a5abae24c0e19b",
-      "bytes": 7148
+      "sha256": "0033f7d5342caf178922ce1cfac41719a8e4c6fc503a0da1ace77100c02054a4",
+      "bytes": 231
     },
     {
       "path": "lib/core/dag.js",
-      "sha256": "6b6094d0cd8395df8f003b3bb5665cabcb0e7e1995bbd6c476b5489bb2fb6846",
-      "bytes": 5880
+      "sha256": "c4062bdfa78c14151b701188462e0c2d74b7b319688afafdfde5f206f45e579d",
+      "bytes": 123
     },
     {
       "path": "lib/core/evidence.js",
-      "sha256": "f42b0a26360e29b468e5c38fe9995f3cd65420bd79b8bcb04087e7b661a524fb",
-      "bytes": 7867
+      "sha256": "7ec1d33298def026fb90a5cec30e0f884ac11892c66ecd9c84ab6e91fba680a7",
+      "bytes": 223
     },
     {
       "path": "lib/core/externalTools.js",
-      "sha256": "05873d6cd56c03105713339c36fad2d8ab81972ec81311626ca05b63f7b99c01",
-      "bytes": 9187
+      "sha256": "cd7afc9786a4d95658c54a9a95d9b743826925c68f4ad36151c333df9bcf3c91",
+      "bytes": 133
     },
     {
       "path": "lib/core/files.js",
-      "sha256": "f97adecf6e557da6f3037ca446d3e0b90880812875eefe014af61200236d32bc",
-      "bytes": 8638
+      "sha256": "f11ab4bf9f6b9ef9906de82bd28e027a9b75a180a995cfe276488233a8fe75fa",
+      "bytes": 125
     },
     {
       "path": "lib/core/health.js",
-      "sha256": "28aada80d8a823c891a4da0618e6730af8656f521b0e00de811029a4be00c8df",
-      "bytes": 15282
+      "sha256": "eace2604221980438f3c083450c716c69d0196bd1f0e1f47d07e573355846817",
+      "bytes": 219
     },
     {
       "path": "lib/core/help.js",
-      "sha256": "0ee77694f3ded2d89a38f2bb5f1d9c2ac1129edadfaabd125759f5a1df2749a3",
-      "bytes": 1019
+      "sha256": "9342ada05125ed5c9c034f3477373318a147406d6f17dc1b1c80360c059c73b5",
+      "bytes": 215
     },
     {
       "path": "lib/core/isolation.js",
-      "sha256": "f934fe996917ce9c00cf2ecf8418fe5f0d5b3cf155b2cfd28f6411aacb7ede7e",
-      "bytes": 12199
+      "sha256": "2195c63f6615f5a56208696ab5b324dc9fe8c2a7afd9585efe62a3cafbb8eaa5",
+      "bytes": 129
     },
     {
       "path": "lib/core/presentation.js",
-      "sha256": "094ab795d7b572c692a3d173c85c324b0d31c40b6970b8942d7d972c592dc97b",
-      "bytes": 4598
+      "sha256": "823ff59641a0451221b381dc5a63d21645378b24d655ccbbad49ab3ff57044db",
+      "bytes": 132
     },
     {
       "path": "lib/core/reports.js",
-      "sha256": "409b0ad2b9199b9b19ad67051b9a34662b34a61886df2879087bd4e84f8a6ecc",
-      "bytes": 21027
+      "sha256": "52a6657c0be9f02258cb5a8be18a88a6203154206af536e6261de10f05f54256",
+      "bytes": 221
     },
     {
       "path": "lib/core/runner.js",
-      "sha256": "f2b44620b7513a4b0e5bad50d1e4437d366ef609abe234ef64913a7877420b42",
-      "bytes": 41845
+      "sha256": "a1586afaaad3deb1e8d680bbf9121136c56666b9dac648740c13d80035e52a7d",
+      "bytes": 219
     },
     {
       "path": "lib/core/runtime.js",
-      "sha256": "4b33f2fd22f60d4aa4b250cec46cd7d50afba808bd6767cf0047f41c7365146e",
-      "bytes": 10612
+      "sha256": "73443101f7b272301f2dbd67e2f7c0e66fcd38bc7b9504827f22c255de82909f",
+      "bytes": 221
     },
     {
       "path": "lib/core/scope.js",
-      "sha256": "2d36cf1b4ab7e0a473f064aaeff20c1b2dba0419c037a1267e523726075755f8",
-      "bytes": 30008
+      "sha256": "28b6acddb8f22678240b45a5de63b71330d67dca328cdfd624605232adc05a3e",
+      "bytes": 217
     },
     {
       "path": "lib/core/taskQueue.js",
-      "sha256": "f9758b368a8e2816649dc995698ae140fe658f514a0e2bc345c73d89064f5ef0",
-      "bytes": 8195
+      "sha256": "4d4b01147fe057ee77e9cfe26cba81401b62a3b509ad14ec180b1e1627051a92",
+      "bytes": 225
     },
     {
       "path": "lib/core/tasks.js",
-      "sha256": "3c3249bb1575f0111b5c2feb23ba1a87c32256bfb8e220b6c5c8a0d66b99737f",
-      "bytes": 13083
+      "sha256": "d624358bc1c29494401d37be5be7df74e43c777ebfee1d8d1fff5276ac943b1e",
+      "bytes": 217
     },
     {
       "path": "lib/core/util.js",
-      "sha256": "83407c4bf8e5948ada71ed400cd6e696100af13795652a7da95ed593f0228aa7",
-      "bytes": 12939
+      "sha256": "536a5505653dfb8b5ea589dd9c4bbd0809f37191bc669cfb6613e94c24523737",
+      "bytes": 124
     },
     {
       "path": "lib/core/workflows.js",
-      "sha256": "e339d3c61473494b46c3d4a9c340927152248a4973c79ebf2ad6fbac288acd67",
-      "bytes": 7194
+      "sha256": "2e5a759da99a14e2c1ba707cd8af698232bfd7ed392d966b90fb936dedd30625",
+      "bytes": 129
     },
     {
       "path": "lib/install/installer.js",
@@ -624,13 +624,18 @@
     },
     {
       "path": "lib/release/evidenceValidator.js",
-      "sha256": "0b4a578734b241b856eb86dabf94c5372e55890b9e617f596a669a0fe7c158fd",
-      "bytes": 3515
+      "sha256": "96a42acc4adc5c38142e8930a9123ae67e46ee4e79b2bd8fd24e6b01cc95a6a9",
+      "bytes": 3724
     },
     {
       "path": "lib/release/gates.js",
       "sha256": "6970b7e57fbd5ac5fed82fb76e6fa7b654712773512ce01a1444294b4cfad5f2",
       "bytes": 11088
+    },
+    {
+      "path": "lib/release/gray.js",
+      "sha256": "817505ddbd79c3f51443bd6cf952a24039888dcfd3f9667310f07eba98feb8b3",
+      "bytes": 691
     },
     {
       "path": "lib/release/rollout.js",
@@ -659,8 +664,8 @@
     },
     {
       "path": "package.json",
-      "sha256": "a4b0ca46d8d6f84610b2db0a2f6aa8b1dd05cd09a5360943760206217b1eca86",
-      "bytes": 1798
+      "sha256": "8dcf686427fc375a190d10dfe29fb069197b1eb6043a0771a127b142d00588f6",
+      "bytes": 1919
     },
     {
       "path": "skills.js",
@@ -671,6 +676,41 @@
       "path": "skills/android-apk-audit.md",
       "sha256": "ad658a41f60dd4371f80bc3f59cbd71facc0f1dbceaf44985619953fc045d2e2",
       "bytes": 1826
+    },
+    {
+      "path": "skills/armorbreak-ai-eval/SKILL.md",
+      "sha256": "6fdfc82f1f6b2fda649b02c2c65c08e52bf100ac96bebd45604b6d1ebebff763",
+      "bytes": 464
+    },
+    {
+      "path": "skills/armorbreak-android/SKILL.md",
+      "sha256": "4694829698c842b6ff88dfad096fe5d2d24d6e6afe06918ed8d6815125afbcaf",
+      "bytes": 480
+    },
+    {
+      "path": "skills/armorbreak-binary/SKILL.md",
+      "sha256": "510d76e693054d2078c5b42d33c4e749498453d011fa7e25f60b3e2f6108d331",
+      "bytes": 479
+    },
+    {
+      "path": "skills/armorbreak-pcap/SKILL.md",
+      "sha256": "cad7f4b6eb1205d624d226cf04ac27737890ab1f137abd15d49c4c704f094229",
+      "bytes": 465
+    },
+    {
+      "path": "skills/armorbreak-report/SKILL.md",
+      "sha256": "dfbc8767afea837270cae713e3af86c614ebbf81dca82e60287da2fe116fda96",
+      "bytes": 460
+    },
+    {
+      "path": "skills/armorbreak-sast/SKILL.md",
+      "sha256": "06b7b1f9f64febdd5db11db8f5b15119fbdb9e62a05e65ea23dbf1d37fad4939",
+      "bytes": 471
+    },
+    {
+      "path": "skills/armorbreak-triage/SKILL.md",
+      "sha256": "42b36aa7476a5fa6e31beefc0bac123fe1d738b9e434f372753bf76aff13b3e2",
+      "bytes": 452
     },
     {
       "path": "skills/binary-static-analysis.md",
@@ -703,13 +743,18 @@
       "bytes": 1630
     },
     {
+      "path": "skills/triggers.json",
+      "sha256": "0ba86378f7e7d0a6c955552eb7919f521ec57d8e16d7cf2c8e4fb0c1f089d757",
+      "bytes": 2028
+    },
+    {
       "path": "tools.js",
-      "sha256": "5ee5f04b326a6bd68d5d1e70371b621aebf87ae75486a8f8da6a76a89b13a6e3",
-      "bytes": 59868
+      "sha256": "a7821477d5c8c12172733722908c231822d30ba175bd1cf0ec2c0ec98f494777",
+      "bytes": 59871
     }
   ],
-  "aggregateSha256": "55249e3e4aba0c8f42ae930f71b88705c7eab243fb3357b7d9f1826532e82caa",
-  "fileCount": 140,
-  "totalBytes": 1581592,
+  "aggregateSha256": "8f4f5f835fcebba239ead66ecbc7b34084e89b61e793c22ff7c295e49257f009",
+  "fileCount": 149,
+  "totalBytes": 1371067,
   "executable": false
 }

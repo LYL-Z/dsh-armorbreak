@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.2.0-rc.1 — 2026-10-22
+
+V2.2 GA engineering candidate: TypeScript SDK, OpenAI Responses/Anthropic/Gemini native protocols, Vault/Policy, Workbench, old-data migration/gray drills, deterministic artifact/SBOM/test-signature, Pi native extension and real host install/rollback. No formal GA tag; gaReady remains false.
+
 ## 2.0.1 — 2026-10-21
 
 证据与文档硬化：release gates 改为 commit-bound evidence manifest + raw TAP；新增 tamper/missing/stale/failing 负例；docs consistency 检查；隔离自检状态持久化（IsolationVerified）；离线指标拆分，相对保持率仍为 N/A。
