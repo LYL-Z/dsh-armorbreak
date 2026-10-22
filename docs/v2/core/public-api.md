@@ -6,8 +6,9 @@ contract version and a migration note; the legacy DSH entry remains separate.
 ## Exports
 
 `@armorbreak/core` exports the constructors/stores needed by host adapters,
-protocol validators, envelope helpers and `createCore`. The machine-readable
-list is `packages/core/api-contract.json`.
+protocol validators, envelope helpers and `createCore`. `getRuntime({stateRoot})`
+is the shared per-stateRoot process instance used by DSH, Core and Engine.
+The machine-readable list is `packages/core/api-contract.json`.
 
 ## createCore
 

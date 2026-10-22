@@ -13,7 +13,7 @@
  * All analysis tools are registered by the preset-scoped `./tools` plugin.
  * @module dsh-armorbreak
  */
-import { getRuntime } from './lib/core/runtime.js'
+import { getRuntime } from './packages/core/index.js'
 import { getWorkflow, listWorkflows } from './lib/core/workflows.js'
 import { createMockTarget, runScenario } from './lib/aisec/evaluator.js'
 import { buildEvaluationDashboard } from './lib/aisec/reportDashboard.js'

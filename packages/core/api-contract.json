@@ -6,6 +6,7 @@
   "exports": [
     "CORE_VERSION",
     "ArmorBreakRuntime",
+    "getRuntime",
     "CapabilityRegistry",
     "TaskStore",
     "EvidenceStore",
