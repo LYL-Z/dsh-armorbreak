@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "armorbreak.hermes-l0/v1",
+  "generatedAt": "2026-10-22T04:14:33.028Z",
+  "host": "Hermes Agent 0.19.0 (2026.7.20)",
+  "command": "hermes -z \"<MCP L0 prompt>\" --cli --yolo",
+  "mcpDiscovery": {
+    "connected": true,
+    "tools": 7,
+    "transport": "stdio"
+  },
+  "taskId": "task_mvj10y9p_44aab54e",
+  "state": "COMPLETED",
+  "capability": "forensics.hash",
+  "riskLevel": "L0",
+  "targetSha256": "0dbaba1f56a201e9c5c7aadc33a5a05f714e3c6c00f519d8d43d15adc8e3ff9d",
+  "evidenceIds": [
+    "ev_mvj10yav_43fd8be4",
+    "ev_mvj10yb0_a594654c"
+  ],
+  "evidenceCount": 2,
+  "report": {
+    "committedCopy": "docs/v2/acceptance/hermes-l0-report.md",
+    "bytes": 7836,
+    "sha256": "1b65e4df6c3f72005d70d46a2ad49ef7f114139df701815fde157fea80210594",
+    "originalTaskSha256": "1b65e4df6c3f72005d70d46a2ad49ef7f114139df701815fde157fea80210594"
+  },
+  "rawOutput": {
+    "committedCopy": "docs/v2/acceptance/hermes-l0.txt",
+    "bytes": 804,
+    "sha256": "aca03f36972e3e90c81d2b82b6032c65c906c82037d5e242f214e0a3478de9a9"
+  },
+  "cleanup": {
+    "mcpTestEntryRemoved": true,
+    "realConfigRestored": true,
+    "remainingServers": [
+      "node_repl"
+    ]
+  },
+  "result": "PASS",
+  "limitations": [
+    "L0 only; no L1/L2 execution.",
+    "Hermes report snapshot header says REPORTING while analyze result/task metadata say COMPLETED.",
+    "Real config was backed up, merged only for this test, then restored."
+  ]
+}

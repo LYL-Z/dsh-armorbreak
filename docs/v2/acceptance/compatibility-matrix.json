@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.compatibility-matrix/v1",
   "generatedAt": "2026-10-21T16:30:00.000Z",
-  "commitSha": "2f0ab8b",
+  "commitSha": "6150ad0",
   "hosts": [
     {
       "host": "DSH",
@@ -63,13 +63,13 @@
       "transport": "stdio",
       "installState": "TEST_ENTRY_CONNECTED",
       "toolHandshake": "PASS",
-      "taskRunState": "NOT_RUN",
+      "taskRunState": "L0_COMPLETED",
       "policyDeniedTest": "NOT_RUN",
-      "evidenceId": "docs/v2/acceptance/hermes-mcp.json",
-      "reportHash": null,
-      "testAt": "2026-10-21T16:17:00.000Z",
-      "limitation": "Connection/discovery of 7 tools only; no Hermes model or L0 execution.",
-      "commitSha": "2f0ab8b"
+      "evidenceId": "docs/v2/acceptance/hermes-l0.json",
+      "reportHash": "1b65e4df6c3f72005d70d46a2ad49ef7f114139df701815fde157fea80210594",
+      "testAt": "2026-10-21T21:14:05.000-07:00",
+      "limitation": "L0 only; no L1/L2 execution. Report snapshot header says REPORTING while task metadata says COMPLETED.",
+      "commitSha": "6150ad0"
     },
     {
       "host": "Cursor",

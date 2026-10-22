@@ -15,9 +15,9 @@ test('compatibility matrix has nine hosts and makes no unverified claims', async
       assert.equal(row.taskRunState, 'NOT_RUN')
     }
   }
-  assert.deepEqual(matrix.hosts.filter((row) => row.taskRunState === 'L0_COMPLETED').map((row) => row.host), ['DSH'])
+  assert.deepEqual(matrix.hosts.filter((row) => row.taskRunState === 'L0_COMPLETED').map((row) => row.host).sort(), ['DSH', 'Hermes Agent'])
   assert.deepEqual(matrix.hosts.filter((row) => row.toolHandshake === 'PASS').map((row) => row.host).sort(), ['DSH', 'Hermes Agent'])
-  assert.equal(matrix.hosts.filter((row) => row.reportHash).length, 1)
+  assert.equal(matrix.hosts.filter((row) => row.reportHash).length, 2)
   for (const row of matrix.hosts.filter((item) => item.evidenceId?.startsWith('docs/'))) {
     assert.equal((await stat(row.evidenceId)).isFile(), true)
   }
