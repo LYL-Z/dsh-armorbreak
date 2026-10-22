@@ -12,7 +12,7 @@ const root = process.cwd()
 const tapPath = 'docs/v2/acceptance/test-report.tap'
 const reportPath = 'docs/v2/acceptance/test-report.json'
 const commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
-const run = spawnSync(process.execPath, ['--test', '--test-reporter=tap'], { cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
+const run = spawnSync(process.execPath, ['--test', '--test-reporter=tap', '--test-concurrency=1'], { cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
 const tap = String(run.stdout ?? '') + String(run.stderr ?? '')
 writeFileSync(tapPath, tap)
 const tapSha256 = createHash('sha256').update(readFileSync(tapPath)).digest('hex')
@@ -23,7 +23,7 @@ const report = {
   commit,
   node: process.version,
   platform: process.platform,
-  command: 'node --test --test-reporter=tap',
+  command: 'node --test --test-reporter=tap --test-concurrency=1',
   exitCode: run.status,
   counts: { tests: count('tests'), pass: count('pass'), fail: count('fail'), skipped: count('skipped'), cancelled: count('cancelled'), todo: count('todo') },
   tapPath,

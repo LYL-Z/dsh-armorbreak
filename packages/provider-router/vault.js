@@ -18,7 +18,7 @@ export class MemorySecretVault {
 }
 
 function powershell(script, input) {
-  const result = execFileSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', script], { input, encoding: 'utf8', timeout: 10_000, windowsHide: true })
+  const result = execFileSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', script], { input, encoding: 'utf8', timeout: 60_000, windowsHide: true })
   return result.trim()
 }
 

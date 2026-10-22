@@ -39,11 +39,11 @@ jobs:
       # Runtime remains dependency-free; TypeScript is a locked dev dependency
       # used only to compile the SDK contract and consumer fixture.
       - name: Full test suite
-        run: node --test
+        run: node --test --test-concurrency=1
 
       - name: Coverage
         if: matrix.os == 'ubuntu-latest'
-        run: node --test --experimental-test-coverage
+        run: node --test --test-concurrency=1 --experimental-test-coverage
 
       - name: Reproducible micro-benchmarks
         if: matrix.os == 'ubuntu-latest'

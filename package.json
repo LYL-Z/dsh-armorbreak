@@ -71,7 +71,7 @@
     }
   },
   "scripts": {
-    "test": "node --test",
+    "test": "node --test --test-concurrency=1",
     "bench": "node benchmarks/bench.mjs",
     "inventory": "node scripts/file-changes.mjs",
     "clean-temp": "node scripts/clean-temp.mjs",
