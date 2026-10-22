@@ -79,11 +79,11 @@ Required correspondence:
 | Workbench real render | `workbench.png`, `workbench-rendered.html` |
 | Deterministic build/SBOM | `release-build.json` |
 | GitHub OIDC attestation | `github-attestation.json` |
-| Real host L0 (9/9 third-party; Claude CLI caveat) | `compatibility-matrix.json` |
+| Real host L0 (10/10 entries; 9/9 third-party; layered matrix) | `compatibility-matrix.json` |
 
 ## Not verified / external scope
 
-- Claude Code host L0 used the repository CLI because that Cowork session did not mount ArmorBreak MCP; MCP handshake was verified separately.
+- Claude Cowork CLI L0 and Claude Code MCP handshake are separate rows; Gemini CLI handshake and Antigravity Desktop L0 are separate rows. Do not describe CLI/handshake results as native MCP full-loop E2E.
 - Real paid OpenAI Chat/Responses, Anthropic Messages, Gemini native endpoints.
 - Independent human review signature.
 

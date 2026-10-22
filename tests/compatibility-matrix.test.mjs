@@ -2,10 +2,10 @@ import assert from 'node:assert/strict'
 import { readFile, stat } from 'node:fs/promises'
 import test from 'node:test'
 
-test('compatibility matrix has ten hosts and makes no unverified claims', async () => {
+test('compatibility matrix has twelve host entries and makes no unverified claims', async () => {
   const matrix = JSON.parse(await readFile('docs/v2/acceptance/compatibility-matrix.json', 'utf8'))
-  assert.equal(matrix.hosts.length, 10)
-  assert.deepEqual(matrix.hosts.map((row) => row.host).sort(), ['Antigravity', 'Claude Code', 'Codex', 'Cursor', 'DSH', 'Hermes Agent', 'Pi', 'TRAE', 'WorkBuddy', 'ZCode'].sort())
+  assert.equal(matrix.hosts.length, 12)
+  assert.deepEqual(matrix.hosts.map((row) => row.host).sort(), ['Antigravity', 'Claude Code', 'Claude Cowork', 'Codex', 'Cursor', 'DSH', 'Gemini CLI', 'Hermes Agent', 'Pi', 'TRAE', 'WorkBuddy', 'ZCode'].sort())
   const required = ['host', 'hostVersion', 'os', 'arch', 'integrationMethod', 'transport', 'installState', 'toolHandshake', 'taskRunState', 'policyDeniedTest', 'evidenceId', 'reportHash', 'testAt', 'commitSha', 'limitation']
   for (const row of matrix.hosts) {
     for (const field of required) assert.ok(field in row, `${row.host} missing ${field}`)
@@ -19,8 +19,8 @@ test('compatibility matrix has ten hosts and makes no unverified claims', async 
       assert.equal(row.taskRunState, 'NOT_RUN')
     }
   }
-  assert.deepEqual(matrix.hosts.filter((row) => row.taskRunState === 'L0_COMPLETED').map((row) => row.host).sort(), ['Antigravity', 'Claude Code', 'Codex', 'Cursor', 'DSH', 'Hermes Agent', 'Pi', 'TRAE', 'WorkBuddy', 'ZCode'])
-  assert.deepEqual(matrix.hosts.filter((row) => row.toolHandshake === 'PASS').map((row) => row.host).sort(), ['Antigravity', 'Claude Code', 'Codex', 'Cursor', 'DSH', 'Hermes Agent', 'Pi', 'TRAE', 'WorkBuddy', 'ZCode'])
+  assert.deepEqual(matrix.hosts.filter((row) => row.taskRunState === 'L0_COMPLETED').map((row) => row.host).sort(), ['Antigravity', 'Claude Cowork', 'Codex', 'Cursor', 'DSH', 'Hermes Agent', 'Pi', 'TRAE', 'WorkBuddy', 'ZCode'])
+  assert.deepEqual(matrix.hosts.filter((row) => row.toolHandshake === 'PASS').map((row) => row.host).sort(), ['Antigravity', 'Claude Code', 'Codex', 'Cursor', 'DSH', 'Gemini CLI', 'Hermes Agent', 'Pi', 'TRAE', 'WorkBuddy', 'ZCode'])
   assert.equal(matrix.hosts.filter((row) => row.reportHash).length, 10)
   for (const row of matrix.hosts.filter((item) => item.evidenceId?.startsWith('docs/'))) {
     assert.equal((await stat(row.evidenceId)).isFile(), true)

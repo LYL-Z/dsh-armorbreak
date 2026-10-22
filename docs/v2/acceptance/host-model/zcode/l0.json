@@ -17,5 +17,11 @@
   "reportFile": "report.md",
   "result": "L0_COMPLETED",
   "evidenceLevel": "real_verified",
-  "limitation": null
+  "limitation": null,
+  "findingsReview": {
+    "path": "docs/v2/acceptance/host-model/zcode/findings-reviewed.json",
+    "falsePositive": 2,
+    "truePositive": 0,
+    "note": "Original findings preserved; review overlay records both as false positives."
+  }
 }
