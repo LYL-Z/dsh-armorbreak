@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.evidence-manifest/v1",
-  "commit": "33aa6896ba00712baa307e6615630f317684ddf3",
-  "generatedAt": "2026-10-22T12:22:57.119Z",
+  "commit": "d3e5edcd5b022bb3401e0c7581ced2fb2950e16f",
+  "generatedAt": "2026-10-22T12:37:12.197Z",
   "files": {
     "docs/v2/acceptance/airgap-container.json": {
       "sha256": "967dc9c1443f006ac5e6552b0b080c797ef7f906239d049b06e95f522ad24397",
@@ -64,8 +64,8 @@
       "size": 1143
     },
     "docs/v2/acceptance/compatibility-matrix.json": {
-      "sha256": "af52a5971a224b37de03a04d9037dc01385adbfe9967b62c7693b5d960201ca8",
-      "size": 7150
+      "sha256": "1902a4091b86b3715c7e24e87c2b984f170658f4bda27489a3e9f80d1e827a65",
+      "size": 7354
     },
     "docs/v2/acceptance/cursor-mcp.json": {
       "sha256": "647e4e40048e720376cea49797dd13011eafc9a2eec5d0dce5cf81e31d78a4d2",
@@ -171,6 +171,22 @@
       "sha256": "1e113ac9de8b216055615711715fc854e4c779ab1e78280be5cdcd9289ff485e",
       "size": 3799
     },
+    "docs/v2/acceptance/host-model/pi/evidence.jsonl": {
+      "sha256": "a10e804f0737d1c58c935531424e2e89733066eabeb644f6b41e5f9baacdc084",
+      "size": 1988
+    },
+    "docs/v2/acceptance/host-model/pi/pi-l0.json": {
+      "sha256": "3239a6925a0f0e77bf571d81d594dd735e83802d6530e3d708ef942c26d26cf9",
+      "size": 871
+    },
+    "docs/v2/acceptance/host-model/pi/report.md": {
+      "sha256": "bbb692e35a356d5d2680891f824a28ac48f9875f3798a86f99967699a9b4190d",
+      "size": 7649
+    },
+    "docs/v2/acceptance/host-model/pi/task.json": {
+      "sha256": "8f8a8ce98fdb92fd2adbd27dbb9a628d1bfdea3c68d5e443d4a10674d45c51de",
+      "size": 3337
+    },
     "docs/v2/acceptance/host-model/trae-audit.jsonl": {
       "sha256": "9f7dde35509dd054cb6c6f2c38ccb8ce5adac16e4dd25cccaf6f6d5aeb2d3a18",
       "size": 3128
@@ -268,7 +284,7 @@
       "size": 4182
     },
     "docs/v2/acceptance/portable-artifact.json": {
-      "sha256": "121bfdad83e89a154f55a691dedbc926780e712e9b10b7313299496670fdf8df",
+      "sha256": "98d631639a1257cc60390276f98f9a17dee1d7a438c89137f22b57492665fede",
       "size": 650
     },
     "docs/v2/acceptance/provider-live-ollama.json": {
@@ -280,7 +296,7 @@
       "size": 601
     },
     "docs/v2/acceptance/release-build.json": {
-      "sha256": "b87a7cdacd2ae1863c475897e4e743036173580cdd6904a347aa98653b122fe6",
+      "sha256": "9513292d11a4f3a918eebbe39f57e314e8931237e18f92b6b4897a34c919a709",
       "size": 1185
     },
     "docs/v2/acceptance/signoff-liuyilin.jpg": {
@@ -308,16 +324,16 @@
       "size": 1370
     },
     "docs/v2/acceptance/test-report.json": {
-      "sha256": "bf3f935d2dcd9d29299f86a737edcc2dfd0bf77bac0b2b7ca7285a84a431a900",
+      "sha256": "4250f8eedcd2291180ae8511d666fcb27495a945e742923ee5da2bac43de75e4",
       "size": 538
     },
     "docs/v2/acceptance/test-report.tap": {
-      "sha256": "4c2ea0ee2b8d456cd273282f8055418ca2f0bd753a0b2aee51bb1b0e752a4416",
-      "size": 77051
+      "sha256": "e1ca36f9e98f6ef841a568e894e59e5561380c10087d394176e19326fa2dbd65",
+      "size": 77061
     },
     "docs/v2/acceptance/v2.2-readiness.json": {
-      "sha256": "63ef7983dd88c197973a772b514e0214383502c1ae57f08b7304d4397150eb93",
-      "size": 9118
+      "sha256": "35dae7b5582fcd28b38c063350bf327824aadbb3b16cf58f3e2e0571e0124a9e",
+      "size": 8714
     },
     "docs/v2/acceptance/workbench-rendered.html": {
       "sha256": "dde7bb89e017bba7de18201dac3e8caee9c3e0801fd245ec0eaf5690ad42acd3",
