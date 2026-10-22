@@ -1,15 +1,15 @@
 {
   "schemaVersion": "armorbreak.release-readiness/v1",
-  "generatedAt": "2026-10-22T13:28:22.142Z",
+  "generatedAt": "2026-10-22T13:58:42.705Z",
   "package": {
     "name": "dsh-armorbreak",
     "version": "2.2.0-rc.1"
   },
   "sbom": true,
-  "commit": "b4c2cc787d04b82b45280482e106532fc7339f57",
+  "commit": "71ec654318601ffd452a85ae884ae99be2be64ea",
   "evidence": {
-    "manifestCommit": "b4c2cc787d04b82b45280482e106532fc7339f57",
-    "testReportCommit": "b4c2cc787d04b82b45280482e106532fc7339f57",
+    "manifestCommit": "71ec654318601ffd452a85ae884ae99be2be64ea",
+    "testReportCommit": "71ec654318601ffd452a85ae884ae99be2be64ea",
     "testCounts": {
       "tests": 377,
       "pass": 376,
@@ -22,12 +22,12 @@
   },
   "gates": {
     "security": {
-      "status": "REVIEW",
-      "reason": "test report commit b89bfc45720e1d569da962e0c636c4dc4a9d79f8 is stale; all evidence pinned"
+      "status": "PASS",
+      "reason": "all evidence pinned"
     },
     "offline": {
-      "status": "REVIEW",
-      "reason": "test report commit b89bfc45720e1d569da962e0c636c4dc4a9d79f8 is stale; airgap + 62/62 offline target",
+      "status": "PASS",
+      "reason": "airgap + 62/62 offline target",
       "evidence": [
         {
           "available": true,
@@ -48,8 +48,8 @@
       ]
     },
     "supplyChain": {
-      "status": "REVIEW",
-      "reason": "test report commit b89bfc45720e1d569da962e0c636c4dc4a9d79f8 is stale; signed index + installer rollback + live supply-chain",
+      "status": "PASS",
+      "reason": "signed index + installer rollback + live supply-chain",
       "evidence": [
         {
           "available": true,
@@ -70,8 +70,8 @@
       ]
     },
     "aiEvaluation": {
-      "status": "REVIEW",
-      "reason": "test report commit b89bfc45720e1d569da962e0c636c4dc4a9d79f8 is stale; Garak/PyRIT/JailbreakBench evidence PASS; mock/local endpoint only",
+      "status": "PASS",
+      "reason": "Garak/PyRIT/JailbreakBench evidence PASS; mock/local endpoint only",
       "evidence": [
         {
           "available": true,
@@ -100,8 +100,8 @@
       ]
     },
     "compatibility": {
-      "status": "REVIEW",
-      "reason": "test report commit b89bfc45720e1d569da962e0c636c4dc4a9d79f8 is stale; real Desktop health + L0 report/screenshot hashes",
+      "status": "PASS",
+      "reason": "real Desktop health + L0 report/screenshot hashes",
       "evidence": [
         {
           "available": true,
@@ -130,8 +130,8 @@
       ]
     },
     "performance": {
-      "status": "REVIEW",
-      "reason": "test report commit b89bfc45720e1d569da962e0c636c4dc4a9d79f8 is stale; no >10% regression",
+      "status": "PASS",
+      "reason": "no >10% regression",
       "evidence": [
         {
           "available": true,
@@ -159,6 +159,6 @@
     "AB2-M4-12.md": "DONE"
   },
   "incomplete": [],
-  "ready": false,
-  "reason": "release blocked by incomplete gates/tasks or stale/missing evidence; not a failure of the build"
+  "ready": true,
+  "reason": "all required gates/tasks/evidence match the current commit"
 }
