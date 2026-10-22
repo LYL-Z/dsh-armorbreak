@@ -1,15 +1,15 @@
 {
   "schemaVersion": "armorbreak.release-readiness/v1",
-  "generatedAt": "2026-10-22T13:20:16.664Z",
+  "generatedAt": "2026-10-22T13:28:22.142Z",
   "package": {
     "name": "dsh-armorbreak",
     "version": "2.2.0-rc.1"
   },
   "sbom": true,
-  "commit": "b89bfc45720e1d569da962e0c636c4dc4a9d79f8",
+  "commit": "b4c2cc787d04b82b45280482e106532fc7339f57",
   "evidence": {
-    "manifestCommit": "b89bfc45720e1d569da962e0c636c4dc4a9d79f8",
-    "testReportCommit": "b89bfc45720e1d569da962e0c636c4dc4a9d79f8",
+    "manifestCommit": "b4c2cc787d04b82b45280482e106532fc7339f57",
+    "testReportCommit": "b4c2cc787d04b82b45280482e106532fc7339f57",
     "testCounts": {
       "tests": 377,
       "pass": 376,
@@ -22,12 +22,12 @@
   },
   "gates": {
     "security": {
-      "status": "FAIL",
-      "reason": "tests not green: {\"tests\":377,\"pass\":375,\"fail\":1,\"skipped\":1,\"cancelled\":0,\"todo\":0}; all evidence pinned"
+      "status": "REVIEW",
+      "reason": "test report commit b89bfc45720e1d569da962e0c636c4dc4a9d79f8 is stale; all evidence pinned"
     },
     "offline": {
-      "status": "FAIL",
-      "reason": "tests not green: {\"tests\":377,\"pass\":375,\"fail\":1,\"skipped\":1,\"cancelled\":0,\"todo\":0}; airgap + 62/62 offline target",
+      "status": "REVIEW",
+      "reason": "test report commit b89bfc45720e1d569da962e0c636c4dc4a9d79f8 is stale; airgap + 62/62 offline target",
       "evidence": [
         {
           "available": true,
@@ -48,8 +48,8 @@
       ]
     },
     "supplyChain": {
-      "status": "FAIL",
-      "reason": "tests not green: {\"tests\":377,\"pass\":375,\"fail\":1,\"skipped\":1,\"cancelled\":0,\"todo\":0}; signed index + installer rollback + live supply-chain",
+      "status": "REVIEW",
+      "reason": "test report commit b89bfc45720e1d569da962e0c636c4dc4a9d79f8 is stale; signed index + installer rollback + live supply-chain",
       "evidence": [
         {
           "available": true,
@@ -70,8 +70,8 @@
       ]
     },
     "aiEvaluation": {
-      "status": "FAIL",
-      "reason": "tests not green: {\"tests\":377,\"pass\":375,\"fail\":1,\"skipped\":1,\"cancelled\":0,\"todo\":0}; Garak/PyRIT/JailbreakBench evidence PASS; mock/local endpoint only",
+      "status": "REVIEW",
+      "reason": "test report commit b89bfc45720e1d569da962e0c636c4dc4a9d79f8 is stale; Garak/PyRIT/JailbreakBench evidence PASS; mock/local endpoint only",
       "evidence": [
         {
           "available": true,
@@ -100,8 +100,8 @@
       ]
     },
     "compatibility": {
-      "status": "FAIL",
-      "reason": "tests not green: {\"tests\":377,\"pass\":375,\"fail\":1,\"skipped\":1,\"cancelled\":0,\"todo\":0}; real Desktop health + L0 report/screenshot hashes",
+      "status": "REVIEW",
+      "reason": "test report commit b89bfc45720e1d569da962e0c636c4dc4a9d79f8 is stale; real Desktop health + L0 report/screenshot hashes",
       "evidence": [
         {
           "available": true,
@@ -130,8 +130,8 @@
       ]
     },
     "performance": {
-      "status": "FAIL",
-      "reason": "tests not green: {\"tests\":377,\"pass\":375,\"fail\":1,\"skipped\":1,\"cancelled\":0,\"todo\":0}; no >10% regression",
+      "status": "REVIEW",
+      "reason": "test report commit b89bfc45720e1d569da962e0c636c4dc4a9d79f8 is stale; no >10% regression",
       "evidence": [
         {
           "available": true,

@@ -1,11 +1,11 @@
 {
   "schemaVersion": "armorbreak.portable-artifact/v1",
   "generatedAt": "2026-10-22T13:10:59.263Z",
-  "sourceCommit": "3b4a24579f53b932600e33f7dc7a1b86f9e0ffac",
+  "sourceCommit": "b4c2cc787d04b82b45280482e106532fc7339f57",
   "version": "2.2.0-rc.1",
   "artifact": "armorbreak-portable-2.2.0-rc.1.tar.gz",
-  "bytes": 2818182,
-  "sha256": "24ef96de637d19dadb395ab6e0052f742af5b1a5e1825f9d04a3a8a85db47700",
+  "bytes": 2818310,
+  "sha256": "63bfe4e715d4897b6fb8a98bf81bcf9ffadbf60bc93b569a6bd828dbbf63a310",
   "sbom": "armorbreak-portable-2.2.0-rc.1.tar.gz.sbom.cdx.json",
   "cleanRoom": {
     "extracted": true,
@@ -22,9 +22,9 @@
   "signatureKind": "github-oidc-sigstore-attestation",
   "attestation": {
     "verified": true,
-    "subjectSha256": "24ef96de637d19dadb395ab6e0052f742af5b1a5e1825f9d04a3a8a85db47700",
-    "workflowRun": "39784165789",
-    "commit": "58b32262254144bf1f134c3ef060d31eb4471fde",
+    "subjectSha256": "63bfe4e715d4897b6fb8a98bf81bcf9ffadbf60bc93b569a6bd828dbbf63a310",
+    "workflowRun": "39786371975",
+    "commit": "b4c2cc787d04b82b45280482e106532fc7339f57",
     "evidence": "docs/v2/acceptance/github-attestation.json"
   }
 }

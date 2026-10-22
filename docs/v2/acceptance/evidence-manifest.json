@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.evidence-manifest/v1",
-  "commit": "b89bfc45720e1d569da962e0c636c4dc4a9d79f8",
-  "generatedAt": "2026-10-22T13:20:16.522Z",
+  "commit": "b4c2cc787d04b82b45280482e106532fc7339f57",
+  "generatedAt": "2026-10-22T13:28:21.992Z",
   "files": {
     "docs/v2/acceptance/airgap-container.json": {
       "sha256": "967dc9c1443f006ac5e6552b0b080c797ef7f906239d049b06e95f522ad24397",
@@ -108,8 +108,8 @@
       "size": 32873
     },
     "docs/v2/acceptance/github-attestation.json": {
-      "sha256": "bc34498234da44ffab92e6c3b2e9f252ed39a284575fadbe73b49e6d53d4ded1",
-      "size": 14046
+      "sha256": "0a12c808e904edece99440892347d7f52fdafdac11f799c7792ab5058778c8a2",
+      "size": 27565
     },
     "docs/v2/acceptance/hermes-l0-report.md": {
       "sha256": "1b65e4df6c3f72005d70d46a2ad49ef7f114139df701815fde157fea80210594",
@@ -292,7 +292,7 @@
       "size": 4182
     },
     "docs/v2/acceptance/portable-artifact.json": {
-      "sha256": "033b3da6399a6727b999d99c31ca532c5ba53d2296c7b3aab71cea67eef922b8",
+      "sha256": "ac3c1671d702c6b0f0d89ae7e1a9a97fc85444197599a69208ef5cadc2b23725",
       "size": 1050
     },
     "docs/v2/acceptance/provider-live-ollama.json": {
@@ -304,7 +304,7 @@
       "size": 601
     },
     "docs/v2/acceptance/release-build.json": {
-      "sha256": "44d6db4d66b752c0a73d37c73b1de8697c3871217fa6b8e155a09b6a8e8d34be",
+      "sha256": "0dcc9b2297a69aafcd384df1037a4bff5fb2bf9e6e2a3b53ba6c7ef01d007f41",
       "size": 1546
     },
     "docs/v2/acceptance/signoff-liuyilin.jpg": {
@@ -332,12 +332,12 @@
       "size": 1370
     },
     "docs/v2/acceptance/test-report.json": {
-      "sha256": "aba64cb9fa8942f58b22f5434715fd0238a1347378c0d371258102307d227b5a",
+      "sha256": "85a9796fe449ebe719c3b6218820a0b10ecf050480437fc33f9d42d6571feb7f",
       "size": 538
     },
     "docs/v2/acceptance/test-report.tap": {
-      "sha256": "1588a8a8c6aef7a8378293de6e245b99e4bc78d879235111bb9595e98e430828",
-      "size": 77040
+      "sha256": "23bc92312e52d16e12ce6d5e6372626123d8938fd573da493a2ded61c43b487d",
+      "size": 77049
     },
     "docs/v2/acceptance/v2.2-readiness.json": {
       "sha256": "d3edaea4c111550b0e74437d9d53ad8bc2dae279df46212255adab1996d438ec",
