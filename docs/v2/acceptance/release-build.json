@@ -5,8 +5,8 @@
   "package": "dsh-armorbreak",
   "version": "2.2.0-rc.1",
   "artifact": "armorbreak-portable-2.2.0-rc.1.tar.gz",
-  "bytes": 2818183,
-  "sha256": "231a41be2550d5414c39b55c8339f63e46b20edbe980d63bd00bf1bed068bcc0",
+  "bytes": 2818182,
+  "sha256": "24ef96de637d19dadb395ab6e0052f742af5b1a5e1825f9d04a3a8a85db47700",
   "reproducible": true,
   "sbom": "armorbreak-portable-2.2.0-rc.1.tar.gz.sbom.cdx.json",
   "sbomSha256": "548419bc1bff0ab952073c6a4c69b8a381254ce17ad3316ecc928f166cf38d23",
@@ -22,9 +22,17 @@
     "testKey": true,
     "valid": true,
     "signature": "SUreW86IcZuU+Sykc3J8XDM+Khe2jjD0CEuRe4P8RNiaboobMt9HU/4vVoCKdZe0XUnZNq9oTVK70Hd+IrUOCQ==",
-    "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEABCwzQrE31qwAzPVlhXJ3fjY97dFZc9Cw9+ob4UUhzr0=\n-----END PUBLIC KEY-----\n"
+    "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEABCwzQrE31qwAzPVlhXJ3fjY97dFZc9Cw9+ob4UUhzr0=\n-----END PUBLIC KEY-----\n",
+    "github": {
+      "verified": true,
+      "subjectSha256": "24ef96de637d19dadb395ab6e0052f742af5b1a5e1825f9d04a3a8a85db47700",
+      "workflowRun": "39784165789",
+      "commit": "58b32262254144bf1f134c3ef060d31eb4471fde",
+      "kind": "github-oidc-sigstore-attestation",
+      "evidence": "docs/v2/acceptance/github-attestation.json"
+    }
   },
-  "productionSigned": false,
+  "productionSigned": true,
   "limitations": [
     "Test Ed25519 key verifies the signing mechanism; it is not a production identity.",
     "Docker/npm publish not performed by this builder."
