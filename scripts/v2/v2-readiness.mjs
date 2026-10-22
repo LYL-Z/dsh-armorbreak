@@ -5,7 +5,7 @@
  * portable artifact must be signed before GA can be claimed.
  */
 import { execFileSync } from 'node:child_process'
-import { readFileSync } from 'node:fs'
+import { readFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -62,4 +62,7 @@ const report = {
   artifact: artifact ? { version: artifact.version, signed: artifact.signed, sha256: artifact.sha256 } : null,
 }
 console.log(JSON.stringify(report, null, 2))
+if (process.argv.includes('--write')) {
+  writeFileSync(resolve(root, 'docs/v2/acceptance/v2.2-readiness.json'), `${JSON.stringify(report, null, 2)}\n`)
+}
 if (process.argv.includes('--require-ready') && !report.ready) process.exitCode = 1
