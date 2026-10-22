@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict'
 import { readFile, readdir } from 'node:fs/promises'
-import { join } from 'node:path'
 import test from 'node:test'
 
 async function json(path) { return JSON.parse(await readFile(path, 'utf8')) }
@@ -22,19 +21,37 @@ test('portable plugin manifest and MCP template are structurally valid', async (
   assert.doesNotMatch(JSON.stringify(mcp), /api[_-]?key\s*[:=]\s*["'][^$]/i)
 })
 
-test('host overlays honestly remain unverified and point at portable files', async () => {
-  const hosts = ['codex', 'claude-code', 'cursor', 'zcode']
-  for (const host of hosts) {
-    const path = host === 'codex' ? 'plugins/codex/.codex-plugin/plugin.json'
-      : host === 'claude-code' ? 'plugins/claude/.claude-plugin/plugin.json'
-        : host === 'cursor' ? 'plugins/cursor/.cursor-plugin/plugin.json'
-          : 'plugins/zcode/.zcode-plugin/plugin.json'
+test('Claude plugin manifest is official-shaped and validates offline', async () => {
+  const manifest = await json('plugins/claude/.claude-plugin/plugin.json')
+  const pkg = await json('package.json')
+  assert.equal(manifest.name, 'armorbreak')
+  assert.ok(manifest.description.length > 20)
+  assert.equal(manifest.version, pkg.version)
+  assert.equal(manifest.author.name, 'ArmorBreak Universal')
+  assert.equal(manifest.license, 'MIT')
+  assert.equal(Object.hasOwn(manifest, 'schemaVersion'), false)
+  assert.equal(Object.hasOwn(manifest, 'host'), false)
+  const skills = (await readdir('plugins/claude/skills', { withFileTypes: true })).filter((entry) => entry.isDirectory())
+  assert.equal(skills.length, 7)
+  for (const skill of skills) await readFile(`plugins/claude/skills/${skill.name}/SKILL.md`, 'utf8')
+  const mcp = await json('plugins/claude/.mcp.json')
+  assert.ok(mcp.mcpServers.armorbreak)
+  const validation = await json('docs/v2/acceptance/claude-plugin-validation.json')
+  assert.equal(validation.result, 'PASS')
+  assert.equal(validation.exitCode, 0)
+  assert.equal(validation.skills, 7)
+})
+
+test('unverified host overlays stay honestly unverified', async () => {
+  for (const [host, path] of [
+    ['codex', 'plugins/codex/.codex-plugin/plugin.json'],
+    ['cursor', 'plugins/cursor/.cursor-plugin/plugin.json'],
+    ['zcode', 'plugins/zcode/.zcode-plugin/plugin.json'],
+  ]) {
     const overlay = await json(path)
     assert.equal(overlay.host, host)
     assert.equal(overlay.verified, false)
     assert.equal(overlay.pluginManifest, 'plugins/portable/plugin.json')
     await readFile(overlay.mcpConfig, 'utf8')
   }
-  const entries = await readdir('plugins')
-  assert.ok(entries.includes('portable'))
 })

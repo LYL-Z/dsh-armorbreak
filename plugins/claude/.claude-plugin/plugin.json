@@ -1,9 +1,10 @@
 {
-  "schemaVersion": "armorbreak.host-overlay/v1",
-  "host": "claude-code",
-  "pluginManifest": "plugins/portable/plugin.json",
-  "mcpConfig": "plugins/portable/mcp.json",
-  "skillsPath": "skills",
-  "notes": ["Portable MCP/Skills overlay; Claude Code native plugin schema is not claimed verified."],
-  "verified": false
+  "name": "armorbreak",
+  "description": "Authorized reverse-engineering and security-research tools over a trusted local Core. L0-first; L1/L2 require independent human approval.",
+  "version": "2.0.1",
+  "author": {
+    "name": "ArmorBreak Universal"
+  },
+  "homepage": "https://github.com/LYL-Z/dsh-armorbreak",
+  "license": "MIT"
 }

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "armorbreak.host-overlay/v1",
+  "host": "claude-code",
+  "pluginManifest": "plugins/claude/.claude-plugin/plugin.json",
+  "mcpConfig": "plugins/claude/.mcp.json",
+  "skillsPath": "plugins/claude/skills",
+  "notes": ["Official Claude plugin manifest validated offline.", "MCP still requires user-level project approval before connection."],
+  "verified": "plugin_manifest"
+}

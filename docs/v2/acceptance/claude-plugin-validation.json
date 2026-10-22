@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "armorbreak.claude-plugin-validation/v1",
+  "generatedAt": "2026-10-21T21:53:36.5177568-07:00",
+  "host": "Claude Code 2.1.299",
+  "command": "claude plugin validate plugins/claude",
+  "exitCode": 0,
+  "skills": 7,
+  "result": "PASS",
+  "output": "Validating plugin manifest: D:\\dsh-ABM\\armorbreak\\plugins\\claude\\.claude-plugin\\plugin.json\r\n\r\n√ Validation passed",
+  "manifest": "plugins/claude/.claude-plugin/plugin.json",
+  "limitations": [
+    "Manifest/components validation only; plugin not installed into a real Claude marketplace.",
+    "MCP connection still requires Claude login/project approval; no L0 claimed."
+  ]
+}
