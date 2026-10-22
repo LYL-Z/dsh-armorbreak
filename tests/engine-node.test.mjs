@@ -6,6 +6,8 @@ import test from 'node:test'
 
 import { createEngine } from '../packages/engine-node/index.js'
 import { ApprovalAuthority } from '../lib/control/approvalAuthority.js'
+import { getRuntime } from '../lib/core/runtime.js'
+import { createCore } from '../packages/core/index.js'
 
 async function fixture() {
   const stateRoot = await mkdtemp(join(tmpdir(), 'abm-engine-state-'))
@@ -130,4 +132,18 @@ test('deadline bounds are enforced on public Engine methods', async () => {
   const invalid = { ...alice, deadline: 'not-a-date' }
   await assert.rejects(() => engine.capabilities(invalid), (error) => error.code === 'INVALID_REQUEST')
   await engine.close()
+})
+
+
+test('DSH/Core/Engine share one runtime per stateRoot', async () => {
+  const stateRoot = await mkdtemp(join(tmpdir(), 'abm-shared-runtime-'))
+  const workspace = await mkdtemp(join(tmpdir(), 'abm-shared-ws-'))
+  const core = await createCore({ stateRoot })
+  assert.equal(core.runtime, getRuntime({ stateRoot }))
+  const engine = await createEngine({ stateRoot, principals: [{ id: 'alice', kind: 'local-user', workspaces: [workspace] }] })
+  assert.equal(engine.runtime, core.runtime)
+  const otherRoot = await mkdtemp(join(tmpdir(), 'abm-shared-other-'))
+  assert.notEqual(getRuntime({ stateRoot: otherRoot }), core.runtime)
+  await engine.close()
+  await core.close()
 })

@@ -6,7 +6,7 @@
  * DSH plugin remains in index.js/tools.js and will be converted to adapter-dsh
  * only after this boundary is contract-tested.
  */
-import { ArmorBreakRuntime } from '../../lib/core/runtime.js'
+import { ArmorBreakRuntime, getRuntime } from '../../lib/core/runtime.js'
 import { CapabilityRegistry } from '../../lib/core/capabilities.js'
 import { TaskStore } from '../../lib/core/tasks.js'
 import { EvidenceStore } from '../../lib/core/evidence.js'
@@ -23,7 +23,7 @@ export { ArmorBreakRuntime, CapabilityRegistry, TaskStore, EvidenceStore, Policy
  */
 export async function createCore({ stateRoot, workspace } = {}) {
   if (!stateRoot) throw new Error('stateRoot is required for a Universal Core instance')
-  const runtime = new ArmorBreakRuntime({ stateRoot })
+  const runtime = getRuntime({ stateRoot })
   await runtime.init()
   return {
     version: CORE_VERSION,

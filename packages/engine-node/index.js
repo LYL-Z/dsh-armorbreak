@@ -9,7 +9,7 @@
  */
 import { createHash } from 'node:crypto'
 import { resolve, sep } from 'node:path'
-import { ArmorBreakRuntime } from '../../lib/core/runtime.js'
+import { getRuntime } from '../../lib/core/runtime.js'
 import { ApprovalAuthority } from '../../lib/control/approvalAuthority.js'
 import { listWorkflows } from '../../lib/core/workflows.js'
 import { validateInvocation } from '../protocol/index.js'
@@ -55,7 +55,7 @@ export class TrustedEngine {
     this.idempotency = new Map()
     this.approvalAuthority = options.approvalAuthority ?? new ApprovalAuthority({ stateRoot: this.stateRoot })
     this.requestTimeoutMs = Number(options.requestTimeoutMs ?? 30_000)
-    this.runtime = new ArmorBreakRuntime({ stateRoot: this.stateRoot })
+    this.runtime = getRuntime({ stateRoot: this.stateRoot })
   }
 
   async init() {

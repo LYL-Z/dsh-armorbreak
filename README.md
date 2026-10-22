@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-0ea5e9)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%E2%89%A522-339933?logo=node.js&logoColor=white)](package.json)
 [![DeepSeek Harness](https://img.shields.io/badge/DeepSeek%20Harness-0.2.1--rc.2-4D6BFE)](docs/compatibility-matrix.md)
-[![Tests](https://img.shields.io/badge/tests-320%20total%20%2F%201%20skipped-2ea44f)](docs/v2/acceptance/test-report.json)
+[![Tests](https://img.shields.io/badge/tests-321%20total%20%2F%201%20skipped-2ea44f)](docs/v2/acceptance/test-report.json)
 [![Coverage](https://img.shields.io/badge/coverage-85.82%25-yellowgreen)](docs/acceptance-v1.1.0.md)
 [![Runtime deps](https://img.shields.io/badge/runtime%20dependencies-0-blueviolet)](package.json)
 [![Security policy](https://img.shields.io/badge/security-policy-blue)](SECURITY.md)
@@ -87,7 +87,7 @@ ArmorBreak 的设计目标因此不是「再加一个安全 AI」，而是：
 | 模型可见工具 | **10**（工具目录而非 42 个适配器逐一暴露） | `tools.js` |
 | 内置技能 | **7** | `skills.js` |
 | 可复用工作流模板 | **9** | `lib/core/workflows.js` |
-| 自动化测试 | **320 tests / 319 pass / 1 skipped** | `node --test` + raw TAP evidence |
+| 自动化测试 | **321 tests / 320 pass / 1 skipped** | `node --test` + raw TAP evidence |
 | 代码覆盖率 | 历史 v1.2.0 数据；本分支以 `test-report.json` 为准 | `node --test --experimental-test-coverage` |
 | 运行时依赖 | **0**（`node:*` only） | `package.json` |
 | 360 KiB PE 静态解析（p50） | `binary.identify` **1.72 ms** / `forensics.hash` **0.84 ms** | [benchmarks](docs/benchmarks.md) |
@@ -1024,7 +1024,7 @@ dsh-armorbreak/
 ├── docs/                     # 审计/架构/安全模型/验收/兼容性/已知问题/路线图/市场/基准
 ├── benchmarks/               # 可复现基准脚本与结果
 ├── scripts/                  # 文件清单生成、测试临时目录清理
-├── tests/                    # 320 个 node:test 用例
+├── tests/                    # 321 个 node:test 用例
 └── .github/workflows/ci.yml  # 双平台 CI
 ```
 
