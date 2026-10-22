@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.v2-readiness/v1",
-  "commit": "6a69cd4d9e0504d67186e8eb7e1cbb9df41b43b5",
+  "commit": "0528715d0e4a813b4750d119ac00437257d08442",
   "ready": false,
   "releaseTag": false,
   "taskStatus": {
@@ -38,7 +38,7 @@
     "ABU-312": "IN_PROGRESS",
     "ABU-313": "IN_PROGRESS",
     "ABU-314": "NOT_STARTED",
-    "ABU-315": "IN_PROGRESS",
+    "ABU-315": "TESTED",
     "ABU-316": "IN_PROGRESS",
     "ABU-317": "NOT_STARTED",
     "ABU-318": "NOT_STARTED",
@@ -108,10 +108,6 @@
     {
       "code": "ABU-314_NOT_TESTED",
       "detail": "ABU-314 status=NOT_STARTED"
-    },
-    {
-      "code": "ABU-315_NOT_TESTED",
-      "detail": "ABU-315 status=IN_PROGRESS"
     },
     {
       "code": "ABU-316_NOT_TESTED",
