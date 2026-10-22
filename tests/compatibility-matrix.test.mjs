@@ -10,15 +10,17 @@ test('compatibility matrix has nine hosts and makes no unverified claims', async
   for (const row of matrix.hosts) {
     for (const field of required) assert.ok(field in row, `${row.host} missing ${field}`)
     assert.ok(row.limitation && row.limitation.length > 5)
-    assert.ok(['real_verified', 'mock_verified', 'docs_only', 'blocked', 'not_installed'].includes(row.evidenceLevel))
+    assert.ok(['real_verified', 'mcp_verified', 'mcp_verified_model_blocked', 'mock_verified', 'config_only', 'docs_only', 'blocked', 'not_installed'].includes(row.evidenceLevel))
     if (row.evidenceLevel === 'real_verified') assert.equal(row.taskRunState, 'L0_COMPLETED')
+    if (row.evidenceLevel === 'mcp_verified' || row.evidenceLevel === 'mcp_verified_model_blocked') assert.equal(row.toolHandshake, 'PASS')
+    if (row.evidenceLevel === 'config_only') assert.equal(row.taskRunState, 'NOT_RUN')
     if (row.installState === 'NOT_INSTALLED') {
       assert.equal(row.toolHandshake, 'NOT_RUN')
       assert.equal(row.taskRunState, 'NOT_RUN')
     }
   }
   assert.deepEqual(matrix.hosts.filter((row) => row.taskRunState === 'L0_COMPLETED').map((row) => row.host).sort(), ['Codex', 'DSH', 'Hermes Agent'])
-  assert.deepEqual(matrix.hosts.filter((row) => row.toolHandshake === 'PASS').map((row) => row.host).sort(), ['Codex', 'DSH', 'Hermes Agent'])
+  assert.deepEqual(matrix.hosts.filter((row) => row.toolHandshake === 'PASS').map((row) => row.host).sort(), ['Claude Code', 'Codex', 'Cursor', 'DSH', 'Hermes Agent', 'TRAE', 'ZCode'])
   assert.equal(matrix.hosts.filter((row) => row.reportHash).length, 3)
   for (const row of matrix.hosts.filter((item) => item.evidenceId?.startsWith('docs/'))) {
     assert.equal((await stat(row.evidenceId)).isFile(), true)

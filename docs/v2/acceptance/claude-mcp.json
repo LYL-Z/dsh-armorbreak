@@ -1,9 +1,9 @@
 {
   "schemaVersion": "armorbreak.claude-mcp/v1",
-  "generatedAt": "2026-10-21T16:12:00.000Z",
+  "generatedAt": "2026-10-22T09:55:00.000-07:00",
   "claudeVersion": "2.1.299 (Claude Code)",
-  "scope": "project",
-  "project": "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\claude-abm-proj-9f3daacf-671e-4e1e-ae1a-68c583e97f67",
+  "scope": "user",
+  "configFile": "C:/Users/Lenovo/.claude.json",
   "server": {
     "name": "armorbreak",
     "type": "stdio",
@@ -14,27 +14,35 @@
     "envKeys": [
       "ARMORBREAK_STATE_ROOT",
       "ARMORBREAK_WORKSPACE",
-      "ARMORBREAK_PRINCIPAL_ID"
+      "ARMORBREAK_PRINCIPAL_ID",
+      "ARMORBREAK_MCP_AUDIT_LOG"
     ]
   },
   "observed": {
-    "configFile": ".mcp.json",
-    "listStatus": "Pending approval",
-    "connected": false,
-    "mcpListCommand": "claude mcp list"
+    "mcpListCommand": "claude mcp list",
+    "listStatus": "Connected",
+    "connected": true,
+    "clientInfo": {
+      "name": "claude-code",
+      "version": "2.1.299"
+    },
+    "initialize": true,
+    "protocolVersion": "2025-11-25",
+    "toolsList": 7,
+    "toolCalls": 0,
+    "auditLog": "docs/v2/acceptance/host-audit/claude.jsonl"
   },
-  "result": "BLOCKED_CREDENTIALS",
+  "result": "MCP_CONNECTED_MODEL_BLOCKED",
   "limitations": [
-    "Claude Code requires interactive project MCP approval; non-interactive approval was not bypassed.",
-    "No model invocation or L0 tool call was made through Claude.",
-    "This is configuration recognition evidence, not agent integration acceptance.",
-    "No Claude login/API key/OAuth token in this environment; no model call was possible."
+    "The real Claude Code MCP client connected and listed all 7 tools.",
+    "claude -p still fails with Not logged in / 401; no ANTHROPIC_* or CLAUDE_CODE_OAUTH_TOKEN is available.",
+    "No model invocation or L0 tool call was made through Claude; no credential bypass was attempted."
   ],
   "printMode": {
     "command": "claude -p \"只回复 OK\" --output-format json",
     "result": "BLOCKED",
     "detail": "Not logged in · Please run /login",
-    "envCredentials": "MISSING",
-    "modelError": "unrecognized_model"
+    "proxyAttempt": "ANTHROPIC_BASE_URL=http://127.0.0.1:15721 + PROXY_MANAGED -> 401 Authentication Fails",
+    "envCredentials": "MISSING"
   }
 }

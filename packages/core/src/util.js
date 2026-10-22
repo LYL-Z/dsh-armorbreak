@@ -269,7 +269,7 @@ const SECRET_PATTERNS = [
   [/-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----/g, '[REDACTED PRIVATE KEY]'],
   [/\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{5,}\b/g, '[REDACTED JWT]'],
   [/\bAKIA[0-9A-Z]{16}\b/g, '[REDACTED AWS ACCESS KEY]'],
-  [/\b(?i:bearer)\s+[A-Za-z0-9._~+/=-]{12,}/g, 'Bearer [REDACTED]'],
+  [/\bbearer\s+[A-Za-z0-9._~+/=-]{12,}/gi, 'Bearer [REDACTED]'],
   [/\b(ghp|gho|ghs|ghu)_[A-Za-z0-9]{20,}\b/g, '[REDACTED GITHUB TOKEN]'],
   [/\bsk-[A-Za-z0-9]{16,}\b/g, '[REDACTED API KEY]'],
 ]

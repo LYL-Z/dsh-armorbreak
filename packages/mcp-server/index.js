@@ -9,8 +9,8 @@ import { randomUUID } from 'node:crypto'
 import { createInterface } from 'node:readline'
 import { pathToFileURL, fileURLToPath } from 'node:url'
 import { createHash } from 'node:crypto'
-import { readFileSync, readdirSync } from 'node:fs'
-import { join, resolve, sep } from 'node:path'
+import { appendFileSync, mkdirSync, readFileSync, readdirSync } from 'node:fs'
+import { dirname, join, resolve, sep } from 'node:path'
 import { createEngine } from '../engine-node/index.js'
 
 const PROTOCOL_VERSION = '2025-06-18'
@@ -80,14 +80,23 @@ function error(id, code, message) {
 }
 
 export class McpServer {
-  constructor({ engine, principal, workspaceId } = {}) {
+  constructor({ engine, principal, workspaceId, auditLog = null } = {}) {
     if (!engine) throw new Error('engine is required')
     if (!principal?.id || !principal?.kind) throw new Error('trusted principal is required')
     if (!workspaceId) throw new Error('workspaceId is required')
     this.engine = engine
     this.principal = principal
     this.workspaceId = workspaceId
+    this.auditLog = auditLog
     this.initialized = false
+  }
+
+  record(event) {
+    if (!this.auditLog) return
+    try {
+      mkdirSync(dirname(this.auditLog), { recursive: true })
+      appendFileSync(this.auditLog, `${JSON.stringify({ schemaVersion: 'armorbreak.mcp-audit/v1', at: new Date().toISOString(), pid: process.pid, principal: this.principal.id, workspace: this.workspaceId, ...event })}\n`)
+    } catch { /* audit must never break the protocol */ }
   }
 
   context(id) {
@@ -100,6 +109,11 @@ export class McpServer {
     }
     if (message.method === 'initialize') {
       this.initialized = true
+      this.record({
+        event: 'initialize',
+        protocolVersion: message.params?.protocolVersion ?? null,
+        clientInfo: message.params?.clientInfo ? { name: message.params.clientInfo.name ?? null, version: message.params.clientInfo.version ?? null } : null,
+      })
       return {
         jsonrpc: '2.0', id: message.id ?? null,
         result: {
@@ -109,7 +123,10 @@ export class McpServer {
         },
       }
     }
-    if (message.method === 'notifications/initialized') return null
+    if (message.method === 'notifications/initialized') {
+      this.record({ event: 'notifications/initialized' })
+      return null
+    }
     if (!this.initialized) return error(message.id ?? null, -32002, 'server not initialized')
     if (message.method === 'skills/list') {
       return { jsonrpc: '2.0', id: message.id ?? null, result: { skills: loadSkills() } }
@@ -157,6 +174,7 @@ export class McpServer {
       return { jsonrpc: '2.0', id: message.id ?? null, result: { description: 'ArmorBreak triage', messages: [{ role: 'user', content: { type: 'text', text: 'Call armorbreak_capabilities, choose an L0 capability, analyze the authorized target, then verify task/evidence/report.' } }] } }
     }
     if (message.method === 'tools/list') {
+      this.record({ event: 'tools/list', tools: TOOLS.length })
       return { jsonrpc: '2.0', id: message.id ?? null, result: { tools: TOOLS } }
     }
     if (message.method === 'tools/call') {
@@ -174,8 +192,10 @@ export class McpServer {
         else if (name === 'armorbreak_evidence') value = await this.engine.getEvidence(ctx, args.taskId)
         else if (name === 'armorbreak_report') value = await this.engine.getReport(ctx, args.taskId)
         else if (name === 'armorbreak_task_list') value = { tasks: await this.engine.listTasks(ctx) }
+        this.record({ event: 'tools/call', tool: name, ok: true })
         return { jsonrpc: '2.0', id: message.id ?? null, result: { content: [{ type: 'text', text: JSON.stringify(value) }], isError: false } }
       } catch (cause) {
+        this.record({ event: 'tools/call', tool: name, ok: false })
         return { jsonrpc: '2.0', id: message.id ?? null, result: { content: [{ type: 'text', text: String(cause?.message ?? cause).slice(0, 2000) }], isError: true } }
       }
     }
@@ -200,9 +220,9 @@ export class McpServer {
   }
 }
 
-export async function createMcpServer({ stateRoot, workspaceId, principal }) {
+export async function createMcpServer({ stateRoot, workspaceId, principal, auditLog = null }) {
   const engine = await createEngine({ stateRoot, principals: [principal] })
-  return { engine, server: new McpServer({ engine, principal, workspaceId }) }
+  return { engine, server: new McpServer({ engine, principal, workspaceId, auditLog }) }
 }
 
 async function main() {
@@ -214,7 +234,7 @@ async function main() {
     process.exitCode = 2
     return
   }
-  const { server, engine } = await createMcpServer({ stateRoot, workspaceId, principal: { id: principalId, kind: 'local-user', workspaces: [workspaceId] } })
+  const { server, engine } = await createMcpServer({ stateRoot, workspaceId, principal: { id: principalId, kind: 'local-user', workspaces: [workspaceId] }, auditLog: process.env.ARMORBREAK_MCP_AUDIT_LOG ?? null })
   await server.serve()
   await engine.close()
 }

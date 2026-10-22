@@ -6,9 +6,16 @@ import { join } from 'node:path'
 import test from 'node:test'
 
 import { createCore } from '../packages/core/index.js'
+import { redactText } from '../packages/core/src/util.js'
 import { validateEvidenceEnvelope, validateInvocation } from '../packages/protocol/index.js'
 
 const ctx = { principal: { id: 'local-user', kind: 'local-user' }, workspaceId: 'ws', requestId: 'req-1', traceId: 'trace-1' }
+
+test('credential redaction uses syntax supported by host Node 22', () => {
+  assert.equal(redactText('Bearer abcdefghijklmnop'), 'Bearer [REDACTED]')
+  assert.equal(redactText('bearer abcdefghijklmnop'), 'Bearer [REDACTED]')
+  assert.equal(redactText('Authorization: Bearer abcdefghijklmnop'), 'Authorization: [REDACTED] [REDACTED]')
+})
 
 test('Universal Core imports and lists capabilities without DSH/Cordis', async () => {
   const stateRoot = await mkdtemp(join(tmpdir(), 'abm-core-'))

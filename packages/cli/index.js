@@ -58,14 +58,16 @@ async function main() {
       if (!configPath) throw new Error('agent install requires --config <path>; no host path is guessed')
       if (!['user', 'project'].includes(scope)) throw new Error('agent install --scope must be user or project')
       const uninstall = Boolean(options.uninstall || options.disable)
+      const serverEnv = {
+        ARMORBREAK_STATE_ROOT: String(options['state-root'] ?? '${ARMORBREAK_STATE_ROOT}'),
+        ARMORBREAK_WORKSPACE: String(options.workspace ?? '${ARMORBREAK_WORKSPACE}'),
+        ARMORBREAK_PRINCIPAL_ID: String(options.principal ?? 'armorbreak-host'),
+      }
+      if (options['audit-log']) serverEnv.ARMORBREAK_MCP_AUDIT_LOG = String(options['audit-log'])
       const server = {
         command: 'node',
         args: [fileURLToPath(new URL('../mcp-server/index.js', import.meta.url))],
-        env: {
-          ARMORBREAK_STATE_ROOT: String(options['state-root'] ?? '${ARMORBREAK_STATE_ROOT}'),
-          ARMORBREAK_WORKSPACE: String(options.workspace ?? '${ARMORBREAK_WORKSPACE}'),
-          ARMORBREAK_PRINCIPAL_ID: String(options.principal ?? 'armorbreak-host'),
-        },
+        env: serverEnv,
       }
       if (uninstall) {
         if (!existsSync(configPath)) throw new Error('config path does not exist')

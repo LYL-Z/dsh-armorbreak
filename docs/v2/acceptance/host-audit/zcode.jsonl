@@ -1,0 +1,3 @@
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:52:01.831Z","pid":63916,"principal":"zcode-host","workspace":"D:/dsh-ABM/armorbreak","event":"initialize","protocolVersion":"2025-11-25","clientInfo":{"name":"zcode","version":"0.16.9"}}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:52:01.835Z","pid":63916,"principal":"zcode-host","workspace":"D:/dsh-ABM/armorbreak","event":"notifications/initialized"}
+{"schemaVersion":"armorbreak.mcp-audit/v1","at":"2026-10-22T09:52:01.836Z","pid":63916,"principal":"zcode-host","workspace":"D:/dsh-ABM/armorbreak","event":"tools/list","tools":7}
