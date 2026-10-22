@@ -1,0 +1,126 @@
+{
+  "schemaVersion": "armorbreak.provider-golden/v1",
+  "families": [
+    {
+      "id": "openai-chat",
+      "kind": "openai-compatible",
+      "prefix": "/v1",
+      "model": "gpt-golden",
+      "keyEnv": "OPENAI_KEY",
+      "cases": [
+        {
+          "name": "text",
+          "response": { "choices": [{ "message": { "content": "golden chat" }, "finish_reason": "stop" }], "usage": { "prompt_tokens": 2, "completion_tokens": 1, "total_tokens": 3 } },
+          "expect": { "text": "golden chat", "totalTokens": 3, "finishReason": "stop" }
+        },
+        {
+          "name": "tool",
+          "response": { "choices": [{ "message": { "content": "", "tool_calls": [{ "id": "call_chat", "function": { "name": "armorbreak_health", "arguments": "{}" } }] }, "finish_reason": "tool_calls" }], "usage": { "prompt_tokens": 2, "completion_tokens": 1, "total_tokens": 3 } },
+          "expect": { "tool": "armorbreak_health", "totalTokens": 3, "finishReason": "tool_calls" }
+        },
+        {
+          "name": "stream",
+          "stream": true,
+          "events": [
+            { "choices": [{ "delta": { "content": "golden " } }] },
+            { "choices": [{ "delta": { "tool_calls": [{ "index": 0, "id": "call_stream", "function": { "name": "armorbreak_health", "arguments": "{}" } }] }, "finish_reason": "tool_calls" }], "usage": { "prompt_tokens": 2, "completion_tokens": 1, "total_tokens": 3 } }
+          ],
+          "expect": { "text": "golden ", "tool": "armorbreak_health", "totalTokens": 3, "finishReason": "tool_calls", "minEvents": 2 }
+        },
+        { "name": "error", "status": 429, "expectCode": "PROVIDER_HTTP_429" }
+      ]
+    },
+    {
+      "id": "openai-responses",
+      "kind": "openai-responses",
+      "prefix": "/v1",
+      "model": "resp-golden",
+      "keyEnv": "OPENAI_KEY",
+      "cases": [
+        {
+          "name": "text",
+          "response": { "status": "completed", "output": [{ "type": "message", "content": [{ "type": "output_text", "text": "golden responses" }] }], "usage": { "input_tokens": 2, "output_tokens": 1, "total_tokens": 3 } },
+          "expect": { "text": "golden responses", "totalTokens": 3, "finishReason": "stop" }
+        },
+        {
+          "name": "tool",
+          "response": { "status": "completed", "output": [{ "type": "function_call", "call_id": "call_resp", "name": "armorbreak_health", "arguments": "{}" }], "usage": { "input_tokens": 2, "output_tokens": 1, "total_tokens": 3 } },
+          "expect": { "tool": "armorbreak_health", "totalTokens": 3, "finishReason": "stop" }
+        },
+        {
+          "name": "stream",
+          "stream": true,
+          "events": [
+            { "type": "response.output_text.delta", "delta": "golden " },
+            { "type": "response.output_item.added", "item": { "id": "item_g", "type": "function_call", "call_id": "call_resp_stream", "name": "armorbreak_health" } },
+            { "type": "response.function_call_arguments.delta", "item_id": "item_g", "delta": "{}" },
+            { "type": "response.completed", "response": { "usage": { "input_tokens": 2, "output_tokens": 1, "total_tokens": 3 } } }
+          ],
+          "expect": { "text": "golden ", "tool": "armorbreak_health", "totalTokens": 3, "finishReason": "stop", "minEvents": 4 }
+        },
+        { "name": "error", "status": 500, "expectCode": "PROVIDER_HTTP_500" }
+      ]
+    },
+    {
+      "id": "anthropic",
+      "kind": "anthropic",
+      "prefix": "",
+      "model": "claude-golden",
+      "keyEnv": "ANTHROPIC_KEY",
+      "cases": [
+        {
+          "name": "text",
+          "response": { "content": [{ "type": "text", "text": "golden anth" }], "stop_reason": "end_turn", "usage": { "input_tokens": 2, "output_tokens": 1 } },
+          "expect": { "text": "golden anth", "totalTokens": 3, "finishReason": "stop" }
+        },
+        {
+          "name": "tool",
+          "response": { "content": [{ "type": "tool_use", "id": "tool_g", "name": "armorbreak_health", "input": {} }], "stop_reason": "tool_use", "usage": { "input_tokens": 2, "output_tokens": 1 } },
+          "expect": { "tool": "armorbreak_health", "totalTokens": 3, "finishReason": "tool_calls" }
+        },
+        {
+          "name": "stream",
+          "stream": true,
+          "events": [
+            { "type": "message_start", "message": { "usage": { "input_tokens": 2 } } },
+            { "type": "content_block_delta", "index": 0, "delta": { "type": "text_delta", "text": "golden " } },
+            { "type": "content_block_start", "index": 1, "content_block": { "type": "tool_use", "id": "tool_stream", "name": "armorbreak_health" } },
+            { "type": "content_block_delta", "index": 1, "delta": { "type": "input_json_delta", "partial_json": "{}" } },
+            { "type": "message_delta", "delta": { "stop_reason": "tool_use" }, "usage": { "output_tokens": 1 } }
+          ],
+          "expect": { "text": "golden ", "tool": "armorbreak_health", "totalTokens": 3, "finishReason": "tool_calls", "minEvents": 5 }
+        },
+        { "name": "error", "status": 401, "expectCode": "PROVIDER_HTTP_401" }
+      ]
+    },
+    {
+      "id": "gemini",
+      "kind": "gemini",
+      "prefix": "/v1beta",
+      "model": "gemini-golden",
+      "keyEnv": "GEMINI_KEY",
+      "cases": [
+        {
+          "name": "text",
+          "response": { "candidates": [{ "content": { "parts": [{ "text": "golden gemini" }] }, "finishReason": "STOP" }], "usageMetadata": { "promptTokenCount": 2, "candidatesTokenCount": 1, "totalTokenCount": 3 } },
+          "expect": { "text": "golden gemini", "totalTokens": 3, "finishReason": "stop" }
+        },
+        {
+          "name": "tool",
+          "response": { "candidates": [{ "content": { "parts": [{ "functionCall": { "name": "armorbreak_health", "args": {} } }] }, "finishReason": "STOP" }], "usageMetadata": { "promptTokenCount": 2, "candidatesTokenCount": 1, "totalTokenCount": 3 } },
+          "expect": { "tool": "armorbreak_health", "totalTokens": 3, "finishReason": "stop" }
+        },
+        {
+          "name": "stream",
+          "stream": true,
+          "events": [
+            { "candidates": [{ "content": { "parts": [{ "text": "golden " }] } }] },
+            { "candidates": [{ "content": { "parts": [{ "functionCall": { "name": "armorbreak_health", "args": {} } }] }, "finishReason": "STOP" }], "usageMetadata": { "promptTokenCount": 2, "candidatesTokenCount": 1, "totalTokenCount": 3 } }
+          ],
+          "expect": { "text": "golden ", "tool": "armorbreak_health", "totalTokens": 3, "finishReason": "stop", "minEvents": 2 }
+        },
+        { "name": "error", "status": 400, "expectCode": "PROVIDER_HTTP_400" }
+      ]
+    }
+  ]
+}

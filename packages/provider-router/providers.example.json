@@ -12,11 +12,29 @@
       "timeoutMs": 60000
     },
     {
+      "id": "openai-responses",
+      "kind": "openai-responses",
+      "baseUrl": "https://api.openai.com/v1",
+      "models": ["gpt-5"],
+      "apiKeyEnv": "OPENAI_API_KEY",
+      "supportsTools": true,
+      "timeoutMs": 60000
+    },
+    {
       "id": "anthropic",
       "kind": "anthropic",
       "baseUrl": "https://api.anthropic.com",
       "models": ["claude-sonnet-4-5"],
       "apiKeyEnv": "ANTHROPIC_API_KEY",
+      "supportsTools": true,
+      "timeoutMs": 60000
+    },
+    {
+      "id": "gemini",
+      "kind": "gemini",
+      "baseUrl": "https://generativelanguage.googleapis.com/v1beta",
+      "models": ["gemini-2.5-pro"],
+      "apiKeyEnv": "GEMINI_API_KEY",
       "supportsTools": true,
       "timeoutMs": 60000
     },

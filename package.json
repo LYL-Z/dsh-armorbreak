@@ -74,6 +74,10 @@
     "test": "node --test",
     "bench": "node benchmarks/bench.mjs",
     "inventory": "node scripts/file-changes.mjs",
-    "clean-temp": "node scripts/clean-temp.mjs"
+    "clean-temp": "node scripts/clean-temp.mjs",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
   }
 }

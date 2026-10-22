@@ -1,31 +1,41 @@
 # Release Status (generated)
 
-Ready: **true**
-Release tag: **false**
+Pre-release ready: **true**
+GA ready: **false**
+Release tag: **true**
 
 ## Active blockers
 
 
-## Owner waivers
+## GA blockers (owner waivers do not count)
 
-Approved by **刘依林** on 2026-10-22; independent review: **WAIVED_BY_OWNER** (20 items).
-
-- `ABU-206_NOT_TESTED`: ABU-206 status=IN_PROGRESS
 - `ABU-210_NOT_TESTED`: ABU-210 status=IN_PROGRESS
 - `ABU-302_NOT_TESTED`: ABU-302 status=NOT_STARTED
 - `ABU-303_NOT_TESTED`: ABU-303 status=IN_PROGRESS
 - `ABU-307_NOT_TESTED`: ABU-307 status=NOT_STARTED
-- `ABU-311_NOT_TESTED`: ABU-311 status=NOT_STARTED
-- `ABU-312_NOT_TESTED`: ABU-312 status=IN_PROGRESS
-- `ABU-313_NOT_TESTED`: ABU-313 status=IN_PROGRESS
-- `ABU-314_NOT_TESTED`: ABU-314 status=NOT_STARTED
-- `ABU-317_NOT_TESTED`: ABU-317 status=NOT_STARTED
-- `ABU-318_NOT_TESTED`: ABU-318 status=NOT_STARTED
-- `ABU-402_NOT_TESTED`: ABU-402 status=IN_PROGRESS
 - `ABU-403_NOT_TESTED`: ABU-403 status=IN_PROGRESS
-- `ABU-404_NOT_TESTED`: ABU-404 status=NOT_STARTED
-- `ABU-408_NOT_TESTED`: ABU-408 status=IN_PROGRESS
-- `ABU-409_NOT_TESTED`: ABU-409 status=IN_PROGRESS
+- `HOST_Claude Code_NOT_VERIFIED`: Claude Code integration is not host-verified
+- `HOST_ZCode_NOT_VERIFIED`: ZCode integration is not host-verified
+- `HOST_Pi_NOT_VERIFIED`: Pi integration is not host-verified
+- `ARTIFACT_UNSIGNED`: portable artifact has no production signature
+- `ABU-311_REAL_ENDPOINT_BLOCKED`: ABU-311 real endpoint is BLOCKED_EXTERNAL
+- `ABU-312_REAL_ENDPOINT_BLOCKED`: ABU-312 real endpoint is BLOCKED_EXTERNAL
+- `ABU-313_REAL_ENDPOINT_BLOCKED`: ABU-313 real endpoint is BLOCKED_EXTERNAL
+- `ABU-314_REAL_ENDPOINT_BLOCKED`: ABU-314 real endpoint is BLOCKED_EXTERNAL
+- `ABU-318_REAL_ENDPOINT_BLOCKED`: ABU-318 real endpoint is BLOCKED_EXTERNAL
+- `ABU-409_INDEPENDENT_REVIEW_BLOCKED`: ABU-409 independent review is BLOCKED_EXTERNAL
+- `ABU-402_HOST_INSTALL_BLOCKED`: ABU-402 real host install is BLOCKED_EXTERNAL
+- `ABU-408_PRODUCTION_SIGNATURE_BLOCKED`: ABU-408 production signature is BLOCKED_EXTERNAL
+
+## Owner waivers (pre-release only)
+
+Approved by **刘依林** on 2026-10-22; independent review: **WAIVED_BY_OWNER** (9 items).
+
+- `ABU-210_NOT_TESTED`: ABU-210 status=IN_PROGRESS
+- `ABU-302_NOT_TESTED`: ABU-302 status=NOT_STARTED
+- `ABU-303_NOT_TESTED`: ABU-303 status=IN_PROGRESS
+- `ABU-307_NOT_TESTED`: ABU-307 status=NOT_STARTED
+- `ABU-403_NOT_TESTED`: ABU-403 status=IN_PROGRESS
 - `HOST_Claude Code_NOT_VERIFIED`: Claude Code integration is not host-verified
 - `HOST_ZCode_NOT_VERIFIED`: ZCode integration is not host-verified
 - `HOST_Pi_NOT_VERIFIED`: Pi integration is not host-verified

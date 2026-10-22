@@ -13,12 +13,24 @@ const root = resolve(fileURLToPath(new URL('../..', import.meta.url)))
 const rank = { NOT_STARTED: 0, IN_PROGRESS: 1, IMPLEMENTED: 2, TESTED: 3, HOST_VERIFIED: 4, RELEASED: 5, BLOCKED: -1 }
 const required = ["ABU-101","ABU-102","ABU-103","ABU-104","ABU-105","ABU-106","ABU-107","ABU-108","ABU-109","ABU-201","ABU-202","ABU-203","ABU-204","ABU-205","ABU-206","ABU-207","ABU-208","ABU-209","ABU-210","ABU-211","ABU-301","ABU-302","ABU-303","ABU-304","ABU-305","ABU-306","ABU-307","ABU-308","ABU-309","ABU-310","ABU-311","ABU-312","ABU-313","ABU-314","ABU-315","ABU-316","ABU-317","ABU-318","ABU-401","ABU-402","ABU-403","ABU-404","ABU-405","ABU-406","ABU-407","ABU-408","ABU-409"]
 const taskStatus = {}
+const taskRealEndpoint = {}
+const taskIndependentReview = {}
+const taskHostInstall = {}
+const taskProductionSignature = {}
 const blockers = []
 for (const id of required) {
   try {
     const text = readFileSync(resolve(root, `docs/v2/tasks/${id}.md`), 'utf8')
     const status = /^status:\s*(\S+)/m.exec(text)?.[1] ?? 'NOT_STARTED'
+    const realEndpoint = /^realEndpoint:\s*(\S+)/m.exec(text)?.[1] ?? null
+    const independentReview = /^independentReview:\s*(\S+)/m.exec(text)?.[1] ?? null
+    const hostInstall = /^hostInstall:\s*(\S+)/m.exec(text)?.[1] ?? null
+    const productionSignature = /^productionSignature:\s*(\S+)/m.exec(text)?.[1] ?? null
     taskStatus[id] = status
+    taskRealEndpoint[id] = realEndpoint
+    taskIndependentReview[id] = independentReview
+    taskHostInstall[id] = hostInstall
+    taskProductionSignature[id] = productionSignature
     if (rank[status] === undefined || rank[status] < rank.TESTED) blockers.push({ code: `${id}_NOT_TESTED`, detail: `${id} status=${status}` })
   } catch {
     taskStatus[id] = 'MISSING'
@@ -69,13 +81,37 @@ if (!noWaivers) {
 }
 const activeBlockers = blockers.filter((blocker) => !waiverCodes.has(blocker.code))
 const waived = blockers.filter((blocker) => waiverCodes.has(blocker.code))
+const realEndpointBlockers = Object.entries(taskRealEndpoint)
+  .filter(([, value]) => value === 'BLOCKED_EXTERNAL')
+  .map(([id]) => ({ code: `${id}_REAL_ENDPOINT_BLOCKED`, detail: `${id} real endpoint is BLOCKED_EXTERNAL` }))
+const independentReviewBlockers = Object.entries(taskIndependentReview)
+  .filter(([, value]) => value === 'BLOCKED_EXTERNAL')
+  .map(([id]) => ({ code: `${id}_INDEPENDENT_REVIEW_BLOCKED`, detail: `${id} independent review is BLOCKED_EXTERNAL` }))
+const hostInstallBlockers = Object.entries(taskHostInstall)
+  .filter(([, value]) => value === 'BLOCKED_EXTERNAL')
+  .map(([id]) => ({ code: `${id}_HOST_INSTALL_BLOCKED`, detail: `${id} real host install is BLOCKED_EXTERNAL` }))
+const productionSignatureBlockers = Object.entries(taskProductionSignature)
+  .filter(([, value]) => value === 'BLOCKED_EXTERNAL')
+  .map(([id]) => ({ code: `${id}_PRODUCTION_SIGNATURE_BLOCKED`, detail: `${id} production signature is BLOCKED_EXTERNAL` }))
+const gaBlockers = [...blockers, ...waived, ...realEndpointBlockers, ...independentReviewBlockers, ...hostInstallBlockers, ...productionSignatureBlockers]
+if (artifact?.signed !== true) gaBlockers.push({ code: 'ARTIFACT_UNSIGNED', detail: 'portable artifact has no production signature' })
+const uniqueGaBlockers = [...new Map(gaBlockers.map((item) => [item.code, item])).values()]
+const preReleaseReady = activeBlockers.length === 0
+const gaReady = uniqueGaBlockers.length === 0 && !releaseTag
 const report = {
   schemaVersion: 'armorbreak.v2-readiness/v1',
   commit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
-  ready: activeBlockers.length === 0 && !releaseTag,
+  preReleaseReady,
+  gaReady,
+  ready: preReleaseReady,
   releaseTag,
   taskStatus,
+  taskRealEndpoint,
+  taskIndependentReview,
+  taskHostInstall,
+  taskProductionSignature,
   blockers: activeBlockers,
+  gaBlockers: uniqueGaBlockers,
   waived,
   waiver: waiverDoc ? { approvedBy: waiverDoc.approvedBy, approvedAt: waiverDoc.approvedAt, independentReview: waiverDoc.independentReview, count: waived.length, ref: 'docs/v2/release/waivers.json' } : null,
   artifact: artifact ? { version: artifact.version, signed: artifact.signed, sha256: artifact.sha256 } : null,
@@ -84,4 +120,5 @@ console.log(JSON.stringify(report, null, 2))
 if (process.argv.includes('--write')) {
   writeFileSync(resolve(root, 'docs/v2/acceptance/v2.2-readiness.json'), `${JSON.stringify(report, null, 2)}\n`)
 }
-if (process.argv.includes('--require-ready') && !report.ready) process.exitCode = 1
+if (process.argv.includes('--require-ready') && !report.preReleaseReady) process.exitCode = 1
+if (process.argv.includes('--require-ga') && !report.gaReady) process.exitCode = 1

@@ -4,7 +4,7 @@
  * returns plaintext API keys. Callers read credentials only from the declared
  * environment variable in their own adapter.
  */
-const KINDS = new Set(['openai-compatible', 'anthropic', 'ollama', 'local'])
+const KINDS = new Set(['openai-compatible', 'openai-responses', 'anthropic', 'gemini', 'ollama', 'local'])
 const SECRET_FIELD = /api[_-]?key|token|secret|authorization|password/i
 
 function fail(code, message) {
@@ -75,3 +75,6 @@ export class ProviderRouter {
 export function createProviderRouter(options) {
   return new ProviderRouter(options)
 }
+
+export { ProviderPolicy, createProviderPolicy } from './policy.js'
+export { MemorySecretVault, WindowsDpapiVault, createSecretVault, redactSecret } from './vault.js'

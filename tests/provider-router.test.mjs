@@ -41,7 +41,7 @@ test('plaintext keys and secret-like provider fields are rejected', () => {
 test('example provider file is secret-free and loadable', async () => {
   const { readFile } = await import('node:fs/promises')
   const example = JSON.parse(await readFile('packages/provider-router/providers.example.json', 'utf8'))
-  assert.equal(example.providers.length, 4)
+  assert.equal(example.providers.length, 6)
   assert.equal(JSON.stringify(example).includes('sk-'), false)
   const router = new ProviderRouter({ providers: example.providers, env: {} })
   assert.throws(() => router.resolve({ model: 'gpt-4.1' }), (error) => error.code === 'KEY_MISSING')

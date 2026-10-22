@@ -8,13 +8,6 @@
   "policy": "A waiver only suppresses a readiness blocker; it never changes test results or fabricates evidence. Residual risk is recorded below.",
   "waivers": [
     {
-      "code": "ABU-206_NOT_TESTED",
-      "task": "ABU-206",
-      "reason": "No TypeScript compiler is installed in the dependency-free environment; OpenAPI and index.d.ts exist, but tsc/CLI shared typed client is not verified.",
-      "residualRisk": "SDK type drift could go unnoticed until an external TypeScript consumer compiles it.",
-      "followUp": "Add a pinned TypeScript dev dependency in CI and run tsc --noEmit on SDK examples."
-    },
-    {
       "code": "ABU-210_NOT_TESTED",
       "task": "ABU-210",
       "reason": "Claude Code MCP connects and lists 7 tools, but claude -p is not logged in and no ANTHROPIC_* or CLAUDE_CODE_OAUTH_TOKEN is available; no credential bypass attempted.",
@@ -43,81 +36,11 @@
       "followUp": "Implement/verify the Pi TypeScript extension and run a real host test."
     },
     {
-      "code": "ABU-311_NOT_TESTED",
-      "task": "ABU-311",
-      "reason": "OpenAI Responses API and SSE event accumulation are not implemented; only Chat-compatible/Ollama stream paths exist.",
-      "residualRisk": "Responses API users are unsupported.",
-      "followUp": "Implement Responses API mapping and live tests with an authorized endpoint."
-    },
-    {
-      "code": "ABU-312_NOT_TESTED",
-      "task": "ABU-312",
-      "reason": "OpenAI Chat-compatible mapping is tested against mocks and local Ollama, but no paid/authorized OpenAI endpoint was called.",
-      "residualRisk": "Provider-specific flags/errors may differ.",
-      "followUp": "Run with an authorized OpenAI key and capture request/response evidence."
-    },
-    {
-      "code": "ABU-313_NOT_TESTED",
-      "task": "ABU-313",
-      "reason": "Anthropic Messages mapping is unit-tested; Anthropic streaming/tool loop has no live endpoint.",
-      "residualRisk": "Anthropic streaming and stop-reason handling are unverified live.",
-      "followUp": "Run with an authorized Anthropic key; add stream tests."
-    },
-    {
-      "code": "ABU-314_NOT_TESTED",
-      "task": "ABU-314",
-      "reason": "Gemini native provider is not implemented; only OpenAI-compatible/Ollama/local are covered.",
-      "residualRisk": "No Gemini compatibility claim.",
-      "followUp": "Implement Gemini native mapping and live tests."
-    },
-    {
-      "code": "ABU-317_NOT_TESTED",
-      "task": "ABU-317",
-      "reason": "Secret Vault, egress policy, cost estimate and fallback consent are not implemented.",
-      "residualRisk": "Credentials rely on host env/secret store; cost/fallback controls absent.",
-      "followUp": "Add vault integration and egress/cost/fallback policy tests."
-    },
-    {
-      "code": "ABU-318_NOT_TESTED",
-      "task": "ABU-318",
-      "reason": "Four-protocol-family authorized-endpoint golden fixtures are incomplete; only local Ollama and mock fixtures exist.",
-      "residualRisk": "Cross-provider conformance is not fully proven.",
-      "followUp": "Add anonymous golden fixtures for each protocol and authorized live runs."
-    },
-    {
-      "code": "ABU-402_NOT_TESTED",
-      "task": "ABU-402",
-      "reason": "Installer rollback/source pinning are tested, but production signing and real-host installation are not complete.",
-      "residualRisk": "Artifact trust chain remains owner-waived.",
-      "followUp": "Provide a production signing key and run real-host install acceptance."
-    },
-    {
       "code": "ABU-403_NOT_TESTED",
       "task": "ABU-403",
       "reason": "Six of nine hosts have real L0; ZCode, Claude, Antigravity and Pi are incomplete (Antigravity/Pi not installed, Claude model blocked, ZCode model call not captured).",
       "residualRisk": "Nine-host compatibility is not complete.",
       "followUp": "Finish the four missing host runs and re-collect the matrix."
-    },
-    {
-      "code": "ABU-404_NOT_TESTED",
-      "task": "ABU-404",
-      "reason": "Workbench Hosts/Providers UI was not implemented.",
-      "residualRisk": "No visual workbench deliverable.",
-      "followUp": "Build the Workbench UI over the existing machine-readable matrix/readiness artifacts."
-    },
-    {
-      "code": "ABU-408_NOT_TESTED",
-      "task": "ABU-408",
-      "reason": "No production artifact signature or tagged release was created; v2.0.0 remains the published tag.",
-      "residualRisk": "No V2.2 signed release asset.",
-      "followUp": "Sign the artifact with the production key and publish the tag/release."
-    },
-    {
-      "code": "ABU-409_NOT_TESTED",
-      "task": "ABU-409",
-      "reason": "Owner signature is present, but independent third-party review, gray plan and old-V2 read-only drill are not complete.",
-      "residualRisk": "Release is owner-approved with waivers, not independently reviewed.",
-      "followUp": "Run independent review, gray plan and old-data read-only drill."
     },
     {
       "code": "HOST_Claude Code_NOT_VERIFIED",

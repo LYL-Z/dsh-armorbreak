@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, feature/abu-universal]
+    branches: [main, feature/abu-universal, feature/v2.2-ga]
     tags: ['v*']
   pull_request:
   workflow_dispatch:
@@ -33,7 +33,11 @@ jobs:
       - name: Environment facts
         run: node --version && node -e "console.log(process.platform, process.arch)"
 
-      # The bundle is intentionally dependency-free: no install step is required.
+      - name: Install locked dev dependencies
+        run: npm ci --no-audit --no-fund
+
+      # Runtime remains dependency-free; TypeScript is a locked dev dependency
+      # used only to compile the SDK contract and consumer fixture.
       - name: Full test suite
         run: node --test
 

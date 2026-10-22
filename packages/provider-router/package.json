@@ -6,6 +6,8 @@
   "exports": {
     ".": "./index.js",
     "./client": "./client.js",
-    "./tool-loop": "./toolLoop.js"
+    "./tool-loop": "./toolLoop.js",
+    "./vault": "./vault.js",
+    "./policy": "./policy.js"
   }
 }
