@@ -8,8 +8,14 @@
     "name": "armorbreak",
     "type": "stdio",
     "command": "node",
-    "args": ["D:\\dsh-ABM\\armorbreak\\packages\\mcp-server\\index.js"],
-    "envKeys": ["ARMORBREAK_STATE_ROOT", "ARMORBREAK_WORKSPACE", "ARMORBREAK_PRINCIPAL_ID"]
+    "args": [
+      "D:\\dsh-ABM\\armorbreak\\packages\\mcp-server\\index.js"
+    ],
+    "envKeys": [
+      "ARMORBREAK_STATE_ROOT",
+      "ARMORBREAK_WORKSPACE",
+      "ARMORBREAK_PRINCIPAL_ID"
+    ]
   },
   "observed": {
     "configFile": ".mcp.json",
@@ -17,10 +23,18 @@
     "connected": false,
     "mcpListCommand": "claude mcp list"
   },
-  "result": "CONFIG_VISIBLE_PENDING_APPROVAL",
+  "result": "BLOCKED_CREDENTIALS",
   "limitations": [
     "Claude Code requires interactive project MCP approval; non-interactive approval was not bypassed.",
     "No model invocation or L0 tool call was made through Claude.",
-    "This is configuration recognition evidence, not agent integration acceptance."
-  ]
+    "This is configuration recognition evidence, not agent integration acceptance.",
+    "No Claude login/API key/OAuth token in this environment; no model call was possible."
+  ],
+  "printMode": {
+    "command": "claude -p \"只回复 OK\" --output-format json",
+    "result": "BLOCKED",
+    "detail": "Not logged in · Please run /login",
+    "envCredentials": "MISSING",
+    "modelError": "unrecognized_model"
+  }
 }

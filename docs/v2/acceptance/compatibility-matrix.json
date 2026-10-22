@@ -51,7 +51,7 @@
       "evidenceId": "docs/v2/acceptance/claude-mcp.json",
       "reportHash": null,
       "testAt": "2026-10-21T16:12:00.000Z",
-      "limitation": "Project MCP requires interactive approval; not approved or connected.",
+      "limitation": "Claude print mode is BLOCKED: not logged in and no API key/OAuth env; project MCP remains pending approval. No L0 executed.",
       "commitSha": "2f0ab8b"
     },
     {
