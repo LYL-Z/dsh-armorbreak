@@ -1,40 +1,13 @@
 {
   "schemaVersion": "armorbreak.ga-blocker-map/v1",
-  "generatedAt": "2026-10-22T13:46:51.444Z",
+  "generatedAt": "2026-10-22T15:28:04.888Z",
   "source": "docs/v2/acceptance/v2.2-readiness.json",
   "counts": {
-    "acceptanceBlockers": 13,
-    "uniqueRootCauses": 7,
-    "derivedBlockers": 2
+    "acceptanceBlockers": 6,
+    "uniqueRootCauses": 4,
+    "derivedBlockers": 1
   },
   "rootCauses": [
-    {
-      "id": "EXT-CLAUDE-AUTH",
-      "label": "Claude Code model authentication",
-      "derived": false,
-      "blockers": [
-        "ABU-210_NOT_TESTED",
-        "HOST_Claude Code_NOT_VERIFIED"
-      ]
-    },
-    {
-      "id": "EXT-ANTIGRAVITY-AUTH",
-      "label": "Antigravity/Gemini CLI authentication",
-      "derived": false,
-      "blockers": [
-        "ABU-302_NOT_TESTED",
-        "HOST_Antigravity_NOT_VERIFIED"
-      ]
-    },
-    {
-      "id": "EXT-ZCODE-BALANCE",
-      "label": "ZCode provider balance/model access",
-      "derived": false,
-      "blockers": [
-        "ABU-303_NOT_TESTED",
-        "HOST_ZCode_NOT_VERIFIED"
-      ]
-    },
     {
       "id": "EXT-OPENAI-ENDPOINTS",
       "label": "OpenAI paid endpoint credentials",
@@ -62,7 +35,7 @@
     },
     {
       "id": "EXT-CROSS-PROTOCOL-GOLDEN",
-      "label": "Cross-protocol golden aggregate (derived from OpenAI/Anthropic/Gemini)",
+      "label": "Cross-protocol golden aggregate (derived)",
       "derived": true,
       "blockers": [
         "ABU-318_REAL_ENDPOINT_BLOCKED"
@@ -75,59 +48,9 @@
       "blockers": [
         "ABU-409_INDEPENDENT_REVIEW_BLOCKED"
       ]
-    },
-    {
-      "id": "EXT-HOST-AGGREGATE",
-      "label": "Aggregate host acceptance (derived from Claude/Antigravity/ZCode)",
-      "derived": true,
-      "blockers": [
-        "ABU-403_NOT_TESTED"
-      ]
     }
   ],
   "blockers": [
-    {
-      "code": "ABU-210_NOT_TESTED",
-      "detail": "ABU-210 status=IN_PROGRESS",
-      "rootCause": "EXT-CLAUDE-AUTH",
-      "derived": false
-    },
-    {
-      "code": "ABU-302_NOT_TESTED",
-      "detail": "ABU-302 status=IN_PROGRESS",
-      "rootCause": "EXT-ANTIGRAVITY-AUTH",
-      "derived": false
-    },
-    {
-      "code": "ABU-303_NOT_TESTED",
-      "detail": "ABU-303 status=IN_PROGRESS",
-      "rootCause": "EXT-ZCODE-BALANCE",
-      "derived": false
-    },
-    {
-      "code": "ABU-403_NOT_TESTED",
-      "detail": "ABU-403 status=IN_PROGRESS",
-      "rootCause": "EXT-HOST-AGGREGATE",
-      "derived": true
-    },
-    {
-      "code": "HOST_Claude Code_NOT_VERIFIED",
-      "detail": "Claude Code integration is not host-verified",
-      "rootCause": "EXT-CLAUDE-AUTH",
-      "derived": false
-    },
-    {
-      "code": "HOST_ZCode_NOT_VERIFIED",
-      "detail": "ZCode integration is not host-verified",
-      "rootCause": "EXT-ZCODE-BALANCE",
-      "derived": false
-    },
-    {
-      "code": "HOST_Antigravity_NOT_VERIFIED",
-      "detail": "Antigravity integration is not host-verified",
-      "rootCause": "EXT-ANTIGRAVITY-AUTH",
-      "derived": false
-    },
     {
       "code": "ABU-311_REAL_ENDPOINT_BLOCKED",
       "detail": "ABU-311 real endpoint is BLOCKED_EXTERNAL",

@@ -79,20 +79,17 @@ Required correspondence:
 | Workbench real render | `workbench.png`, `workbench-rendered.html` |
 | Deterministic build/SBOM | `release-build.json` |
 | GitHub OIDC attestation | `github-attestation.json` |
-| Real host L0 (6/9 third-party) | `compatibility-matrix.json` |
+| Real host L0 (9/9 third-party; Claude CLI caveat) | `compatibility-matrix.json` |
 
 ## Not verified / external scope
 
-- Claude Code model call: 401, no real Claude L0.
-- Antigravity/Gemini model call: 401.
-- ZCode model call: 429 / provider 1113.
+- Claude Code host L0 used the repository CLI because that Cowork session did not mount ArmorBreak MCP; MCP handshake was verified separately.
 - Real paid OpenAI Chat/Responses, Anthropic Messages, Gemini native endpoints.
 - Independent human review signature.
 
-The 13 acceptance blockers collapse to **7 independent root causes**:
-Claude auth, Antigravity auth, ZCode balance, OpenAI endpoint, Anthropic endpoint,
-Gemini endpoint, independent review. `ABU-403` and `ABU-318` are derived aggregates.
-See `blocker-map.json`.
+The 6 acceptance blockers collapse to **4 independent root causes**:
+OpenAI endpoint, Anthropic endpoint, Gemini endpoint, independent review.
+`ABU-318` is the cross-protocol derived aggregate. See `blocker-map.json`.
 
 ## Security boundaries to review
 
@@ -113,7 +110,7 @@ See `blocker-map.json`.
 - [ ] Review secret handling and provider egress/budget policy.
 - [ ] Review Workbench route protections and screenshot.
 - [ ] Review migration/fault/rollback evidence.
-- [ ] Confirm the 7 root causes and that no owner waiver is used for GA.
+- [ ] Confirm the 4 root causes and that no owner waiver is used for GA.
 - [ ] Record PASS/FAIL per item with file/line references.
 - [ ] State residual P0/P1 findings and whether they block GA.
 - [ ] Sign as an independent human reviewer; include identity and date.

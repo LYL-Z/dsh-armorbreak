@@ -17,5 +17,6 @@ test('generated docs are reproducible and include host/API/Skill/release status'
   assert.match(release, /Pre-release ready: \*\*true\*\*/)
   assert.match(release, /GA ready: \*\*false\*\*/)
   assert.match(release, /Owner waivers \(pre-release only\)/)
-  assert.match(release, /WAIVED_BY_OWNER/)
+  assert.match(release, /0 items/)
+  assert.match(release, /None\./) 
 })
