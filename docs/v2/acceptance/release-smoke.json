@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.release-smoke/v1",
-  "generatedAt": "2026-10-22T06:15:24.837Z",
-  "commit": "2284348f6cb8b93f3659670bfd58e469c7a5f31d",
+  "generatedAt": "2026-10-22T06:18:03.013Z",
+  "commit": "28765de2f6d10aa59b0f93ff0c5aadf5de0f9cd9",
   "version": "2.0.1",
   "checks": [
     {
@@ -25,14 +25,19 @@
       "detail": "2.0.1"
     },
     {
+      "id": "readiness-evidence-current",
+      "status": "PASS",
+      "detail": "readiness=28765de2f6d10aa59b0f93ff0c5aadf5de0f9cd9 manifest=28765de2f6d10aa59b0f93ff0c5aadf5de0f9cd9 tests=28765de2f6d10aa59b0f93ff0c5aadf5de0f9cd9"
+    },
+    {
       "id": "docs-consistency",
       "status": "PASS",
       "detail": "no issues"
     },
     {
       "id": "evidence-hashes",
-      "status": "FAIL",
-      "detail": "docs/v2/acceptance/release-smoke.json hash mismatch"
+      "status": "PASS",
+      "detail": "49 files verified"
     },
     {
       "id": "release-gates",
@@ -45,5 +50,5 @@
       "detail": "v2.0.0 tag still points at the published merge commit"
     }
   ],
-  "result": "FAIL"
+  "result": "PASS"
 }
