@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "armorbreak.host-l0/v1",
+  "generatedAt": "2026-10-22T15:23:58.854Z",
+  "host": "ZCode",
+  "hostKey": "zcode",
+  "model": "DeepSeek/deepseek-flash",
+  "transport": "MCP stdio",
+  "taskId": "task_mvjo2nqy_726bd805",
+  "state": "COMPLETED",
+  "operator": "zcode-host",
+  "workspace": "D:\\dsh-ABM\\armorbreak",
+  "targetPath": "D:\\dsh-ABM\\armorbreak",
+  "reportSha256": "dfd39cd70fb8f7742baa44bd8114006cff5aa422ba1f159d9983da47dfabe78d",
+  "evidenceLines": 4,
+  "evidenceSha256": "cdb52bec0b7d7b24f98193d4ec3774e167ce6b0b46cf24ef742da1d4c452495d",
+  "taskSha256": "27d65cfd29e28741c366c49412df9af207c81f4e0621c59f9c8c5be4ffc29652",
+  "reportFile": "report.md",
+  "result": "L0_COMPLETED",
+  "evidenceLevel": "real_verified",
+  "limitation": null
+}

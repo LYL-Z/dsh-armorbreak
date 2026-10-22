@@ -95,7 +95,7 @@ export class McpServer {
     if (!this.auditLog) return
     try {
       mkdirSync(dirname(this.auditLog), { recursive: true })
-      appendFileSync(this.auditLog, `${JSON.stringify({ schemaVersion: 'armorbreak.mcp-audit/v1', at: new Date().toISOString(), pid: process.pid, principal: this.principal.id, workspace: this.workspaceId, ...event })}\n`)
+      appendFileSync(this.auditLog, `${JSON.stringify({ schemaVersion: 'armorbreak.mcp-audit/v1', at: new Date().toISOString(), pid: process.pid, principal: this.principal.id, workspace: this.workspaceId, runId: process.env.ARMORBREAK_RUN_ID ?? null, ...event })}\n`)
     } catch { /* audit must never break the protocol */ }
   }
 

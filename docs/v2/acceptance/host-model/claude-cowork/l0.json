@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "armorbreak.host-l0/v1",
+  "generatedAt": "2026-10-22T15:23:58.846Z",
+  "host": "Claude Code",
+  "hostKey": "claude-cowork",
+  "model": "host-configured (screenshot: deepseek-v4-flash)",
+  "transport": "CLI engine via Cowork sandbox (MCP not mounted)",
+  "taskId": "task_mvjo4s66_c4407844",
+  "state": "COMPLETED",
+  "operator": "claude-desktop",
+  "workspace": "/sessions/gracious-awesome-wozniak/mnt/dsh-ABM/armorbreak",
+  "targetPath": "/sessions/gracious-awesome-wozniak/mnt/dsh-ABM/armorbreak/README.md",
+  "reportSha256": "2d5ca83af7a03584a1e2e28327ca3cc1d86a978b587fb7e1973ba149697c2753",
+  "evidenceLines": 2,
+  "evidenceSha256": "c32803b10287113f2867d66d29ea0f69b27446ded10b7d0b25f1de8d293317b3",
+  "taskSha256": "a83a5972b436841b781a7721e55ec43546a6af5729bcec4231b9566d3b925887",
+  "reportFile": "report.md",
+  "result": "L0_COMPLETED",
+  "evidenceLevel": "cli_verified_l0",
+  "limitation": "Claude host completed the L0 task through the repository CLI because this session did not mount ArmorBreak MCP; MCP handshake was verified separately."
+}

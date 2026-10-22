@@ -49,9 +49,10 @@ function releaseStatus() {
     lines.push('', '## GA blockers (owner waivers do not count)', '')
     for (const blocker of report.gaBlockers) lines.push(`- \`${blocker.code}\`: ${blocker.detail}`)
   }
-  if (report.waived?.length) {
+  if (report.waiver) {
     lines.push('', '## Owner waivers (pre-release only)', '', `Approved by **${report.waiver.approvedBy}** on ${report.waiver.approvedAt}; independent review: **${report.waiver.independentReview}** (${report.waiver.count} items).`, '')
-    for (const blocker of report.waived) lines.push(`- \`${blocker.code}\`: ${blocker.detail}`)
+    if (report.waived?.length) for (const blocker of report.waived) lines.push(`- \`${blocker.code}\`: ${blocker.detail}`)
+    else lines.push('- None. All original waivers resolved or superseded by real evidence.')
   }
   return `${lines.join('\n')}\n`
 }

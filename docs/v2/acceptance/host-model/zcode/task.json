@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "armorbreak/v2",
+  "id": "task_mvjo2nqy_726bd805",
+  "title": "MCP 硬编码凭据与密钥检测",
+  "objective": "Run sast.secrets on D:\\dsh-ABM\\armorbreak",
+  "workflowId": null,
+  "targetPath": "D:\\dsh-ABM\\armorbreak",
+  "targetKind": "directory",
+  "operator": "zcode-host",
+  "tags": [],
+  "workspace": "D:\\dsh-ABM\\armorbreak",
+  "state": "COMPLETED",
+  "stateHistory": [
+    {
+      "state": "CREATED",
+      "at": "2026-10-22T14:59:14.747Z",
+      "reason": "task created"
+    },
+    {
+      "state": "SCOPE_VALIDATION",
+      "at": "2026-10-22T14:59:14.759Z",
+      "reason": "validating authorization scope"
+    },
+    {
+      "state": "ENVIRONMENT_CHECK",
+      "at": "2026-10-22T14:59:14.767Z",
+      "reason": "scope validated"
+    },
+    {
+      "state": "PLANNING",
+      "at": "2026-10-22T14:59:14.776Z",
+      "reason": "environment checked; riskMax=L0"
+    },
+    {
+      "state": "EXECUTING",
+      "at": "2026-10-22T14:59:14.783Z",
+      "reason": "planned; offline L0 analysis"
+    },
+    {
+      "state": "VERIFYING",
+      "at": "2026-10-22T14:59:15.180Z",
+      "reason": "all steps settled"
+    },
+    {
+      "state": "REPORTING",
+      "at": "2026-10-22T14:59:15.196Z",
+      "reason": "generating report"
+    },
+    {
+      "state": "COMPLETED",
+      "at": "2026-10-22T14:59:15.216Z",
+      "reason": "analysis completed"
+    }
+  ],
+  "steps": [
+    {
+      "id": "analyze",
+      "title": "硬编码凭据与密钥检测",
+      "capabilityId": "sast.secrets",
+      "options": {
+        "minEntropy": 3,
+        "maxFiles": 600,
+        "excludePaths": [
+          "fixtures/",
+          "tests/",
+          "benchmarks/",
+          "docs/",
+          "node_modules/"
+        ]
+      },
+      "dependsOn": null,
+      "failurePolicy": null,
+      "retryPolicy": null,
+      "timeoutMs": null,
+      "status": "DONE",
+      "startedAt": null,
+      "finishedAt": "2026-10-22T14:59:15.172Z",
+      "error": null,
+      "summary": "凭据扫描：读取 282 个文件，发现 2 个唯一疑似凭据（候选出现 2 次，跳过二进制 0 个文件）：critical 1 / high 1 / medium 0 / low 0。 类型：aws-access-key、private-key-block。 所有值已脱敏；若为真实凭据请立即轮换。",
+      "evidenceIds": [
+        "ev_mvjo2o1h_3b961c52",
+        "ev_mvjo2o1o_32a992af"
+      ],
+      "findingIds": [
+        "fnd_mvjo2o23_80b5a937",
+        "fnd_mvjo2o2h_8d50fb4b"
+      ],
+      "durationMs": 332,
+      "attempt": 0
+    }
+  ],
+  "currentStep": 0,
+  "riskMax": "L0",
+  "approvals": [],
+  "notes": [
+    {
+      "at": "2026-10-22T14:59:15.193Z",
+      "note": "evidence chain verified (4 records)"
+    },
+    {
+      "at": "2026-10-22T14:59:15.214Z",
+      "note": "report generated: D:\\dsh-ABM\\armorbreak\\.armorbreak\\tasks\\task_mvjo2nqy_726bd805\\reports\\mcp-硬编码凭据与密钥检测_2026-10-22_14-59-15.md"
+    }
+  ],
+  "createdAt": "2026-10-22T14:59:14.747Z",
+  "updatedAt": "2026-10-22T14:59:15.216Z",
+  "completedAt": "2026-10-22T14:59:15.216Z",
+  "error": null,
+  "report": {
+    "format": "markdown",
+    "path": "D:\\dsh-ABM\\armorbreak\\.armorbreak\\tasks\\task_mvjo2nqy_726bd805\\reports\\mcp-硬编码凭据与密钥检测_2026-10-22_14-59-15.md",
+    "sha256": "dfd39cd70fb8f7742baa44bd8114006cff5aa422ba1f159d9983da47dfabe78d",
+    "at": "2026-10-22T14:59:15.211Z"
+  },
+  "stats": {
+    "evidence": 4,
+    "findings": 2,
+    "stepsDone": 1,
+    "stepsFailed": 0
+  }
+}

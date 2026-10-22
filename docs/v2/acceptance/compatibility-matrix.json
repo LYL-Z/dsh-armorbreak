@@ -48,14 +48,14 @@
       "transport": "stdio",
       "installState": "USER_CONFIG_REGISTERED",
       "toolHandshake": "PASS",
-      "taskRunState": "NOT_RUN",
+      "taskRunState": "L0_COMPLETED",
       "policyDeniedTest": "NOT_RUN",
-      "evidenceId": "docs/v2/acceptance/host-e2e-2026-10-22.json",
-      "reportHash": null,
-      "testAt": "2026-10-21T16:12:00.000Z",
-      "limitation": "Real MCP handshake (claude-code 2.1.299, 7 tools); claude -p still Not logged in / 401, so no model L0.",
+      "evidenceId": "docs/v2/acceptance/host-model/claude-cowork/l0.json",
+      "reportHash": "2d5ca83af7a03584a1e2e28327ca3cc1d86a978b587fb7e1973ba149697c2753",
+      "testAt": "2026-10-22T15:00:54.768Z",
+      "limitation": "Real Claude host L0 via repository CLI in Cowork sandbox; ArmorBreak MCP was not mounted in that session (MCP handshake verified separately).",
       "commitSha": "2f0ab8b",
-      "evidenceLevel": "mcp_verified_model_blocked"
+      "evidenceLevel": "cli_verified_l0"
     },
     {
       "host": "Hermes Agent",
@@ -120,14 +120,14 @@
       "transport": "stdio",
       "installState": "USER_CONFIG_REGISTERED",
       "toolHandshake": "PASS",
-      "taskRunState": "HANDSHAKE_ONLY",
+      "taskRunState": "L0_COMPLETED",
       "policyDeniedTest": "NOT_RUN",
-      "evidenceId": "docs/v2/acceptance/host-e2e-2026-10-22.json",
-      "reportHash": null,
-      "testAt": "2026-10-21T16:06:00.000Z",
-      "limitation": "Real MCP handshake (zcode 0.16.9, 7 tools); no model tools/call captured.",
+      "evidenceId": "docs/v2/acceptance/host-model/zcode/l0.json",
+      "reportHash": "dfd39cd70fb8f7742baa44bd8114006cff5aa422ba1f159d9983da47dfabe78d",
+      "testAt": "2026-10-22T14:59:15.216Z",
+      "limitation": "Real MCP L0: sast.secrets, 4 evidence, 2 findings; ZCode DeepSeek flash.",
       "commitSha": "2f0ab8b",
-      "evidenceLevel": "mcp_verified"
+      "evidenceLevel": "real_verified"
     },
     {
       "host": "Pi",
@@ -174,14 +174,14 @@
       "transport": "stdio",
       "installState": "USER_CONFIG_REGISTERED",
       "toolHandshake": "PASS",
-      "taskRunState": "HANDSHAKE_ONLY",
+      "taskRunState": "L0_COMPLETED",
       "policyDeniedTest": "NOT_RUN",
-      "evidenceId": "docs/v2/acceptance/antigravity-mcp.json",
-      "reportHash": null,
-      "testAt": "2026-10-22T12:05:08.058Z",
-      "limitation": "Real Gemini CLI MCP handshake (7 tools); model auth 401, no L0 task.",
+      "evidenceId": "docs/v2/acceptance/host-model/antigravity/l0.json",
+      "reportHash": "da84f617070250ae69c51af7dca81d378b620b3d1582a29116cd7ca15acdf6a0",
+      "testAt": "2026-10-22T15:17:28.948Z",
+      "limitation": "Real MCP L0: forensics.hash README, 2 evidence; Gemini 3.8 Flash High.",
       "commitSha": "7b158cb",
-      "evidenceLevel": "mcp_verified_model_blocked"
+      "evidenceLevel": "real_verified"
     }
   ]
 }

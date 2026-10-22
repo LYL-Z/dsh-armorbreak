@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "armorbreak.host-l0/v1",
+  "generatedAt": "2026-10-22T15:23:58.859Z",
+  "host": "Antigravity",
+  "hostKey": "antigravity",
+  "model": "Gemini 3.8 Flash High",
+  "transport": "MCP stdio",
+  "taskId": "task_mvjoq3xk_a07113b4",
+  "state": "COMPLETED",
+  "operator": "antigravity-host",
+  "workspace": "D:\\dsh-ABM\\armorbreak",
+  "targetPath": "D:\\dsh-ABM\\armorbreak\\README.md",
+  "reportSha256": "da84f617070250ae69c51af7dca81d378b620b3d1582a29116cd7ca15acdf6a0",
+  "evidenceLines": 2,
+  "evidenceSha256": "242286145caf858cddf113caa3140226ae3d5b03057970582ec79868b9d9c0ef",
+  "taskSha256": "dff0befac0a25e57c11f03ca819d70aea3cbf8ee0f633d1b28c3221e47992d74",
+  "reportFile": "report.md",
+  "result": "L0_COMPLETED",
+  "evidenceLevel": "real_verified",
+  "limitation": null
+}
