@@ -1,14 +1,16 @@
 {
-  "schemaVersion": "armorbreak.real-retest/v1",
+  "schemaVersion": "armorbreak.real-retest/v2",
   "kind": "provider",
-  "id": "openai-responses",
   "provider": "OpenAI Responses",
-  "at": "2026-10-22T13:47:30.763Z",
-  "run": false,
+  "providerId": "openai-responses",
+  "runId": "provider-openai-responses-2026-10-22T14-59-20-701Z-69680c09",
+  "startedAt": "2026-10-22T14:59:20.701Z",
   "model": "gpt-5",
+  "stages": {},
+  "evidencePath": "docs/v2/acceptance/retest/provider-openai-responses.json",
   "status": "PREPARED",
   "details": {
-    "credentialEnv": "OPENAI_API_KEY",
-    "credentialPresent": false
+    "credentialPresent": false,
+    "credentialEnv": "OPENAI_API_KEY"
   }
 }

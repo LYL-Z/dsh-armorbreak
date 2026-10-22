@@ -1,14 +1,16 @@
 {
-  "schemaVersion": "armorbreak.real-retest/v1",
+  "schemaVersion": "armorbreak.real-retest/v2",
   "kind": "provider",
-  "id": "anthropic",
   "provider": "Anthropic Messages",
-  "at": "2026-10-22T13:47:30.764Z",
-  "run": false,
+  "providerId": "anthropic",
+  "runId": "provider-anthropic-2026-10-22T14-59-20-702Z-3f20f9d6",
+  "startedAt": "2026-10-22T14:59:20.702Z",
   "model": "claude-sonnet-4-5",
+  "stages": {},
+  "evidencePath": "docs/v2/acceptance/retest/provider-anthropic.json",
   "status": "PREPARED",
   "details": {
-    "credentialEnv": "ANTHROPIC_API_KEY",
-    "credentialPresent": false
+    "credentialPresent": false,
+    "credentialEnv": "ANTHROPIC_API_KEY"
   }
 }

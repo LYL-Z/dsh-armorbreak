@@ -1,12 +1,20 @@
 {
-  "schemaVersion": "armorbreak.real-retest/v1",
+  "schemaVersion": "armorbreak.real-retest/v2",
   "kind": "host",
-  "id": "antigravity",
   "host": "Antigravity",
-  "at": "2026-10-22T13:47:28.297Z",
-  "run": false,
-  "status": "PREPARED",
-  "details": {
-    "version": "0.64.0"
-  }
+  "hostKey": "antigravity",
+  "runId": "host-antigravity-2026-10-22T14-59-17-969Z-9f07110a",
+  "startedAt": "2026-10-22T14:59:17.969Z",
+  "workspace": "D:\\dsh-ABM\\armorbreak",
+  "model": "host-default",
+  "states": {
+    "cliPresent": "PASS",
+    "mcpHandshake": "NOT_RUN",
+    "accountAuth": "NOT_CONFIRMED",
+    "modelExecution": "NOT_RUN",
+    "taskCompleted": "NOT_RUN"
+  },
+  "cliVersion": "0.64.0",
+  "evidencePath": "docs/v2/acceptance/retest/host-antigravity.json",
+  "status": "PREPARED"
 }
