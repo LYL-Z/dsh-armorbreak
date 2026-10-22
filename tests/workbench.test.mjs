@@ -9,7 +9,7 @@ test('Workbench serves real state, host/provider tables and diagnostics', async 
     const stateResponse = await fetch(`${server.url}/api/state`)
     assert.equal(stateResponse.status, 200)
     const state = await stateResponse.json()
-    assert.equal(state.hosts.length, 9)
+    assert.equal(state.hosts.length, 10)
     assert.equal(state.providers.length, 6)
     assert.ok(state.skills.length >= 7)
     assert.ok(state.tasks.length >= 40)

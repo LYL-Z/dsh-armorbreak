@@ -164,6 +164,24 @@
       "limitation": "Real model GLM-5.3-Flash Max ran sast.scan + report (task_mvjf4409_3916dfb3).",
       "commitSha": "2f0ab8b",
       "evidenceLevel": "real_verified"
+    },
+    {
+      "host": "Antigravity",
+      "hostVersion": "Antigravity / Gemini CLI 0.64.0",
+      "os": "win32",
+      "arch": "x64",
+      "integrationMethod": "MCP + Gemini settings",
+      "transport": "stdio",
+      "installState": "USER_CONFIG_REGISTERED",
+      "toolHandshake": "PASS",
+      "taskRunState": "HANDSHAKE_ONLY",
+      "policyDeniedTest": "NOT_RUN",
+      "evidenceId": "docs/v2/acceptance/antigravity-mcp.json",
+      "reportHash": null,
+      "testAt": "2026-10-22T12:05:08.058Z",
+      "limitation": "Real Gemini CLI MCP handshake (7 tools); model auth 401, no L0 task.",
+      "commitSha": "7b158cb",
+      "evidenceLevel": "mcp_verified_model_blocked"
     }
   ]
 }

@@ -48,7 +48,7 @@ if (matrix) {
     const row = matrix.hosts.find((item) => item.host === host)
     if (!row || row.taskRunState !== 'L0_COMPLETED') blockers.push({ code: `HOST_${host}_NO_L0`, detail: `${host} has no L0 completion` })
   }
-  for (const host of ['Claude Code', 'Cursor', 'WorkBuddy', 'ZCode', 'Pi', 'TRAE']) {
+  for (const host of ['Claude Code', 'Cursor', 'WorkBuddy', 'ZCode', 'Pi', 'TRAE', 'Antigravity']) {
     const row = matrix.hosts.find((item) => item.host === host)
     if (!row || row.taskRunState !== 'L0_COMPLETED') blockers.push({ code: `HOST_${host}_NOT_VERIFIED`, detail: `${host} integration is not host-verified` })
   }

@@ -69,6 +69,13 @@
       "reason": "Portable artifact is not signed with a production key; Ed25519 primitive/test key only.",
       "residualRisk": "No cryptographic release trust root.",
       "followUp": "Sign with the production key and verify."
+    },
+    {
+      "code": "HOST_Antigravity_NOT_VERIFIED",
+      "host": "Antigravity",
+      "reason": "MCP handshake PASS; model 401 Authentication Fails.",
+      "residualRisk": "No Antigravity model L0.",
+      "followUp": "Authenticate Gemini CLI/Antigravity and rerun."
     }
   ]
 }

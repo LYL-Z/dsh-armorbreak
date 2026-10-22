@@ -10,13 +10,14 @@ Release tag: **false**
 ## GA blockers (owner waivers do not count)
 
 - `ABU-210_NOT_TESTED`: ABU-210 status=IN_PROGRESS
-- `ABU-302_NOT_TESTED`: ABU-302 status=NOT_STARTED
+- `ABU-302_NOT_TESTED`: ABU-302 status=IN_PROGRESS
 - `ABU-303_NOT_TESTED`: ABU-303 status=IN_PROGRESS
 - `ABU-307_NOT_TESTED`: ABU-307 status=NOT_STARTED
 - `ABU-403_NOT_TESTED`: ABU-403 status=IN_PROGRESS
 - `HOST_Claude Code_NOT_VERIFIED`: Claude Code integration is not host-verified
 - `HOST_ZCode_NOT_VERIFIED`: ZCode integration is not host-verified
 - `HOST_Pi_NOT_VERIFIED`: Pi integration is not host-verified
+- `HOST_Antigravity_NOT_VERIFIED`: Antigravity integration is not host-verified
 - `ARTIFACT_UNSIGNED`: portable artifact has no production signature
 - `ABU-311_REAL_ENDPOINT_BLOCKED`: ABU-311 real endpoint is BLOCKED_EXTERNAL
 - `ABU-312_REAL_ENDPOINT_BLOCKED`: ABU-312 real endpoint is BLOCKED_EXTERNAL
@@ -29,14 +30,15 @@ Release tag: **false**
 
 ## Owner waivers (pre-release only)
 
-Approved by **刘依林** on 2026-10-22; independent review: **WAIVED_BY_OWNER** (9 items).
+Approved by **刘依林** on 2026-10-22; independent review: **WAIVED_BY_OWNER** (10 items).
 
 - `ABU-210_NOT_TESTED`: ABU-210 status=IN_PROGRESS
-- `ABU-302_NOT_TESTED`: ABU-302 status=NOT_STARTED
+- `ABU-302_NOT_TESTED`: ABU-302 status=IN_PROGRESS
 - `ABU-303_NOT_TESTED`: ABU-303 status=IN_PROGRESS
 - `ABU-307_NOT_TESTED`: ABU-307 status=NOT_STARTED
 - `ABU-403_NOT_TESTED`: ABU-403 status=IN_PROGRESS
 - `HOST_Claude Code_NOT_VERIFIED`: Claude Code integration is not host-verified
 - `HOST_ZCode_NOT_VERIFIED`: ZCode integration is not host-verified
 - `HOST_Pi_NOT_VERIFIED`: Pi integration is not host-verified
+- `HOST_Antigravity_NOT_VERIFIED`: Antigravity integration is not host-verified
 - `ARTIFACT_UNSIGNED`: portable artifact has no production signature
