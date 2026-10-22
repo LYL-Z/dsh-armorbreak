@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.test-report/v1",
-  "generatedAt": "2026-10-22T04:48:32.162Z",
-  "commit": "c3070ab77f4a2f6cbbe85edf546223098399ce18",
+  "generatedAt": "2026-10-22T04:51:36.528Z",
+  "commit": "4f19c556088d05e13e34804759a93e035d0512b8",
   "node": "v24.16.0",
   "platform": "win32",
   "command": "node --test --test-reporter=tap",
@@ -15,5 +15,5 @@
     "todo": 0
   },
   "tapPath": "docs/v2/acceptance/test-report.tap",
-  "tapSha256": "8ff3c69062117b62960824f8cb2bdc618a4263fef3a39834e92e85b9e4aff434"
+  "tapSha256": "eec1cc9a79e61c682ba67cae725453ae942ae3cabdea2b6202e715597f79b88c"
 }
