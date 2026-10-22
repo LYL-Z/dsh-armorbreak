@@ -83,3 +83,25 @@ test('MCP HTTP rejects cross-site Origin and malicious Host', async () => {
     await f.engine.close()
   }
 })
+
+
+test('MCP HTTP supports SSE responses when requested', async () => {
+  const f = await fixture()
+  const server = await createMcpHttpServer({ engine: f.engine, principal: f.principal, workspaceId: f.workspace })
+  try {
+    const response = await fetch(server.url, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', accept: 'text/event-stream' },
+      body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize' }),
+    })
+    assert.equal(response.status, 200)
+    assert.match(response.headers.get('content-type'), /text\/event-stream/)
+    const text = await response.text()
+    assert.match(text, /^event: message\ndata: /)
+    const data = JSON.parse(text.split('data: ')[1])
+    assert.equal(data.result.protocolVersion, '2025-06-18')
+  } finally {
+    await server.close()
+    await f.engine.close()
+  }
+})

@@ -51,6 +51,13 @@ export async function createMcpHttpServer({ engine, principal, workspaceId, host
     const response = await mcp.dispatch(message)
     res.setHeader('mcp-session-id', sessionId)
     if (!response) return send(202, { ok: true })
+    if (String(req.headers.accept ?? '').includes('text/event-stream')) {
+      res.statusCode = 200
+      res.setHeader('content-type', 'text/event-stream; charset=utf-8')
+      res.setHeader('cache-control', 'no-cache')
+      res.end(`event: message\ndata: ${JSON.stringify(response)}\n\n`)
+      return
+    }
     return send(200, response)
   })
   await new Promise((resolve, reject) => {
