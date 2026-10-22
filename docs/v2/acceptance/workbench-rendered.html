@@ -21,10 +21,10 @@
 
   <main>
     <section class="summary" aria-label="Summary">
-      <article class="metric"><span>Readiness</span><strong id="m-ready" class="pass-text">READY</strong><small id="m-ready-note">9 owner waivers</small></article>
-      <article class="metric"><span>Hosts L0</span><strong id="m-hosts">6/9</strong><small>real model tasks</small></article>
+      <article class="metric"><span>Readiness</span><strong id="m-ready" class="pass-text">READY</strong><small id="m-ready-note">10 owner waivers</small></article>
+      <article class="metric"><span>Hosts L0</span><strong id="m-hosts">6/10</strong><small>real model tasks</small></article>
       <article class="metric"><span>Providers</span><strong id="m-providers">6</strong><small>configured adapters</small></article>
-      <article class="metric"><span>Artifact</span><strong id="m-artifact">UNSIGNED</strong><small id="m-artifact-note">fad179c6fd96</small></article>
+      <article class="metric"><span>Artifact</span><strong id="m-artifact">UNSIGNED</strong><small id="m-artifact-note">2cdccbe1fe00</small></article>
     </section>
 
     <nav class="tabs" role="tablist">
@@ -110,6 +110,14 @@
       <td><span class="badge pass">PASS</span></td>
       <td><span class="badge pass">L0_COMPLETED</span></td>
       <td><span class="badge pass">real_verified</span></td>
+    </tr>
+    <tr class="clickable" data-host="9">
+      <td><strong>Antigravity</strong></td>
+      <td>Antigravity / Gemini CLI 0.64.0</td>
+      <td><span class="badge warn">USER_CONFIG_REGISTERED</span></td>
+      <td><span class="badge pass">PASS</span></td>
+      <td><span class="badge ">HANDSHAKE_ONLY</span></td>
+      <td><span class="badge warn">mcp_verified_model_blocked</span></td>
     </tr></tbody></table></div>
       <div id="host-detail" class="detail">Select a host to inspect limitations and evidence.</div>
     </section>
@@ -204,8 +212,8 @@
     <tr><td><strong>ABU-210</strong></td><td><span class="badge ">IN_PROGRESS</span></td><td>PARTIAL</td><td><span class="badge ">not-required</span></td></tr>
     <tr><td><strong>ABU-211</strong></td><td><span class="badge pass">TESTED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
     <tr><td><strong>ABU-301</strong></td><td><span class="badge pass">HOST_VERIFIED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
-    <tr><td><strong>ABU-302</strong></td><td><span class="badge warn">NOT_STARTED</span></td><td>NOT_STARTED</td><td><span class="badge ">not-required</span></td></tr>
-    <tr><td><strong>ABU-303</strong></td><td><span class="badge ">IN_PROGRESS</span></td><td>PARTIAL</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-302</strong></td><td><span class="badge ">IN_PROGRESS</span></td><td>BLOCKED_EXTERNAL</td><td><span class="badge ">not-required</span></td></tr>
+    <tr><td><strong>ABU-303</strong></td><td><span class="badge ">IN_PROGRESS</span></td><td>BLOCKED_EXTERNAL</td><td><span class="badge ">not-required</span></td></tr>
     <tr><td><strong>ABU-304</strong></td><td><span class="badge pass">HOST_VERIFIED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
     <tr><td><strong>ABU-305</strong></td><td><span class="badge pass">HOST_VERIFIED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
     <tr><td><strong>ABU-306</strong></td><td><span class="badge pass">HOST_VERIFIED</span></td><td>PASS</td><td><span class="badge ">not-required</span></td></tr>
@@ -234,7 +242,7 @@
 
     <section id="panel-evidence" class="panel">
       <div class="panel-head"><h2>Evidence center</h2><p>Commit-bound evidence and residual limitations.</p></div>
-      <div class="cards-list" id="evidence-list"><article class="card"><h3>Host model E2E</h3><p>Cursor, WorkBuddy and TRAE real L0 tasks; see docs/v2/acceptance/host-model-e2e-2026-10-22.json</p></article><article class="card"><h3>Provider live Ollama</h3><p>Local chat, SSE and tool loop; see docs/v2/acceptance/provider-live-ollama.json</p></article><article class="card"><h3>Test report</h3><p>Commit-bound raw TAP and test-report.json in docs/v2/acceptance</p></article><article class="card"><h3>Release readiness</h3><p>ready=true; blockers=0; waived=9</p></article></div>
+      <div class="cards-list" id="evidence-list"><article class="card"><h3>Host model E2E</h3><p>Cursor, WorkBuddy and TRAE real L0 tasks; see docs/v2/acceptance/host-model-e2e-2026-10-22.json</p></article><article class="card"><h3>Provider live Ollama</h3><p>Local chat, SSE and tool loop; see docs/v2/acceptance/provider-live-ollama.json</p></article><article class="card"><h3>Test report</h3><p>Commit-bound raw TAP and test-report.json in docs/v2/acceptance</p></article><article class="card"><h3>Release readiness</h3><p>ready=true; blockers=0; waived=10</p></article></div>
     </section>
 
     <section id="panel-diagnostics" class="panel">
@@ -243,7 +251,7 @@
       <pre id="diag-output" class="output">Choose a provider.</pre>
     </section>
   </main>
-  <footer>Read-only Workbench · no secrets rendered · <span id="generated">generated 2026-10-22T11:55:11.287Z</span></footer>
+  <footer>Read-only Workbench · no secrets rendered · <span id="generated">generated 2026-10-22T12:06:27.958Z</span></footer>
   <script src="/app.js"></script>
 
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.v2-readiness/v1",
-  "commit": "7b158cb9ae07ea28165b9f93a1a8445088800d41",
+  "commit": "3a3fbe15ed08527bf1c676348b91298fc4a2faf7",
   "preReleaseReady": true,
   "gaReady": false,
   "ready": true,
@@ -28,7 +28,7 @@
     "ABU-210": "IN_PROGRESS",
     "ABU-211": "TESTED",
     "ABU-301": "HOST_VERIFIED",
-    "ABU-302": "NOT_STARTED",
+    "ABU-302": "IN_PROGRESS",
     "ABU-303": "IN_PROGRESS",
     "ABU-304": "HOST_VERIFIED",
     "ABU-305": "HOST_VERIFIED",
@@ -259,7 +259,7 @@
     },
     {
       "code": "ABU-302_NOT_TESTED",
-      "detail": "ABU-302 status=NOT_STARTED"
+      "detail": "ABU-302 status=IN_PROGRESS"
     },
     {
       "code": "ABU-303_NOT_TESTED",
@@ -284,6 +284,10 @@
     {
       "code": "HOST_Pi_NOT_VERIFIED",
       "detail": "Pi integration is not host-verified"
+    },
+    {
+      "code": "HOST_Antigravity_NOT_VERIFIED",
+      "detail": "Antigravity integration is not host-verified"
     },
     {
       "code": "ARTIFACT_UNSIGNED",
@@ -329,7 +333,7 @@
     },
     {
       "code": "ABU-302_NOT_TESTED",
-      "detail": "ABU-302 status=NOT_STARTED"
+      "detail": "ABU-302 status=IN_PROGRESS"
     },
     {
       "code": "ABU-303_NOT_TESTED",
@@ -356,6 +360,10 @@
       "detail": "Pi integration is not host-verified"
     },
     {
+      "code": "HOST_Antigravity_NOT_VERIFIED",
+      "detail": "Antigravity integration is not host-verified"
+    },
+    {
       "code": "ARTIFACT_UNSIGNED",
       "detail": "portable artifact has no production signature"
     }
@@ -364,12 +372,12 @@
     "approvedBy": "刘依林",
     "approvedAt": "2026-10-22",
     "independentReview": "WAIVED_BY_OWNER",
-    "count": 9,
+    "count": 10,
     "ref": "docs/v2/release/waivers.json"
   },
   "artifact": {
     "version": "2.0.1",
     "signed": false,
-    "sha256": "d59d1e5e10eec6572cc7d03c439d158276fa4aaaa9fb48ab634cbcca570d2c23"
+    "sha256": "493c6fa32419874cdf3e5657e405488f155138c0bd051bfd08d7b8792b52aba5"
   }
 }

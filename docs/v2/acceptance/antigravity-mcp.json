@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "armorbreak.antigravity-mcp/v1",
+  "generatedAt": "2026-10-22T12:04:55.531Z",
+  "host": "Antigravity",
+  "hostVersion": "Antigravity (Gemini CLI 0.64.0)",
+  "config": "C:/Users/Lenovo/.gemini/settings.json",
+  "backup": "C:/Users/Lenovo/.gemini/settings.json.armorbreak.bak",
+  "mcp": {
+    "clientInfo": {
+      "name": "gemini-cli-mcp-client",
+      "version": "0.64.0"
+    },
+    "initialize": true,
+    "protocolVersion": "2025-06-18",
+    "toolsList": 7,
+    "audit": "docs/v2/acceptance/host-audit/antigravity.jsonl"
+  },
+  "model": {
+    "httpStatus": 401,
+    "error": "Authentication Fails (governor)",
+    "taskCreated": false
+  },
+  "result": "MCP_HANDSHAKE_ONLY_MODEL_BLOCKED",
+  "limitation": "Real Gemini CLI MCP handshake and 7-tool discovery pass; model auth is 401. No L0 task; not counted as host-verified."
+}

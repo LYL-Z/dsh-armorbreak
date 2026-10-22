@@ -1,10 +1,10 @@
 {
   "schemaVersion": "armorbreak.release-gates/v2",
-  "generatedAt": "2026-10-22T11:59:31.857Z",
-  "commit": "7b158cb9ae07ea28165b9f93a1a8445088800d41",
+  "generatedAt": "2026-10-22T12:08:09.090Z",
+  "commit": "3a3fbe15ed08527bf1c676348b91298fc4a2faf7",
   "evidenceManifest": {
-    "commit": "7b158cb9ae07ea28165b9f93a1a8445088800d41",
-    "currentCommit": "7b158cb9ae07ea28165b9f93a1a8445088800d41",
+    "commit": "3a3fbe15ed08527bf1c676348b91298fc4a2faf7",
+    "currentCommit": "3a3fbe15ed08527bf1c676348b91298fc4a2faf7",
     "valid": true,
     "ancestorEvidence": false,
     "reason": "evidence manifest matches current commit"
