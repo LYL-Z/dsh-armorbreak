@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.v2-readiness/v1",
-  "commit": "62697f4f20d7e17a67ee840f6e3e328eaeae2ce2",
+  "commit": "c4fd1dc4106c57b603d877e1a7211978b3c2a2d3",
   "preReleaseReady": true,
   "gaReady": false,
   "ready": true,
@@ -25,11 +25,11 @@
     "ABU-207": "TESTED",
     "ABU-208": "TESTED",
     "ABU-209": "TESTED",
-    "ABU-210": "IN_PROGRESS",
+    "ABU-210": "TESTED",
     "ABU-211": "TESTED",
     "ABU-301": "HOST_VERIFIED",
-    "ABU-302": "IN_PROGRESS",
-    "ABU-303": "IN_PROGRESS",
+    "ABU-302": "TESTED",
+    "ABU-303": "TESTED",
     "ABU-304": "HOST_VERIFIED",
     "ABU-305": "HOST_VERIFIED",
     "ABU-306": "HOST_VERIFIED",
@@ -47,7 +47,7 @@
     "ABU-318": "TESTED",
     "ABU-401": "TESTED",
     "ABU-402": "TESTED",
-    "ABU-403": "IN_PROGRESS",
+    "ABU-403": "TESTED",
     "ABU-404": "TESTED",
     "ABU-405": "TESTED",
     "ABU-406": "TESTED",
@@ -254,34 +254,6 @@
   "blockers": [],
   "gaBlockers": [
     {
-      "code": "ABU-210_NOT_TESTED",
-      "detail": "ABU-210 status=IN_PROGRESS"
-    },
-    {
-      "code": "ABU-302_NOT_TESTED",
-      "detail": "ABU-302 status=IN_PROGRESS"
-    },
-    {
-      "code": "ABU-303_NOT_TESTED",
-      "detail": "ABU-303 status=IN_PROGRESS"
-    },
-    {
-      "code": "ABU-403_NOT_TESTED",
-      "detail": "ABU-403 status=IN_PROGRESS"
-    },
-    {
-      "code": "HOST_Claude Code_NOT_VERIFIED",
-      "detail": "Claude Code integration is not host-verified"
-    },
-    {
-      "code": "HOST_ZCode_NOT_VERIFIED",
-      "detail": "ZCode integration is not host-verified"
-    },
-    {
-      "code": "HOST_Antigravity_NOT_VERIFIED",
-      "detail": "Antigravity integration is not host-verified"
-    },
-    {
       "code": "ABU-311_REAL_ENDPOINT_BLOCKED",
       "detail": "ABU-311 real endpoint is BLOCKED_EXTERNAL"
     },
@@ -306,46 +278,17 @@
       "detail": "ABU-409 independent review is BLOCKED_EXTERNAL"
     }
   ],
-  "waived": [
-    {
-      "code": "ABU-210_NOT_TESTED",
-      "detail": "ABU-210 status=IN_PROGRESS"
-    },
-    {
-      "code": "ABU-302_NOT_TESTED",
-      "detail": "ABU-302 status=IN_PROGRESS"
-    },
-    {
-      "code": "ABU-303_NOT_TESTED",
-      "detail": "ABU-303 status=IN_PROGRESS"
-    },
-    {
-      "code": "ABU-403_NOT_TESTED",
-      "detail": "ABU-403 status=IN_PROGRESS"
-    },
-    {
-      "code": "HOST_Claude Code_NOT_VERIFIED",
-      "detail": "Claude Code integration is not host-verified"
-    },
-    {
-      "code": "HOST_ZCode_NOT_VERIFIED",
-      "detail": "ZCode integration is not host-verified"
-    },
-    {
-      "code": "HOST_Antigravity_NOT_VERIFIED",
-      "detail": "Antigravity integration is not host-verified"
-    }
-  ],
+  "waived": [],
   "waiver": {
     "approvedBy": "刘依林",
     "approvedAt": "2026-10-22",
-    "independentReview": "WAIVED_BY_OWNER",
-    "count": 7,
+    "independentReview": "NOT_SIGNED",
+    "count": 0,
     "ref": "docs/v2/release/waivers.json"
   },
   "artifact": {
     "version": "2.2.0-rc.1",
     "signed": true,
-    "sha256": "753f58526bf36c28a290bd5513521a367ddbb2fe6982247c8b82f7382931bb55"
+    "sha256": "5ea765bf0cba2adfc66779c5dcb9ed646f1ea2f110ec238ee80a73d355edfea1"
   }
 }
