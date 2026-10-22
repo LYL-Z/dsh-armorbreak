@@ -27,7 +27,6 @@ Release tag: **false**
 - `ABU-403_NOT_TESTED`: ABU-403 status=IN_PROGRESS
 - `ABU-404_NOT_TESTED`: ABU-404 status=NOT_STARTED
 - `ABU-405_NOT_TESTED`: ABU-405 status=IN_PROGRESS
-- `ABU-406_NOT_TESTED`: ABU-406 status=IN_PROGRESS
 - `ABU-408_NOT_TESTED`: ABU-408 status=IN_PROGRESS
 - `ABU-409_NOT_TESTED`: ABU-409 status=IN_PROGRESS
 - `HOST_Claude Code_NOT_VERIFIED`: Claude Code integration is not host-verified
