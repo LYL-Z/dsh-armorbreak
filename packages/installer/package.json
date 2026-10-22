@@ -4,5 +4,8 @@
   "private": true,
   "type": "module",
   "description": "Transactional JSON MCP config installer with dry-run, backup and rollback",
-  "exports": "./index.js"
+  "exports": {
+    ".": "./index.js",
+    "./toml": "./toml.js"
+  }
 }
