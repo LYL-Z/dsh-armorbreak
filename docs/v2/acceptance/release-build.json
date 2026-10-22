@@ -1,15 +1,15 @@
 {
   "schemaVersion": "armorbreak.release-build/v1",
-  "generatedAt": "2026-10-22T12:47:09.808Z",
-  "commit": "39017f3e75d1e37c93abae90a5d5330ebb5c5e8b",
+  "generatedAt": "2026-10-22T12:59:37.581Z",
+  "commit": "0392a521c1bd6d58e509e9e2ad2fa06737994368",
   "package": "dsh-armorbreak",
-  "version": "2.0.1",
-  "artifact": "armorbreak-portable-2.0.1.tar.gz",
-  "bytes": 2816753,
-  "sha256": "891ce9e43962e3d6d72e6c537616c60d29ccd46ec0dcb2c2d7f45404c0841774",
+  "version": "2.2.0-rc.1",
+  "artifact": "armorbreak-portable-2.2.0-rc.1.tar.gz",
+  "bytes": 2818183,
+  "sha256": "231a41be2550d5414c39b55c8339f63e46b20edbe980d63bd00bf1bed068bcc0",
   "reproducible": true,
-  "sbom": "armorbreak-portable-2.0.1.tar.gz.sbom.cdx.json",
-  "sbomSha256": "7fd991b15c155d1eb0b4b4cb4979378b2644ea41fac6f6485ed77b256fa03c4d",
+  "sbom": "armorbreak-portable-2.2.0-rc.1.tar.gz.sbom.cdx.json",
+  "sbomSha256": "548419bc1bff0ab952073c6a4c69b8a381254ce17ad3316ecc928f166cf38d23",
   "files": 592,
   "cleanRoom": {
     "extracted": true,
@@ -21,8 +21,8 @@
     "algorithm": "ed25519",
     "testKey": true,
     "valid": true,
-    "signature": "3jyM9b9B8In4tvd1MEg4qxvYi6gFEMsCNqeBsjGw/7zm9YpOKHM/pAgJGpSgEvPGxBa5PW9mNxVdsFPQwJnKCw==",
-    "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA8oPb6Mm1nJIzBZ1ZLr7NgF66d+ILr20FC1e7M/dY8b0=\n-----END PUBLIC KEY-----\n"
+    "signature": "SUreW86IcZuU+Sykc3J8XDM+Khe2jjD0CEuRe4P8RNiaboobMt9HU/4vVoCKdZe0XUnZNq9oTVK70Hd+IrUOCQ==",
+    "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEABCwzQrE31qwAzPVlhXJ3fjY97dFZc9Cw9+ob4UUhzr0=\n-----END PUBLIC KEY-----\n"
   },
   "productionSigned": false,
   "limitations": [
