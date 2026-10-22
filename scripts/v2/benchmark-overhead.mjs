@@ -8,10 +8,13 @@ import { performance } from 'node:perf_hooks'
 import { cpus } from 'node:os'
 import { createEngine } from '../../packages/engine-node/index.js'
 import { createMcpHttpServer } from '../../packages/mcp-server/http.js'
+import { createProviderRouter } from '../../packages/provider-router/index.js'
+import { createProviderClient } from '../../packages/provider-router/client.js'
 
 const args = process.argv.slice(2)
 const iterationIndex = args.indexOf('--iterations')
 const iterations = Math.max(2, Math.min(20, Number(iterationIndex >= 0 ? args[iterationIndex + 1] : 5) || 5))
+const withOllama = args.includes('--with-ollama')
 const stateRoot = await mkdtemp(join(tmpdir(), 'abm-bench-state-'))
 const workspace = await mkdtemp(join(tmpdir(), 'abm-bench-ws-'))
 const principal = { id: 'bench', kind: 'local-user', workspaces: [workspace] }
@@ -39,6 +42,7 @@ for (let i = 0; i < iterations; i += 1) {
 }
 const server = await createMcpHttpServer({ engine, principal, workspaceId: workspace })
 const http = []
+let modelMetrics = null
 try {
   await fetch(server.url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize' }) })
   for (let i = 0; i < iterations; i += 1) {
@@ -46,6 +50,32 @@ try {
     const response = await fetch(server.url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 10 + i, method: 'tools/call', params: { name: 'armorbreak_capabilities', arguments: {} } }) })
     if (!response.ok) throw new Error(`HTTP benchmark failed: ${response.status}`)
     http.push(performance.now() - start)
+  }
+  if (withOllama) {
+    const router = createProviderRouter({ providers: [{ id: 'ollama', kind: 'ollama', baseUrl: 'http://127.0.0.1:11434/v1', models: ['qwen3.5:4b'], supportsTools: true, timeoutMs: 180000 }], env: {} })
+    const client = createProviderClient({ router, env: {} })
+    const basic = []
+    const stream = []
+    let usage = null
+    const modelIterations = Math.min(iterations, 3)
+    for (let i = 0; i < modelIterations; i += 1) {
+      const start = performance.now()
+      const reply = await client.chat({ model: 'qwen3.5:4b', messages: [{ role: 'user', content: 'Reply with exactly BENCH_OK' }], maxTokens: 64 })
+      basic.push(performance.now() - start)
+      usage = reply.usage
+    }
+    const start = performance.now()
+    const reply = await client.chatStream({ model: 'qwen3.5:4b', messages: [{ role: 'user', content: 'Reply with exactly BENCH_STREAM_OK' }], maxTokens: 64 })
+    stream.push(performance.now() - start)
+    modelMetrics = {
+      model: 'qwen3.5:4b',
+      provider: 'ollama',
+      basicMs: summarize(basic),
+      streamMs: summarize(stream),
+      usage,
+      streamEventCount: reply.eventCount,
+      protocolOverheadRatio: Number((summarize(http).p50 / summarize(basic).p50).toFixed(4)),
+    }
   }
 } finally {
   await server.close()
@@ -55,10 +85,15 @@ try {
 }
 const report = {
   schemaVersion: 'armorbreak.overhead-benchmark/v1',
+  generatedAt: new Date().toISOString(),
   hardware: { platform: process.platform, arch: process.arch, cpu: cpus()[0]?.model ?? 'unknown', node: process.version },
   iterations,
   metrics: { cliStartupMs: summarize(cli), coreCapabilitiesMs: summarize(core), httpCapabilitiesMs: summarize(http), capabilitiesPayloadBytes: payloadBytes },
-  realModelCalls: false,
-  limitations: ['No provider/model calls; this measures local Core/CLI/MCP overhead only.', 'Timings vary by machine load and are not a cross-host benchmark.'],
+  realModelCalls: Boolean(modelMetrics),
+  model: modelMetrics,
+  limitations: [
+    ...(withOllama ? ['Real local Ollama qwen3.5:4b calls were measured; no paid OpenAI/Anthropic/Gemini endpoint was called.'] : ['No provider/model calls; this measures local Core/CLI/MCP overhead only.']),
+    'Timings vary by machine load and are not a cross-host benchmark.',
+  ],
 }
 console.log(JSON.stringify(report, null, 2))
