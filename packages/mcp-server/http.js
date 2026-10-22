@@ -5,7 +5,7 @@
  * - POST /mcp, JSON-RPC responses as application/json (no SSE in this slice)
  */
 import { createServer } from 'node:http'
-import { timingSafeEqual } from 'node:crypto'
+import { randomUUID, timingSafeEqual } from 'node:crypto'
 import { McpServer } from './index.js'
 
 const MAX_BODY = 1024 * 1024
@@ -24,6 +24,7 @@ export async function createMcpHttpServer({ engine, principal, workspaceId, host
   if (!principal?.id || !principal?.kind) throw new Error('trusted principal is required')
   if (!workspaceId) throw new Error('workspaceId is required')
   const mcp = new McpServer({ engine, principal, workspaceId })
+  const sessionId = randomUUID()
   const http = createServer(async (req, res) => {
     const send = (status, value) => {
       res.statusCode = status
@@ -32,6 +33,12 @@ export async function createMcpHttpServer({ engine, principal, workspaceId, host
     }
     if (req.method === 'GET' && req.url === '/health') return send(200, { ok: true })
     if (req.method !== 'POST' || req.url !== '/mcp') return send(404, { error: 'not found' })
+    const hostName = String(req.headers.host ?? '').replace(/^\[|\](?=:)|:\d+$/g, '')
+    if (!LOOPBACK.has(hostName)) return send(403, { error: 'host not allowed' })
+    const origin = req.headers.origin
+    if (origin) {
+      try { if (!LOOPBACK.has(new URL(String(origin)).hostname)) return send(403, { error: 'origin not allowed' }) } catch { return send(403, { error: 'origin not allowed' }) }
+    }
     if (token && !bearerMatches(req.headers.authorization, token)) return send(401, { error: 'unauthorized' })
     if (!String(req.headers['content-type'] ?? '').includes('application/json')) return send(415, { error: 'application/json required' })
     let body = ''
@@ -42,6 +49,7 @@ export async function createMcpHttpServer({ engine, principal, workspaceId, host
     let message
     try { message = JSON.parse(body) } catch { return send(400, { error: 'parse error' }) }
     const response = await mcp.dispatch(message)
+    res.setHeader('mcp-session-id', sessionId)
     if (!response) return send(202, { ok: true })
     return send(200, response)
   })
