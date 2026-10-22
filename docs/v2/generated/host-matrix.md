@@ -9,6 +9,6 @@
 | Cursor | 3.17.8 | MCP + cursor skills/plugin | USER_CONFIG_REGISTERED | PASS | L0_COMPLETED | docs/v2/acceptance/host-model-e2e-2026-10-22.json |
 | WorkBuddy | 5.5.2 | MCP + Skill UI | USER_CONFIG_REGISTERED | PASS | L0_COMPLETED | docs/v2/acceptance/host-model-e2e-2026-10-22.json |
 | ZCode | 3.14.4 | MCP + Skill + plugin | USER_CONFIG_REGISTERED | PASS | HANDSHAKE_ONLY | docs/v2/acceptance/host-e2e-2026-10-22.json |
-| Pi | — | native TypeScript extension + Skill | NOT_INSTALLED | NOT_RUN | NOT_RUN | — |
+| Pi | @mariozechner/pi-coding-agent 0.73.1 | Native TypeScript extension (Universal Core) | INSTALLED | PASS | L0_COMPLETED | docs/v2/acceptance/host-model/pi/pi-l0.json |
 | TRAE | 3.4.2 | MCP + Skill | USER_CONFIG_REGISTERED | PASS | L0_COMPLETED | docs/v2/acceptance/host-model-e2e-2026-10-22.json |
 | Antigravity | Antigravity / Gemini CLI 0.64.0 | MCP + Gemini settings | USER_CONFIG_REGISTERED | PASS | HANDSHAKE_ONLY | docs/v2/acceptance/antigravity-mcp.json |

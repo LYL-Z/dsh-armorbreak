@@ -29,13 +29,6 @@
       "followUp": "Capture a ZCode model L0 task or add a headless ZCode adapter."
     },
     {
-      "code": "ABU-307_NOT_TESTED",
-      "task": "ABU-307",
-      "reason": "Pi is not installed and no native extension was implemented.",
-      "residualRisk": "No Pi compatibility claim.",
-      "followUp": "Implement/verify the Pi TypeScript extension and run a real host test."
-    },
-    {
       "code": "ABU-403_NOT_TESTED",
       "task": "ABU-403",
       "reason": "Five of nine third-party hosts have real L0; ZCode, Claude and Pi lack model L0, and Antigravity only has MCP handshake with model auth 401.",
@@ -55,13 +48,6 @@
       "reason": "MCP handshake PASS; no model L0 captured.",
       "residualRisk": "ZCode model E2E unverified.",
       "followUp": "Capture a ZCode L0 task."
-    },
-    {
-      "code": "HOST_Pi_NOT_VERIFIED",
-      "host": "Pi",
-      "reason": "Pi is not installed.",
-      "residualRisk": "No Pi compatibility claim.",
-      "followUp": "Install Pi and run the native adapter test."
     },
     {
       "code": "ARTIFACT_UNSIGNED",

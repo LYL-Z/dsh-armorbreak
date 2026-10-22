@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "armorbreak.pi-l0/v1",
+  "generatedAt": "2026-10-22T12:32:33.920Z",
+  "host": "Pi",
+  "hostVersion": "@mariozechner/pi-coding-agent 0.73.1",
+  "model": "ollama/qwen3.5:4b",
+  "extension": "plugins/pi/index.ts",
+  "transport": "native TypeScript extension (no MCP)",
+  "taskId": "task_mvjistyn_dda26919",
+  "state": "COMPLETED",
+  "operator": "pi-host",
+  "workspace": "D:\\dsh-ABM\\armorbreak",
+  "target": "D:\\dsh-ABM\\armorbreak\\README.md",
+  "reportSha256": "bbb692e35a356d5d2680891f824a28ac48f9875f3798a86f99967699a9b4190d",
+  "evidenceLines": 2,
+  "evidenceSha256": "a10e804f0737d1c58c935531424e2e89733066eabeb644f6b41e5f9baacdc084",
+  "taskSha256": "8f8a8ce98fdb92fd2adbd27dbb9a628d1bfdea3c68d5e443d4a10674d45c51de",
+  "result": "L0_COMPLETED",
+  "limitation": "Local Ollama Qwen 3.5 4B used as model; native extension, not MCP handshake."
+}

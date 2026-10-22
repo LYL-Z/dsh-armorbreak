@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.v2-readiness/v1",
-  "commit": "33aa6896ba00712baa307e6615630f317684ddf3",
+  "commit": "d3e5edcd5b022bb3401e0c7581ced2fb2950e16f",
   "preReleaseReady": true,
   "gaReady": false,
   "ready": true,
@@ -33,7 +33,7 @@
     "ABU-304": "HOST_VERIFIED",
     "ABU-305": "HOST_VERIFIED",
     "ABU-306": "HOST_VERIFIED",
-    "ABU-307": "NOT_STARTED",
+    "ABU-307": "TESTED",
     "ABU-308": "TESTED",
     "ABU-309": "TESTED",
     "ABU-310": "TESTED",
@@ -266,10 +266,6 @@
       "detail": "ABU-303 status=IN_PROGRESS"
     },
     {
-      "code": "ABU-307_NOT_TESTED",
-      "detail": "ABU-307 status=NOT_STARTED"
-    },
-    {
       "code": "ABU-403_NOT_TESTED",
       "detail": "ABU-403 status=IN_PROGRESS"
     },
@@ -280,10 +276,6 @@
     {
       "code": "HOST_ZCode_NOT_VERIFIED",
       "detail": "ZCode integration is not host-verified"
-    },
-    {
-      "code": "HOST_Pi_NOT_VERIFIED",
-      "detail": "Pi integration is not host-verified"
     },
     {
       "code": "HOST_Antigravity_NOT_VERIFIED",
@@ -340,10 +332,6 @@
       "detail": "ABU-303 status=IN_PROGRESS"
     },
     {
-      "code": "ABU-307_NOT_TESTED",
-      "detail": "ABU-307 status=NOT_STARTED"
-    },
-    {
       "code": "ABU-403_NOT_TESTED",
       "detail": "ABU-403 status=IN_PROGRESS"
     },
@@ -354,10 +342,6 @@
     {
       "code": "HOST_ZCode_NOT_VERIFIED",
       "detail": "ZCode integration is not host-verified"
-    },
-    {
-      "code": "HOST_Pi_NOT_VERIFIED",
-      "detail": "Pi integration is not host-verified"
     },
     {
       "code": "HOST_Antigravity_NOT_VERIFIED",
@@ -372,12 +356,12 @@
     "approvedBy": "刘依林",
     "approvedAt": "2026-10-22",
     "independentReview": "WAIVED_BY_OWNER",
-    "count": 10,
+    "count": 8,
     "ref": "docs/v2/release/waivers.json"
   },
   "artifact": {
     "version": "2.0.1",
     "signed": false,
-    "sha256": "14b6bd9c276ad2a705a978ff01e5fa818eab14ba0d4c608a639f51a1227b6cbf"
+    "sha256": "071fe6b2424b20a1c40e3793ef26f2142b4658eff29114e16b999df1dfada64f"
   }
 }
