@@ -12,7 +12,7 @@ test('release build is reproducible, hashed, SBOM-backed and test-signature veri
   const out = join(root, 'dist')
   const evidence = join(root, 'release-build.json')
   try {
-    const build = spawnSync(process.execPath, ['scripts/v2/build-release.mjs', '--out', out, '--evidence', evidence], { cwd: process.cwd(), encoding: 'utf8', timeout: 300_000 })
+    const build = spawnSync(process.execPath, ['scripts/v2/build-release.mjs', '--out', out, '--evidence', evidence, '--no-portable-evidence'], { cwd: process.cwd(), encoding: 'utf8', timeout: 300_000 })
     assert.equal(build.status, 0, build.stderr)
     const manifest = JSON.parse(await readFile(evidence, 'utf8'))
     assert.equal(manifest.reproducible, true)

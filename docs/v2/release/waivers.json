@@ -50,13 +50,6 @@
       "followUp": "Capture a ZCode L0 task."
     },
     {
-      "code": "ARTIFACT_UNSIGNED",
-      "host": "artifact",
-      "reason": "Portable artifact is not signed with a production key; Ed25519 primitive/test key only.",
-      "residualRisk": "No cryptographic release trust root.",
-      "followUp": "Sign with the production key and verify."
-    },
-    {
       "code": "HOST_Antigravity_NOT_VERIFIED",
       "host": "Antigravity",
       "reason": "MCP handshake PASS; model 401 Authentication Fails.",

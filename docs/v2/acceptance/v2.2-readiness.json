@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.v2-readiness/v1",
-  "commit": "0392a521c1bd6d58e509e9e2ad2fa06737994368",
+  "commit": "b89bfc45720e1d569da962e0c636c4dc4a9d79f8",
   "preReleaseReady": true,
   "gaReady": false,
   "ready": true,
@@ -248,7 +248,7 @@
     "ABU-405": null,
     "ABU-406": null,
     "ABU-407": null,
-    "ABU-408": "BLOCKED_EXTERNAL",
+    "ABU-408": "GITHUB_ATTESTED",
     "ABU-409": null
   },
   "blockers": [],
@@ -282,10 +282,6 @@
       "detail": "Antigravity integration is not host-verified"
     },
     {
-      "code": "ARTIFACT_UNSIGNED",
-      "detail": "portable artifact has no production signature"
-    },
-    {
       "code": "ABU-311_REAL_ENDPOINT_BLOCKED",
       "detail": "ABU-311 real endpoint is BLOCKED_EXTERNAL"
     },
@@ -308,10 +304,6 @@
     {
       "code": "ABU-409_INDEPENDENT_REVIEW_BLOCKED",
       "detail": "ABU-409 independent review is BLOCKED_EXTERNAL"
-    },
-    {
-      "code": "ABU-408_PRODUCTION_SIGNATURE_BLOCKED",
-      "detail": "ABU-408 production signature is BLOCKED_EXTERNAL"
     }
   ],
   "waived": [
@@ -342,22 +334,18 @@
     {
       "code": "HOST_Antigravity_NOT_VERIFIED",
       "detail": "Antigravity integration is not host-verified"
-    },
-    {
-      "code": "ARTIFACT_UNSIGNED",
-      "detail": "portable artifact has no production signature"
     }
   ],
   "waiver": {
     "approvedBy": "刘依林",
     "approvedAt": "2026-10-22",
     "independentReview": "WAIVED_BY_OWNER",
-    "count": 8,
+    "count": 7,
     "ref": "docs/v2/release/waivers.json"
   },
   "artifact": {
     "version": "2.2.0-rc.1",
-    "signed": false,
-    "sha256": "231a41be2550d5414c39b55c8339f63e46b20edbe980d63bd00bf1bed068bcc0"
+    "signed": true,
+    "sha256": "24ef96de637d19dadb395ab6e0052f742af5b1a5e1825f9d04a3a8a85db47700"
   }
 }

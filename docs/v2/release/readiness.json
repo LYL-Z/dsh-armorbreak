@@ -1,15 +1,15 @@
 {
   "schemaVersion": "armorbreak.release-readiness/v1",
-  "generatedAt": "2026-10-22T13:01:26.217Z",
+  "generatedAt": "2026-10-22T13:20:16.664Z",
   "package": {
     "name": "dsh-armorbreak",
     "version": "2.2.0-rc.1"
   },
   "sbom": true,
-  "commit": "0392a521c1bd6d58e509e9e2ad2fa06737994368",
+  "commit": "b89bfc45720e1d569da962e0c636c4dc4a9d79f8",
   "evidence": {
-    "manifestCommit": "0392a521c1bd6d58e509e9e2ad2fa06737994368",
-    "testReportCommit": "0392a521c1bd6d58e509e9e2ad2fa06737994368",
+    "manifestCommit": "b89bfc45720e1d569da962e0c636c4dc4a9d79f8",
+    "testReportCommit": "b89bfc45720e1d569da962e0c636c4dc4a9d79f8",
     "testCounts": {
       "tests": 377,
       "pass": 376,
@@ -22,12 +22,12 @@
   },
   "gates": {
     "security": {
-      "status": "PASS",
-      "reason": "all evidence pinned"
+      "status": "FAIL",
+      "reason": "tests not green: {\"tests\":377,\"pass\":375,\"fail\":1,\"skipped\":1,\"cancelled\":0,\"todo\":0}; all evidence pinned"
     },
     "offline": {
-      "status": "PASS",
-      "reason": "airgap + 62/62 offline target",
+      "status": "FAIL",
+      "reason": "tests not green: {\"tests\":377,\"pass\":375,\"fail\":1,\"skipped\":1,\"cancelled\":0,\"todo\":0}; airgap + 62/62 offline target",
       "evidence": [
         {
           "available": true,
@@ -48,8 +48,8 @@
       ]
     },
     "supplyChain": {
-      "status": "PASS",
-      "reason": "signed index + installer rollback + live supply-chain",
+      "status": "FAIL",
+      "reason": "tests not green: {\"tests\":377,\"pass\":375,\"fail\":1,\"skipped\":1,\"cancelled\":0,\"todo\":0}; signed index + installer rollback + live supply-chain",
       "evidence": [
         {
           "available": true,
@@ -70,8 +70,8 @@
       ]
     },
     "aiEvaluation": {
-      "status": "PASS",
-      "reason": "Garak/PyRIT/JailbreakBench evidence PASS; mock/local endpoint only",
+      "status": "FAIL",
+      "reason": "tests not green: {\"tests\":377,\"pass\":375,\"fail\":1,\"skipped\":1,\"cancelled\":0,\"todo\":0}; Garak/PyRIT/JailbreakBench evidence PASS; mock/local endpoint only",
       "evidence": [
         {
           "available": true,
@@ -100,8 +100,8 @@
       ]
     },
     "compatibility": {
-      "status": "PASS",
-      "reason": "real Desktop health + L0 report/screenshot hashes",
+      "status": "FAIL",
+      "reason": "tests not green: {\"tests\":377,\"pass\":375,\"fail\":1,\"skipped\":1,\"cancelled\":0,\"todo\":0}; real Desktop health + L0 report/screenshot hashes",
       "evidence": [
         {
           "available": true,
@@ -130,8 +130,8 @@
       ]
     },
     "performance": {
-      "status": "PASS",
-      "reason": "no >10% regression",
+      "status": "FAIL",
+      "reason": "tests not green: {\"tests\":377,\"pass\":375,\"fail\":1,\"skipped\":1,\"cancelled\":0,\"todo\":0}; no >10% regression",
       "evidence": [
         {
           "available": true,
@@ -159,6 +159,6 @@
     "AB2-M4-12.md": "DONE"
   },
   "incomplete": [],
-  "ready": true,
-  "reason": "all required gates/tasks/evidence match the current commit"
+  "ready": false,
+  "reason": "release blocked by incomplete gates/tasks or stale/missing evidence; not a failure of the build"
 }
