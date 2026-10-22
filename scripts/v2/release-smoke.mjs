@@ -13,12 +13,21 @@ const pkg = json('package.json')
 const lock = json('docs/v2/bundle.lock.json')
 const sbom = json('docs/v2/release/sbom.spdx.json')
 const readiness = json('docs/v2/release/readiness.json')
+const testReport = json('docs/v2/acceptance/test-report.json')
+const manifest = json('docs/v2/acceptance/evidence-manifest.json')
+const counts = (value) => JSON.stringify(value ?? null)
 const checks = []
 const add = (id, ok, detail) => checks.push({ id, status: ok ? 'PASS' : 'FAIL', detail })
 add('package-version', pkg.version === '2.0.1', pkg.version)
 add('bundle-version', lock.version === pkg.version, lock.version)
 add('sbom-version', String(sbom.name ?? '').includes(pkg.version), sbom.name)
 add('readiness-version', readiness.package?.version === pkg.version, readiness.package?.version)
+add('readiness-evidence-current', Boolean(
+  readiness.evidence?.manifestCommit === manifest.commit
+  && readiness.evidence?.testReportCommit === testReport.commit
+  && counts(readiness.evidence?.testCounts) === counts(testReport.counts)
+  && testReport.commit === manifest.commit
+), `readiness=${readiness.evidence?.manifestCommit ?? 'missing'} manifest=${manifest.commit ?? 'missing'} tests=${testReport.commit ?? 'missing'}`)
 const docIssues = checkDocs(process.cwd())
 add('docs-consistency', docIssues.length === 0, docIssues.join('; ') || 'no issues')
 const evidence = validateEvidence({ repoRoot: process.cwd(), commit, allowEvidenceAncestor: true })

@@ -11,7 +11,7 @@ const sbom = await readJson('docs/v2/release/sbom.spdx.json')
 const manifest = await readJson('docs/v2/acceptance/evidence-manifest.json')
 const testReport = await readJson('docs/v2/acceptance/test-report.json')
 const head = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
-const evidenceOk = Boolean(testReport?.counts?.fail === 0 && testReport?.counts?.tests > 0 && manifest?.files && gates?.evidenceManifest?.valid !== false)
+const evidenceOk = Boolean(testReport?.counts?.fail === 0 && testReport?.counts?.tests > 0 && manifest?.files && gates?.evidenceManifest?.valid !== false && testReport?.commit === manifest?.commit)
 const statuses = {}
 try {
   for (const file of await readdir('docs/v2/tasks')) {
