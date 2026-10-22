@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.evidence-manifest/v1",
-  "commit": "6c38ecc052407e0807a984cd502a3aa2efd9c484",
-  "generatedAt": "2026-10-22T04:21:53.492Z",
+  "commit": "9bc65af7702b6dfee7a0987d97d728ffed67eadc",
+  "generatedAt": "2026-10-22T04:32:22.897Z",
   "files": {
     "docs/v2/acceptance/airgap-container.json": {
       "sha256": "967dc9c1443f006ac5e6552b0b080c797ef7f906239d049b06e95f522ad24397",
@@ -20,8 +20,8 @@
       "size": 10769
     },
     "docs/v2/acceptance/claude-mcp.json": {
-      "sha256": "96416698f030b7636b4cf79066976633ddff55683acf73f983a46c581cbaa555",
-      "size": 1007
+      "sha256": "1eeefacbfb871578b49bc5c5fcae091ccea88b1a08f7070dce0ee4a761011586",
+      "size": 1360
     },
     "docs/v2/acceptance/clean-room.json": {
       "sha256": "bf608c584985b765a104d10c7cccf5f579eb49487c155fb0c5632a5c5fd982bb",
@@ -44,8 +44,8 @@
       "size": 1143
     },
     "docs/v2/acceptance/compatibility-matrix.json": {
-      "sha256": "b39f4ef9ef2b6b9c7dd5cdb908d143acc856fac6508795319df72dceafc8bc74",
-      "size": 5513
+      "sha256": "f2ad781b8aeed7c0f3a96b5e11e621b4e13a1ae3d629b225d07224da655eec7d",
+      "size": 5567
     },
     "docs/v2/acceptance/desktop-analysis.json": {
       "sha256": "d96020879c4bf809d02a911c24c2e8cbf0c5e9c1c03c3abd767805cfc0d3636f",
@@ -160,7 +160,7 @@
       "size": 601
     },
     "docs/v2/acceptance/release-smoke.json": {
-      "sha256": "524408b53d1747199514723a37b1b44cf9edf980fdb173b5d1225eeaea1dbbef",
+      "sha256": "d10ca78ce1f18e2909a12ef6e5a596ef4d467f1a87221f217b7d18369ee443ee",
       "size": 1082
     },
     "docs/v2/acceptance/streaming-10gb.json": {
@@ -180,12 +180,12 @@
       "size": 1370
     },
     "docs/v2/acceptance/test-report.json": {
-      "sha256": "e1025a9d31eeaabb71135689f7b5eb9edbd208d6d56b5aa081839513c9c90e44",
+      "sha256": "32fa6e808bbbbfe0b39fe6a2696fba57f7976813dbe730bc85cc815408995c7c",
       "size": 517
     },
     "docs/v2/acceptance/test-report.tap": {
-      "sha256": "88ac74ffc4f6198d32b7cc1db2b1713569329104b3db651a2cf6d145a05ce39f",
-      "size": 65275
+      "sha256": "3834c17f10c321df84449a5fa3112d0c703ece87db10e20a73e929e0e1b0e0e5",
+      "size": 65277
     }
   }
 }
