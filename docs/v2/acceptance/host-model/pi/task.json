@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "armorbreak/v2",
+  "id": "task_mvjistyn_dda26919",
+  "title": "MCP 多算法文件哈希与完整性标识",
+  "objective": "Run forensics.hash on D:\\dsh-ABM\\armorbreak\\README.md",
+  "workflowId": null,
+  "targetPath": "D:\\dsh-ABM\\armorbreak\\README.md",
+  "targetKind": "file",
+  "operator": "pi-host",
+  "tags": [],
+  "workspace": "D:\\dsh-ABM\\armorbreak",
+  "state": "COMPLETED",
+  "stateHistory": [
+    {
+      "state": "CREATED",
+      "at": "2026-10-22T12:31:38.159Z",
+      "reason": "task created"
+    },
+    {
+      "state": "SCOPE_VALIDATION",
+      "at": "2026-10-22T12:31:38.177Z",
+      "reason": "validating authorization scope"
+    },
+    {
+      "state": "ENVIRONMENT_CHECK",
+      "at": "2026-10-22T12:31:38.194Z",
+      "reason": "scope validated"
+    },
+    {
+      "state": "PLANNING",
+      "at": "2026-10-22T12:31:38.205Z",
+      "reason": "environment checked; riskMax=L0"
+    },
+    {
+      "state": "EXECUTING",
+      "at": "2026-10-22T12:31:38.217Z",
+      "reason": "planned; offline L0 analysis"
+    },
+    {
+      "state": "VERIFYING",
+      "at": "2026-10-22T12:31:38.287Z",
+      "reason": "all steps settled"
+    },
+    {
+      "state": "REPORTING",
+      "at": "2026-10-22T12:31:38.314Z",
+      "reason": "generating report"
+    },
+    {
+      "state": "COMPLETED",
+      "at": "2026-10-22T12:31:39.617Z",
+      "reason": "analysis completed"
+    }
+  ],
+  "steps": [
+    {
+      "id": "analyze",
+      "title": "多算法文件哈希与完整性标识",
+      "capabilityId": "forensics.hash",
+      "options": {},
+      "dependsOn": null,
+      "failurePolicy": null,
+      "retryPolicy": null,
+      "timeoutMs": null,
+      "status": "DONE",
+      "startedAt": null,
+      "finishedAt": "2026-10-22T12:31:38.273Z",
+      "error": null,
+      "summary": "文件大小 62050 字节。\n类型：text（text，high）。\nmd5: 7420cd97a5f703a5113b3089fea8fac8\nsha1: 81919ac57169271b2a55ae40acf5cb8c8ae5c3da\nsha256: 52137f3b825cb5b4c34a730a487dc2f2abeeecc3fdd59e6b5c9fd10ed6756014\nsha512: afdcc340a6995e5761e57bc79713a9bd990610ee73f1e3149efe3a3ca01b09a2bb4d34a24194bb91abec62642647da215ea9683f1b9626bd13f5d33f92457c58",
+      "evidenceIds": [
+        "ev_mvjisu14_defc9399",
+        "ev_mvjisu1d_5bee141e"
+      ],
+      "findingIds": [],
+      "durationMs": 14,
+      "attempt": 0
+    }
+  ],
+  "currentStep": 0,
+  "riskMax": "L0",
+  "approvals": [],
+  "notes": [
+    {
+      "at": "2026-10-22T12:31:38.309Z",
+      "note": "evidence chain verified (2 records)"
+    },
+    {
+      "at": "2026-10-22T12:31:39.611Z",
+      "note": "report generated: D:\\dsh-ABM\\armorbreak\\.armorbreak\\tasks\\task_mvjistyn_dda26919\\reports\\mcp-多算法文件哈希与完整性标识_2026-10-22_12-31-39.md"
+    }
+  ],
+  "createdAt": "2026-10-22T12:31:38.159Z",
+  "updatedAt": "2026-10-22T12:31:39.617Z",
+  "completedAt": "2026-10-22T12:31:39.617Z",
+  "error": null,
+  "report": {
+    "format": "markdown",
+    "path": "D:\\dsh-ABM\\armorbreak\\.armorbreak\\tasks\\task_mvjistyn_dda26919\\reports\\mcp-多算法文件哈希与完整性标识_2026-10-22_12-31-39.md",
+    "sha256": "bbb692e35a356d5d2680891f824a28ac48f9875f3798a86f99967699a9b4190d",
+    "at": "2026-10-22T12:31:39.603Z"
+  },
+  "stats": {
+    "evidence": 2,
+    "findings": 0,
+    "stepsDone": 1,
+    "stepsFailed": 0
+  }
+}

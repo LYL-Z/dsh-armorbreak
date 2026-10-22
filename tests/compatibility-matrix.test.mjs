@@ -19,9 +19,9 @@ test('compatibility matrix has ten hosts and makes no unverified claims', async 
       assert.equal(row.taskRunState, 'NOT_RUN')
     }
   }
-  assert.deepEqual(matrix.hosts.filter((row) => row.taskRunState === 'L0_COMPLETED').map((row) => row.host).sort(), ['Codex', 'Cursor', 'DSH', 'Hermes Agent', 'TRAE', 'WorkBuddy'])
-  assert.deepEqual(matrix.hosts.filter((row) => row.toolHandshake === 'PASS').map((row) => row.host).sort(), ['Antigravity', 'Claude Code', 'Codex', 'Cursor', 'DSH', 'Hermes Agent', 'TRAE', 'WorkBuddy', 'ZCode'])
-  assert.equal(matrix.hosts.filter((row) => row.reportHash).length, 6)
+  assert.deepEqual(matrix.hosts.filter((row) => row.taskRunState === 'L0_COMPLETED').map((row) => row.host).sort(), ['Codex', 'Cursor', 'DSH', 'Hermes Agent', 'Pi', 'TRAE', 'WorkBuddy'])
+  assert.deepEqual(matrix.hosts.filter((row) => row.toolHandshake === 'PASS').map((row) => row.host).sort(), ['Antigravity', 'Claude Code', 'Codex', 'Cursor', 'DSH', 'Hermes Agent', 'Pi', 'TRAE', 'WorkBuddy', 'ZCode'])
+  assert.equal(matrix.hosts.filter((row) => row.reportHash).length, 7)
   for (const row of matrix.hosts.filter((item) => item.evidenceId?.startsWith('docs/'))) {
     assert.equal((await stat(row.evidenceId)).isFile(), true)
   }
