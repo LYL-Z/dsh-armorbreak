@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "armorbreak.real-retest/v1",
+  "kind": "host",
+  "id": "zcode",
+  "host": "ZCode",
+  "at": "2026-10-22T13:47:29.637Z",
+  "run": false,
+  "status": "PREPARED",
+  "details": {
+    "version": "0.16.9"
+  }
+}
