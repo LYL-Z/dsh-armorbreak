@@ -1,0 +1,8 @@
+# Security-sensitive surfaces: approval does not replace testing.
+/.github/workflows/ @LYL-Z
+/lib/release/ @LYL-Z
+/scripts/v2/ @LYL-Z
+/docs/v2/acceptance/ @LYL-Z
+/SECURITY.md @LYL-Z
+/package.json @LYL-Z
+/package-lock.json @LYL-Z

@@ -1,5 +1,7 @@
 # 兼容性矩阵
 
+> **版本范围：** 本文保留早期运行时与安装记录；当前 V2.2 能力契约以 [Core Public API](v2/core/public-api.md) 的 **46 个能力**为准，Host 验收以 [generated host matrix](v2/generated/host-matrix.md) 为准。早期“39 个能力 / 9 个工具”的数字是历史记录，不应作为当前口径。
+
 ## 1. 运行时
 
 | 项 | 基线 | 状态 | 验证方式 |
@@ -22,7 +24,7 @@
 |---|---|---|
 | `@deepseek-ai/dsh-agent-preset` 行（`config.id/plugins`） | 注册「破甲模式」 | ✅ 0.2.1-rc.2 官方格式（与 shipped `presets/*.patch.yml` 一致） |
 | `@deepseek-ai/dsh-persona`（`prefix`） | 专业 persona | ✅ |
-| `ctx.tools.register(ToolDefinition)` | 9 个模型工具 | ✅ `{name, description, parameters(JSON Schema), output, execute}` |
+| `ctx.tools.register(ToolDefinition)` | 10 个 DSH 模型工具（MCP Server 另有 7 个工具，不能合并计数） | ✅ `{name, description, parameters(JSON Schema), output, execute}` |
 | `ctx.skills.register(SkillRegistration)` | 7 个技能 | ✅ `{name, description, content, whenToUse, resourceBase}` |
 | `ctx.webServer.register({kind, path, handler})` | `/armorbreak/state` | ✅ 0.2.1 路由契约；旧版/未来版如变更会在 apply 中降级（不阻断插件） |
 | `ctx.approval.request({agent, toolName, callId, reason, signal})` | L1/L2 平台审批 | ✅ 审批服务存在时启用；不存在时 fail-closed |
@@ -50,16 +52,16 @@
 
 | 域 | 能力数 | 风险 | 是否联网 |
 |---|---|---|---|
-| binary | 5 | L0 | 否 |
+| binary | 7 | L0 | 否 |
 | forensics | 6 | L0 | 否 |
-| android | 5 | L0 | 否 |
-| network | 7 | L0 | 否 |
+| android | 6 | L0 | 否 |
+| network | 8 | L0 | 否 |
 | web | 4 | L0 | 否 |
-| sast | 5 | L0 | 否 |
+| sast | 8 | L0 | 否 |
 | ctf | 5 | L0 | 否 |
 | live | 2 | L2 / L1 | 是（仅授权 + 审批后） |
 
-合计 **39 个能力 / 8 个域**（`armorbreak_capabilities` 实时列出）。
+合计 **46 个能力 / 8 个域**（`armorbreak_capabilities` 实时列出；当前风险分布为 44 L0、1 L1、1 L2）。
 
 ## 5. 不兼容/降级行为
 

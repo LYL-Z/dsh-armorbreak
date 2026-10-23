@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict'
+import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
 
-import { computeReleaseGates, REQUIRED_M4, sha256File } from '../lib/release/gates.js'
+import { computeReleaseGates, docsOnlyGateReport, REQUIRED_M4, sha256File } from '../lib/release/gates.js'
 
 const COMMIT = 'a'.repeat(40)
 
@@ -95,4 +96,50 @@ test('failed test run can never be releasable', () => {
   assert.equal(report.gates.security.status, 'FAIL')
   assert.equal(report.releasable, false)
   rmSync(repo.root, { recursive: true, force: true })
+})
+
+test('docs-only gate inherits the target base gates and never fabricates releasability', () => {
+  const validation = { ok: true, mode: 'docs-only', checked: 113, issues: [] }
+  const baseReport = { releasable: true, gates: { security: { status: 'PASS' } }, testReport: { tests: 396 } }
+  const report = docsOnlyGateReport({ commit: COMMIT, baseCommit: 'b'.repeat(40), baseReport, validation })
+  assert.equal(report.mode, 'docs-only')
+  assert.equal(report.applicability, 'DOCS_ONLY_BASE_GATES')
+  assert.equal(report.releasable, true)
+  assert.equal(report.gates.security.status, 'PASS')
+  assert.equal(report.evidenceValidation.ok, true)
+  assert.equal(report.evidenceValidation.checked, 113)
+
+  const blocked = docsOnlyGateReport({ commit: COMMIT, baseCommit: 'b'.repeat(40), baseReport: { releasable: false }, validation })
+  assert.equal(blocked.releasable, false)
+  assert.match(blocked.reason, /cannot bypass/)
+})
+
+test('docs ancestor gate accepts a base with a prior docs-only merge', () => {
+  const repo = makeRepo()
+  const git = (...args) => execFileSync('git', ['-C', repo.root, ...args], { encoding: 'utf8' }).trim()
+  try {
+    git('init')
+    git('config', 'user.email', 'qa@example.test')
+    git('config', 'user.name', 'QA')
+    git('add', '-A')
+    git('commit', '-m', 'base evidence')
+    const base = git('rev-parse', 'HEAD')
+    writeJson(join(repo.root, 'docs/v2/acceptance/test-report.json'), {
+      ...JSON.parse(readFileSync(join(repo.root, 'docs/v2/acceptance/test-report.json'), 'utf8')),
+      commit: base,
+    })
+    repo.writeManifest(base)
+    writeFileSync(join(repo.root, 'README.md'), '# docs after evidence\n')
+    git('add', 'README.md')
+    git('commit', '-m', 'docs: prior docs-only merge')
+    const head = git('rev-parse', 'HEAD')
+
+    const evidenceOnly = computeReleaseGates({ repoRoot: repo.root, commit: head, allowEvidenceAncestor: true })
+    assert.equal(evidenceOnly.evidenceManifest.valid, false)
+    const docsAware = computeReleaseGates({ repoRoot: repo.root, commit: head, allowEvidenceAncestor: true, allowDocsAncestor: true })
+    assert.equal(docsAware.evidenceManifest.valid, true)
+    assert.equal(docsAware.releasable, true)
+  } finally {
+    rmSync(repo.root, { recursive: true, force: true })
+  }
 })
