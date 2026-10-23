@@ -92,6 +92,29 @@ test('evidence validator rejects stale embedded hashes for nested relative evide
   }
 })
 
+test('evidence validator resolves references relative to their nested JSON document', () => {
+  const root = fixture()
+  const log = 'synthetic Pi install/uninstall evidence\n'
+  addPinnedFiles(root, {
+    'docs/v2/acceptance/host-model/pi/install-uninstall.log': log,
+    'docs/v2/acceptance/host-model/pi/pi-package-install.json': JSON.stringify({
+      headlessWithoutExtensionFlag: {
+        evidence: {
+          path: 'install-uninstall.log',
+          sha256: hash(log),
+          size: Buffer.byteLength(log),
+        },
+      },
+    }),
+  })
+  try {
+    const result = validateEvidence({ repoRoot: root, commit: 'a'.repeat(40) })
+    assert.equal(result.ok, true, result.issues.join('\n'))
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
 test('evidence validator refuses a parent junction to acceptance data outside the repository', (t) => {
   const root = fixture()
   const acceptance = join(root, 'docs/v2/acceptance')
