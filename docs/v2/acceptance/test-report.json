@@ -1,19 +1,19 @@
 {
   "schemaVersion": "armorbreak.test-report/v1",
-  "generatedAt": "2026-10-23T11:02:22.016Z",
-  "commit": "bf799d6fb5a41d39470e01b96ac19091dc93a6d8",
+  "generatedAt": "2026-10-23T11:10:29.149Z",
+  "commit": "5fb9cdf1474341a7b450d7d0811ce828237a489e",
   "node": "v24.16.0",
   "platform": "win32",
   "command": "node --test --test-reporter=tap --test-concurrency=1",
   "exitCode": 0,
   "counts": {
-    "tests": 396,
-    "pass": 395,
+    "tests": 399,
+    "pass": 398,
     "fail": 0,
     "skipped": 1,
     "cancelled": 0,
     "todo": 0
   },
   "tapPath": "docs/v2/acceptance/test-report.tap",
-  "tapSha256": "75543ab17a480b76b5ac653bea2acbb97689cf6524ec79bc27be7c913e7a8b41"
+  "tapSha256": "339e347f40ca762fdbfaa8e4762394fc812cb88dc907fe1f7e652efade844c9c"
 }
