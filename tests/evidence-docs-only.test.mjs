@@ -9,6 +9,21 @@ import test from 'node:test'
 import { classifyDocsBaseline, classifyDocsOnly, validateEvidence } from '../lib/release/evidenceValidator.js'
 
 const hash = (value) => createHash('sha256').update(value).digest('hex')
+const TEST_TAP = 'TAP version 13\nok 1 - policy and approval are checked\n# tests 1\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n'
+
+function testReport(commit) {
+  return JSON.stringify({
+    schemaVersion: 'armorbreak.test-report/v1',
+    commit,
+    exitCode: 0,
+    command: 'node --test --test-reporter=tap --test-concurrency=1',
+    processError: null,
+    signal: null,
+    counts: { tests: 1, pass: 1, fail: 0, skipped: 0, cancelled: 0, todo: 0 },
+    tapPath: 'docs/v2/acceptance/test-report.tap',
+    tapSha256: hash(TEST_TAP),
+  })
+}
 
 function git(root, ...args) {
   return execFileSync('git', ['-C', root, ...args], { encoding: 'utf8' }).trim()
@@ -30,7 +45,7 @@ function fixture() {
   write(root, 'lib/source.js', 'export const value = 1\n')
   write(root, 'scripts/v2/release-gates.mjs', 'export const gate = true\n')
   write(root, '.github/workflows/ci.yml', 'name: CI\n')
-  write(root, 'docs/v2/acceptance/test-report.tap', 'tap')
+  write(root, 'docs/v2/acceptance/test-report.tap', TEST_TAP)
   git(root, 'add', '-A')
   git(root, 'commit', '-m', 'base')
   const base = git(root, 'rev-parse', 'HEAD')
@@ -101,13 +116,14 @@ test('docs-only rejects git replace refs', () => {
 test('evidence-only accepts a real evidence append after the source baseline', () => {
   const { root, base } = fixture()
   try {
-    write(root, 'docs/v2/acceptance/test-report.json', JSON.stringify({ commit: base, tapSha256: hash('tap') }))
+    const report = testReport(base)
+    write(root, 'docs/v2/acceptance/test-report.json', report)
     write(root, 'docs/v2/acceptance/evidence-manifest.json', JSON.stringify({
       schemaVersion: 'armorbreak.evidence-manifest/v1',
       commit: base,
       files: {
-        'docs/v2/acceptance/test-report.json': { sha256: hash(JSON.stringify({ commit: base, tapSha256: hash('tap') })), size: Buffer.byteLength(JSON.stringify({ commit: base, tapSha256: hash('tap') })) },
-        'docs/v2/acceptance/test-report.tap': { sha256: hash('tap'), size: 3 },
+        'docs/v2/acceptance/test-report.json': { sha256: hash(report), size: Buffer.byteLength(report) },
+        'docs/v2/acceptance/test-report.tap': { sha256: hash(TEST_TAP), size: Buffer.byteLength(TEST_TAP) },
       },
     }))
     git(root, 'add', 'docs/v2/acceptance')
@@ -116,14 +132,41 @@ test('evidence-only accepts a real evidence append after the source baseline', (
     const accepted = validateEvidence({ repoRoot: root, commit: evidenceHead, allowEvidenceAncestor: true })
     assert.equal(accepted.ok, true, accepted.issues.join('; '))
     assert.equal(accepted.mode, 'evidence-only')
+    const tagStyleExactCommit = validateEvidence({ repoRoot: root, commit: evidenceHead, allowEvidenceAncestor: false })
+    assert.equal(tagStyleExactCommit.ok, false, 'tag validation must require evidence bound to the tagged commit')
+    assert.ok(tagStyleExactCommit.issues.some((issue) => /does not match/.test(issue)))
 
-    write(root, 'docs/v2/release/readiness.json', '{"gaReady":true}\n')
+    write(root, 'docs/v2/release/readiness.json', JSON.stringify({
+      schemaVersion: 'armorbreak.release-readiness/v1',
+      commit: base,
+      evaluatedAtCommit: base,
+      evidence: {
+        manifestCommit: base,
+        testReportCommit: base,
+        testCounts: { tests: 1, pass: 1, fail: 0, skipped: 0, cancelled: 0, todo: 0 },
+        current: true,
+        checks: { manifestValid: true, evidenceLineage: true, testsPassed: true, gatesValid: true },
+      },
+      ready: false,
+      incomplete: [],
+      sbom: false,
+    }) + '\n')
     git(root, 'add', 'docs/v2/release/readiness.json')
-    git(root, 'commit', '-m', 'readiness: attempt to bypass evidence-only')
+    git(root, 'commit', '-m', 'readiness: bind status to tested evidence')
     const readinessHead = git(root, 'rev-parse', 'HEAD')
     const readinessRejected = validateEvidence({ repoRoot: root, commit: readinessHead, allowEvidenceAncestor: true })
     assert.equal(readinessRejected.ok, false)
     assert.ok(readinessRejected.issues.some((issue) => /readiness\.json/.test(issue)))
+    const readinessAccepted = validateEvidence({ repoRoot: root, commit: readinessHead, allowEvidenceAncestor: true, allowReadiness: true })
+    assert.equal(readinessAccepted.ok, true, readinessAccepted.issues.join('; '))
+
+    write(root, 'docs/v2/release/readiness.json', '{"gaReady":true}\n')
+    git(root, 'add', 'docs/v2/release/readiness.json')
+    git(root, 'commit', '-m', 'readiness: reject unbound metadata')
+    const forgedReadinessHead = git(root, 'rev-parse', 'HEAD')
+    const forgedReadiness = validateEvidence({ repoRoot: root, commit: forgedReadinessHead, allowEvidenceAncestor: true, allowReadiness: true })
+    assert.equal(forgedReadiness.ok, false)
+    assert.ok(forgedReadiness.issues.some((issue) => /readiness metadata|readiness schema/.test(issue)))
 
     write(root, 'lib/source.js', 'export const value = 2\n')
     git(root, 'add', 'lib/source.js')
@@ -141,13 +184,14 @@ test('validator accepts a path-verified docs-only baseline and still rejects a p
   const { root, base } = fixture()
   try {
     const docsHead = commitChange(root, 'README.md', '# README changed\n')
-    write(root, 'docs/v2/acceptance/test-report.json', JSON.stringify({ commit: base, tapSha256: hash('tap') }))
+    const report = testReport(base)
+    write(root, 'docs/v2/acceptance/test-report.json', report)
     write(root, 'docs/v2/acceptance/evidence-manifest.json', JSON.stringify({
       schemaVersion: 'armorbreak.evidence-manifest/v1',
       commit: base,
       files: {
-        'docs/v2/acceptance/test-report.json': { sha256: hash(JSON.stringify({ commit: base, tapSha256: hash('tap') })), size: Buffer.byteLength(JSON.stringify({ commit: base, tapSha256: hash('tap') })) },
-        'docs/v2/acceptance/test-report.tap': { sha256: hash('tap'), size: 3 },
+        'docs/v2/acceptance/test-report.json': { sha256: hash(report), size: Buffer.byteLength(report) },
+        'docs/v2/acceptance/test-report.tap': { sha256: hash(TEST_TAP), size: Buffer.byteLength(TEST_TAP) },
       },
     }))
     const accepted = validateEvidence({ repoRoot: root, commit: docsHead, base, allowDocsOnly: true })
@@ -211,13 +255,14 @@ test('docs baseline rejects CI, build and security changes in target base', () =
 test('docs-only rejects a target base with unbound source changes after evidence', () => {
   const { root, base } = fixture()
   try {
-    write(root, 'docs/v2/acceptance/test-report.json', JSON.stringify({ commit: base, tapSha256: hash('tap') }))
+    const report = testReport(base)
+    write(root, 'docs/v2/acceptance/test-report.json', report)
     write(root, 'docs/v2/acceptance/evidence-manifest.json', JSON.stringify({
       schemaVersion: 'armorbreak.evidence-manifest/v1',
       commit: base,
       files: {
-        'docs/v2/acceptance/test-report.json': { sha256: hash(JSON.stringify({ commit: base, tapSha256: hash('tap') })), size: Buffer.byteLength(JSON.stringify({ commit: base, tapSha256: hash('tap') })) },
-        'docs/v2/acceptance/test-report.tap': { sha256: hash('tap'), size: 3 },
+        'docs/v2/acceptance/test-report.json': { sha256: hash(report), size: Buffer.byteLength(report) },
+        'docs/v2/acceptance/test-report.tap': { sha256: hash(TEST_TAP), size: Buffer.byteLength(TEST_TAP) },
       },
     }))
     git(root, 'add', 'docs/v2/acceptance')

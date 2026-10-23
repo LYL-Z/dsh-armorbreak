@@ -20,12 +20,13 @@ function makeRepo({ commit = COMMIT, failTests = false } = {}) {
   const tasks = join(root, 'docs/v2/tasks')
   mkdirSync(evidence, { recursive: true })
   mkdirSync(tasks, { recursive: true })
-  const tap = `TAP version 13\nok 1 - policy gateway denies unknown actions\nok 2 - approval binding rejects model self-approval\n${failTests ? 'not ok 3 - deliberate failure\n' : ''}# tests 3\n# pass ${failTests ? 2 : 2}\n# fail ${failTests ? 1 : 0}\n# skipped 1\n`
+  const tap = `TAP version 13\nok 1 - policy gateway denies unknown actions\nok 2 - approval binding rejects model self-approval\n${failTests ? 'not ok 3 - deliberate failure\n' : 'ok 3 - evidence report metadata validates\n'}# tests 3\n# pass ${failTests ? 2 : 3}\n# fail ${failTests ? 1 : 0}\n# cancelled 0\n# skipped 0\n# todo 0\n`
   writeFileSync(join(evidence, 'test-report.tap'), tap)
-  const counts = { tests: 3, pass: 2, fail: failTests ? 1 : 0, skipped: 1, cancelled: 0, todo: 0 }
+  const counts = { tests: 3, pass: failTests ? 2 : 3, fail: failTests ? 1 : 0, skipped: 0, cancelled: 0, todo: 0 }
   writeJson(join(evidence, 'test-report.json'), {
     schemaVersion: 'armorbreak.test-report/v1', commit, node: process.version, generatedAt: new Date().toISOString(),
-    counts, tapPath: 'docs/v2/acceptance/test-report.tap', tapSha256: createHash('sha256').update(tap).digest('hex'),
+    counts, exitCode: failTests ? 1 : 0, command: 'node --test --test-reporter=tap --test-concurrency=1', processError: null, signal: null,
+    tapPath: 'docs/v2/acceptance/test-report.tap', tapSha256: createHash('sha256').update(tap).digest('hex'),
   })
   writeJson(join(evidence, 'airgap-container.json'), { result: 'PASS' })
   writeJson(join(evidence, 'offline-score.json'), { summary: { targetPass: 62 } })
@@ -96,6 +97,45 @@ test('failed test run can never be releasable', () => {
   assert.equal(report.gates.security.status, 'FAIL')
   assert.equal(report.releasable, false)
   rmSync(repo.root, { recursive: true, force: true })
+})
+
+test('failed process metadata and skipped tests cannot produce a PASS release gate', () => {
+  const failedProcess = makeRepo()
+  const failedReportPath = join(failedProcess.evidence, 'test-report.json')
+  const failedReport = JSON.parse(readFileSync(failedReportPath, 'utf8'))
+  failedReport.exitCode = 1
+  writeJson(failedReportPath, failedReport)
+  failedProcess.writeManifest()
+  const processGate = computeReleaseGates({ repoRoot: failedProcess.root, commit: COMMIT })
+  assert.equal(processGate.gates.security.status, 'FAIL')
+  assert.equal(processGate.releasable, false)
+
+  const processMetadata = makeRepo()
+  const metadataReportPath = join(processMetadata.evidence, 'test-report.json')
+  const metadataReport = JSON.parse(readFileSync(metadataReportPath, 'utf8'))
+  metadataReport.processError = 'spawn returned an error despite a forged zero exit code'
+  writeJson(metadataReportPath, metadataReport)
+  processMetadata.writeManifest()
+  const metadataGate = computeReleaseGates({ repoRoot: processMetadata.root, commit: COMMIT })
+  assert.equal(metadataGate.gates.security.status, 'FAIL')
+  assert.equal(metadataGate.releasable, false)
+
+  const skipped = makeRepo()
+  const tapPath = join(skipped.evidence, 'test-report.tap')
+  const tap = `TAP version 13\nok 1 - policy gateway denies unknown actions\nok 2 - approval binding rejects model self-approval\nok 3 - evidence report metadata validates\nok 4 - platform-specific boundary # SKIP not available\n# tests 4\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 1\n# todo 0\n`
+  writeFileSync(tapPath, tap)
+  const skippedReportPath = join(skipped.evidence, 'test-report.json')
+  const skippedReport = JSON.parse(readFileSync(skippedReportPath, 'utf8'))
+  skippedReport.counts = { tests: 4, pass: 3, fail: 0, skipped: 1, cancelled: 0, todo: 0 }
+  skippedReport.tapSha256 = createHash('sha256').update(tap).digest('hex')
+  writeJson(skippedReportPath, skippedReport)
+  skipped.writeManifest()
+  const skippedGate = computeReleaseGates({ repoRoot: skipped.root, commit: COMMIT })
+  assert.equal(skippedGate.gates.security.status, 'REVIEW')
+  assert.equal(skippedGate.releasable, false)
+  rmSync(failedProcess.root, { recursive: true, force: true })
+  rmSync(processMetadata.root, { recursive: true, force: true })
+  rmSync(skipped.root, { recursive: true, force: true })
 })
 
 test('docs-only gate inherits the target base gates and never fabricates releasability', () => {
