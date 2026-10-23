@@ -13,8 +13,17 @@ security, acceptance metadata, or evidence content.
 
 ## Rule
 
-`validate-evidence.mjs --allow-docs-only` requires a trusted target-branch base
-SHA (`EVIDENCE_BASE_SHA` from the pull-request event). The validator then:
+The validator supports three explicit modes:
+
+- **docs-only:** `--allow-docs-only`, validated against a trusted target-branch
+  base SHA (`EVIDENCE_BASE_SHA` from the pull-request event);
+- **evidence-only:** `--allow-evidence-only`, validated against the manifest's
+  source commit; only `docs/v2/acceptance/**` and
+  `docs/v2/release/readiness.json` may differ;
+- **code/security change:** neither mode applies; evidence must match the code
+  commit or be regenerated for it.
+
+For docs-only mode the validator:
 
 1. checks that the base is an ancestor of HEAD;
 2. computes `git diff --name-only --no-renames <base>..HEAD`;
@@ -54,6 +63,8 @@ older report.
 - `.github/workflows/ci.yml` rejected;
 - generated acceptance metadata rejected;
 - Git replace refs rejected;
+- evidence-only append accepted after a fixed source baseline;
+- source change followed by evidence still rejected;
 - validator rejects a protected diff and requires a target base.
 
 ## Residual risk

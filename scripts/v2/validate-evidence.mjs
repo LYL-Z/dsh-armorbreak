@@ -9,7 +9,8 @@ const arg = (name) => {
   return index >= 0 && process.argv[index + 1] && !process.argv[index + 1].startsWith('--') ? process.argv[index + 1] : undefined
 }
 const allowDocsOnly = process.argv.includes('--allow-docs-only')
+const allowEvidenceOnly = process.argv.includes('--allow-evidence-only')
 const base = arg('--base') ?? process.env.EVIDENCE_BASE_SHA
-const result = validateEvidence({ repoRoot: process.cwd(), commit, base, allowEvidenceAncestor: !allowDocsOnly, allowDocsOnly })
+const result = validateEvidence({ repoRoot: process.cwd(), commit, base, allowEvidenceAncestor: allowEvidenceOnly, allowDocsOnly })
 console.log(JSON.stringify(result, null, 2))
 if (!result.ok) process.exitCode = 1

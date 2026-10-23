@@ -95,6 +95,36 @@ test('docs-only rejects git replace refs', () => {
   }
 })
 
+test('evidence-only accepts a real evidence append after the source baseline', () => {
+  const { root, base } = fixture()
+  try {
+    write(root, 'docs/v2/acceptance/test-report.json', JSON.stringify({ commit: base, tapSha256: hash('tap') }))
+    write(root, 'docs/v2/acceptance/evidence-manifest.json', JSON.stringify({
+      schemaVersion: 'armorbreak.evidence-manifest/v1',
+      commit: base,
+      files: {
+        'docs/v2/acceptance/test-report.tap': { sha256: hash('tap'), size: 3 },
+      },
+    }))
+    git(root, 'add', 'docs/v2/acceptance')
+    git(root, 'commit', '-m', 'evidence: bind baseline tests')
+    const evidenceHead = git(root, 'rev-parse', 'HEAD')
+    const accepted = validateEvidence({ repoRoot: root, commit: evidenceHead, allowEvidenceAncestor: true })
+    assert.equal(accepted.ok, true, accepted.issues.join('; '))
+    assert.equal(accepted.mode, 'evidence-only')
+
+    write(root, 'lib/source.js', 'export const value = 2\n')
+    git(root, 'add', 'lib/source.js')
+    git(root, 'commit', '-m', 'source: change without evidence')
+    const sourceHead = git(root, 'rev-parse', 'HEAD')
+    const rejected = validateEvidence({ repoRoot: root, commit: sourceHead, allowEvidenceAncestor: true })
+    assert.equal(rejected.ok, false)
+    assert.ok(rejected.issues.some((issue) => /non-evidence change/.test(issue)))
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
 test('validator accepts a path-verified docs-only baseline and still rejects a protected diff', () => {
   const { root, base } = fixture()
   try {

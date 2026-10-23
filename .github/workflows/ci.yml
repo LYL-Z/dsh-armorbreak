@@ -141,7 +141,7 @@ jobs:
       - name: Evidence hashes and references
         env:
           EVIDENCE_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-        run: node scripts/v2/validate-evidence.mjs --allow-docs-only
+        run: node scripts/v2/validate-evidence.mjs --allow-docs-only --allow-evidence-only
 
       - name: Evidence-driven release gates
         run: node scripts/v2/release-gates.mjs
