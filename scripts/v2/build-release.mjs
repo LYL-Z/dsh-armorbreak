@@ -10,9 +10,9 @@ import { execFileSync, spawnSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { basename, join, relative, resolve } from 'node:path'
-import { gzipSync } from 'node:zlib'
 import { fileURLToPath } from 'node:url'
 import { signArtifact, verifyArtifactSignature } from './artifact-signature.mjs'
+import { deterministicGzip } from './deterministic-gzip.mjs'
 import { readSafeRepoFile } from '../../lib/release/safeEvidenceFile.js'
 
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)))
@@ -95,7 +95,7 @@ function tar(entries) {
 }
 
 function buildOnce(name, entries) {
-  const archive = gzipSync(tar(entries), { level: 9 })
+  const archive = deterministicGzip(tar(entries))
   const target = join(outDir, name)
   writeFileSync(target, archive)
   return { target, sha256: createHash('sha256').update(archive).digest('hex'), bytes: archive.length, entries }
