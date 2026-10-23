@@ -4,7 +4,7 @@
  * excerpt, and a per-task hash chain so silent edits are detectable.
  * @module dsh-armorbreak/lib/core/evidence
  */
-import { appendJsonl, chainHash, newId, nowIso, readJson, readJsonl, redactText, sanitizeText, sha256, withFileMutex, writeJsonAtomic } from './util.js'
+import { appendJsonl, chainHash, newId, nowIso, readJson, readJsonl, redactDeep, redactText, sanitizeText, sha256, withFileMutex, writeJsonAtomic } from './util.js'
 import { withAppendFileLock } from './append-lock.js'
 
 /**
@@ -65,7 +65,7 @@ export class EvidenceStore {
         excerpt: redactText(sanitizeText(input.excerpt ?? '', 2000)),
         targetPath: input.targetPath ?? null,
         targetSha256: input.targetSha256 ?? null,
-        meta: input.meta ?? {},
+        meta: redactDeep(input.meta ?? {}),
       }
       const hash = chainHash(headHash, body)
       const record = { ...body, prevHash: headHash, hash }
