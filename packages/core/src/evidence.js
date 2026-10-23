@@ -139,13 +139,28 @@ export class EvidenceStore {
   /**
    * Update verification status (human/model judgement after corroboration).
    * @param {string} findingId
-   * @param {{verification?: Verification, note?: string, severity?: Severity}} patch
+   * @param {{verification?: Verification, note?: string, severity?: Severity, evidenceIds?: string[]}} patch
    */
   async verifyFinding(findingId, patch) {
     return withFileMutex(this.findingsFile, async () => {
       const store = await this.readFindings()
     const finding = store.findings.find((item) => item.id === findingId)
     if (!finding) throw new Error(`finding not found: ${findingId}`)
+    const priorVerification = finding.verification
+    const priorSeverity = finding.severity
+    const nextVerification = patch.verification ? oneOf(patch.verification, VERIFICATIONS, finding.verification) : finding.verification
+    const nextSeverity = patch.severity ? oneOf(patch.severity, SEVERITIES, finding.severity) : finding.severity
+    const verificationElevated = nextVerification === 'corroborated' && finding.verification !== 'corroborated'
+    const severityElevated = SEVERITY_SCORE[nextSeverity] > SEVERITY_SCORE[finding.severity]
+    const citedIds = [...new Set((Array.isArray(patch.evidenceIds) ? patch.evidenceIds : []).filter((id) => typeof id === 'string' && id.length <= 160))]
+    if (verificationElevated || severityElevated) {
+      const minimumEvidence = verificationElevated ? 2 : 1
+      if (citedIds.length < minimumEvidence) throw new Error(`finding elevation requires at least ${minimumEvidence} task evidence id(s)`)
+      const evidenceIds = new Set((await this.readEvidence(10000)).filter((item) => item.taskId === this.taskId).map((item) => item.id))
+      const missing = citedIds.filter((id) => !evidenceIds.has(id))
+      if (missing.length) throw new Error(`finding elevation references unknown task evidence: ${missing.join(', ')}`)
+      finding.evidenceIds = unique([...(finding.evidenceIds ?? []), ...citedIds])
+    }
     if (patch.verification) finding.verification = oneOf(patch.verification, VERIFICATIONS, finding.verification)
     if (patch.severity) finding.severity = oneOf(patch.severity, SEVERITIES, finding.severity)
     if (patch.note) {
@@ -154,7 +169,12 @@ export class EvidenceStore {
     }
     finding.updatedAt = nowIso()
     await writeJsonAtomic(this.findingsFile, { version: 1, taskId: this.taskId, findings: store.findings })
-    await this.audit?.append({ action: 'finding.verify', taskId: this.taskId, findingId, verification: finding.verification })
+    await this.audit?.append({
+      action: 'finding.verify', taskId: this.taskId, findingId,
+      priorVerification, priorSeverity,
+      verification: finding.verification, severity: finding.severity,
+      evidenceIds: citedIds, note: patch.note ?? null,
+    })
     return finding
     })
   }

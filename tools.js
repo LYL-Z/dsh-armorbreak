@@ -888,6 +888,7 @@ export function apply(ctx) {
           findingId: { type: 'string', description: 'get/verify: exact finding id.' },
           evidenceId: { type: 'string', description: 'get: exact evidence id.' },
           verification: { type: 'string', enum: ['observed', 'corroborated', 'hypothesis', 'unverified'], description: 'verify: new verification level, justified by the evidence you cite in note.' },
+          evidenceIds: { type: 'array', items: { type: 'string', minLength: 1, maxLength: 160 }, maxItems: 100, description: 'verify: task-local evidence ids supporting a verification or severity increase; corroborated requires at least two.' },
           note: { type: 'string', description: 'verify: why the status changed and what evidence supports it.' },
         },
         required: ['action'],
@@ -929,6 +930,7 @@ export function apply(ctx) {
             verification: args.verification,
             severity: args.severity,
             note: args.note,
+            evidenceIds: args.evidenceIds,
           })
           return { text: `发现 \`${updated.id}\` 验证状态更新为 **${updated.verification}**。`, data: updated }
         }
