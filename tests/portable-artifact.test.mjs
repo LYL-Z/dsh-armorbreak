@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { execFileSync } from 'node:child_process'
-import { mkdir, mkdtemp, readFile, rm } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, readdir, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
@@ -18,9 +18,19 @@ test('portable artifact builds and runs capabilities after clean-room extraction
     assert.equal(manifest.commit, execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim())
     const sbom = JSON.parse(await readFile(join(out, `${manifest.artifact}.sbom.cdx.json`), 'utf8'))
     assert.equal(sbom.bomFormat, 'CycloneDX')
+    assert.match(manifest.contentManifestSha256, /^[a-f0-9]{64}$/)
+    assert.ok(manifest.contentManifest.every((file) => /^[a-f0-9]{64}$/.test(file.sha256)))
+    const expectedPackages = (await readdir(join(process.cwd(), 'packages'), { withFileTypes: true }))
+      .filter((entry) => entry.isDirectory()).map((entry) => `@armorbreak/${entry.name}`).sort()
+    assert.deepEqual(sbom.components.map((component) => component.name).sort(), expectedPackages)
+    assert.ok(sbom.components.every((component) => component.hashes?.some((hash) => hash.alg === 'SHA-256')))
     const extract = join(out, 'clean-room')
     await mkdir(extract, { recursive: true })
-    execFileSync('tar', ['-xzf', info.artifact, '-C', extract], { timeout: 120_000 })
+    const archiveBytes = await readFile(info.artifact)
+    execFileSync('tar', ['-xzf', '-'], { cwd: extract, input: archiveBytes, timeout: 120_000 })
+    const archiveEntries = execFileSync('tar', ['-tzf', '-'], { cwd: extract, input: archiveBytes, encoding: 'utf8', timeout: 120_000 })
+      .split(/\r?\n/).filter((entry) => entry && !entry.endsWith('/')).sort()
+    assert.deepEqual(archiveEntries, manifest.contentManifest.map((file) => file.path).sort())
     const state = join(out, 'state')
     const workspace = join(out, 'workspace')
     const capsRaw = execFileSync(process.execPath, [join(extract, 'packages/cli/index.js'), 'capabilities', '--json'], {

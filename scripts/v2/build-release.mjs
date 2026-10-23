@@ -130,7 +130,7 @@ const signatureValid = await verifyArtifactSignature(first.target, signature.sig
 const cleanDir = mkdtempSync(join(tmpdir(), 'abm-cleanroom-'))
 let cleanRoom
 try {
-  execFileSync('tar', ['-xzf', first.target, '-C', cleanDir], { stdio: 'pipe' })
+  execFileSync('tar', ['-xzf', '-'], { cwd: cleanDir, input: readFileSync(first.target), stdio: ['pipe', 'pipe', 'pipe'] })
   const cli = spawnSync(process.execPath, ['packages/cli/index.js', 'capabilities', '--json'], {
     cwd: cleanDir,
     env: { ...process.env, ARMORBREAK_STATE_ROOT: join(cleanDir, '.state'), ARMORBREAK_WORKSPACE: cleanDir },
