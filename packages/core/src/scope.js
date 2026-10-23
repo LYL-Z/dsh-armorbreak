@@ -40,6 +40,28 @@ const RATE = { capacity: 20, refillPerSec: 0.5, maxUsesPerApproval: 200 }
 
 /** Cloud metadata endpoints that are never a legitimate research target. */
 const DENIED_RESOLVED_IPS = new Set(['169.254.169.254', 'fd00:ec2::254', '100.100.100.200'])
+/** Address ranges that must never be reached through a DNS name in an L2 request. */
+const NON_PUBLIC_IPV4_RANGES = [
+  '0.0.0.0/8', '10.0.0.0/8', '100.64.0.0/10', '127.0.0.0/8', '169.254.0.0/16',
+  '172.16.0.0/12', '192.0.0.0/24', '192.0.2.0/24', '192.88.99.0/24', '192.168.0.0/16',
+  '198.18.0.0/15', '198.51.100.0/24', '203.0.113.0/24', '224.0.0.0/4', '240.0.0.0/4',
+]
+const NON_PUBLIC_IPV6_RANGES = ['2001::/23', '2001:db8::/32', '2002::/16', '3fff::/20']
+
+/**
+ * DNS names may resolve only to globally routable unicast addresses. Explicit
+ * IP/CIDR targets remain possible because their exact range is host-authorized.
+ * @param {string} address
+ */
+function isPublicUnicastIp(address) {
+  const family = isIP(address)
+  if (family === 4) return !NON_PUBLIC_IPV4_RANGES.some((range) => ipv4InCidr(address, range))
+  if (family === 6) {
+    return ipv6InCidr(address, '2000::/3')
+      && !NON_PUBLIC_IPV6_RANGES.some((range) => ipv6InCidr(address, range))
+  }
+  return false
+}
 
 /** @param {string} host */
 async function defaultResolveHost(host) {
@@ -615,21 +637,47 @@ export class ScopePolicy {
     if (!rate.allowed) {
       return { allowed: false, code: 'NETWORK_RATE_LIMITED', reason: `rate limit for ${parsed.host}: retry in ${Math.ceil(rate.retryAfterMs / 1000)} s.` }
     }
-    // Resolve once at policy time; the capability pins the connection to these
-    // addresses so a later DNS answer cannot redirect the approved request.
+    // Resolve once at policy time. The authorization result records these
+    // addresses, but the caller must still bind the actual socket to one of
+    // them; this policy decision alone does not pin the connection.
     let resolvedIps = []
     if (isIP(parsed.host) !== 0) {
       resolvedIps = [parsed.host]
     } else {
       try {
-        resolvedIps = await this.dnsLookup(parsed.host)
+        const answer = await this.dnsLookup(parsed.host)
+        if (!Array.isArray(answer) || answer.length === 0 || answer.some((ip) => typeof ip !== 'string' || isIP(ip) === 0)) {
+          return {
+            allowed: false,
+            code: 'NETWORK_DNS_FAILED',
+            reason: `DNS resolution for ${parsed.host} returned no usable IP addresses; network access is denied.`,
+            resolvedIps: [],
+          }
+        }
+        resolvedIps = [...new Set(answer)]
       } catch {
-        resolvedIps = []
+        return {
+          allowed: false,
+          code: 'NETWORK_DNS_FAILED',
+          reason: `DNS resolution for ${parsed.host} failed; network access is denied.`,
+          resolvedIps: [],
+        }
       }
     }
     const deniedIps = resolvedIps.filter((ip) => DENIED_RESOLVED_IPS.has(ip))
     if (deniedIps.length > 0) {
       return { allowed: false, code: 'NETWORK_METADATA_ENDPOINT_DENIED', reason: `denied resolved address (cloud metadata endpoint): ${deniedIps.join(', ')}` }
+    }
+    if (isIP(parsed.host) === 0) {
+      const nonPublicIps = resolvedIps.filter((ip) => !isPublicUnicastIp(ip))
+      if (nonPublicIps.length > 0) {
+        return {
+          allowed: false,
+          code: 'NETWORK_NON_PUBLIC_ADDRESS_DENIED',
+          reason: `DNS resolution for ${parsed.host} included non-public address(es): ${nonPublicIps.join(', ')}; network access is denied.`,
+          resolvedIps,
+        }
+      }
     }
     return {
       allowed: true,
@@ -638,7 +686,7 @@ export class ScopePolicy {
       authorizationId: authorization.id,
       approvalId: approval.id,
       resolvedIps,
-      dnsWarning: resolvedIps.length === 0 ? 'DNS resolution failed at policy time; the request will fail if the host stays unresolvable.' : null,
+      dnsWarning: null,
     }
   }
 

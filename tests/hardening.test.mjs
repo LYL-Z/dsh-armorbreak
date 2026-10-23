@@ -28,7 +28,7 @@ test('port-scoped network targets never match a portless host', () => {
 })
 
 test('checkNetwork applies the port restriction end to end', async () => {
-  const scope = new ScopePolicy({ stateRoot: await tempDir() })
+  const scope = new ScopePolicy({ stateRoot: await tempDir(), dnsLookup: async () => ['8.8.8.8'] })
   await scope.authorize({ purpose: 'port-scoped lab', operator: 'tester', networkTargets: ['lab.example.test:443'], riskCeiling: 'L2', ttlMs: 60_000 })
   const portless = await scope.checkNetwork({ taskId: 't1', target: 'lab.example.test' })
   assert.equal(portless.allowed, false)
