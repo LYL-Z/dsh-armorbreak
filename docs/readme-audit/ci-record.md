@@ -3,8 +3,9 @@
 - PR：[#15](https://github.com/LYL-Z/dsh-armorbreak/pull/15)
 - 分支：`docs/readme-v22-developer-experience`
 - 基线：`8df5bf98b059139707cc048dcb97f8dea380873e`
-- 最新 CI：`39929353734`（head `07ec4ab870e85ffbdb3a13127d2f81bdf963915c`）
+- CI（head `4737e64c97026bcbf2da9edf9dfaef8c3a2c694e`）：`39929603859`
 - 首轮 CI：`39928989956`（merge commit `ef67bf99…`，结果相同）
+- 前一轮：`39929353734`（head `07ec4ab…`，结果相同）
 
 ## 1. CI 结果
 
@@ -38,15 +39,16 @@ test report commit is stale
 
 ## 3. GitHub 渲染预览
 
-浏览器扩展未连接，无法截图。使用 GitHub 官方 Markdown API 对 `README.md` 做真实 GFM 渲染：
+浏览器扩展未连接，改用 GitHub 官方 Markdown API 对 `README.md` 做真实 GFM 渲染，并用 Edge headless 将渲染结果截图：
 
 - 输出 HTML：约 30,778 bytes
 - H1：1；H2：11
 - 表格：4
 - 代码块：6
 - Mermaid：保留为 `language-mermaid` 代码块，需在 GitHub 页面最终目视确认
+- 首屏截图：`D:\ArmorBreak-Docs\readme-preview.png`（1440×1800；中文显示正常）
 
-渲染产物保存在工作区外部：`D:\ArmorBreak-Docs\readme-render-utf8.html`（不作为仓库交付）。
+渲染产物保存在工作区外部：`D:\ArmorBreak-Docs\readme-render-utf8.html` 与 `readme-preview.png`（不作为仓库交付）。
 
 ## 4. 未解决
 
