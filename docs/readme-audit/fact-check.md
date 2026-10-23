@@ -27,6 +27,7 @@
 | Full V2.2 GA | false | `v2.2-readiness.json` | PASS（如实标注） |
 | 独立安全审查 | 未完整签署 | `release-status.md`、waivers | PASS（如实标注） |
 | Desktop L0 | 已有真实 E2E | `docs/v2/acceptance/desktop-e2e.md` | PASS（历史证据） |
+| 安全审查状态 | 四轮 AI 辅助审查完成初审；部分发现未修复；无独立人类认证 | 用户提供的四轮审计状态 + 发布门禁 | PASS（如实标注，不披露细节） |
 
 ## 2. 纠正的旧口径
 

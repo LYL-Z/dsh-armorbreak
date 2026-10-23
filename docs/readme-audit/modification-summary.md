@@ -7,8 +7,8 @@
 
 | 文件 | 修改 | 原因 |
 |---|---|---|
-| `README.md` | 完全重写为英文主入口 | 首屏定位、三条接入路径、Quick Start、状态与文档导航；保留技术深度链接 |
-| `README.zh-CN.md` | 新增完整中文镜像 | 国际化与中文用户入口 |
+| `README.md` | 完全重写为英文主入口 | 首屏定位、三条接入路径、Quick Start、状态与文档导航；新增安全保证状态（设计目标/自动化测试/AI 辅助审查/待修复/无人类认证） |
+| `README.zh-CN.md` | 新增完整中文镜像 | 国际化与中文用户入口；安全声明与英文版一致 |
 | `docs/readme-archive-v2.2.md` | 新增旧 README 归档 | 保留原算法/ADR/benchmark 内容，避免首页密度 |
 | `docs/installation.md` | 去除本机绝对路径；补 MCP/Core 指针 | 可移植性与入口一致性 |
 | `docs/usage.md` | 8→10 个 DSH 工具；区分 MCP 7 工具 | 修正过期工具数 |

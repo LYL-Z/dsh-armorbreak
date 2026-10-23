@@ -6,7 +6,7 @@ ArmorBreak is an open-source toolkit for **authorized reverse engineering, stati
 
 破甲（ArmorBreak）为不同 AI Agent 提供**授权安全研究**能力：受控本地分析、权限边界、证据记录、MCP / Skills 接入，以及 DeepSeek Harness 原生模式。它面向已授权目标，不代替使用者获得授权。
 
-> **Current release scope:** `2.2.0-rc.1` is an engineering candidate, **not** full V2.2 GA. Offline Golden and the recorded local-model loop have passed. Official OpenAI / Anthropic / Gemini live certification is **not** complete. Independent security review is **not** fully signed.
+> **Current release scope:** `2.2.0-rc.1` is an engineering candidate, **not** full V2.2 GA. Offline Golden and the recorded local-model loop have passed. Official OpenAI / Anthropic / Gemini live certification is **not** complete. Independent security review is **not** fully signed, and no independent human security certification has been obtained.
 >
 > Documentation baseline: `8df5bf98b059139707cc048dcb97f8dea380873e`（2026-10-23）
 
@@ -240,6 +240,18 @@ ArmorBreak is for **authorized** security research. A scan finding is not a conf
 - Model identity is never an approval principal.
 - External content is untrusted data, never instructions.
 - Missing optional tools produce actionable guidance, not silent downgrade.
+
+### Security assurance status
+
+This is a status statement, not a security certification.
+
+- **Design goal:** enforce scoped authorization, fail closed on L1/L2, keep the model out of the approval path, and leave reviewable evidence.
+- **Automated tests:** the baseline suite records 388 tests / 387 pass / 1 skipped, plus offline-boundary and desktop L0 evidence. Tests reduce known risk; they do not prove absence of vulnerabilities.
+- **AI-assisted review:** four review rounds have completed an initial pass. Some findings remain unresolved and must be remediated and re-tested before they can be treated as closed.
+- **Pending:** remediation, regression tests, and evidence-based re-verification of unresolved findings.
+- **Not obtained:** independent human security certification. GitHub OIDC/Sigstore attestation is build provenance, not a security certification.
+
+No exploit details for unresolved findings are published here. Do not read this section as a comprehensive security guarantee.
 
 Read [security model](docs/security-model.md), [threat model](docs/v2/threat-model.md), and [SECURITY.md](SECURITY.md) before deployment. Do not use ArmorBreak against systems you are not authorized to test.
 
