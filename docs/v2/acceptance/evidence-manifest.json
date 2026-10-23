@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.evidence-manifest/v1",
-  "commit": "bfe06d64de472f1a4ae6f275cd86d972d3f6c972",
-  "generatedAt": "2026-10-23T10:44:51.580Z",
+  "commit": "ea3089c4d839f6cfc9ba4351dea298c05be6a1c9",
+  "generatedAt": "2026-10-23T10:50:52.623Z",
   "files": {
     "docs/v2/acceptance/airgap-container.json": {
       "sha256": "967dc9c1443f006ac5e6552b0b080c797ef7f906239d049b06e95f522ad24397",
@@ -428,12 +428,12 @@
       "size": 1370
     },
     "docs/v2/acceptance/test-report.json": {
-      "sha256": "14e716cf2abd1bbe5f826750ae438bfb358bef90ae9ed671e21ff1773225ed94",
+      "sha256": "062312f87f5bd623433b668572c76df5f348542fde8ed2491bedc6bf81f01fdb",
       "size": 538
     },
     "docs/v2/acceptance/test-report.tap": {
-      "sha256": "6a4186c3e3e196c9b79b2be86c4a2bdcb7e0073ccac3c283db356a93cf894fa5",
-      "size": 88144
+      "sha256": "1280a94496dc9fb09998f618c175eb565fcbe8373d8e1fe2a85ac1d44bba3164",
+      "size": 86886
     },
     "docs/v2/acceptance/v2.2-readiness.json": {
       "sha256": "15ca7c5242ca7a4db1d7df4824d7faa572feb109433029b8aba72c8019601f16",
