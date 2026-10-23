@@ -2,907 +2,907 @@ TAP version 13
 # Subtest: real BinaryStaticAnalysis workflow runs through the tool layer and produces evidence + report
 ok 1 - real BinaryStaticAnalysis workflow runs through the tool layer and produces evidence + report
   ---
-  duration_ms: 2009.4809
+  duration_ms: 1707.4767
   type: 'test'
   ...
 # Subtest: partial success keeps successful-step evidence when a later step fails
 ok 2 - partial success keeps successful-step evidence when a later step fails
   ---
-  duration_ms: 1028.7708
+  duration_ms: 844.9343
   type: 'test'
   ...
 # Subtest: running a workflow with an aborted signal cancels it durably
 ok 3 - running a workflow with an aborted signal cancels it durably
   ---
-  duration_ms: 132.3732
+  duration_ms: 102.4897
   type: 'test'
   ...
 # Subtest: audit log redacts credentials and cannot be forgotten on capability failures
 ok 4 - audit log redacts credentials and cannot be forgotten on capability failures
   ---
-  duration_ms: 143.0142
+  duration_ms: 103.1556
   type: 'test'
   ...
 # Subtest: unsupported report format and missing task produce actionable errors
 ok 5 - unsupported report format and missing task produce actionable errors
   ---
-  duration_ms: 738.7796
+  duration_ms: 678.8058
   type: 'test'
   ...
 # Subtest: adapter-dsh still registers the legacy ArmorBreak tools and L0 health
 ok 6 - adapter-dsh still registers the legacy ArmorBreak tools and L0 health
   ---
-  duration_ms: 1100.9123
+  duration_ms: 1104.2537
   type: 'test'
   ...
 # Subtest: agent install dry-run/apply/uninstall JSON preserves other servers and backup
 ok 7 - agent install dry-run/apply/uninstall JSON preserves other servers and backup
   ---
-  duration_ms: 725.2172
+  duration_ms: 761.5537
   type: 'test'
   ...
 # Subtest: agent install applies Codex TOML and Hermes YAML
 ok 8 - agent install applies Codex TOML and Hermes YAML
   ---
-  duration_ms: 565.3226
+  duration_ms: 489.7814
   type: 'test'
   ...
 # Subtest: agent install rejects conflicts without force
 ok 9 - agent install rejects conflicts without force
   ---
-  duration_ms: 274.6999
+  duration_ms: 222.7414
   type: 'test'
   ...
 # Subtest: Garak plan rejects unauthorized targets and non-allowlisted probes
 ok 10 - Garak plan rejects unauthorized targets and non-allowlisted probes
   ---
-  duration_ms: 1.1938
+  duration_ms: 1.0642
   type: 'test'
   ...
 # Subtest: Garak report maps only allowlisted attempts and never stores raw payload
 ok 11 - Garak report maps only allowlisted attempts and never stores raw payload
   ---
-  duration_ms: 0.5048
+  duration_ms: 0.3913
   type: 'test'
   ...
 # Subtest: Inspect-style mock plan produces a complete trace and aggregate counts
 ok 12 - Inspect-style mock plan produces a complete trace and aggregate counts
   ---
-  duration_ms: 3.2514
+  duration_ms: 2.4138
   type: 'test'
   ...
 # Subtest: Garak eval summaries use passed/fails counts, not boolean
 ok 13 - Garak eval summaries use passed/fails counts, not boolean
   ---
-  duration_ms: 0.201
+  duration_ms: 0.1779
   type: 'test'
   ...
 # Subtest: AgentDojo tool output cannot invoke a denied tool and memory resets per case
 ok 14 - AgentDojo tool output cannot invoke a denied tool and memory resets per case
   ---
-  duration_ms: 0.8778
+  duration_ms: 1.0392
   type: 'test'
   ...
 # Subtest: RAG context is untrusted and cannot authorize execution
 ok 15 - RAG context is untrusted and cannot authorize execution
   ---
-  duration_ms: 1.0534
+  duration_ms: 1.0474
   type: 'test'
   ...
 # Subtest: campaign orders DAG, retries, dedupes evidence and persists resume state
 ok 16 - campaign orders DAG, retries, dedupes evidence and persists resume state
   ---
-  duration_ms: 10.0708
+  duration_ms: 8.0894
   type: 'test'
   ...
 # Subtest: campaign cancellation leaves CANCELLED and resume completes remaining work
 ok 17 - campaign cancellation leaves CANCELLED and resume completes remaining work
   ---
-  duration_ms: 23.2867
+  duration_ms: 21.5782
   type: 'test'
   ...
 # Subtest: LLM report computes AVR/FRR/TCR/cost with model and dataset fingerprints
 ok 18 - LLM report computes AVR/FRR/TCR/cost with model and dataset fingerprints
   ---
-  duration_ms: 1.2765
+  duration_ms: 1.3903
   type: 'test'
   ...
 # Subtest: AISEC schemas require authorization and reject model-supplied authorization
 ok 19 - AISEC schemas require authorization and reject model-supplied authorization
   ---
-  duration_ms: 0.5555
+  duration_ms: 0.5379
   type: 'test'
   ...
 # Subtest: mock scenario carries one traceId through scenario/target/result
 ok 20 - mock scenario carries one traceId through scenario/target/result
   ---
-  duration_ms: 2.3555
+  duration_ms: 2.5912
   type: 'test'
   ...
 # Subtest: unauthorized target produces no invocation and is rejected
 ok 21 - unauthorized target produces no invocation and is rejected
   ---
-  duration_ms: 0.3979
+  duration_ms: 0.4029
   type: 'test'
   ...
 # Subtest: jailbreak dataset is aggregate-only and requires authorization/license
 ok 22 - jailbreak dataset is aggregate-only and requires authorization/license
   ---
-  duration_ms: 1.287
+  duration_ms: 1.0615
   type: 'test'
   ...
 # Subtest: multimodal missing runtime is SKIPPED, never PASS
 ok 23 - multimodal missing runtime is SKIPPED, never PASS
   ---
-  duration_ms: 0.7102
+  duration_ms: 0.6611
   type: 'test'
   ...
 # Subtest: composite report keeps NOT_RUN domains separate
 ok 24 - composite report keeps NOT_RUN domains separate
   ---
-  duration_ms: 2.6971
+  duration_ms: 1.9726
   type: 'test'
   ...
 # Subtest: confusion metrics compute TP/FP/TN/FN and Wilson intervals
 ok 25 - confusion metrics compute TP/FP/TN/FN and Wilson intervals
   ---
-  duration_ms: 0.7046
+  duration_ms: 0.6471
   type: 'test'
   ...
 # Subtest: model-assisted judge is not truth without human review
 ok 26 - model-assisted judge is not truth without human review
   ---
-  duration_ms: 0.2449
+  duration_ms: 0.2136
   type: 'test'
   ...
 # Subtest: PyRIT adapter requires authorized target, explicit outcomes and never stores raw prompts
 ok 27 - PyRIT adapter requires authorized target, explicit outcomes and never stores raw prompts
   ---
-  duration_ms: 0.8028
+  duration_ms: 1.0415
   type: 'test'
   ...
 # Subtest: worker speaks JSONL, uses env allowlist and returns protocol
 ok 28 - worker speaks JSONL, uses env allowlist and returns protocol
   ---
-  duration_ms: 145.9572
+  duration_ms: 115.0267
   type: 'test'
   ...
 # Subtest: crash rejects the request and a later request restarts the worker
 ok 29 - crash rejects the request and a later request restarts the worker
   ---
-  duration_ms: 218.0756
+  duration_ms: 212.0899
   type: 'test'
   ...
 # Subtest: timeout kills the worker, rejects pending work and the Host recovers
 ok 30 - timeout kills the worker, rejects pending work and the Host recovers
   ---
-  duration_ms: 1106.079
+  duration_ms: 1110.9319
   type: 'test'
   ...
 # Subtest: cancelAll rejects a pending request and leaves no running child
 ok 31 - cancelAll rejects a pending request and leaves no running child
   ---
-  duration_ms: 117.5265
+  duration_ms: 110.6866
   type: 'test'
   ...
 # Subtest: android: capability 清单符合契约（id/riskLevel/params schema）
 ok 32 - android: capability 清单符合契约（id/riskLevel/params schema）
   ---
-  duration_ms: 0.9765
+  duration_ms: 0.966
   type: 'test'
   ...
 # Subtest: android.apk_structure: 解析 ZIP 中央目录与 APK 分类
 ok 33 - android.apk_structure: 解析 ZIP 中央目录与 APK 分类
   ---
-  duration_ms: 10.0323
+  duration_ms: 9.6995
   type: 'test'
   ...
 # Subtest: android.apk_structure: includeEntries + maxEntries 截断
 ok 34 - android.apk_structure: includeEntries + maxEntries 截断
   ---
-  duration_ms: 1.396
+  duration_ms: 1.6588
   type: 'test'
   ...
 # Subtest: android.apk_structure: ZIP64 EOCD locator 定位与后续解析
 ok 35 - android.apk_structure: ZIP64 EOCD locator 定位与后续解析
   ---
-  duration_ms: 3.3048
+  duration_ms: 3.3028
   type: 'test'
   ...
 # Subtest: android.manifest: 解码二进制 AXML 的包名/权限/组件/安全开关
 ok 36 - android.manifest: 解码二进制 AXML 的包名/权限/组件/安全开关
   ---
-  duration_ms: 1.5699
+  duration_ms: 1.447
   type: 'test'
   ...
 # Subtest: android.manifest: parseAxml 直接校验字符串池/资源映射/类型化解码
 ok 37 - android.manifest: parseAxml 直接校验字符串池/资源映射/类型化解码
   ---
-  duration_ms: 0.8143
+  duration_ms: 0.7985
   type: 'test'
   ...
 # Subtest: android.manifest: 文本 XML 清单回退解析
 ok 38 - android.manifest: 文本 XML 清单回退解析
   ---
-  duration_ms: 0.6976
+  duration_ms: 0.7073
   type: 'test'
   ...
 # Subtest: android.manifest: 畸形/缺失清单抛出可操作错误
 ok 39 - android.manifest: 畸形/缺失清单抛出可操作错误
   ---
-  duration_ms: 0.5358
+  duration_ms: 0.5622
   type: 'test'
   ...
 # Subtest: android.dex: 解析 DEX 头/字符串/类描述符并命中库特征
 ok 40 - android.dex: 解析 DEX 头/字符串/类描述符并命中库特征
   ---
-  duration_ms: 2.1514
+  duration_ms: 2.0946
   type: 'test'
   ...
 # Subtest: android.dex: 非法输入与空输入报可操作错误
 ok 41 - android.dex: 非法输入与空输入报可操作错误
   ---
-  duration_ms: 0.3761
+  duration_ms: 0.3821
   type: 'test'
   ...
 # Subtest: android.signing: v2+v3 签名块与证书 SHA-256/主体/调试证书提示
 ok 42 - android.signing: v2+v3 签名块与证书 SHA-256/主体/调试证书提示
   ---
-  duration_ms: 2.8728
+  duration_ms: 2.7478
   type: 'test'
   ...
 # Subtest: android.signing: v1 META-INF 证书提取与未签名检测
 ok 43 - android.signing: v1 META-INF 证书提取与未签名检测
   ---
-  duration_ms: 1.7451
+  duration_ms: 1.6438
   type: 'test'
   ...
 # Subtest: android.dex: 截断 DEX 标记 truncated，大端 DEX 报可操作错误
 ok 44 - android.dex: 截断 DEX 标记 truncated，大端 DEX 报可操作错误
   ---
-  duration_ms: 0.3204
+  duration_ms: 0.3449
   type: 'test'
   ...
 # Subtest: android.signing: 损坏的 APK Signing Block 只告警不崩溃
 ok 45 - android.signing: 损坏的 APK Signing Block 只告警不崩溃
   ---
-  duration_ms: 0.6574
+  duration_ms: 0.7231
   type: 'test'
   ...
 # Subtest: android.findings: 从清单/结构/签名推导诚实 findings（含验证等级）
 ok 46 - android.findings: 从清单/结构/签名推导诚实 findings（含验证等级）
   ---
-  duration_ms: 3.1592
+  duration_ms: 3.2324
   type: 'test'
   ...
 # Subtest: android: Result 契约（summary/data 体积/meta 与全部 capability 可执行）
 ok 47 - android: Result 契约（summary/data 体积/meta 与全部 capability 可执行）
   ---
-  duration_ms: 1.8922
+  duration_ms: 1.8817
   type: 'test'
   ...
 # Subtest: android: data 超过 256KiB 时按预算裁剪并标记
 ok 48 - android: data 超过 256KiB 时按预算裁剪并标记
   ---
-  duration_ms: 7.1177
+  duration_ms: 7.084
   type: 'test'
   ...
 # Subtest: android: 畸形/截断输入不崩溃且错误可操作
 ok 49 - android: 畸形/截断输入不崩溃且错误可操作
   ---
-  duration_ms: 0.966
+  duration_ms: 0.8676
   type: 'test'
   ...
 # Subtest: approval tokens are signed and bound to task/target/risk/operator
 ok 50 - approval tokens are signed and bound to task/target/risk/operator
   ---
-  duration_ms: 6.6631
+  duration_ms: 6.8788
   type: 'test'
   ...
 # Subtest: tampering, expiry, revocation and replay are rejected
 ok 51 - tampering, expiry, revocation and replay are rejected
   ---
-  duration_ms: 3.0738
+  duration_ms: 3.2315
   type: 'test'
   ...
 # Subtest: consumption is single-use and a second consume is replay
 ok 52 - consumption is single-use and a second consume is replay
   ---
-  duration_ms: 3.3024
+  duration_ms: 2.9941
   type: 'test'
   ...
 # Subtest: approval ids are unique
 ok 53 - approval ids are unique
   ---
-  duration_ms: 0.375
+  duration_ms: 0.3284
   type: 'test'
   ...
 # Subtest: platform approvals require a bound token when the authority is enabled
 ok 54 - platform approvals require a bound token when the authority is enabled
   ---
-  duration_ms: 104.0663
+  duration_ms: 106.259
   type: 'test'
   ...
 # Subtest: approval token cannot be replayed against another target or task
 ok 55 - approval token cannot be replayed against another target or task
   ---
-  duration_ms: 4.3954
+  duration_ms: 4.4752
   type: 'test'
   ...
 # Subtest: authorization activation requires a bound Host token and consumes it once
 ok 56 - authorization activation requires a bound Host token and consumes it once
   ---
-  duration_ms: 8.575
+  duration_ms: 8.5713
   type: 'test'
   ...
 # Subtest: approval CLI requires an explicit human challenge and Engine consumes the token
 ok 57 - approval CLI requires an explicit human challenge and Engine consumes the token
   ---
-  duration_ms: 744.6838
+  duration_ms: 810.119
   type: 'test'
   ...
 # Subtest: approval CLI refuses L3 and missing confirmation material
 ok 58 - approval CLI refuses L3 and missing confirmation material
   ---
-  duration_ms: 469.3076
+  duration_ms: 440.7429
   type: 'test'
   ...
 # Subtest: Ed25519 artifact signatures detect tampering and wrong keys
 ok 59 - Ed25519 artifact signatures detect tampering and wrong keys
   ---
-  duration_ms: 12.6687
+  duration_ms: 13.5514
   type: 'test'
   ...
 # Subtest: local overhead benchmark emits p50/p95 for CLI, Core and MCP HTTP
 ok 60 - local overhead benchmark emits p50/p95 for CLI, Core and MCP HTTP
   ---
-  duration_ms: 749.7454
+  duration_ms: 717.2014
   type: 'test'
   ...
 # Subtest: binary manifest: shape, ids, risk levels and params schema follow CONTRACT
 ok 61 - binary manifest: shape, ids, risk levels and params schema follow CONTRACT
   ---
-  duration_ms: 1.1691
+  duration_ms: 1.2722
   type: 'test'
   ...
 # Subtest: binary.identify: PE32+ fields, imports, exports, overlay, hashes
 ok 62 - binary.identify: PE32+ fields, imports, exports, overlay, hashes
   ---
-  duration_ms: 5.9545
+  duration_ms: 5.1532
   type: 'test'
   ...
 # Subtest: binary.identify: ELF fields, build-id, dynamic imports
 ok 63 - binary.identify: ELF fields, build-id, dynamic imports
   ---
-  duration_ms: 2.0966
+  duration_ms: 1.8213
   type: 'test'
   ...
 # Subtest: binary.identify: thin Mach-O, fat/java detection and unknown input
 ok 64 - binary.identify: thin Mach-O, fat/java detection and unknown input
   ---
-  duration_ms: 1.6134
+  duration_ms: 1.47
   type: 'test'
   ...
 # Subtest: binary.identify: malformed/truncated PE and ELF return structured results without crashing
 ok 65 - binary.identify: malformed/truncated PE and ELF return structured results without crashing
   ---
-  duration_ms: 1.4815
+  duration_ms: 1.8798
   type: 'test'
   ...
 # Subtest: binary.identify: empty inputs throw actionable Errors
 ok 66 - binary.identify: empty inputs throw actionable Errors
   ---
-  duration_ms: 0.57
+  duration_ms: 0.4489
   type: 'test'
   ...
 # Subtest: binary.identify: deterministic output (same input -> identical JSON)
 ok 67 - binary.identify: deterministic output (same input -> identical JSON)
   ---
-  duration_ms: 0.7611
+  duration_ms: 0.6934
   type: 'test'
   ...
 # Subtest: binary.strings: ASCII/UTF-16 extraction and categorization
 ok 68 - binary.strings: ASCII/UTF-16 extraction and categorization
   ---
-  duration_ms: 4.8021
+  duration_ms: 4.4084
   type: 'test'
   ...
 # Subtest: binary.strings: shell command and persistence strings produce hypothesis findings
 ok 69 - binary.strings: shell command and persistence strings produce hypothesis findings
   ---
-  duration_ms: 0.4396
+  duration_ms: 0.5084
   type: 'test'
   ...
 # Subtest: binary.entropy: zero buffer, high-entropy buffer and bounded block map
 ok 70 - binary.entropy: zero buffer, high-entropy buffer and bounded block map
   ---
-  duration_ms: 2.6148
+  duration_ms: 2.3747
   type: 'test'
   ...
 # Subtest: binary.headers: PE optional header, directories, hardening flags
 ok 71 - binary.headers: PE optional header, directories, hardening flags
   ---
-  duration_ms: 0.8138
+  duration_ms: 0.7839
   type: 'test'
   ...
 # Subtest: binary.headers: ELF program headers and Mach-O load commands
 ok 72 - binary.headers: ELF program headers and Mach-O load commands
   ---
-  duration_ms: 1.0715
+  duration_ms: 0.9321
   type: 'test'
   ...
 # Subtest: binary.structure: ELF symbols, PE exports and Mach-O function starts
 ok 73 - binary.structure: ELF symbols, PE exports and Mach-O function starts
   ---
-  duration_ms: 2.3204
+  duration_ms: 2.1463
   type: 'test'
   ...
 # Subtest: binary.structure: PE exception directory is summarized when present
 ok 74 - binary.structure: PE exception directory is summarized when present
   ---
-  duration_ms: 0.3665
+  duration_ms: 0.3203
   type: 'test'
   ...
 # Subtest: binary: long loops cooperate with AbortSignal
 ok 75 - binary: long loops cooperate with AbortSignal
   ---
-  duration_ms: 0.4786
+  duration_ms: 0.4282
   type: 'test'
   ...
 # Subtest: binary: helper parsers agree with container detection and never throw on garbage
 ok 76 - binary: helper parsers agree with container detection and never throw on garbage
   ---
-  duration_ms: 0.7414
+  duration_ms: 0.6122
   type: 'test'
   ...
 # Subtest: binary.behavior: aggregates suspicious API categories and stays hypothesis-level
 ok 77 - binary.behavior: aggregates suspicious API categories and stays hypothesis-level
   ---
-  duration_ms: 0.8991
+  duration_ms: 0.8398
   type: 'test'
   ...
 # Subtest: bundle compiler hashes real files and preserves preset armorbreak
 ok 78 - bundle compiler hashes real files and preserves preset armorbreak
   ---
-  duration_ms: 28.682
+  duration_ms: 28.3641
   type: 'test'
   ...
 # Subtest: isolated profile upgrade preserves other bundles/preset and rolls back exact bytes
 ok 79 - isolated profile upgrade preserves other bundles/preset and rolls back exact bytes
   ---
-  duration_ms: 28.4085
+  duration_ms: 24.9641
   type: 'test'
   ...
 # Subtest: catalog canonicalizes repos, dedupes same repo+commit and separates commits
 ok 80 - catalog canonicalizes repos, dedupes same repo+commit and separates commits
   ---
-  duration_ms: 0.9295
+  duration_ms: 0.9008
   type: 'test'
   ...
 # Subtest: license gate fails closed for unknown/copyleft licenses and dangerous scripts
 ok 81 - license gate fails closed for unknown/copyleft licenses and dangerous scripts
   ---
-  duration_ms: 0.4351
+  duration_ms: 0.4073
   type: 'test'
   ...
 # Subtest: OSV known vulnerability and low/missing Scorecard block automatic assembly
 ok 82 - OSV known vulnerability and low/missing Scorecard block automatic assembly
   ---
-  duration_ms: 0.7637
+  duration_ms: 0.6958
   type: 'test'
   ...
 # Subtest: CLI capabilities, analyze and task status work without DSH
 ok 83 - CLI capabilities, analyze and task status work without DSH
   ---
-  duration_ms: 2514.6393
+  duration_ms: 2510.8366
   type: 'test'
   ...
 # Subtest: MCP server process emits only JSON-RPC frames on stdout
 ok 84 - MCP server process emits only JSON-RPC frames on stdout
   ---
-  duration_ms: 246.2337
+  duration_ms: 347.0536
   type: 'test'
   ...
 # Subtest: compatibility matrix has twelve host entries and makes no unverified claims
 ok 85 - compatibility matrix has twelve host entries and makes no unverified claims
   ---
-  duration_ms: 6.3868
+  duration_ms: 5.4217
   type: 'test'
   ...
 # Subtest: 12-class network/connector fault matrix
 ok 86 - 12-class network/connector fault matrix
   ---
-  duration_ms: 3.303
+  duration_ms: 3.793
   type: 'test'
   ...
 # Subtest: NetworkState hysteresis: healthy -> degraded -> offline -> recovering -> healthy
 ok 87 - NetworkState hysteresis: healthy -> degraded -> offline -> recovering -> healthy
   ---
-  duration_ms: 2.0792
+  duration_ms: 2.1216
   type: 'test'
   ...
 # Subtest: staging preserves previous state and failed staging goes offline
 ok 88 - staging preserves previous state and failed staging goes offline
   ---
-  duration_ms: 0.1613
+  duration_ms: 0.166
   type: 'test'
   ...
 # Subtest: invalid transitions are rejected and history is bounded
 ok 89 - invalid transitions are rejected and history is bounded
   ---
-  duration_ms: 1.0222
+  duration_ms: 0.9007
   type: 'test'
   ...
 # Subtest: ConnectorHealth isolates a 429 source and honors Retry-After
 ok 90 - ConnectorHealth isolates a 429 source and honors Retry-After
   ---
-  duration_ms: 0.3137
+  duration_ms: 0.2876
   type: 'test'
   ...
 # Subtest: ConnectorHealth exponential backoff is bounded and no busy loop
 ok 91 - ConnectorHealth exponential backoff is bounded and no busy loop
   ---
-  duration_ms: 0.1361
+  duration_ms: 0.1322
   type: 'test'
   ...
 # Subtest: streaming hash matches a one-shot hash and returns byte count
 ok 92 - streaming hash matches a one-shot hash and returns byte count
   ---
-  duration_ms: 15.7524
+  duration_ms: 18.8917
   type: 'test'
   ...
 # Subtest: CAS import deduplicates by hash and rejects a mismatched expected hash
 ok 93 - CAS import deduplicates by hash and rejects a mismatched expected hash
   ---
-  duration_ms: 14.284
+  duration_ms: 13.7178
   type: 'test'
   ...
 # Subtest: concurrent audit appends produce one continuous hash chain
 ok 94 - concurrent audit appends produce one continuous hash chain
   ---
-  duration_ms: 186.872
+  duration_ms: 194.0721
   type: 'test'
   ...
 # Subtest: concurrent evidence appends produce one continuous evidence chain
 ok 95 - concurrent evidence appends produce one continuous evidence chain
   ---
-  duration_ms: 93.4752
+  duration_ms: 106.9729
   type: 'test'
   ...
 # Subtest: concurrent finding writes preserve every distinct finding
 ok 96 - concurrent finding writes preserve every distinct finding
   ---
-  duration_ms: 66.4319
+  duration_ms: 80.7956
   type: 'test'
   ...
 # Subtest: Core public API contract, dependency graph and result shapes are frozen
 ok 97 - Core public API contract, dependency graph and result shapes are frozen
   ---
-  duration_ms: 1126.7834
+  duration_ms: 1148.9151
   type: 'test'
   ...
 # Subtest: Core daemon supports three clients and survives restart
 ok 98 - Core daemon supports three clients and survives restart
   ---
-  duration_ms: 1506.412
+  duration_ms: 1435.2191
   type: 'test'
   ...
 # Subtest: core pack is deterministic, hashes files and excludes workspace state/tests
 ok 99 - core pack is deterministic, hashes files and excludes workspace state/tests
   ---
-  duration_ms: 25.1162
+  duration_ms: 15.8
   type: 'test'
   ...
 # Subtest: credential redaction uses syntax supported by host Node 22
 ok 100 - credential redaction uses syntax supported by host Node 22
   ---
-  duration_ms: 0.8941
+  duration_ms: 0.898
   type: 'test'
   ...
 # Subtest: Universal Core imports and lists capabilities without DSH/Cordis
 ok 101 - Universal Core imports and lists capabilities without DSH/Cordis
   ---
-  duration_ms: 116.083
+  duration_ms: 111.9407
   type: 'test'
   ...
 # Subtest: Core can be imported in a fresh Node process with no @deepseek-ai package
 ok 102 - Core can be imported in a fresh Node process with no @deepseek-ai package
   ---
-  duration_ms: 236.4232
+  duration_ms: 232.7314
   type: 'test'
   ...
 # Subtest: Core package source has no DSH/Cordis/DOM/Electron imports
 ok 103 - Core package source has no DSH/Cordis/DOM/Electron imports
   ---
-  duration_ms: 3.3513
+  duration_ms: 2.3859
   type: 'test'
   ...
 # Subtest: protocol validates invocation and evidence envelopes
 ok 104 - protocol validates invocation and evidence envelopes
   ---
-  duration_ms: 0.253
+  duration_ms: 0.2535
   type: 'test'
   ...
 # Subtest: versioned JSON Schema files are present and parseable
 ok 105 - versioned JSON Schema files are present and parseable
   ---
-  duration_ms: 1.392
+  duration_ms: 1.3818
   type: 'test'
   ...
 # Subtest: authorize creates a signed durable record and list shows it active
 ok 106 - authorize creates a signed durable record and list shows it active
   ---
-  duration_ms: 10.9699
+  duration_ms: 10.5121
   type: 'test'
   ...
 # Subtest: authorize rejects empty authorization and short purpose
 ok 107 - authorize rejects empty authorization and short purpose
   ---
-  duration_ms: 1.3868
+  duration_ms: 1.3717
   type: 'test'
   ...
 # Subtest: file check allows workspace targets and denies outside/sensitive targets
 ok 108 - file check allows workspace targets and denies outside/sensitive targets
   ---
-  duration_ms: 6.9367
+  duration_ms: 6.7527
   type: 'test'
   ...
 # Subtest: sensitive host paths are denied even inside an authorized tree
 ok 109 - sensitive host paths are denied even inside an authorized tree
   ---
-  duration_ms: 2.4166
+  duration_ms: 2.248
   type: 'test'
   ...
 # Subtest: network target parsing and matching (exact, wildcard, CIDR, ports)
 ok 110 - network target parsing and matching (exact, wildcard, CIDR, ports)
   ---
-  duration_ms: 4.3726
+  duration_ms: 4.599
   type: 'test'
   ...
 # Subtest: L2 network execution requires authorization and an active approval
 ok 111 - L2 network execution requires authorization and an active approval
   ---
-  duration_ms: 5.4794
+  duration_ms: 5.4368
   type: 'test'
   ...
 # Subtest: recordApproval refuses non-grant outcomes
 ok 112 - recordApproval refuses non-grant outcomes
   ---
-  duration_ms: 0.9482
+  duration_ms: 0.9071
   type: 'test'
   ...
 # Subtest: L1 execution is denied without an isolation provider
 ok 113 - L1 execution is denied without an isolation provider
   ---
-  duration_ms: 4.7137
+  duration_ms: 4.7935
   type: 'test'
   ...
 # Subtest: token bucket rate-limits an authorized host
 ok 114 - token bucket rate-limits an authorized host
   ---
-  duration_ms: 0.7641
+  duration_ms: 0.7555
   type: 'test'
   ...
 # Subtest: L0 capability runs, persists evidence/finding, finalizes with report and valid chains
 ok 115 - L0 capability runs, persists evidence/finding, finalizes with report and valid chains
   ---
-  duration_ms: 973.7896
+  duration_ms: 833.6886
   type: 'test'
   ...
 # Subtest: out-of-workspace target is rejected before execution
 ok 116 - out-of-workspace target is rejected before execution
   ---
-  duration_ms: 26.3439
+  duration_ms: 26.0362
   type: 'test'
   ...
 # Subtest: L3 capability is rejected by policy and never runs
 ok 117 - L3 capability is rejected by policy and never runs
   ---
-  duration_ms: 33.193
+  duration_ms: 32.0307
   type: 'test'
   ...
 # Subtest: L2 capability fails closed without a platform approval channel
 ok 118 - L2 capability fails closed without a platform approval channel
   ---
-  duration_ms: 38.3243
+  duration_ms: 35.8073
   type: 'test'
   ...
 # Subtest: L0 capability timeout becomes a structured TIMEOUT error
 ok 119 - L0 capability timeout becomes a structured TIMEOUT error
   ---
-  duration_ms: 204.7852
+  duration_ms: 206.4849
   type: 'test'
   ...
 # Subtest: missing capability fails the environment check durably
 ok 120 - missing capability fails the environment check durably
   ---
-  duration_ms: 33.7749
+  duration_ms: 26.8101
   type: 'test'
   ...
 # Subtest: illegal state transitions throw, legal cancellations are durable
 ok 121 - illegal state transitions throw, legal cancellations are durable
   ---
-  duration_ms: 40.8771
+  duration_ms: 35.2453
   type: 'test'
   ...
 # Subtest: evidence hash chain detects tampering
 ok 122 - evidence hash chain detects tampering
   ---
-  duration_ms: 77.297
+  duration_ms: 63.7669
   type: 'test'
   ...
 # Subtest: report formats render findings, evidence and SARIF metadata
 ok 123 - report formats render findings, evidence and SARIF metadata
   ---
-  duration_ms: 10812.4655
+  duration_ms: 9253.8222
   type: 'test'
   ...
 # Subtest: state summary exposes tasks, capabilities and secret-free policy
 ok 124 - state summary exposes tasks, capabilities and secret-free policy
   ---
-  duration_ms: 1116.7188
+  duration_ms: 1047.1683
   type: 'test'
   ...
 # Subtest: multi-client cross-workspace task read/cancel/approval are denied
 ok 125 - multi-client cross-workspace task read/cancel/approval are denied
   ---
-  duration_ms: 159.7349
+  duration_ms: 146.9661
   type: 'test'
   ...
 # Subtest: ctf manifest shape: 5 offline capabilities with closed params schemas
 ok 126 - ctf manifest shape: 5 offline capabilities with closed params schemas
   ---
-  duration_ms: 1.0592
+  duration_ms: 0.934
   type: 'test'
   ...
 # Subtest: ctf.decode: base64→gzip chain, intermediates, flag detection and artifact
 ok 127 - ctf.decode: base64→gzip chain, intermediates, flag detection and artifact
   ---
-  duration_ms: 2.3886
+  duration_ms: 2.0018
   type: 'test'
   ...
 # Subtest: ctf.decode: all supported textual transforms behave correctly
 ok 128 - ctf.decode: all supported textual transforms behave correctly
   ---
-  duration_ms: 2.4691
+  duration_ms: 2.2707
   type: 'test'
   ...
 # Subtest: ctf.decode: unknown/invalid chains fail with actionable errors, not crashes
 ok 129 - ctf.decode: unknown/invalid chains fail with actionable errors, not crashes
   ---
-  duration_ms: 0.685
+  duration_ms: 0.6876
   type: 'test'
   ...
 # Subtest: ctf.classify: identifies base64 chain + flags, gzip/PNG/TAR magic
 ok 130 - ctf.classify: identifies base64 chain + flags, gzip/PNG/TAR magic
   ---
-  duration_ms: 2.3212
+  duration_ms: 1.9934
   type: 'test'
   ...
 # Subtest: ctf.hash_id: length/charset/prefix identification with explicit ambiguity
 ok 131 - ctf.hash_id: length/charset/prefix identification with explicit ambiguity
   ---
-  duration_ms: 1.2163
+  duration_ms: 1.1378
   type: 'test'
   ...
 # Subtest: ctf.crypto_basics: Caesar brute force finds the right rotation, honest labels
 ok 132 - ctf.crypto_basics: Caesar brute force finds the right rotation, honest labels
   ---
-  duration_ms: 2.83
+  duration_ms: 2.5545
   type: 'test'
   ...
 # Subtest: ctf.crypto_basics: single-byte XOR brute force recovers hex key 0x42
 ok 133 - ctf.crypto_basics: single-byte XOR brute force recovers hex key 0x42
   ---
-  duration_ms: 2.6294
+  duration_ms: 2.2798
   type: 'test'
   ...
 # Subtest: ctf.flag_scan: finds known flag formats and entropy anomalies in text and binaries
 ok 134 - ctf.flag_scan: finds known flag formats and entropy anomalies in text and binaries
   ---
-  duration_ms: 1.3058
+  duration_ms: 0.9134
   type: 'test'
   ...
 # Subtest: ctf.classify/report determinism: identical input yields identical structured data
 ok 135 - ctf.classify/report determinism: identical input yields identical structured data
   ---
-  duration_ms: 0.8367
+  duration_ms: 0.6053
   type: 'test'
   ...
 # Subtest: docs consistency catches stale BLOCKED/NOT READY/test-count text
 ok 136 - docs consistency catches stale BLOCKED/NOT READY/test-count text
   ---
-  duration_ms: 16.5954
+  duration_ms: 13.6201
   type: 'test'
   ...
 # Subtest: mock-model E2E: workflow start → background run → evidence → report
 ok 137 - mock-model E2E: workflow start → background run → evidence → report
   ---
-  duration_ms: 1824.3547
+  duration_ms: 1645.2187
   type: 'test'
   ...
 # Subtest: trusted principal creates tasks and idempotent replay returns the same task
 ok 138 - trusted principal creates tasks and idempotent replay returns the same task
   ---
-  duration_ms: 152.616
+  duration_ms: 116.9685
   type: 'test'
   ...
 # Subtest: forged operators, unknown principals and cross-workspace reads are rejected
 ok 139 - forged operators, unknown principals and cross-workspace reads are rejected
   ---
-  duration_ms: 17.8635
+  duration_ms: 13.6673
   type: 'test'
   ...
 # Subtest: requestId reuse with a different payload is rejected
 ok 140 - requestId reuse with a different payload is rejected
   ---
-  duration_ms: 15.9483
+  duration_ms: 12.391
   type: 'test'
   ...
 # Subtest: task cancellation requires the workspace-authorized principal
 ok 141 - task cancellation requires the workspace-authorized principal
   ---
-  duration_ms: 26.9236
+  duration_ms: 19.2304
   type: 'test'
   ...
 # Subtest: approval tokens are bound, expire and cannot be replayed
 ok 142 - approval tokens are bound, expire and cannot be replayed
   ---
-  duration_ms: 9.9874
+  duration_ms: 7.3713
   type: 'test'
   ...
 # Subtest: sanitized evidence envelopes are persisted and abort is fail-closed
 ok 143 - sanitized evidence envelopes are persisted and abort is fail-closed
   ---
-  duration_ms: 29.965
+  duration_ms: 22.0506
   type: 'test'
   ...
 # Subtest: forward-slash workspace paths are equivalent to backslash paths
 ok 144 - forward-slash workspace paths are equivalent to backslash paths
   ---
-  duration_ms: 17.0212
+  duration_ms: 14.7013
   type: 'test'
   ...
 # Subtest: deadline bounds are enforced on public Engine methods
 ok 145 - deadline bounds are enforced on public Engine methods
   ---
-  duration_ms: 7.3751
+  duration_ms: 7.1172
   type: 'test'
   ...
 # Subtest: DSH/Core/Engine share one runtime per stateRoot
 ok 146 - DSH/Core/Engine share one runtime per stateRoot
   ---
-  duration_ms: 10.2468
+  duration_ms: 7.6945
   type: 'test'
   ...
 # Subtest: provider manager never claims isolation from a CLI without a daemon
 ok 147 - provider manager never claims isolation from a CLI without a daemon
   ---
-  duration_ms: 3.1027
+  duration_ms: 2.5452
   type: 'test'
   ...
 # Subtest: verify requires an injected self-test and then records IsolationVerified
 ok 148 - verify requires an injected self-test and then records IsolationVerified
   ---
-  duration_ms: 0.4298
+  duration_ms: 0.3815
   type: 'test'
   ...
 # Subtest: default verify is explicit about not being a self-test; guide lists official links
 ok 149 - default verify is explicit about not being a self-test; guide lists official links
   ---
-  duration_ms: 0.2919
+  duration_ms: 0.1895
   type: 'test'
   ...
 # Subtest: selfTest runs a harmless pinned container and only records IsolationVerified on success
 ok 150 - selfTest runs a harmless pinned container and only records IsolationVerified on success
   ---
-  duration_ms: 0.673
+  duration_ms: 0.5322
   type: 'test'
   ...
 # Subtest: successful self-test persists across manager instances and is invalidated by a daemon change
 ok 151 - successful self-test persists across manager instances and is invalidated by a daemon change
   ---
-  duration_ms: 9.7001
+  duration_ms: 7.4545
   type: 'test'
   ...
 # warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
@@ -911,6 +911,9 @@ ok 151 - successful self-test persists across manager instances and is invalidat
 # warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
@@ -923,29 +926,20 @@ ok 151 - successful self-test persists across manager instances and is invalidat
 # warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
-# warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
-# warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
-# warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
-# warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
-# warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
-# warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
-# warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'docs/v2/generated/host-matrix.md', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'docs/v2/provider-security.md', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'docs/acceptance.md', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'docs/audit/environment-audit.md', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
-# warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
-# warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
-# warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
-# warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
-# warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
@@ -960,1467 +954,1502 @@ ok 151 - successful self-test persists across manager instances and is invalidat
 # warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
-# warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
 # warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+# warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
 # Subtest: docs-only accepts only real documentation diffs, not commit messages
 ok 152 - docs-only accepts only real documentation diffs, not commit messages
   ---
-  duration_ms: 1545.4199
+  duration_ms: 1547.2279
   type: 'test'
   ...
 # Subtest: docs-only rejects security, source, release-gate, evidence and build-config changes
 ok 153 - docs-only rejects security, source, release-gate, evidence and build-config changes
   ---
-  duration_ms: 4556.0236
+  duration_ms: 6415.7766
   type: 'test'
   ...
 # Subtest: docs-only rejects git replace refs
 ok 154 - docs-only rejects git replace refs
   ---
-  duration_ms: 1113.1933
+  duration_ms: 1223.8236
   type: 'test'
   ...
 # Subtest: evidence-only accepts a real evidence append after the source baseline
 ok 155 - evidence-only accepts a real evidence append after the source baseline
   ---
-  duration_ms: 2309.1647
+  duration_ms: 2654.5393
   type: 'test'
   ...
 # Subtest: validator accepts a path-verified docs-only baseline and still rejects a protected diff
 ok 156 - validator accepts a path-verified docs-only baseline and still rejects a protected diff
   ---
-  duration_ms: 1726.4786
+  duration_ms: 1879.0984
+  type: 'test'
+  ...
+# Subtest: docs-only rejects a gitlink disguised as a markdown document
+ok 157 - docs-only rejects a gitlink disguised as a markdown document
+  ---
+  duration_ms: 1200.309
+  type: 'test'
+  ...
+# Subtest: validator requireClean rejects a dirty working tree before trusting evidence
+ok 158 - validator requireClean rejects a dirty working tree before trusting evidence
+  ---
+  duration_ms: 715.9448
   type: 'test'
   ...
 # Subtest: evidence envelope pins identifiers and redacts secrets
-ok 157 - evidence envelope pins identifiers and redacts secrets
+ok 159 - evidence envelope pins identifiers and redacts secrets
   ---
-  duration_ms: 2.7109
+  duration_ms: 2.4214
   type: 'test'
   ...
 # Subtest: event envelope and invalid identifiers fail closed
-ok 158 - event envelope and invalid identifiers fail closed
+ok 160 - event envelope and invalid identifiers fail closed
   ---
-  duration_ms: 0.334
+  duration_ms: 0.3736
   type: 'test'
   ...
 # Subtest: the DSH adapter is a thin shim over the legacy exports
-ok 159 - the DSH adapter is a thin shim over the legacy exports
+ok 161 - the DSH adapter is a thin shim over the legacy exports
   ---
-  duration_ms: 0.0691
+  duration_ms: 0.5574
   type: 'test'
   ...
 # Subtest: evidence validator accepts pinned files and rejects tamper/missing
-ok 160 - evidence validator accepts pinned files and rejects tamper/missing
+ok 162 - evidence validator accepts pinned files and rejects tamper/missing
   ---
-  duration_ms: 21.4087
+  duration_ms: 20.523
   type: 'test'
   ...
 # Subtest: tshark: parses packet JSON into observed HTTP/DNS summary and hypothesis-safe findings
-ok 161 - tshark: parses packet JSON into observed HTTP/DNS summary and hypothesis-safe findings
+ok 163 - tshark: parses packet JSON into observed HTTP/DNS summary and hypothesis-safe findings
   ---
-  duration_ms: 1.453
+  duration_ms: 2.0804
   type: 'test'
   ...
 # Subtest: tshark capability calls argv seam and returns bounded data; missing target rejects
-ok 162 - tshark capability calls argv seam and returns bounded data; missing target rejects
+ok 164 - tshark capability calls argv seam and returns bounded data; missing target rejects
   ---
-  duration_ms: 2.0307
+  duration_ms: 1.7861
   type: 'test'
   ...
 # Subtest: syft: normalizes CycloneDX, flags missing versions without CVE claims
-ok 163 - syft: normalizes CycloneDX, flags missing versions without CVE claims
+ok 165 - syft: normalizes CycloneDX, flags missing versions without CVE claims
   ---
-  duration_ms: 0.3087
+  duration_ms: 0.293
   type: 'test'
   ...
 # Subtest: syft capability uses dir: argv with seam and never claims CVE
-ok 164 - syft capability uses dir: argv with seam and never claims CVE
+ok 166 - syft capability uses dir: argv with seam and never claims CVE
   ---
-  duration_ms: 0.9655
+  duration_ms: 0.4993
   type: 'test'
   ...
 # Subtest: jadx: indexes sources/APIs without returning source, and seam writes temp output
-ok 165 - jadx: indexes sources/APIs without returning source, and seam writes temp output
+ok 167 - jadx: indexes sources/APIs without returning source, and seam writes temp output
   ---
-  duration_ms: 6.213
+  duration_ms: 7.5329
   type: 'test'
   ...
 # Subtest: ghidra: parses bounded function summary and flags sensitive names as hypothesis
-ok 166 - ghidra: parses bounded function summary and flags sensitive names as hypothesis
+ok 168 - ghidra: parses bounded function summary and flags sensitive names as hypothesis
   ---
-  duration_ms: 4.4213
+  duration_ms: 4.5593
   type: 'test'
   ...
 # Subtest: Semgrep JSON normalizes to hypothesis findings with location and source rule
-ok 167 - Semgrep JSON normalizes to hypothesis findings with location and source rule
+ok 169 - Semgrep JSON normalizes to hypothesis findings with location and source rule
   ---
-  duration_ms: 1.4637
+  duration_ms: 1.246
   type: 'test'
   ...
 # Subtest: Semgrep malformed or wrong-shape JSON is rejected instead of silently normalized
-ok 168 - Semgrep malformed or wrong-shape JSON is rejected instead of silently normalized
+ok 170 - Semgrep malformed or wrong-shape JSON is rejected instead of silently normalized
   ---
-  duration_ms: 0.542
+  duration_ms: 0.5333
   type: 'test'
   ...
 # Subtest: Trivy JSON normalizes vulnerabilities, secrets and misconfigurations separately
-ok 169 - Trivy JSON normalizes vulnerabilities, secrets and misconfigurations separately
+ok 171 - Trivy JSON normalizes vulnerabilities, secrets and misconfigurations separately
   ---
-  duration_ms: 0.2321
+  duration_ms: 0.2016
   type: 'test'
   ...
 # Subtest: normalization is bounded and deterministic
-ok 170 - normalization is bounded and deterministic
+ok 172 - normalization is bounded and deterministic
   ---
-  duration_ms: 0.2232
+  duration_ms: 0.7553
   type: 'test'
   ...
 # Subtest: semgrep capability runs through the injected executor and reports normalized data
-ok 171 - semgrep capability runs through the injected executor and reports normalized data
+ok 173 - semgrep capability runs through the injected executor and reports normalized data
   ---
-  duration_ms: 0.7157
+  duration_ms: 0.6022
   type: 'test'
   ...
 # Subtest: trivy capability builds offline-db args and reports normalized data
-ok 172 - trivy capability builds offline-db args and reports normalized data
+ok 174 - trivy capability builds offline-db args and reports normalized data
   ---
-  duration_ms: 0.3634
+  duration_ms: 0.321
   type: 'test'
   ...
 # Subtest: missing external tool produces actionable guidance, not a silent downgrade
-ok 173 - missing external tool produces actionable guidance, not a silent downgrade # SKIP
+ok 175 - missing external tool produces actionable guidance, not a silent downgrade # SKIP
   ---
-  duration_ms: 0.0625
+  duration_ms: 0.1573
   type: 'test'
   ...
 # Subtest: forensics manifest: domain, six capability ids, schema and no external tools required
-ok 174 - forensics manifest: domain, six capability ids, schema and no external tools required
+ok 176 - forensics manifest: domain, six capability ids, schema and no external tools required
   ---
-  duration_ms: 1.0869
+  duration_ms: 1.1176
   type: 'test'
   ...
 # Subtest: forensics.filetype: executable, archive, document, image, script and data detection
-ok 175 - forensics.filetype: executable, archive, document, image, script and data detection
+ok 177 - forensics.filetype: executable, archive, document, image, script and data detection
   ---
-  duration_ms: 6.4419
+  duration_ms: 6.1181
   type: 'test'
   ...
 # Subtest: forensics.hash: real digests, algorithm selection and truncation honesty
-ok 176 - forensics.hash: real digests, algorithm selection and truncation honesty
+ok 178 - forensics.hash: real digests, algorithm selection and truncation honesty
   ---
-  duration_ms: 3.5906
+  duration_ms: 3.7469
   type: 'test'
   ...
 # Subtest: forensics.metadata: PE timestamp, version resources, PDB path and resources
-ok 177 - forensics.metadata: PE timestamp, version resources, PDB path and resources
+ok 179 - forensics.metadata: PE timestamp, version resources, PDB path and resources
   ---
-  duration_ms: 2.7039
+  duration_ms: 2.8707
   type: 'test'
   ...
 # Subtest: forensics.metadata: ELF, Mach-O, ZIP, PNG, JPEG, PDF, OLE2 and gzip
-ok 178 - forensics.metadata: ELF, Mach-O, ZIP, PNG, JPEG, PDF, OLE2 and gzip
+ok 180 - forensics.metadata: ELF, Mach-O, ZIP, PNG, JPEG, PDF, OLE2 and gzip
   ---
-  duration_ms: 3.4942
+  duration_ms: 3.3836
   type: 'test'
   ...
 # Subtest: forensics.timeline: PE, ZIP, PNG, JPEG events are real, sorted and deterministic
-ok 179 - forensics.timeline: PE, ZIP, PNG, JPEG events are real, sorted and deterministic
+ok 181 - forensics.timeline: PE, ZIP, PNG, JPEG events are real, sorted and deterministic
   ---
-  duration_ms: 8.482
+  duration_ms: 8.4129
   type: 'test'
   ...
 # Subtest: forensics.ioc: real indicator extraction, dedupe, flags and category filters
-ok 180 - forensics.ioc: real indicator extraction, dedupe, flags and category filters
+ok 182 - forensics.ioc: real indicator extraction, dedupe, flags and category filters
   ---
-  duration_ms: 3.114
+  duration_ms: 3.1758
   type: 'test'
   ...
 # Subtest: forensics.yara_lite: bundled rules, wide-string matching, filters and honest verification
-ok 181 - forensics.yara_lite: bundled rules, wide-string matching, filters and honest verification
+ok 183 - forensics.yara_lite: bundled rules, wide-string matching, filters and honest verification
   ---
-  duration_ms: 1.6505
+  duration_ms: 2.0549
   type: 'test'
   ...
 # Subtest: forensics: malformed/truncated inputs return structured results without crashes
-ok 182 - forensics: malformed/truncated inputs return structured results without crashes
+ok 184 - forensics: malformed/truncated inputs return structured results without crashes
   ---
-  duration_ms: 1.8061
+  duration_ms: 2.1062
   type: 'test'
   ...
 # Subtest: forensics: empty inputs throw actionable Errors for every capability
-ok 183 - forensics: empty inputs throw actionable Errors for every capability
+ok 185 - forensics: empty inputs throw actionable Errors for every capability
   ---
-  duration_ms: 0.4236
+  duration_ms: 0.4702
   type: 'test'
   ...
 # Subtest: forensics: every capability honors AbortSignal and is deterministic on fixtures
-ok 184 - forensics: every capability honors AbortSignal and is deterministic on fixtures
+ok 186 - forensics: every capability honors AbortSignal and is deterministic on fixtures
   ---
-  duration_ms: 1.3785
+  duration_ms: 1.6751
   type: 'test'
   ...
 # Subtest: forensics: result data is JSON-serializable and bounded for all capabilities
-ok 185 - forensics: result data is JSON-serializable and bounded for all capabilities
+ok 187 - forensics: result data is JSON-serializable and bounded for all capabilities
   ---
-  duration_ms: 2.8558
+  duration_ms: 3.2094
   type: 'test'
   ...
 # Subtest: generated docs are reproducible and include host/API/Skill/release status
-ok 186 - generated docs are reproducible and include host/API/Skill/release status
+ok 188 - generated docs are reproducible and include host/API/Skill/release status
   ---
-  duration_ms: 295.1319
+  duration_ms: 320.8001
   type: 'test'
   ...
 # Subtest: generic MCP adapter installs, diagnoses and uninstalls without touching other servers
-ok 187 - generic MCP adapter installs, diagnoses and uninstalls without touching other servers
+ok 189 - generic MCP adapter installs, diagnoses and uninstalls without touching other servers
   ---
-  duration_ms: 646.4918
+  duration_ms: 739.2011
   type: 'test'
   ...
 # Subtest: generic MCP doctor fails closed when ArmorBreak is absent
-ok 188 - generic MCP doctor fails closed when ArmorBreak is absent
+ok 190 - generic MCP doctor fails closed when ArmorBreak is absent
   ---
-  duration_ms: 229.0834
+  duration_ms: 218.5437
   type: 'test'
   ...
 # Subtest: gray rollout continues only when every safety condition holds
-ok 189 - gray rollout continues only when every safety condition holds
+ok 191 - gray rollout continues only when every safety condition holds
   ---
-  duration_ms: 0.5363
+  duration_ms: 0.5542
   type: 'test'
   ...
 # Subtest: port-scoped network targets never match a portless host
-ok 190 - port-scoped network targets never match a portless host
+ok 192 - port-scoped network targets never match a portless host
   ---
-  duration_ms: 0.5191
+  duration_ms: 1.3796
   type: 'test'
   ...
 # Subtest: checkNetwork applies the port restriction end to end
-ok 191 - checkNetwork applies the port restriction end to end
+ok 193 - checkNetwork applies the port restriction end to end
   ---
-  duration_ms: 11340.8121
+  duration_ms: 11371.9941
   type: 'test'
   ...
 # Subtest: YAML flow nesting is bounded instead of overflowing the stack
-ok 192 - YAML flow nesting is bounded instead of overflowing the stack
+ok 194 - YAML flow nesting is bounded instead of overflowing the stack
   ---
-  duration_ms: 1.5444
+  duration_ms: 1.2713
   type: 'test'
   ...
 # Subtest: YAML parser rejects prototype-polluting keys
-ok 193 - YAML parser rejects prototype-polluting keys
+ok 195 - YAML parser rejects prototype-polluting keys
   ---
-  duration_ms: 0.4233
+  duration_ms: 0.3688
   type: 'test'
   ...
 # Subtest: all shipped text files are valid UTF-8
-ok 194 - all shipped text files are valid UTF-8
+ok 196 - all shipped text files are valid UTF-8
   ---
-  duration_ms: 530.7624
+  duration_ms: 540.7912
   type: 'test'
   ...
 # Subtest: index publishes signed descriptors, rejects tamper and verifies with public key
-ok 195 - index publishes signed descriptors, rejects tamper and verifies with public key
+ok 197 - index publishes signed descriptors, rejects tamper and verifies with public key
   ---
-  duration_ms: 20.4402
+  duration_ms: 19.2062
   type: 'test'
   ...
 # Subtest: unsigned index is rejected when signature is required
-ok 196 - unsigned index is rejected when signature is required
+ok 198 - unsigned index is rejected when signature is required
   ---
-  duration_ms: 7.8853
+  duration_ms: 7.1381
   type: 'test'
   ...
 # Subtest: plan rejects unknown license before any staging/execution
-ok 197 - plan rejects unknown license before any staging/execution
+ok 199 - plan rejects unknown license before any staging/execution
   ---
-  duration_ms: 6.2842
+  duration_ms: 6.0321
   type: 'test'
   ...
 # Subtest: install transaction requires stage/verify/approval before activation and rolls back
-ok 198 - install transaction requires stage/verify/approval before activation and rolls back
+ok 200 - install transaction requires stage/verify/approval before activation and rolls back
   ---
-  duration_ms: 65.4628
+  duration_ms: 47.9756
   type: 'test'
   ...
 # Subtest: failed pre-activation transaction cleans staging and leaves no half install
-ok 199 - failed pre-activation transaction cleans staging and leaves no half install
+ok 201 - failed pre-activation transaction cleans staging and leaves no half install
   ---
-  duration_ms: 31.0436
+  duration_ms: 19.1975
   type: 'test'
   ...
 # Subtest: KEV/EPSS/OSV normalize with provenance and reject malformed CVEs
-ok 200 - KEV/EPSS/OSV normalize with provenance and reject malformed CVEs
+ok 202 - KEV/EPSS/OSV normalize with provenance and reject malformed CVEs
   ---
-  duration_ms: 1.529
+  duration_ms: 0.9992
   type: 'test'
   ...
 # Subtest: 100 synthetic CVE mappings merge without wrong CVE concatenation
-ok 201 - 100 synthetic CVE mappings merge without wrong CVE concatenation
+ok 203 - 100 synthetic CVE mappings merge without wrong CVE concatenation
   ---
-  duration_ms: 9.8286
+  duration_ms: 7.6148
   type: 'test'
   ...
 # Subtest: stale source is marked and conflicts are surfaced
-ok 202 - stale source is marked and conflicts are surfaced
+ok 204 - stale source is marked and conflicts are surfaced
   ---
-  duration_ms: 0.2996
+  duration_ms: 0.2487
   type: 'test'
   ...
 # Subtest: JSON installer dry-run/apply/rollback preserves other servers byte-for-byte
-ok 203 - JSON installer dry-run/apply/rollback preserves other servers byte-for-byte
+ok 205 - JSON installer dry-run/apply/rollback preserves other servers byte-for-byte
   ---
-  duration_ms: 19.5433
+  duration_ms: 16.7889
   type: 'test'
   ...
 # Subtest: JSON installer blocks conflicts/secrets and supports force
-ok 204 - JSON installer blocks conflicts/secrets and supports force
+ok 206 - JSON installer blocks conflicts/secrets and supports force
   ---
-  duration_ms: 6.6717
+  duration_ms: 6.2241
   type: 'test'
   ...
 # Subtest: json uninstall removes only armorbreak and invalid input writes nothing
-ok 205 - json uninstall removes only armorbreak and invalid input writes nothing
+ok 207 - json uninstall removes only armorbreak and invalid input writes nothing
   ---
-  duration_ms: 9.0464
+  duration_ms: 10.4273
   type: 'test'
   ...
 # Subtest: knowledge index returns provenance and explicit conflicts
-ok 206 - knowledge index returns provenance and explicit conflicts
+ok 208 - knowledge index returns provenance and explicit conflicts
   ---
-  duration_ms: 18.3077
+  duration_ms: 15.7442
   type: 'test'
   ...
 # Subtest: knowledge guard blocks prompt injection/secrets and labels context untrusted
-ok 207 - knowledge guard blocks prompt injection/secrets and labels context untrusted
+ok 209 - knowledge guard blocks prompt injection/secrets and labels context untrusted
   ---
-  duration_ms: 1.2606
+  duration_ms: 1.084
   type: 'test'
   ...
 # Subtest: untrusted knowledge cannot make the installer route allowed
-ok 208 - untrusted knowledge cannot make the installer route allowed
+ok 210 - untrusted knowledge cannot make the installer route allowed
   ---
-  duration_ms: 0.4033
+  duration_ms: 0.3314
   type: 'test'
   ...
 # Subtest: layered cache stages/activates core and falls back safely on failed activation
-ok 209 - layered cache stages/activates core and falls back safely on failed activation
+ok 211 - layered cache stages/activates core and falls back safely on failed activation
   ---
-  duration_ms: 32.83
+  duration_ms: 30.5823
   type: 'test'
   ...
 # Subtest: layered cache rollback restores the previous active descriptor
-ok 210 - layered cache rollback restores the previous active descriptor
+ok 212 - layered cache rollback restores the previous active descriptor
   ---
-  duration_ms: 25.7006
+  duration_ms: 24.0851
   type: 'test'
   ...
 # Subtest: versioned CAS index detects tampering and rolls back to previous hash
-ok 211 - versioned CAS index detects tampering and rolls back to previous hash
+ok 213 - versioned CAS index detects tampering and rolls back to previous hash
   ---
-  duration_ms: 21.2712
+  duration_ms: 22.1381
   type: 'test'
   ...
 # Subtest: MCP audit log records host clientInfo and tool calls without arguments
-ok 212 - MCP audit log records host clientInfo and tool calls without arguments
+ok 214 - MCP audit log records host clientInfo and tool calls without arguments
   ---
-  duration_ms: 1274.5572
+  duration_ms: 1241.2205
   type: 'test'
   ...
 # Subtest: MCP HTTP transport serves initialize and tools over loopback
-ok 213 - MCP HTTP transport serves initialize and tools over loopback
+ok 215 - MCP HTTP transport serves initialize and tools over loopback
   ---
-  duration_ms: 138.8176
+  duration_ms: 138.6994
   type: 'test'
   ...
 # Subtest: MCP HTTP recovers persisted sessions and isolates token identities
-ok 214 - MCP HTTP recovers persisted sessions and isolates token identities
+ok 216 - MCP HTTP recovers persisted sessions and isolates token identities
   ---
-  duration_ms: 36.4274
+  duration_ms: 32.0461
   type: 'test'
   ...
 # Subtest: MCP HTTP rejects non-loopback binding and enforces configured bearer token
-ok 215 - MCP HTTP rejects non-loopback binding and enforces configured bearer token
+ok 217 - MCP HTTP rejects non-loopback binding and enforces configured bearer token
   ---
-  duration_ms: 12.2392
+  duration_ms: 12.2582
   type: 'test'
   ...
 # Subtest: MCP HTTP rejects cross-site Origin and malicious Host
-ok 216 - MCP HTTP rejects cross-site Origin and malicious Host
+ok 218 - MCP HTTP rejects cross-site Origin and malicious Host
   ---
-  duration_ms: 13.791
+  duration_ms: 12.5494
   type: 'test'
   ...
 # Subtest: MCP HTTP supports SSE responses when requested
-ok 217 - MCP HTTP supports SSE responses when requested
+ok 219 - MCP HTTP supports SSE responses when requested
   ---
-  duration_ms: 10.1615
+  duration_ms: 12.0083
   type: 'test'
   ...
 # Subtest: MCP HTTP supports explicit TLS with a test certificate
-ok 218 - MCP HTTP supports explicit TLS with a test certificate
+ok 220 - MCP HTTP supports explicit TLS with a test certificate
   ---
-  duration_ms: 131.1294
+  duration_ms: 129.527
   type: 'test'
   ...
 # Subtest: MCP initialize, tools/list and tools/call capabilities
-ok 219 - MCP initialize, tools/list and tools/call capabilities
+ok 221 - MCP initialize, tools/list and tools/call capabilities
   ---
-  duration_ms: 140.6696
+  duration_ms: 116.5753
   type: 'test'
   ...
 # Subtest: MCP fails closed before initialize, on unknown tools and parse errors
-ok 220 - MCP fails closed before initialize, on unknown tools and parse errors
+ok 222 - MCP fails closed before initialize, on unknown tools and parse errors
   ---
-  duration_ms: 9.8082
+  duration_ms: 7.8481
   type: 'test'
   ...
 # Subtest: MCP armorbreak_analyze performs a real L0 task and report
-ok 221 - MCP armorbreak_analyze performs a real L0 task and report
+ok 223 - MCP armorbreak_analyze performs a real L0 task and report
   ---
-  duration_ms: 905.1676
+  duration_ms: 879.0931
   type: 'test'
   ...
 # Subtest: MCP exposes the seven Agent Skills with digests and readable SKILL.md
-ok 222 - MCP exposes the seven Agent Skills with digests and readable SKILL.md
+ok 224 - MCP exposes the seven Agent Skills with digests and readable SKILL.md
   ---
-  duration_ms: 11.8292
+  duration_ms: 11.7334
   type: 'test'
   ...
 # Subtest: ENOSPC/EACCES during replacement leaves backups and recovery restores every original byte
-ok 223 - ENOSPC/EACCES during replacement leaves backups and recovery restores every original byte
+ok 225 - ENOSPC/EACCES during replacement leaves backups and recovery restores every original byte
   ---
-  duration_ms: 71.5756
+  duration_ms: 63.8961
   type: 'test'
   ...
 # Subtest: a real SIGKILL child during migration is recovered from the prepared manifest
-ok 224 - a real SIGKILL child during migration is recovered from the prepared manifest
+ok 226 - a real SIGKILL child during migration is recovered from the prepared manifest
   ---
-  duration_ms: 114.6941
+  duration_ms: 102.4964
   type: 'test'
   ...
 # Subtest: migration plan is read-only and detects v1 task
-ok 225 - migration plan is read-only and detects v1 task
+ok 227 - migration plan is read-only and detects v1 task
   ---
-  duration_ms: 13.4516
+  duration_ms: 10.0117
   type: 'test'
   ...
 # Subtest: apply writes v2 schema, backups original and rollback restores exact bytes
-ok 226 - apply writes v2 schema, backups original and rollback restores exact bytes
+ok 228 - apply writes v2 schema, backups original and rollback restores exact bytes
   ---
-  duration_ms: 25.3167
+  duration_ms: 21.1944
   type: 'test'
   ...
 # Subtest: invalid task data refuses migration
-ok 227 - invalid task data refuses migration
+ok 229 - invalid task data refuses migration
   ---
-  duration_ms: 12.6209
+  duration_ms: 8.824
   type: 'test'
   ...
 # Subtest: network: capability 清单符合契约
-ok 228 - network: capability 清单符合契约
+ok 230 - network: capability 清单符合契约
   ---
-  duration_ms: 1.1432
+  duration_ms: 1.0015
   type: 'test'
   ...
 # Subtest: network.pcap_overview: 经典 pcap（LE 微秒）协议直方图/时间范围/统计
-ok 229 - network.pcap_overview: 经典 pcap（LE 微秒）协议直方图/时间范围/统计
+ok 231 - network.pcap_overview: 经典 pcap（LE 微秒）协议直方图/时间范围/统计
   ---
-  duration_ms: 12.7535
+  duration_ms: 10.7831
   type: 'test'
   ...
 # Subtest: network.pcap_overview: 大端/纳秒 pcap，以及截断抓包只标记不抛错
-ok 230 - network.pcap_overview: 大端/纳秒 pcap，以及截断抓包只标记不抛错
+ok 232 - network.pcap_overview: 大端/纳秒 pcap，以及截断抓包只标记不抛错
   ---
-  duration_ms: 0.884
+  duration_ms: 0.8868
   type: 'test'
   ...
 # Subtest: network.pcap_overview: pcapng 多 Section/多接口/多时间精度
-ok 231 - network.pcap_overview: pcapng 多 Section/多接口/多时间精度
+ok 233 - network.pcap_overview: pcapng 多 Section/多接口/多时间精度
   ---
-  duration_ms: 1.5607
+  duration_ms: 1.394
   type: 'test'
   ...
 # Subtest: network.flows: TCP 状态启发式 + UDP 会话聚合 + 截断
-ok 232 - network.flows: TCP 状态启发式 + UDP 会话聚合 + 截断
+ok 234 - network.flows: TCP 状态启发式 + UDP 会话聚合 + 截断
   ---
-  duration_ms: 1.9683
+  duration_ms: 1.8823
   type: 'test'
   ...
 # Subtest: network.dns: 查询/响应/A 记录/NXDOMAIN/解析器配对
-ok 233 - network.dns: 查询/响应/A 记录/NXDOMAIN/解析器配对
+ok 235 - network.dns: 查询/响应/A 记录/NXDOMAIN/解析器配对
   ---
-  duration_ms: 1.8686
+  duration_ms: 1.6137
   type: 'test'
   ...
 # Subtest: network.tls: ClientHello 分段重组/SNI/ALPN/版本 + ServerHello 协商
-ok 234 - network.tls: ClientHello 分段重组/SNI/ALPN/版本 + ServerHello 协商
+ok 236 - network.tls: ClientHello 分段重组/SNI/ALPN/版本 + ServerHello 协商
   ---
-  duration_ms: 5.1743
+  duration_ms: 3.5905
   type: 'test'
   ...
 # Subtest: network.http: 明文请求/响应、状态码、chunked 与敏感信息脱敏
-ok 235 - network.http: 明文请求/响应、状态码、chunked 与敏感信息脱敏
+ok 237 - network.http: 明文请求/响应、状态码、chunked 与敏感信息脱敏
   ---
-  duration_ms: 2.6389
+  duration_ms: 2.2801
   type: 'test'
   ...
 # Subtest: network.iocs: 公网/私有 IP 分类、域名来源、URI 汇总
-ok 236 - network.iocs: 公网/私有 IP 分类、域名来源、URI 汇总
+ok 238 - network.iocs: 公网/私有 IP 分类、域名来源、URI 汇总
   ---
-  duration_ms: 3.6633
+  duration_ms: 3.0904
   type: 'test'
   ...
 # Subtest: network.anomalies: 扫描扇出/信标/大上传/罕见端口/明文 HTTP（全部标注验证等级）
-ok 237 - network.anomalies: 扫描扇出/信标/大上传/罕见端口/明文 HTTP（全部标注验证等级）
+ok 239 - network.anomalies: 扫描扇出/信标/大上传/罕见端口/明文 HTTP（全部标注验证等级）
   ---
-  duration_ms: 9.7127
+  duration_ms: 8.1711
   type: 'test'
   ...
 # Subtest: network: 不支持的链路类型返回结构化告警而非崩溃
-ok 238 - network: 不支持的链路类型返回结构化告警而非崩溃
+ok 240 - network: 不支持的链路类型返回结构化告警而非崩溃
   ---
-  duration_ms: 0.364
+  duration_ms: 0.3417
   type: 'test'
   ...
 # Subtest: network.anomalies: DNS NXDOMAIN 比例与 TLS 缺 SNI 启发式（直接单测）
-ok 239 - network.anomalies: DNS NXDOMAIN 比例与 TLS 缺 SNI 启发式（直接单测）
+ok 241 - network.anomalies: DNS NXDOMAIN 比例与 TLS 缺 SNI 启发式（直接单测）
   ---
-  duration_ms: 0.2311
+  duration_ms: 0.2077
   type: 'test'
   ...
 # Subtest: network: Result 契约（summary/data 体积/meta 与全部 capability 可执行）
-ok 240 - network: Result 契约（summary/data 体积/meta 与全部 capability 可执行）
+ok 242 - network: Result 契约（summary/data 体积/meta 与全部 capability 可执行）
   ---
-  duration_ms: 2.2667
+  duration_ms: 2.0936
   type: 'test'
   ...
 # Subtest: network: IP 分类与 data 预算裁剪工具
-ok 241 - network: IP 分类与 data 预算裁剪工具
+ok 243 - network: IP 分类与 data 预算裁剪工具
   ---
-  duration_ms: 11.1185
+  duration_ms: 10.1326
   type: 'test'
   ...
 # Subtest: network: 空输入/不可识别输入报可操作错误，TCP 重组处理 seq 缺口
-ok 242 - network: 空输入/不可识别输入报可操作错误，TCP 重组处理 seq 缺口
+ok 244 - network: 空输入/不可识别输入报可操作错误，TCP 重组处理 seq 缺口
   ---
-  duration_ms: 0.4926
+  duration_ms: 0.4203
   type: 'test'
   ...
 # Subtest: L0 analyzer modules contain no network-client imports
-ok 243 - L0 analyzer modules contain no network-client imports
+ok 245 - L0 analyzer modules contain no network-client imports
   ---
-  duration_ms: 20.989
+  duration_ms: 21.074
   type: 'test'
   ...
 # Subtest: RESOURCE_READ is default-off and not modeled as L2
-ok 244 - RESOURCE_READ is default-off and not modeled as L2
+ok 246 - RESOURCE_READ is default-off and not modeled as L2
   ---
-  duration_ms: 0.7876
+  duration_ms: 0.8642
   type: 'test'
   ...
 # Subtest: L0 file actions never select the live/L1 domain implicitly
-ok 245 - L0 file actions never select the live/L1 domain implicitly
+ok 247 - L0 file actions never select the live/L1 domain implicitly
   ---
-  duration_ms: 0.7817
+  duration_ms: 0.666
   type: 'test'
   ...
 # Subtest: old V2 task inspection, copy migration, fault rollback and source immutability
-ok 246 - old V2 task inspection, copy migration, fault rollback and source immutability
+ok 248 - old V2 task inspection, copy migration, fault rollback and source immutability
   ---
-  duration_ms: 88.9736
+  duration_ms: 84.0739
   type: 'test'
   ...
 # Subtest: portable plugin manifest and MCP template are structurally valid
-ok 247 - portable plugin manifest and MCP template are structurally valid
+ok 249 - portable plugin manifest and MCP template are structurally valid
   ---
-  duration_ms: 7.877
+  duration_ms: 7.1258
   type: 'test'
   ...
 # Subtest: Claude plugin manifest is official-shaped and validates offline
-ok 248 - Claude plugin manifest is official-shaped and validates offline
+ok 250 - Claude plugin manifest is official-shaped and validates offline
   ---
-  duration_ms: 7.9445
+  duration_ms: 8.1406
   type: 'test'
   ...
 # Subtest: unverified host overlays stay honestly unverified
-ok 249 - unverified host overlays stay honestly unverified
+ok 251 - unverified host overlays stay honestly unverified
   ---
-  duration_ms: 2.6676
+  duration_ms: 2.3421
   type: 'test'
   ...
 # Subtest: catalog covers every model-facing armorbreak tool exactly once
-ok 250 - catalog covers every model-facing armorbreak tool exactly once
+ok 252 - catalog covers every model-facing armorbreak tool exactly once
+  ---
+  duration_ms: 1.6799
+  type: 'test'
+  ...
+# Subtest: unknown actions and model-supplied authorization are denied
+ok 253 - unknown actions and model-supplied authorization are denied
+  ---
+  duration_ms: 0.3241
+  type: 'test'
+  ...
+# Subtest: L3 has no route; installation stays blocked until M2
+ok 254 - L3 has no route; installation stays blocked until M2
+  ---
+  duration_ms: 0.1291
+  type: 'test'
+  ...
+# Subtest: RESOURCE_READ is connector-gated and never grants L2 network execution
+ok 255 - RESOURCE_READ is connector-gated and never grants L2 network execution
+  ---
+  duration_ms: 0.1351
+  type: 'test'
+  ...
+# Subtest: L0 file actions use real ScopePolicy containment; L1/L2 approvals are enforced
+ok 256 - L0 file actions use real ScopePolicy containment; L1/L2 approvals are enforced
+  ---
+  duration_ms: 13.7925
+  type: 'test'
+  ...
+# Subtest: portable artifact builds and runs capabilities after clean-room extraction
+ok 257 - portable artifact builds and runs capabilities after clean-room extraction
+  ---
+  duration_ms: 2226.0585
+  type: 'test'
+  ...
+# Subtest: OpenAI-compatible and Ollama requests carry correct auth/tool payloads
+ok 258 - OpenAI-compatible and Ollama requests carry correct auth/tool payloads
+  ---
+  duration_ms: 45.385
+  type: 'test'
+  ...
+# Subtest: Anthropic request separates system and maps tool schema
+ok 259 - Anthropic request separates system and maps tool schema
+  ---
+  duration_ms: 6.4651
+  type: 'test'
+  ...
+# Subtest: OpenAI-compatible SSE stream aggregates text, usage and finish reason
+ok 260 - OpenAI-compatible SSE stream aggregates text, usage and finish reason
+  ---
+  duration_ms: 5.2666
+  type: 'test'
+  ...
+# Subtest: timeouts fail closed without leaking credentials
+ok 261 - timeouts fail closed without leaking credentials
+  ---
+  duration_ms: 108.1182
+  type: 'test'
+  ...
+# Subtest: normalized provider contract round-trips roles, IDs, finish reasons and usage
+ok 262 - normalized provider contract round-trips roles, IDs, finish reasons and usage
+  ---
+  duration_ms: 3.7355
+  type: 'test'
+  ...
+# Subtest: provider contract rejects malformed roles, IDs, finish reasons and indexes
+ok 263 - provider contract rejects malformed roles, IDs, finish reasons and indexes
+  ---
+  duration_ms: 0.3853
+  type: 'test'
+  ...
+# Subtest: golden invalid parameters fail before any provider request
+ok 264 - golden invalid parameters fail before any provider request
+  ---
+  duration_ms: 1.1662
+  type: 'test'
+  ...
+# Subtest: golden multi-turn tool loop executes and respects the token budget
+ok 265 - golden multi-turn tool loop executes and respects the token budget
+  ---
+  duration_ms: 0.8616
+  type: 'test'
+  ...
+# Subtest: golden SSE ignores malformed events and tolerates a truncated stream
+ok 266 - golden SSE ignores malformed events and tolerates a truncated stream
+  ---
+  duration_ms: 44.3816
+  type: 'test'
+  ...
+# Subtest: golden fixtures cover text, tool, stream and error for four provider protocols
+ok 267 - golden fixtures cover text, tool, stream and error for four provider protocols
+  ---
+  duration_ms: 92.5694
+  type: 'test'
+  ...
+# Subtest: OpenAI Responses native request/response maps text, function_call and usage
+ok 268 - OpenAI Responses native request/response maps text, function_call and usage
+  ---
+  duration_ms: 46.635
+  type: 'test'
+  ...
+# Subtest: OpenAI Responses streaming accumulates output text, tool arguments and completion usage
+ok 269 - OpenAI Responses streaming accumulates output text, tool arguments and completion usage
+  ---
+  duration_ms: 7.8216
+  type: 'test'
+  ...
+# Subtest: Anthropic streaming maps text, tool_use lifecycle, stop reason and usage
+ok 270 - Anthropic streaming maps text, tool_use lifecycle, stop reason and usage
+  ---
+  duration_ms: 4.6144
+  type: 'test'
+  ...
+# Subtest: Gemini native request/response and streaming map contents, functionCall and usage
+ok 271 - Gemini native request/response and streaming map contents, functionCall and usage
+  ---
+  duration_ms: 7.6613
+  type: 'test'
+  ...
+# Subtest: router resolves providers without exposing credentials
+ok 272 - router resolves providers without exposing credentials
+  ---
+  duration_ms: 1.4654
+  type: 'test'
+  ...
+# Subtest: missing credentials, unknown models and tool mismatch fail closed
+ok 273 - missing credentials, unknown models and tool mismatch fail closed
+  ---
+  duration_ms: 0.41
+  type: 'test'
+  ...
+# Subtest: plaintext keys and secret-like provider fields are rejected
+ok 274 - plaintext keys and secret-like provider fields are rejected
+  ---
+  duration_ms: 0.1929
+  type: 'test'
+  ...
+# Subtest: example provider file is secret-free and loadable
+ok 275 - example provider file is secret-free and loadable
+  ---
+  duration_ms: 4.0022
+  type: 'test'
+  ...
+# Subtest: memory vault and redaction never expose secret values
+ok 276 - memory vault and redaction never expose secret values
   ---
   duration_ms: 1.6219
   type: 'test'
   ...
-# Subtest: unknown actions and model-supplied authorization are denied
-ok 251 - unknown actions and model-supplied authorization are denied
-  ---
-  duration_ms: 0.2876
-  type: 'test'
-  ...
-# Subtest: L3 has no route; installation stays blocked until M2
-ok 252 - L3 has no route; installation stays blocked until M2
-  ---
-  duration_ms: 0.1093
-  type: 'test'
-  ...
-# Subtest: RESOURCE_READ is connector-gated and never grants L2 network execution
-ok 253 - RESOURCE_READ is connector-gated and never grants L2 network execution
-  ---
-  duration_ms: 0.1281
-  type: 'test'
-  ...
-# Subtest: L0 file actions use real ScopePolicy containment; L1/L2 approvals are enforced
-ok 254 - L0 file actions use real ScopePolicy containment; L1/L2 approvals are enforced
-  ---
-  duration_ms: 11.7014
-  type: 'test'
-  ...
-# Subtest: portable artifact builds and runs capabilities after clean-room extraction
-ok 255 - portable artifact builds and runs capabilities after clean-room extraction
-  ---
-  duration_ms: 2226.6176
-  type: 'test'
-  ...
-# Subtest: OpenAI-compatible and Ollama requests carry correct auth/tool payloads
-ok 256 - OpenAI-compatible and Ollama requests carry correct auth/tool payloads
-  ---
-  duration_ms: 50.5932
-  type: 'test'
-  ...
-# Subtest: Anthropic request separates system and maps tool schema
-ok 257 - Anthropic request separates system and maps tool schema
-  ---
-  duration_ms: 7.4978
-  type: 'test'
-  ...
-# Subtest: OpenAI-compatible SSE stream aggregates text, usage and finish reason
-ok 258 - OpenAI-compatible SSE stream aggregates text, usage and finish reason
-  ---
-  duration_ms: 5.1119
-  type: 'test'
-  ...
-# Subtest: timeouts fail closed without leaking credentials
-ok 259 - timeouts fail closed without leaking credentials
-  ---
-  duration_ms: 111.5212
-  type: 'test'
-  ...
-# Subtest: normalized provider contract round-trips roles, IDs, finish reasons and usage
-ok 260 - normalized provider contract round-trips roles, IDs, finish reasons and usage
-  ---
-  duration_ms: 4.2973
-  type: 'test'
-  ...
-# Subtest: provider contract rejects malformed roles, IDs, finish reasons and indexes
-ok 261 - provider contract rejects malformed roles, IDs, finish reasons and indexes
-  ---
-  duration_ms: 0.4204
-  type: 'test'
-  ...
-# Subtest: golden invalid parameters fail before any provider request
-ok 262 - golden invalid parameters fail before any provider request
-  ---
-  duration_ms: 1.3646
-  type: 'test'
-  ...
-# Subtest: golden multi-turn tool loop executes and respects the token budget
-ok 263 - golden multi-turn tool loop executes and respects the token budget
-  ---
-  duration_ms: 0.9898
-  type: 'test'
-  ...
-# Subtest: golden SSE ignores malformed events and tolerates a truncated stream
-ok 264 - golden SSE ignores malformed events and tolerates a truncated stream
-  ---
-  duration_ms: 45.4719
-  type: 'test'
-  ...
-# Subtest: golden fixtures cover text, tool, stream and error for four provider protocols
-ok 265 - golden fixtures cover text, tool, stream and error for four provider protocols
-  ---
-  duration_ms: 111.9488
-  type: 'test'
-  ...
-# Subtest: OpenAI Responses native request/response maps text, function_call and usage
-ok 266 - OpenAI Responses native request/response maps text, function_call and usage
-  ---
-  duration_ms: 49.9863
-  type: 'test'
-  ...
-# Subtest: OpenAI Responses streaming accumulates output text, tool arguments and completion usage
-ok 267 - OpenAI Responses streaming accumulates output text, tool arguments and completion usage
-  ---
-  duration_ms: 8.7335
-  type: 'test'
-  ...
-# Subtest: Anthropic streaming maps text, tool_use lifecycle, stop reason and usage
-ok 268 - Anthropic streaming maps text, tool_use lifecycle, stop reason and usage
-  ---
-  duration_ms: 4.8991
-  type: 'test'
-  ...
-# Subtest: Gemini native request/response and streaming map contents, functionCall and usage
-ok 269 - Gemini native request/response and streaming map contents, functionCall and usage
-  ---
-  duration_ms: 8.1047
-  type: 'test'
-  ...
-# Subtest: router resolves providers without exposing credentials
-ok 270 - router resolves providers without exposing credentials
-  ---
-  duration_ms: 1.8891
-  type: 'test'
-  ...
-# Subtest: missing credentials, unknown models and tool mismatch fail closed
-ok 271 - missing credentials, unknown models and tool mismatch fail closed
-  ---
-  duration_ms: 0.4585
-  type: 'test'
-  ...
-# Subtest: plaintext keys and secret-like provider fields are rejected
-ok 272 - plaintext keys and secret-like provider fields are rejected
-  ---
-  duration_ms: 0.2046
-  type: 'test'
-  ...
-# Subtest: example provider file is secret-free and loadable
-ok 273 - example provider file is secret-free and loadable
-  ---
-  duration_ms: 4.5528
-  type: 'test'
-  ...
-# Subtest: memory vault and redaction never expose secret values
-ok 274 - memory vault and redaction never expose secret values
-  ---
-  duration_ms: 1.8907
-  type: 'test'
-  ...
 # Subtest: provider policy enforces egress, budget and approved fallback
-ok 275 - provider policy enforces egress, budget and approved fallback
+ok 277 - provider policy enforces egress, budget and approved fallback
   ---
-  duration_ms: 0.6438
+  duration_ms: 0.5496
   type: 'test'
   ...
 # Subtest: Windows DPAPI vault persists ciphertext only and decrypts for the current user
-ok 276 - Windows DPAPI vault persists ciphertext only and decrypts for the current user
+ok 278 - Windows DPAPI vault persists ciphertext only and decrypts for the current user
   ---
-  duration_ms: 2665.2374
+  duration_ms: 2327.2158
   type: 'test'
   ...
 # Subtest: rating is explainable and blocks unknown license/dangerous scripts
-ok 277 - rating is explainable and blocks unknown license/dangerous scripts
+ok 279 - rating is explainable and blocks unknown license/dangerous scripts
   ---
-  duration_ms: 3.5658
+  duration_ms: 2.4044
   type: 'test'
   ...
 # Subtest: offline tier manifests are deterministic with size/capability deltas
-ok 278 - offline tier manifests are deterministic with size/capability deltas
+ok 280 - offline tier manifests are deterministic with size/capability deltas
   ---
-  duration_ms: 7.7718
+  duration_ms: 6.4806
   type: 'test'
   ...
 # Subtest: full pack installs and uninstalls reproducibly with hash checks
-ok 279 - full pack installs and uninstalls reproducibly with hash checks
+ok 281 - full pack installs and uninstalls reproducibly with hash checks
   ---
-  duration_ms: 15.5135
+  duration_ms: 12.8278
   type: 'test'
   ...
 # Subtest: pre-release passes with real hosts and zero waivers while GA remains blocked
-ok 280 - pre-release passes with real hosts and zero waivers while GA remains blocked
+ok 282 - pre-release passes with real hosts and zero waivers while GA remains blocked
   ---
-  duration_ms: 731.3478
+  duration_ms: 688.3239
   type: 'test'
   ...
 # Subtest: release build is reproducible, hashed, SBOM-backed and test-signature verifiable
-ok 281 - release build is reproducible, hashed, SBOM-backed and test-signature verifiable
+ok 283 - release build is reproducible, hashed, SBOM-backed and test-signature verifiable
   ---
-  duration_ms: 3235.1755
+  duration_ms: 2670.0296
   type: 'test'
   ...
 # Subtest: evidence-driven gates PASS only with current commit, raw TAP and pinned evidence
-ok 282 - evidence-driven gates PASS only with current commit, raw TAP and pinned evidence
+ok 284 - evidence-driven gates PASS only with current commit, raw TAP and pinned evidence
   ---
-  duration_ms: 113.7473
+  duration_ms: 90.0747
   type: 'test'
   ...
 # Subtest: tampered evidence is FAIL, missing report is REVIEW, stale commit is REVIEW
-ok 283 - tampered evidence is FAIL, missing report is REVIEW, stale commit is REVIEW
+ok 285 - tampered evidence is FAIL, missing report is REVIEW, stale commit is REVIEW
   ---
-  duration_ms: 252.7671
+  duration_ms: 172.0815
   type: 'test'
   ...
 # Subtest: failed test run can never be releasable
-ok 284 - failed test run can never be releasable
+ok 286 - failed test run can never be releasable
   ---
-  duration_ms: 125.7866
+  duration_ms: 83.5677
+  type: 'test'
+  ...
+# Subtest: docs-only gate is explicitly not applicable and never releasable
+ok 287 - docs-only gate is explicitly not applicable and never releasable
+  ---
+  duration_ms: 0.2423
   type: 'test'
   ...
 # Subtest: RESOURCE_READ is disabled by default and unknown connectors are rejected
-ok 285 - RESOURCE_READ is disabled by default and unknown connectors are rejected
+ok 288 - RESOURCE_READ is disabled by default and unknown connectors are rejected
   ---
-  duration_ms: 1.0265
+  duration_ms: 0.8055
   type: 'test'
   ...
 # Subtest: only a fixed https connector registry is fetched; arbitrary URLs cannot be passed
-ok 286 - only a fixed https connector registry is fetched; arbitrary URLs cannot be passed
+ok 289 - only a fixed https connector registry is fetched; arbitrary URLs cannot be passed
   ---
-  duration_ms: 2.9052
+  duration_ms: 2.765
   type: 'test'
   ...
 # Subtest: redirects, HTTP errors and size limits are rejected
-ok 287 - redirects, HTTP errors and size limits are rejected
+ok 290 - redirects, HTTP errors and size limits are rejected
   ---
-  duration_ms: 0.4877
+  duration_ms: 0.3595
   type: 'test'
   ...
 # Subtest: non-json resources are still bounded and hashed
-ok 288 - non-json resources are still bounded and hashed
+ok 291 - non-json resources are still bounded and hashed
   ---
-  duration_ms: 0.3776
+  duration_ms: 0.2949
   type: 'test'
   ...
 # Subtest: sync stages/activates one source and isolates a failed source
-ok 289 - sync stages/activates one source and isolates a failed source
+ok 292 - sync stages/activates one source and isolates a failed source
   ---
-  duration_ms: 37.2369
+  duration_ms: 29.152
   type: 'test'
   ...
 # Subtest: sync refuses to run when RESOURCE_READ is disabled
-ok 290 - sync refuses to run when RESOURCE_READ is disabled
+ok 293 - sync refuses to run when RESOURCE_READ is disabled
   ---
-  duration_ms: 1.0927
+  duration_ms: 0.9672
   type: 'test'
   ...
 # Subtest: retest redacts known token shapes and explicit secrets
-ok 291 - retest redacts known token shapes and explicit secrets
+ok 294 - retest redacts known token shapes and explicit secrets
   ---
-  duration_ms: 0.9946
+  duration_ms: 0.8855
   type: 'test'
   ...
 # Subtest: retest host args are plan/read-only and never yolo or skip-trust
-ok 292 - retest host args are plan/read-only and never yolo or skip-trust
+ok 295 - retest host args are plan/read-only and never yolo or skip-trust
   ---
-  duration_ms: 0.2866
+  duration_ms: 0.2451
   type: 'test'
   ...
 # Subtest: retest rejects historical, concurrent, foreign and non-exact-README tasks
-ok 293 - retest rejects historical, concurrent, foreign and non-exact-README tasks
+ok 296 - retest rejects historical, concurrent, foreign and non-exact-README tasks
   ---
-  duration_ms: 24.2638
+  duration_ms: 21.0216
   type: 'test'
   ...
 # Subtest: retest host verdict only passes a fully verified authenticated run
-ok 294 - retest host verdict only passes a fully verified authenticated run
+ok 297 - retest host verdict only passes a fully verified authenticated run
   ---
-  duration_ms: 0.6805
+  duration_ms: 0.6122
   type: 'test'
   ...
 # Subtest: retest audit must bind runId, pid, principal, workspace and all L0 tool calls
-ok 295 - retest audit must bind runId, pid, principal, workspace and all L0 tool calls
+ok 298 - retest audit must bind runId, pid, principal, workspace and all L0 tool calls
   ---
-  duration_ms: 5.1669
+  duration_ms: 4.5225
   type: 'test'
   ...
 # Subtest: retest sanitize keeps JSON valid and truncates fields, not the document
-ok 296 - retest sanitize keeps JSON valid and truncates fields, not the document
+ok 299 - retest sanitize keeps JSON valid and truncates fields, not the document
   ---
-  duration_ms: 0.2886
+  duration_ms: 0.216
   type: 'test'
   ...
 # Subtest: retest provider preparation is network-free and run ids are unique
-ok 297 - retest provider preparation is network-free and run ids are unique
+ok 300 - retest provider preparation is network-free and run ids are unique
   ---
-  duration_ms: 0.7318
+  duration_ms: 0.5968
   type: 'test'
   ...
 # Subtest: JSON/TOML/YAML rollback drill restores original bytes
-ok 298 - JSON/TOML/YAML rollback drill restores original bytes
+ok 301 - JSON/TOML/YAML rollback drill restores original bytes
   ---
-  duration_ms: 119.6779
+  duration_ms: 94.4408
   type: 'test'
   ...
 # Subtest: rollout requires all gates and ordered 1/10/50/100 promotion
-ok 299 - rollout requires all gates and ordered 1/10/50/100 promotion
+ok 302 - rollout requires all gates and ordered 1/10/50/100 promotion
   ---
-  duration_ms: 2.9963
+  duration_ms: 3.5389
   type: 'test'
   ...
 # Subtest: rollback resets to zero and is audited
-ok 300 - rollback resets to zero and is audited
+ok 303 - rollback resets to zero and is audited
   ---
-  duration_ms: 0.212
+  duration_ms: 0.2056
   type: 'test'
   ...
 # Subtest: WebCodeSecurityReview runs on a real directory and produces multi-file findings
-ok 301 - WebCodeSecurityReview runs on a real directory and produces multi-file findings
+ok 304 - WebCodeSecurityReview runs on a real directory and produces multi-file findings
   ---
-  duration_ms: 1251.7374
+  duration_ms: 1064.8181
   type: 'test'
   ...
 # Subtest: planning rejects a directory task whose capabilities only accept files
-ok 302 - planning rejects a directory task whose capabilities only accept files
+ok 305 - planning rejects a directory task whose capabilities only accept files
   ---
-  duration_ms: 35.4923
+  duration_ms: 29.5397
   type: 'test'
   ...
 # Subtest: file capability on a directory target returns an actionable directory-capability hint
-ok 303 - file capability on a directory target returns an actionable directory-capability hint
+ok 306 - file capability on a directory target returns an actionable directory-capability hint
   ---
-  duration_ms: 46.719
+  duration_ms: 40.8575
   type: 'test'
   ...
 # Subtest: directory readFile rejects a junction that escapes the analyzed root
-ok 304 - directory readFile rejects a junction that escapes the analyzed root
+ok 307 - directory readFile rejects a junction that escapes the analyzed root
   ---
-  duration_ms: 59.2705
+  duration_ms: 50.5539
   type: 'test'
   ...
 # Subtest: a directory task cannot smuggle a network capability past planning
-ok 305 - a directory task cannot smuggle a network capability past planning
+ok 308 - a directory task cannot smuggle a network capability past planning
   ---
-  duration_ms: 31.2955
+  duration_ms: 27.5222
   type: 'test'
   ...
 # Subtest: L2 execution runs only after scope authorization + platform approval grant
-ok 306 - L2 execution runs only after scope authorization + platform approval grant
+ok 309 - L2 execution runs only after scope authorization + platform approval grant
   ---
-  duration_ms: 12443.7758
+  duration_ms: 12389.0363
   type: 'test'
   ...
 # Subtest: L2 approval is consumed and rate-limited per target
-ok 307 - L2 approval is consumed and rate-limited per target
+ok 310 - L2 approval is consumed and rate-limited per target
   ---
-  duration_ms: 11.4918
+  duration_ms: 13.741
   type: 'test'
   ...
 # Subtest: L1 execution runs when isolation is available and the sample is approved
-ok 308 - L1 execution runs when isolation is available and the sample is approved
+ok 311 - L1 execution runs when isolation is available and the sample is approved
   ---
-  duration_ms: 920.1604
+  duration_ms: 881.6845
   type: 'test'
   ...
 # Subtest: approval rejected at the workflow gate becomes REJECTED without execution
-ok 309 - approval rejected at the workflow gate becomes REJECTED without execution
+ok 312 - approval rejected at the workflow gate becomes REJECTED without execution
   ---
-  duration_ms: 41.287
+  duration_ms: 47.6891
   type: 'test'
   ...
 # Subtest: L1 fails closed when the isolation self-test fails after approval
-ok 310 - L1 fails closed when the isolation self-test fails after approval
+ok 313 - L1 fails closed when the isolation self-test fails after approval
   ---
-  duration_ms: 889.118
+  duration_ms: 908.7373
   type: 'test'
   ...
 # Subtest: sast.secrets suppresses scanner-rule text and AWS documentation examples, not real keys
-ok 311 - sast.secrets suppresses scanner-rule text and AWS documentation examples, not real keys
+ok 314 - sast.secrets suppresses scanner-rule text and AWS documentation examples, not real keys
   ---
-  duration_ms: 4.3415
+  duration_ms: 3.9272
   type: 'test'
   ...
 # Subtest: sast manifest shape: 8 offline capabilities with closed params schemas
-ok 312 - sast manifest shape: 8 offline capabilities with closed params schemas
+ok 315 - sast manifest shape: 8 offline capabilities with closed params schemas
   ---
-  duration_ms: 1.6071
+  duration_ms: 1.2023
   type: 'test'
   ...
 # Subtest: sast.scan: finds multi-language sinks, maps CWE, sorts and stays deterministic
-ok 313 - sast.scan: finds multi-language sinks, maps CWE, sorts and stays deterministic
+ok 316 - sast.scan: finds multi-language sinks, maps CWE, sorts and stays deterministic
   ---
-  duration_ms: 4.651
+  duration_ms: 4.1269
   type: 'test'
   ...
 # Subtest: sast.scan: maxFiles/maxFindings bounds, excludeDirs override, binary skip
-ok 314 - sast.scan: maxFiles/maxFindings bounds, excludeDirs override, binary skip
+ok 317 - sast.scan: maxFiles/maxFindings bounds, excludeDirs override, binary skip
   ---
-  duration_ms: 0.6637
+  duration_ms: 0.6601
   type: 'test'
   ...
 # Subtest: sast.scan: actionable errors for missing target/unknown rule/empty source tree
-ok 315 - sast.scan: actionable errors for missing target/unknown rule/empty source tree
+ok 318 - sast.scan: actionable errors for missing target/unknown rule/empty source tree
   ---
-  duration_ms: 1.1395
+  duration_ms: 1.0415
   type: 'test'
   ...
 # Subtest: sast.secrets: detects real formats, redacts values, allowlists placeholders
-ok 316 - sast.secrets: detects real formats, redacts values, allowlists placeholders
+ok 319 - sast.secrets: detects real formats, redacts values, allowlists placeholders
   ---
-  duration_ms: 2.773
+  duration_ms: 2.7066
   type: 'test'
   ...
 # Subtest: sast.deps: inventories manifests, heuristics labelled hypothesis, no fake CVE claims
-ok 317 - sast.deps: inventories manifests, heuristics labelled hypothesis, no fake CVE claims
+ok 320 - sast.deps: inventories manifests, heuristics labelled hypothesis, no fake CVE claims
   ---
-  duration_ms: 3.858
+  duration_ms: 3.1032
   type: 'test'
   ...
 # Subtest: sast.deps: malformed manifest is recorded instead of crashing
-ok 318 - sast.deps: malformed manifest is recorded instead of crashing
+ok 321 - sast.deps: malformed manifest is recorded instead of crashing
   ---
-  duration_ms: 0.4405
+  duration_ms: 0.3624
   type: 'test'
   ...
 # Subtest: sast.sbom: valid deterministic CycloneDX 1.5 with purls and artifacts
-ok 319 - sast.sbom: valid deterministic CycloneDX 1.5 with purls and artifacts
+ok 322 - sast.sbom: valid deterministic CycloneDX 1.5 with purls and artifacts
   ---
-  duration_ms: 2.6556
+  duration_ms: 2.371
   type: 'test'
   ...
 # Subtest: sast.patch_suggestion: builds illustrative diff + regression test, never applies
-ok 320 - sast.patch_suggestion: builds illustrative diff + regression test, never applies
+ok 323 - sast.patch_suggestion: builds illustrative diff + regression test, never applies
   ---
-  duration_ms: 1.0674
+  duration_ms: 1.0484
   type: 'test'
   ...
 # Subtest: sast helpers: entropy is bounded and deterministic
-ok 321 - sast helpers: entropy is bounded and deterministic
+ok 324 - sast helpers: entropy is bounded and deterministic
   ---
-  duration_ms: 0.1569
+  duration_ms: 0.187
   type: 'test'
   ...
 # Subtest: sast.scan excludePaths removes rule/fixture noise from the file set
-ok 322 - sast.scan excludePaths removes rule/fixture noise from the file set
+ok 325 - sast.scan excludePaths removes rule/fixture noise from the file set
   ---
-  duration_ms: 0.4758
+  duration_ms: 0.4872
   type: 'test'
   ...
 # Subtest: v1 tasks are readable, but writing adds schemaVersion and preserves fields
-ok 323 - v1 tasks are readable, but writing adds schemaVersion and preserves fields
+ok 326 - v1 tasks are readable, but writing adds schemaVersion and preserves fields
   ---
-  duration_ms: 0.8777
+  duration_ms: 0.7198
   type: 'test'
   ...
 # Subtest: invalid tasks are rejected rather than silently coerced
-ok 324 - invalid tasks are rejected rather than silently coerced
+ok 327 - invalid tasks are rejected rather than silently coerced
   ---
-  duration_ms: 0.5175
+  duration_ms: 0.3941
   type: 'test'
   ...
 # Subtest: capabilities get explicit v2 permission sets (L3 has none)
-ok 325 - capabilities get explicit v2 permission sets (L3 has none)
+ok 328 - capabilities get explicit v2 permission sets (L3 has none)
   ---
-  duration_ms: 0.9203
+  duration_ms: 0.6022
   type: 'test'
   ...
 # Subtest: SDK OpenAPI is generated from the stable contract
-ok 326 - SDK OpenAPI is generated from the stable contract
+ok 329 - SDK OpenAPI is generated from the stable contract
   ---
-  duration_ms: 75.6719
+  duration_ms: 75.9568
   type: 'test'
   ...
 # Subtest: SDK contract types are generated and compile with tsc
-ok 327 - SDK contract types are generated and compile with tsc
+ok 330 - SDK contract types are generated and compile with tsc
   ---
-  duration_ms: 486.8
+  duration_ms: 460.5613
   type: 'test'
   ...
 # Subtest: typed SDK works over direct Engine transport
-ok 328 - typed SDK works over direct Engine transport
+ok 331 - typed SDK works over direct Engine transport
   ---
-  duration_ms: 985.709
+  duration_ms: 876.7947
   type: 'test'
   ...
 # Subtest: typed SDK works over MCP HTTP transport
-ok 329 - typed SDK works over MCP HTTP transport
+ok 332 - typed SDK works over MCP HTTP transport
   ---
-  duration_ms: 867.8851
+  duration_ms: 790.1559
   type: 'test'
   ...
 # Subtest: strict preset does not mount generic fs/shell/web tools; files tool is registered
-ok 330 - strict preset does not mount generic fs/shell/web tools; files tool is registered
+ok 333 - strict preset does not mount generic fs/shell/web tools; files tool is registered
   ---
-  duration_ms: 4.5127
+  duration_ms: 3.5509
   type: 'test'
   ...
 # Subtest: authorization requests are inert until platform-approved activation
-ok 331 - authorization requests are inert until platform-approved activation
+ok 334 - authorization requests are inert until platform-approved activation
   ---
-  duration_ms: 14.3639
+  duration_ms: 9.6253
   type: 'test'
   ...
 # Subtest: scope rejects UNC, device and NUL path forms before touching the filesystem
-ok 332 - scope rejects UNC, device and NUL path forms before touching the filesystem
+ok 335 - scope rejects UNC, device and NUL path forms before touching the filesystem
   ---
-  duration_ms: 1.7345
+  duration_ms: 1.338
   type: 'test'
   ...
 # Subtest: gated file reader stays inside the workspace and marks truncation/hash scope
-ok 333 - gated file reader stays inside the workspace and marks truncation/hash scope
+ok 336 - gated file reader stays inside the workspace and marks truncation/hash scope
   ---
-  duration_ms: 19.0525
+  duration_ms: 14.2751
   type: 'test'
   ...
 # Subtest: http probe pins the validated IP, never follows redirects, and truncates streamed bodies
-ok 334 - http probe pins the validated IP, never follows redirects, and truncates streamed bodies
+ok 337 - http probe pins the validated IP, never follows redirects, and truncates streamed bodies
   ---
-  duration_ms: 14.1008
+  duration_ms: 12.2496
   type: 'test'
   ...
 # Subtest: container execution requires a digest-pinned allowlisted image and hardened flags
-ok 335 - container execution requires a digest-pinned allowlisted image and hardened flags
+ok 338 - container execution requires a digest-pinned allowlisted image and hardened flags
   ---
-  duration_ms: 0.6062
+  duration_ms: 0.5254
   type: 'test'
   ...
 # Subtest: state route is loopback-only and rejects workspace enumeration
-ok 336 - state route is loopback-only and rejects workspace enumeration
+ok 339 - state route is loopback-only and rejects workspace enumeration
   ---
-  duration_ms: 0.432
+  duration_ms: 0.3976
   type: 'test'
   ...
 # Subtest: prompt text and tool arguments cannot become authorization
-ok 337 - prompt text and tool arguments cannot become authorization
+ok 340 - prompt text and tool arguments cannot become authorization
   ---
-  duration_ms: 939.144
+  duration_ms: 924.0391
   type: 'test'
   ...
 # Subtest: tool-output text stays evidence data and CSRF/OPTIONS is not authorized
-ok 338 - tool-output text stays evidence data and CSRF/OPTIONS is not authorized
+ok 341 - tool-output text stays evidence data and CSRF/OPTIONS is not authorized
   ---
-  duration_ms: 37.0218
+  duration_ms: 37.0667
   type: 'test'
   ...
 # Subtest: every skill has positive and negative trigger cases that route correctly
-ok 339 - every skill has positive and negative trigger cases that route correctly
+ok 342 - every skill has positive and negative trigger cases that route correctly
   ---
-  duration_ms: 10.4209
+  duration_ms: 9.8685
   type: 'test'
   ...
 # Subtest: seven standard Agent Skills have valid frontmatter
-ok 340 - seven standard Agent Skills have valid frontmatter
+ok 343 - seven standard Agent Skills have valid frontmatter
   ---
-  duration_ms: 7.759
+  duration_ms: 6.5283
   type: 'test'
   ...
 # Subtest: queue bounds concurrency and reports WAITING then RUNNING
-ok 341 - queue bounds concurrency and reports WAITING then RUNNING
+ok 344 - queue bounds concurrency and reports WAITING then RUNNING
   ---
-  duration_ms: 341.667
+  duration_ms: 313.6742
   type: 'test'
   ...
 # Subtest: queue cancellation aborts the runner and settles the task as CANCELLED
-ok 342 - queue cancellation aborts the runner and settles the task as CANCELLED
+ok 345 - queue cancellation aborts the runner and settles the task as CANCELLED
   ---
-  duration_ms: 72.6376
+  duration_ms: 71.4028
   type: 'test'
   ...
 # Subtest: restart recovery marks stale running tasks INTERRUPTED/RECOVERABLE and resume completes them
-ok 343 - restart recovery marks stale running tasks INTERRUPTED/RECOVERABLE and resume completes them
+ok 346 - restart recovery marks stale running tasks INTERRUPTED/RECOVERABLE and resume completes them
   ---
-  duration_ms: 873.663
+  duration_ms: 838.9451
   type: 'test'
   ...
 # Subtest: TOML installer uses managed markers, upgrades, and uninstalls only armorbreak
-ok 344 - TOML installer uses managed markers, upgrades, and uninstalls only armorbreak
+ok 347 - TOML installer uses managed markers, upgrades, and uninstalls only armorbreak
   ---
-  duration_ms: 23.0009
+  duration_ms: 22.0722
   type: 'test'
   ...
 # Subtest: TOML installer rejects unmanaged collision and backup restores byte-for-byte
-ok 345 - TOML installer rejects unmanaged collision and backup restores byte-for-byte
+ok 348 - TOML installer rejects unmanaged collision and backup restores byte-for-byte
   ---
-  duration_ms: 14.6452
+  duration_ms: 13.0229
   type: 'test'
   ...
 # Subtest: tool loop preserves tool IDs and returns final text
-ok 346 - tool loop preserves tool IDs and returns final text
+ok 349 - tool loop preserves tool IDs and returns final text
   ---
-  duration_ms: 0.8571
+  duration_ms: 0.6708
   type: 'test'
   ...
 # Subtest: tool loop rejects duplicate and replayed tool call ids
-ok 347 - tool loop rejects duplicate and replayed tool call ids
+ok 350 - tool loop rejects duplicate and replayed tool call ids
   ---
-  duration_ms: 0.4233
+  duration_ms: 0.5291
   type: 'test'
   ...
 # Subtest: tool loop consumes streamed tool calls and accumulates stream events
-ok 348 - tool loop consumes streamed tool calls and accumulates stream events
+ok 351 - tool loop consumes streamed tool calls and accumulates stream events
   ---
-  duration_ms: 0.7222
+  duration_ms: 0.771
   type: 'test'
   ...
 # Subtest: tool loop enforces max turns, budget, deadline and retries 429
-ok 349 - tool loop enforces max turns, budget, deadline and retries 429
+ok 352 - tool loop enforces max turns, budget, deadline and retries 429
   ---
-  duration_ms: 2.3852
+  duration_ms: 1.7065
   type: 'test'
   ...
 # Subtest: tools.js registers ten model-facing tools with valid JSON schemas
-ok 350 - tools.js registers ten model-facing tools with valid JSON schemas
+ok 353 - tools.js registers ten model-facing tools with valid JSON schemas
   ---
-  duration_ms: 73.6653
+  duration_ms: 62.0914
   type: 'test'
   ...
 # Subtest: armorbreak_health reports environment, isolation denial and capability count
-ok 351 - armorbreak_health reports environment, isolation denial and capability count
+ok 354 - armorbreak_health reports environment, isolation denial and capability count
   ---
-  duration_ms: 1267.4308
+  duration_ms: 1120.7322
   type: 'test'
   ...
 # Subtest: armorbreak_capabilities lists real capabilities and describes one
-ok 352 - armorbreak_capabilities lists real capabilities and describes one
+ok 355 - armorbreak_capabilities lists real capabilities and describes one
   ---
-  duration_ms: 5.1909
+  duration_ms: 4.3668
   type: 'test'
   ...
 # Subtest: armorbreak_task create/list/get works on the real task store
-ok 353 - armorbreak_task create/list/get works on the real task store
+ok 356 - armorbreak_task create/list/get works on the real task store
   ---
-  duration_ms: 30.8952
+  duration_ms: 29.0177
   type: 'test'
   ...
 # Subtest: armorbreak_analyze rejects unknown capabilities with an actionable message
-ok 354 - armorbreak_analyze rejects unknown capabilities with an actionable message
+ok 357 - armorbreak_analyze rejects unknown capabilities with an actionable message
   ---
-  duration_ms: 4.6976
+  duration_ms: 4.3547
   type: 'test'
   ...
 # Subtest: armorbreak_analyze runs a real L0 capability and produces a report
-ok 355 - armorbreak_analyze runs a real L0 capability and produces a report
+ok 358 - armorbreak_analyze runs a real L0 capability and produces a report
   ---
-  duration_ms: 1273.3769
+  duration_ms: 1206.5262
   type: 'test'
   ...
 # Subtest: armorbreak_scope separates request from platform-approved activation, then revokes
-ok 356 - armorbreak_scope separates request from platform-approved activation, then revokes
+ok 359 - armorbreak_scope separates request from platform-approved activation, then revokes
   ---
-  duration_ms: 21.7629
+  duration_ms: 21.6651
   type: 'test'
   ...
 # Subtest: armorbreak_workflow lists and rejects unknown workflow ids
-ok 357 - armorbreak_workflow lists and rejects unknown workflow ids
+ok 360 - armorbreak_workflow lists and rejects unknown workflow ids
   ---
-  duration_ms: 5.3517
+  duration_ms: 5.3846
   type: 'test'
   ...
 # Subtest: armorbreak_health output is lossless JSON (no embedded capability functions)
-ok 358 - armorbreak_health output is lossless JSON (no embedded capability functions)
+ok 361 - armorbreak_health output is lossless JSON (no embedded capability functions)
   ---
-  duration_ms: 1298.4702
+  duration_ms: 1277.3251
   type: 'test'
   ...
 # Subtest: every ArmorBreak tool returns lossless JSON data
-ok 359 - every ArmorBreak tool returns lossless JSON data
+ok 362 - every ArmorBreak tool returns lossless JSON data
   ---
-  duration_ms: 1157.0705
+  duration_ms: 1140.2317
   type: 'test'
   ...
 # Subtest: default workspace resolves to the session working directory
-ok 360 - default workspace resolves to the session working directory
+ok 363 - default workspace resolves to the session working directory
   ---
-  duration_ms: 1149.266
+  duration_ms: 1142.8753
   type: 'test'
   ...
 # Subtest: explicit workspace still overrides the session working directory
-ok 361 - explicit workspace still overrides the session working directory
+ok 364 - explicit workspace still overrides the session working directory
   ---
-  duration_ms: 13.8098
+  duration_ms: 15.5935
   type: 'test'
   ...
 # Subtest: isolation labels never claim verified isolation without a self-test
-ok 362 - isolation labels never claim verified isolation without a self-test
+ok 365 - isolation labels never claim verified isolation without a self-test
   ---
-  duration_ms: 0.8468
+  duration_ms: 0.9321
   type: 'test'
   ...
 # Subtest: L2 label reports authorization count instead of a misleading zero
-ok 363 - L2 label reports authorization count instead of a misleading zero
+ok 366 - L2 label reports authorization count instead of a misleading zero
   ---
-  duration_ms: 0.1714
+  duration_ms: 0.2099
   type: 'test'
   ...
 # Subtest: task and tool presentations expose bounded, secret-free metadata
-ok 364 - task and tool presentations expose bounded, secret-free metadata
+ok 367 - task and tool presentations expose bounded, secret-free metadata
   ---
-  duration_ms: 0.8513
+  duration_ms: 0.9546
   type: 'test'
   ...
 # Subtest: task and tool routes return read-only JSON for loopback callers
-ok 365 - task and tool routes return read-only JSON for loopback callers
+ok 368 - task and tool routes return read-only JSON for loopback callers
   ---
-  duration_ms: 1.0009
+  duration_ms: 1.1172
   type: 'test'
   ...
 # Subtest: all workbench routes enforce loopback, GET/HEAD and reject workspace enumeration
-ok 366 - all workbench routes enforce loopback, GET/HEAD and reject workspace enumeration
+ok 369 - all workbench routes enforce loopback, GET/HEAD and reject workspace enumeration
   ---
-  duration_ms: 0.392
+  duration_ms: 0.4461
   type: 'test'
   ...
 # Subtest: workbench create action is loopback-only and requires the local UI header
-ok 367 - workbench create action is loopback-only and requires the local UI header
+ok 370 - workbench create action is loopback-only and requires the local UI header
   ---
-  duration_ms: 124.9475
+  duration_ms: 119.4691
   type: 'test'
   ...
 # Subtest: workbench creates an L0 task, exposes evidence, previews report and cancels
-ok 368 - workbench creates an L0 task, exposes evidence, previews report and cancels
+ok 371 - workbench creates an L0 task, exposes evidence, previews report and cancels
   ---
-  duration_ms: 1093.0927
+  duration_ms: 1001.6041
   type: 'test'
   ...
 # Subtest: workbench rejects unknown workflows with an actionable error
-ok 369 - workbench rejects unknown workflows with an actionable error
+ok 372 - workbench rejects unknown workflows with an actionable error
   ---
-  duration_ms: 7.2208
+  duration_ms: 6.0585
   type: 'test'
   ...
 # Subtest: state route binds a known session to its recorded workspace without directory enumeration
-ok 370 - state route binds a known session to its recorded workspace without directory enumeration
+ok 373 - state route binds a known session to its recorded workspace without directory enumeration
   ---
-  duration_ms: 0.4775
+  duration_ms: 0.4304
   type: 'test'
   ...
 # Subtest: workbench routes enforce same-origin and reject foreign/null origins
-ok 371 - workbench routes enforce same-origin and reject foreign/null origins
+ok 374 - workbench routes enforce same-origin and reject foreign/null origins
   ---
-  duration_ms: 0.4682
+  duration_ms: 0.4016
   type: 'test'
   ...
 # Subtest: workbench creates a mock evaluation and exposes evaluations/knowledge/catalog read-only
-ok 372 - workbench creates a mock evaluation and exposes evaluations/knowledge/catalog read-only
+ok 375 - workbench creates a mock evaluation and exposes evaluations/knowledge/catalog read-only
   ---
-  duration_ms: 12.3053
+  duration_ms: 9.9982
   type: 'test'
   ...
 # Subtest: workbench installation follows stage/verify/approve/activate/rollback and requires explicit confirmation
-ok 373 - workbench installation follows stage/verify/approve/activate/rollback and requires explicit confirmation
+ok 376 - workbench installation follows stage/verify/approve/activate/rollback and requires explicit confirmation
   ---
-  duration_ms: 75.7033
+  duration_ms: 62.5242
   type: 'test'
   ...
 # Subtest: new task/evidence/finding writes carry schemaVersion v2 while old tasks stay readable
-ok 374 - new task/evidence/finding writes carry schemaVersion v2 while old tasks stay readable
+ok 377 - new task/evidence/finding writes carry schemaVersion v2 while old tasks stay readable
   ---
-  duration_ms: 152.2097
+  duration_ms: 129.2049
   type: 'test'
   ...
 # Subtest: web manifest shape: 4 offline capabilities with closed JSON-Schema params
-ok 375 - web manifest shape: 4 offline capabilities with closed JSON-Schema params
+ok 378 - web manifest shape: 4 offline capabilities with closed JSON-Schema params
   ---
-  duration_ms: 1.1596
+  duration_ms: 0.951
   type: 'test'
   ...
 # Subtest: web.har: aggregates security findings, redacts tokens/cookies, flags mixed content
-ok 376 - web.har: aggregates security findings, redacts tokens/cookies, flags mixed content
+ok 379 - web.har: aggregates security findings, redacts tokens/cookies, flags mixed content
   ---
-  duration_ms: 5.3448
+  duration_ms: 3.9945
   type: 'test'
   ...
 # Subtest: web.har: malformed / empty / invalid-structure inputs raise actionable errors
-ok 377 - web.har: malformed / empty / invalid-structure inputs raise actionable errors
+ok 380 - web.har: malformed / empty / invalid-structure inputs raise actionable errors
   ---
-  duration_ms: 0.6613
+  duration_ms: 0.5099
   type: 'test'
   ...
 # Subtest: web.har: honours maxEntries/maxFindings bounds and stays deterministic
-ok 378 - web.har: honours maxEntries/maxFindings bounds and stays deterministic
+ok 381 - web.har: honours maxEntries/maxFindings bounds and stays deterministic
   ---
-  duration_ms: 3.4121
+  duration_ms: 2.3088
   type: 'test'
   ...
 # Subtest: web.openapi: parses YAML subset and reports servers/auth/paths
-ok 379 - web.openapi: parses YAML subset and reports servers/auth/paths
+ok 382 - web.openapi: parses YAML subset and reports servers/auth/paths
   ---
-  duration_ms: 2.8998
+  duration_ms: 2.3882
   type: 'test'
   ...
 # Subtest: web.openapi: accepts JSON specs and rejects unsupported input with actionable errors
-ok 380 - web.openapi: accepts JSON specs and rejects unsupported input with actionable errors
+ok 383 - web.openapi: accepts JSON specs and rejects unsupported input with actionable errors
   ---
-  duration_ms: 0.7064
+  duration_ms: 0.5994
   type: 'test'
   ...
 # Subtest: web.headers: clean header set passes, weak header set yields actionable findings
-ok 381 - web.headers: clean header set passes, weak header set yields actionable findings
+ok 384 - web.headers: clean header set passes, weak header set yields actionable findings
   ---
-  duration_ms: 1.8338
+  duration_ms: 1.5286
   type: 'test'
   ...
 # Subtest: web.headers: maxFindings bound is honoured
-ok 382 - web.headers: maxFindings bound is honoured
+ok 385 - web.headers: maxFindings bound is honoured
   ---
-  duration_ms: 0.3103
+  duration_ms: 0.2771
   type: 'test'
   ...
 # Subtest: web.http_message: parses request, redacts credentials, detects token leak + TE/CL
-ok 383 - web.http_message: parses request, redacts credentials, detects token leak + TE/CL
+ok 386 - web.http_message: parses request, redacts credentials, detects token leak + TE/CL
   ---
-  duration_ms: 1.599
+  duration_ms: 1.3839
   type: 'test'
   ...
 # Subtest: web.http_message: response header audit redacts Set-Cookie values
-ok 384 - web.http_message: response header audit redacts Set-Cookie values
+ok 387 - web.http_message: response header audit redacts Set-Cookie values
   ---
-  duration_ms: 0.6083
+  duration_ms: 0.5392
   type: 'test'
   ...
 # Subtest: web helpers: analyzeHar/analyzeOpenApi/analyzeHttpMessage are deterministic
-ok 385 - web helpers: analyzeHar/analyzeOpenApi/analyzeHttpMessage are deterministic
+ok 388 - web helpers: analyzeHar/analyzeOpenApi/analyzeHttpMessage are deterministic
   ---
-  duration_ms: 1.722
+  duration_ms: 1.4439
   type: 'test'
   ...
 # Subtest: Workbench serves real state, host/provider tables and diagnostics
-ok 386 - Workbench serves real state, host/provider tables and diagnostics
+ok 389 - Workbench serves real state, host/provider tables and diagnostics
   ---
-  duration_ms: 266.1376
+  duration_ms: 211.4807
   type: 'test'
   ...
 # Subtest: compilePlan preserves legacy sequential semantics when dependsOn is absent
-ok 387 - compilePlan preserves legacy sequential semantics when dependsOn is absent
+ok 390 - compilePlan preserves legacy sequential semantics when dependsOn is absent
   ---
-  duration_ms: 1.3075
+  duration_ms: 1.1838
   type: 'test'
   ...
 # Subtest: compilePlan accepts a parallel DAG and rejects malformed graphs
-ok 388 - compilePlan accepts a parallel DAG and rejects malformed graphs
+ok 391 - compilePlan accepts a parallel DAG and rejects malformed graphs
   ---
-  duration_ms: 0.538
+  duration_ms: 0.4925
   type: 'test'
   ...
 # Subtest: readySteps and blockedSteps follow DONE/FAILED dependency states
-ok 389 - readySteps and blockedSteps follow DONE/FAILED dependency states
+ok 392 - readySteps and blockedSteps follow DONE/FAILED dependency states
   ---
-  duration_ms: 0.308
+  duration_ms: 0.252
   type: 'test'
   ...
 # Subtest: runner executes independent DAG steps and waits for dependencies
-ok 390 - runner executes independent DAG steps and waits for dependencies
+ok 393 - runner executes independent DAG steps and waits for dependencies
   ---
-  duration_ms: 1172.8921
+  duration_ms: 988.6796
   type: 'test'
   ...
 # Subtest: a failed step skips its dependents but independent steps still run
-ok 391 - a failed step skips its dependents but independent steps still run
+ok 394 - a failed step skips its dependents but independent steps still run
   ---
-  duration_ms: 901.5337
+  duration_ms: 832.9101
   type: 'test'
   ...
 # Subtest: YAML installer adds/upgrades/uninstalls managed Hermes server
-ok 392 - YAML installer adds/upgrades/uninstalls managed Hermes server
+ok 395 - YAML installer adds/upgrades/uninstalls managed Hermes server
   ---
-  duration_ms: 27.4891
+  duration_ms: 22.2384
   type: 'test'
   ...
 # Subtest: YAML installer rejects unmanaged collision/secrets and rollback is byte-exact
-ok 393 - YAML installer rejects unmanaged collision/secrets and rollback is byte-exact
+ok 396 - YAML installer rejects unmanaged collision/secrets and rollback is byte-exact
   ---
-  duration_ms: 14.0783
+  duration_ms: 11.8047
   type: 'test'
   ...
-1..393
-# tests 393
+1..396
+# tests 396
 # suites 0
-# pass 392
+# pass 395
 # fail 0
 # cancelled 0
 # skipped 1
 # todo 0
-# duration_ms 124550.0383
+# duration_ms 122792.638
