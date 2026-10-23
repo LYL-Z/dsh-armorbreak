@@ -93,7 +93,7 @@ async function enrichArgs(args, exec) {
     try {
       const workingDirectory = typeof pluginCtx.get === 'function' ? pluginCtx.get('workingDirectory') : undefined
       if (workingDirectory && typeof workingDirectory.ensure === 'function') {
-        const dir = await workingDirectory.ensure(exec.agent)
+        const dir = await workingDirectory.ensure(exec?.agent)
         if (typeof dir === 'string' && dir !== '') hostWorkspace = runtime.resolveWorkspace(dir)
       }
     } catch {

@@ -12,7 +12,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
 
-async function loadTools() {
+async function loadTools(workspace) {
   const stateRoot = await mkdtemp(join(tmpdir(), 'abm-e2e-state-'))
   process.env.ARMORBREAK_HOME = stateRoot
   const defs = new Map()
@@ -23,8 +23,8 @@ async function loadTools() {
         return () => {}
       },
     },
-    get() {
-      return undefined
+    get(key) {
+      return key === 'workingDirectory' && workspace ? { ensure: async () => workspace } : undefined
     },
     logger: { warn() {} },
   }
@@ -47,8 +47,8 @@ async function projectWorkspace() {
 }
 
 test('mock-model E2E: workflow start → background run → evidence → report', async () => {
-  const { defs } = await loadTools()
   const workspace = await projectWorkspace()
+  const { defs } = await loadTools(workspace)
   const exec = mockExec()
 
   const health = await defs.get('armorbreak_health').execute({ workspace }, exec)
