@@ -36,6 +36,15 @@ test('release build is reproducible, hashed, SBOM-backed and test-signature veri
       .filter((entry) => entry.isDirectory()).map((entry) => `@armorbreak/${entry.name}`).sort()
     assert.deepEqual(sbom.components.map((component) => component.name).sort(), expectedPackages)
     assert.ok(sbom.components.every((component) => component.hashes?.some((hash) => hash.alg === 'SHA-256' && /^[a-f0-9]{64}$/.test(hash.content))))
+
+    const spdx = JSON.parse(await readFile(join(process.cwd(), 'docs/v2/release/sbom.spdx.json'), 'utf8'))
+    const expectedSpdxPackages = expectedPackages.map((name) => name).sort()
+    assert.deepEqual(spdx.packages.filter((component) => component.primaryPackagePurpose === 'LIBRARY').map((component) => component.name).sort(), expectedSpdxPackages)
+    assert.ok(spdx.files.length > 0)
+    assert.ok(spdx.files.every((file) => file.checksums?.some((checksum) => checksum.algorithm === 'SHA256' && /^[a-f0-9]{64}$/.test(checksum.checksumValue))))
+    const relationships = new Set(spdx.relationships.map((relationship) => `${relationship.spdxElementId}:${relationship.relationshipType}:${relationship.relatedSpdxElement}`))
+    assert.ok(spdx.packages.filter((component) => component.primaryPackagePurpose === 'LIBRARY').every((component) => relationships.has(`SPDXRef-DOCUMENT:DESCRIBES:${component.SPDXID}`)))
+    assert.ok(spdx.files.every((file) => spdx.packages.some((component) => component.primaryPackagePurpose === 'LIBRARY' && relationships.has(`${component.SPDXID}:CONTAINS:${file.SPDXID}`))))
   } finally {
     await rm(root, { recursive: true, force: true })
   }

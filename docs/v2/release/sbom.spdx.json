@@ -5,7 +5,7 @@
   "name": "dsh-armorbreak-2.2.0-rc.1",
   "documentNamespace": "https://github.com/LYL-Z/dsh-armorbreak/sbom/2.2.0-rc.1",
   "creationInfo": {
-    "created": "2026-10-22T12:55:35.813Z",
+    "created": "2026-10-23T15:19:15.403Z",
     "creators": [
       "Tool: scripts/v2/build-sbom.mjs"
     ]
@@ -74,6 +74,1141 @@
       "licenseConcluded": "NOASSERTION",
       "primaryPackagePurpose": "TOOL",
       "comment": "optional external, not bundled"
+    },
+    {
+      "name": "@armorbreak/adapter-dsh",
+      "versionInfo": "0.1.0-p1",
+      "SPDXID": "SPDXRef-Package-a3d3a84053c753c06cbdea7f",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": true,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "sourceInfo": "Internal source component; its files and SHA-256 digests are listed in this document."
+    },
+    {
+      "name": "@armorbreak/cli",
+      "versionInfo": "0.1.0-p2",
+      "SPDXID": "SPDXRef-Package-c367be35d99bea42e0146f64",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": true,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "sourceInfo": "Internal source component; its files and SHA-256 digests are listed in this document."
+    },
+    {
+      "name": "@armorbreak/core",
+      "versionInfo": "1.0.0",
+      "SPDXID": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": true,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "sourceInfo": "Internal source component; its files and SHA-256 digests are listed in this document."
+    },
+    {
+      "name": "@armorbreak/core-daemon",
+      "versionInfo": "0.1.0-p2",
+      "SPDXID": "SPDXRef-Package-052ce10e06fb3b5fb947c9e8",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": true,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "sourceInfo": "Internal source component; its files and SHA-256 digests are listed in this document."
+    },
+    {
+      "name": "@armorbreak/engine-node",
+      "versionInfo": "0.1.0-p1",
+      "SPDXID": "SPDXRef-Package-9051e69de08db43d8a6a1b76",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": true,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "sourceInfo": "Internal source component; its files and SHA-256 digests are listed in this document."
+    },
+    {
+      "name": "@armorbreak/installer",
+      "versionInfo": "0.1.0-p4",
+      "SPDXID": "SPDXRef-Package-1e21de14669c0d1a9e75d944",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": true,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "sourceInfo": "Internal source component; its files and SHA-256 digests are listed in this document."
+    },
+    {
+      "name": "@armorbreak/mcp-server",
+      "versionInfo": "0.1.0-p2",
+      "SPDXID": "SPDXRef-Package-4ebbd64a72e0cb5059718082",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": true,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "sourceInfo": "Internal source component; its files and SHA-256 digests are listed in this document."
+    },
+    {
+      "name": "@armorbreak/migration",
+      "versionInfo": "2.2.0-rc.1",
+      "SPDXID": "SPDXRef-Package-2aa1a191ec48da716865d8fa",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": true,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "sourceInfo": "Internal source component; its files and SHA-256 digests are listed in this document."
+    },
+    {
+      "name": "@armorbreak/protocol",
+      "versionInfo": "1.0.0",
+      "SPDXID": "SPDXRef-Package-97aa2a55d86b87787ccd8f6b",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": true,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "sourceInfo": "Internal source component; its files and SHA-256 digests are listed in this document."
+    },
+    {
+      "name": "@armorbreak/provider-contract",
+      "versionInfo": "0.1.0-p3",
+      "SPDXID": "SPDXRef-Package-d70dce2a20d289a218fc5852",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": true,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "sourceInfo": "Internal source component; its files and SHA-256 digests are listed in this document."
+    },
+    {
+      "name": "@armorbreak/provider-router",
+      "versionInfo": "0.1.0-p3",
+      "SPDXID": "SPDXRef-Package-8ff566f4504182a0c6fe696e",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": true,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "sourceInfo": "Internal source component; its files and SHA-256 digests are listed in this document."
+    },
+    {
+      "name": "@armorbreak/sdk-ts",
+      "versionInfo": "0.1.0-p2",
+      "SPDXID": "SPDXRef-Package-4fa3026a279c374816b26bba",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": true,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "sourceInfo": "Internal source component; its files and SHA-256 digests are listed in this document."
+    },
+    {
+      "name": "@armorbreak/skill-router",
+      "versionInfo": "0.1.0-p2",
+      "SPDXID": "SPDXRef-Package-8e411b64236cc4383db3d856",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": true,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "sourceInfo": "Internal source component; its files and SHA-256 digests are listed in this document."
+    }
+  ],
+  "files": [
+    {
+      "fileName": "./packages/adapter-dsh/index.js",
+      "SPDXID": "SPDXRef-File-34e34cf354b501b99a59e908",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "5649f54ef45df2ff1a08c977f6d62207260e748baa1a1e09a98762bedbcea0fb"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/adapter-dsh/package.json",
+      "SPDXID": "SPDXRef-File-3fbaa564c2b4026f1186eb49",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "95a9b68b645e693f656c9fda2a95ff4ad7704f7592732ae7322e11158e7e9d3a"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/cli/approvalPrompt.js",
+      "SPDXID": "SPDXRef-File-00af5437a439aff64b2e105a",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "d563fcf9aa08faa18c2e326d0f3a21a20b14656b6ce8bddd707a12b93bbf2d06"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/cli/index.js",
+      "SPDXID": "SPDXRef-File-05a207045d4e18878ebb797b",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "52d5ca98eb4eb7a5227927a147244992520b277785c7259ef96672c78641d8c3"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/cli/package.json",
+      "SPDXID": "SPDXRef-File-c953da41bfebf00a67a11b27",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "f56e8701e1073477eb318fac028a84543130dfc87cd33c1180333ebb962d6ef9"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/api-contract.json",
+      "SPDXID": "SPDXRef-File-2bfdfd14b2f822cdc3251c4d",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "986b0426ac20954cefa96ee9ad2f294352ff5e6a7c580ae13b5c83ef4884339a"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/dependency-graph.json",
+      "SPDXID": "SPDXRef-File-3446142a019b3a865ffc7e40",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "23a7440948dd4f9da03395f4f6d98b6bf5c3a9607bfaf17042011f0857696ffd"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/evidenceEnvelope.js",
+      "SPDXID": "SPDXRef-File-d1411eb6abade32bcbf84181",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "2180bbac532d233186d60c6e47cdc140517b32409e09ef681f3f1c0fd51876e4"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/index.js",
+      "SPDXID": "SPDXRef-File-4671f66d21b94d7d1bdb0741",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "a9db9d4438b3c763c1e370513d1a3902b5803859105327224637e168580ed21e"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/package.json",
+      "SPDXID": "SPDXRef-File-51223b5013946aa84fc4ae2b",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "34de7af19bbcca814d99273cd52ff9cf0967f4aa1ff588e4b0b5e0bedef06b13"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/append-lock.js",
+      "SPDXID": "SPDXRef-File-ab9b6e88c7dd2865aab9ea76",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "d22d297e31abb4336ad4b25e28ca15148154803563ae7a9879003201fecb77b6"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/audit.js",
+      "SPDXID": "SPDXRef-File-9c9124c7a0a9740d277cbe60",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "afe3df95459fae38d36b8ed0c6deddca79479cab98b0836ee988c1935a2db3f3"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/capabilities.js",
+      "SPDXID": "SPDXRef-File-d12280ec9d4f44e2098448f1",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "b0a1487fdb423e05898c3385a233641fd6cb457483aa7935c9a5abae24c0e19b"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/dag.js",
+      "SPDXID": "SPDXRef-File-4d4666ab80ff784097f8ae36",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "6b6094d0cd8395df8f003b3bb5665cabcb0e7e1995bbd6c476b5489bb2fb6846"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/evidence.js",
+      "SPDXID": "SPDXRef-File-46a30bb0b2b1d48efd2c6f01",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "1725000bcb5e453daabd0be3c2abadaac00784e2a7deca4ba336db51ac96c8a7"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/externalTools.js",
+      "SPDXID": "SPDXRef-File-6e74ae03b7aca79d96d0d30a",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "05873d6cd56c03105713339c36fad2d8ab81972ec81311626ca05b63f7b99c01"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/files.js",
+      "SPDXID": "SPDXRef-File-ceaab8075e104bd3a9dee68d",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "5a13f3368f4b3de511b697ed489edd04bd0b96af550e686808af28d4710d49e2"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/health.js",
+      "SPDXID": "SPDXRef-File-9ac474ad60df84762062ecbf",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "28aada80d8a823c891a4da0618e6730af8656f521b0e00de811029a4be00c8df"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/help.js",
+      "SPDXID": "SPDXRef-File-a16a0173e96af8f406af1637",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "0ee77694f3ded2d89a38f2bb5f1d9c2ac1129edadfaabd125759f5a1df2749a3"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/isolation.js",
+      "SPDXID": "SPDXRef-File-20ad7099535de275b656f4c5",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "f689d7e09bccf2fb26157bf0a94c6bb8495ce0588f768e8ca2811afd80bbcdf9"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/presentation.js",
+      "SPDXID": "SPDXRef-File-1d29a44a984e23eba8385859",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "094ab795d7b572c692a3d173c85c324b0d31c40b6970b8942d7d972c592dc97b"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/reports.js",
+      "SPDXID": "SPDXRef-File-3f0b5dff417c899d1ed7eda3",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "409b0ad2b9199b9b19ad67051b9a34662b34a61886df2879087bd4e84f8a6ecc"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/runner.js",
+      "SPDXID": "SPDXRef-File-67ee1bf467c0c159e92224c5",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "f2455e8e7c2951492fe01f00ac2a841133471554167231299e309aaa35a6198b"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/runtime.js",
+      "SPDXID": "SPDXRef-File-cb9d19d93005166da5ecb219",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "18995cd27bb805cca1b2169f0adf64c3082d211be70881c465205d176cd880f8"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/scope.js",
+      "SPDXID": "SPDXRef-File-51c87341f233e4d66ee180d7",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "acdd5764fa1c7a03d0bb4cd2aff9331f22a7bf2a794acc74b9a896050740bbf6"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/taskQueue.js",
+      "SPDXID": "SPDXRef-File-5a0d75a4984a90ed966d20f5",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "f9758b368a8e2816649dc995698ae140fe658f514a0e2bc345c73d89064f5ef0"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/tasks.js",
+      "SPDXID": "SPDXRef-File-7ce05b205984e25e4db0e901",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "de96599efc3e99a25bcc2027daba140c3ee13b8fdf74bdd0c86514f04614d523"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/util.js",
+      "SPDXID": "SPDXRef-File-4d940814f34a1db7fe06c213",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "8a6e4acb84884128c4d1dc025c6cff14a5c698a6972b89fbb0ec9b63bfd5d071"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/workflows.js",
+      "SPDXID": "SPDXRef-File-b01f0c43561250dca9d5c964",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "e339d3c61473494b46c3d4a9c340927152248a4973c79ebf2ad6fbac288acd67"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core-daemon/index.js",
+      "SPDXID": "SPDXRef-File-04b13fa978bdbb2a941d1cbe",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "e97806a5607fbd3e6c18429c00f3414ee056bf4ad362bc028d39fbd77f658e4b"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core-daemon/package.json",
+      "SPDXID": "SPDXRef-File-aad9edfeca6d42dc3f819c8f",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "aec0e60e87ec0df543f9b71e90e7229a3083bab47c75dca2c89b4e4262f9cf29"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/engine-node/index.js",
+      "SPDXID": "SPDXRef-File-9769bf0545c9b63c3fb5079b",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "a1ee9e2c6915d41e78568707614f83870891eeea254ae27b50d8f80045cb35f4"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/engine-node/package.json",
+      "SPDXID": "SPDXRef-File-887ae76b32521c080a3aac25",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "9f9c089b7b1f046d932b28f2608f98a07113f5f9847f270d6fb7092363eddc28"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/installer/index.js",
+      "SPDXID": "SPDXRef-File-4b8702c1b523cbd1d4a0b16e",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "88e8198c9907707f2a50ba9749768918c8c9b3d8652307d80ab137a0ba300c61"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/installer/package.json",
+      "SPDXID": "SPDXRef-File-20b23b33e4cb64644ee9fb1c",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "b857c57383dd2c1b7b07d593563b124b216d27c22095dc80204cad1a620fda65"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/installer/secrets.js",
+      "SPDXID": "SPDXRef-File-66a8c26fc70ec8d9d7b34415",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "d40a2fecd0085ff193b34d970bb97ad8812a2f04175b82ab6b6600edce9361b0"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/installer/toml.js",
+      "SPDXID": "SPDXRef-File-972e9f073c0c3da05cf85697",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "69aab3b7d6ce094c42a0e020e97a009ac76b1b4064484ffc5fc0bb04960876e5"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/installer/yaml.js",
+      "SPDXID": "SPDXRef-File-f730127e6f7f8d38251c84ae",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "488b1ba40f06a0fa9c2b63ea340bbc595c6e7bcd262db69398e68824f67a2db8"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/mcp-server/http.js",
+      "SPDXID": "SPDXRef-File-57b28aefaae5097d0f3aa80c",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "68497871475fc48a57f57b12444b1e0a1c34ccfee5845abdf0c1a7df348926ee"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/mcp-server/index.js",
+      "SPDXID": "SPDXRef-File-4288fd0f7966cd12db16f210",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "cabbc33decbe671515f3488881b666c8b68253feb7381ab026b43caa8d677e75"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/mcp-server/package.json",
+      "SPDXID": "SPDXRef-File-1d74bce58439984e281dd98e",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "7cde764ce79d8e0cc67cbe390bcfbc157b42df0df21b8594ce9532cefca4277a"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/migration/oldData.js",
+      "SPDXID": "SPDXRef-File-83dd5ff00e50cdb8b47dcf05",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "4fa3d8e53d9e10fffafdc32ecf83b151a0f5f90db41c62bd5e100c44ef956451"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/protocol/index.js",
+      "SPDXID": "SPDXRef-File-c27bffd3077cfe69efca6c57",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "eed51a68d26e38883a63e3811ce731241d23ed4193cbcb7571ab210d01dc4838"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/protocol/package.json",
+      "SPDXID": "SPDXRef-File-cf880dc69c314e4236f0fe06",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "9fae020a6f2545765bcc9400705a3a6890830f80c8f9f10c2bc6e4d437f0d577"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/protocol/schemas/error.schema.json",
+      "SPDXID": "SPDXRef-File-e4c395c5f528bdfcd38d629c",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "e97bae4f29f07d7bfcc779810565fda464036c1f0caa93c53ebbcada63cf4b4a"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/protocol/schemas/evidence-envelope.schema.json",
+      "SPDXID": "SPDXRef-File-9b398d6002fb393b17762c47",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "7a979a8ee2a84aa814700028599995f0d8d97d1b6b24edb8a604b9102c61dc3b"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/protocol/schemas/invocation.schema.json",
+      "SPDXID": "SPDXRef-File-2d3743109152e1aec7d20491",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "70ee4350662e864c4956c1995b5823ad85e035d103e7e169f54bfb53b4b8a348"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/provider-contract/contract.json",
+      "SPDXID": "SPDXRef-File-9d90d51e649a119f6bf0c545",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "3eb4c85dfaf061557628632fcf2bf0c1e4404883ef7d7fec9efa5dd093f51f80"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/provider-contract/index.d.ts",
+      "SPDXID": "SPDXRef-File-829c1444fcd40b9b39855096",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "89d220ac35924c827bd9e631f7917a0fa762bc425f11b0f4f1787e37cb16a93a"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/provider-contract/index.js",
+      "SPDXID": "SPDXRef-File-b3beb2ae90146fb38a39bcbb",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "e05103695c78264330c7ce76ad86302c2a787ed46226c0bf14a93a5a6dd6ffd1"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/provider-contract/package.json",
+      "SPDXID": "SPDXRef-File-119c691a28bccd18a1c0ce7a",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "cf2cef77a30569598c9373ea6f3dbdb52ebccd377c966cc3d095170ec039b1f2"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/provider-router/client.js",
+      "SPDXID": "SPDXRef-File-ab54fecf727bcd32ec8ae21e",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "afaf752cc3b7adf01c52e8f4a66ddc955dc3762189fa8d7f2d72fc1eda73afeb"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/provider-router/index.js",
+      "SPDXID": "SPDXRef-File-ea171a3ed1d9e26e35186426",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "9e3e8df5f0502f9010350e07f244fbb143830605d5a5a7dcbbca8c5e1fb90558"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/provider-router/package.json",
+      "SPDXID": "SPDXRef-File-0230b2a7425bbea2a6336ccf",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "98879b32843929c618cfe6de5c654649cab3094c7a81e5f4e64299241554213f"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/provider-router/policy.js",
+      "SPDXID": "SPDXRef-File-dedcdf5e5bb91e6819ead1fd",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "9244d7db27955099fad3d43714df105e21fe2bea0adea52cc4660274dd382443"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/provider-router/providers.example.json",
+      "SPDXID": "SPDXRef-File-dade467cfbec38d09ce7876f",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "1aeb7556820974bd75905878b1ad0518e573598c980f91ec03fefad793f2aa8c"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/provider-router/toolLoop.js",
+      "SPDXID": "SPDXRef-File-c9c497c03ec82ceb069ce40a",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "c5dca6277afcab0811be14e89cbec3458c09b03d9c5535b72df5edc2beb66389"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/provider-router/vault.js",
+      "SPDXID": "SPDXRef-File-32100f777baa729779bf28a5",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "0df0b437c76a8221ebb36a666a31ddae4e9d0859bf3ff64f384d3ea7518c11b9"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/sdk-ts/generated/contract.d.ts",
+      "SPDXID": "SPDXRef-File-a778b3b7c15d86424d81a5bb",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "3e69cd2763a65c9db01afc84fd08991f76e7dca5cd7d2ca771d30e5860fc6738"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/sdk-ts/index.d.ts",
+      "SPDXID": "SPDXRef-File-06f072dc1c233cc0099e7b4d",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "42039d05155986ca075586a3c296bc7a1ff2b1f36341dc11891c6e632bc07568"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/sdk-ts/index.js",
+      "SPDXID": "SPDXRef-File-72040f5d0c6d005efad3f5b3",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "c51bbf63a6a13150774b7c930bbc9a8a13acc52db3cb7cdeca49ea8bd3ff09a4"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/sdk-ts/openapi.json",
+      "SPDXID": "SPDXRef-File-68f30613238d79ab23616699",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "17f0c1d996bb6aae811c385d98749dcf4bbc2375955b45c6ab893654a53690f8"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/sdk-ts/package.json",
+      "SPDXID": "SPDXRef-File-f064ad4be0d28dda7a565b72",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "d0f2f1c9ff2798185b2dbb184e8ca7492641fa41826155b544d48612f42782f6"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/sdk-ts/schemas/client-contract.json",
+      "SPDXID": "SPDXRef-File-f9c9b0664bd0ab9de4ad6ba9",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "3145cdd328b4048b1387490ad5306764d23eb77cf4dc50845f552e0259c59e10"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/skill-router/index.js",
+      "SPDXID": "SPDXRef-File-bd7a2026f8ea41fc9c4a2453",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "0438e10cd846fce5c72a0bcaf9739133694862d7f084b25453618f83ff4ef8f6"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/skill-router/package.json",
+      "SPDXID": "SPDXRef-File-a90178c0659e39d8237ee10d",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "a6a4bc7ff3c56c834ca3f492fc054dfe03503aebf04c47ef274110c8010224a0"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
     }
   ],
   "relationships": [
@@ -81,13 +1216,408 @@
       "spdxElementId": "SPDXRef-DOCUMENT",
       "relationshipType": "DESCRIBES",
       "relatedSpdxElement": "SPDXRef-Package-dsh-armorbreak"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-a3d3a84053c753c06cbdea7f"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-a3d3a84053c753c06cbdea7f",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-34e34cf354b501b99a59e908"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-a3d3a84053c753c06cbdea7f",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-3fbaa564c2b4026f1186eb49"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-c367be35d99bea42e0146f64"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-c367be35d99bea42e0146f64",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-00af5437a439aff64b2e105a"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-c367be35d99bea42e0146f64",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-05a207045d4e18878ebb797b"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-c367be35d99bea42e0146f64",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-c953da41bfebf00a67a11b27"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-f2e2d4652b1793c35519baf7"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-2bfdfd14b2f822cdc3251c4d"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-3446142a019b3a865ffc7e40"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-d1411eb6abade32bcbf84181"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-4671f66d21b94d7d1bdb0741"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-51223b5013946aa84fc4ae2b"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-ab9b6e88c7dd2865aab9ea76"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-9c9124c7a0a9740d277cbe60"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-d12280ec9d4f44e2098448f1"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-4d4666ab80ff784097f8ae36"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-46a30bb0b2b1d48efd2c6f01"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-6e74ae03b7aca79d96d0d30a"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-ceaab8075e104bd3a9dee68d"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-9ac474ad60df84762062ecbf"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-a16a0173e96af8f406af1637"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-20ad7099535de275b656f4c5"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-1d29a44a984e23eba8385859"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-3f0b5dff417c899d1ed7eda3"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-67ee1bf467c0c159e92224c5"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-cb9d19d93005166da5ecb219"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-51c87341f233e4d66ee180d7"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-5a0d75a4984a90ed966d20f5"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-7ce05b205984e25e4db0e901"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-4d940814f34a1db7fe06c213"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-b01f0c43561250dca9d5c964"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-052ce10e06fb3b5fb947c9e8"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-052ce10e06fb3b5fb947c9e8",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-04b13fa978bdbb2a941d1cbe"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-052ce10e06fb3b5fb947c9e8",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-aad9edfeca6d42dc3f819c8f"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-9051e69de08db43d8a6a1b76"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-9051e69de08db43d8a6a1b76",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-9769bf0545c9b63c3fb5079b"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-9051e69de08db43d8a6a1b76",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-887ae76b32521c080a3aac25"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-1e21de14669c0d1a9e75d944"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-1e21de14669c0d1a9e75d944",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-4b8702c1b523cbd1d4a0b16e"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-1e21de14669c0d1a9e75d944",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-20b23b33e4cb64644ee9fb1c"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-1e21de14669c0d1a9e75d944",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-66a8c26fc70ec8d9d7b34415"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-1e21de14669c0d1a9e75d944",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-972e9f073c0c3da05cf85697"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-1e21de14669c0d1a9e75d944",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-f730127e6f7f8d38251c84ae"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-4ebbd64a72e0cb5059718082"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-4ebbd64a72e0cb5059718082",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-57b28aefaae5097d0f3aa80c"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-4ebbd64a72e0cb5059718082",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-4288fd0f7966cd12db16f210"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-4ebbd64a72e0cb5059718082",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-1d74bce58439984e281dd98e"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-2aa1a191ec48da716865d8fa"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-2aa1a191ec48da716865d8fa",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-83dd5ff00e50cdb8b47dcf05"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-97aa2a55d86b87787ccd8f6b"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-97aa2a55d86b87787ccd8f6b",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-c27bffd3077cfe69efca6c57"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-97aa2a55d86b87787ccd8f6b",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-cf880dc69c314e4236f0fe06"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-97aa2a55d86b87787ccd8f6b",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-e4c395c5f528bdfcd38d629c"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-97aa2a55d86b87787ccd8f6b",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-9b398d6002fb393b17762c47"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-97aa2a55d86b87787ccd8f6b",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-2d3743109152e1aec7d20491"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-d70dce2a20d289a218fc5852"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-d70dce2a20d289a218fc5852",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-9d90d51e649a119f6bf0c545"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-d70dce2a20d289a218fc5852",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-829c1444fcd40b9b39855096"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-d70dce2a20d289a218fc5852",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-b3beb2ae90146fb38a39bcbb"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-d70dce2a20d289a218fc5852",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-119c691a28bccd18a1c0ce7a"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-8ff566f4504182a0c6fe696e"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-8ff566f4504182a0c6fe696e",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-ab54fecf727bcd32ec8ae21e"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-8ff566f4504182a0c6fe696e",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-ea171a3ed1d9e26e35186426"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-8ff566f4504182a0c6fe696e",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-0230b2a7425bbea2a6336ccf"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-8ff566f4504182a0c6fe696e",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-dedcdf5e5bb91e6819ead1fd"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-8ff566f4504182a0c6fe696e",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-dade467cfbec38d09ce7876f"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-8ff566f4504182a0c6fe696e",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-c9c497c03ec82ceb069ce40a"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-8ff566f4504182a0c6fe696e",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-32100f777baa729779bf28a5"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-4fa3026a279c374816b26bba"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-4fa3026a279c374816b26bba",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-a778b3b7c15d86424d81a5bb"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-4fa3026a279c374816b26bba",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-06f072dc1c233cc0099e7b4d"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-4fa3026a279c374816b26bba",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-72040f5d0c6d005efad3f5b3"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-4fa3026a279c374816b26bba",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-68f30613238d79ab23616699"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-4fa3026a279c374816b26bba",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-f064ad4be0d28dda7a565b72"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-4fa3026a279c374816b26bba",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-f9c9b0664bd0ab9de4ad6ba9"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-8e411b64236cc4383db3d856"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-8e411b64236cc4383db3d856",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-bd7a2026f8ea41fc9c4a2453"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-8e411b64236cc4383db3d856",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-a90178c0659e39d8237ee10d"
     }
   ],
   "annotations": [
     {
       "annotationType": "OTHER",
       "annotator": "Tool: scripts/v2/build-sbom.mjs",
-      "annotationDate": "2026-10-22T12:55:35.816Z",
+      "annotationDate": "2026-10-23T15:19:15.403Z",
       "comment": "External tools are not bundled; their licenses must be reviewed separately before distribution."
     }
   ]
