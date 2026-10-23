@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdtemp, writeFile } from 'node:fs/promises'
+import { mkdtemp, readFile, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
@@ -13,9 +13,23 @@ test('Core daemon supports three clients and survives restart', async () => {
   const principal = { id: 'daemon-test', kind: 'local-user', workspaces: [workspace] }
   await writeFile(join(workspace, 'sample.txt'), 'daemon sample')
   const daemon = await createCoreDaemon({ stateRoot, workspace, principal })
+  const mcpToken = daemon.mcpToken
   const taskIds = []
+  let restoredSessionId
   try {
-    const clients = [1, 2, 3].map(() => new ArmorBreakClient({ baseUrl: daemon.url, principal, workspaceId: workspace }))
+    assert.equal(typeof mcpToken, 'string')
+    assert.ok(Buffer.byteLength(mcpToken) >= 32)
+    assert.equal(Object.keys(daemon).includes('mcpToken'), false, 'the bearer must not appear in enumerable daemon output')
+    const lock = await readFile(join(stateRoot, 'daemon.json'), 'utf8')
+    assert.equal(lock.includes(mcpToken), false, 'the bearer must not be written to daemon.json')
+    const rejected = await fetch(daemon.url, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize' }),
+    })
+    assert.equal(rejected.status, 401, 'daemon must reject requests without its generated bearer')
+
+    const clients = [1, 2, 3].map(() => new ArmorBreakClient({ baseUrl: daemon.url, token: mcpToken, principal, workspaceId: workspace }))
     const results = await Promise.all(clients.map((client) => client.analyze({ capability: 'forensics.hash', target: join(workspace, 'sample.txt') })))
     for (const result of results) {
       assert.equal(result.state, 'COMPLETED')
@@ -23,16 +37,25 @@ test('Core daemon supports three clients and survives restart', async () => {
       taskIds.push(result.taskId)
     }
     assert.equal(new Set(taskIds).size, 3)
-    assert.ok((await clients[0].tasks()).length >= 3)
+    for (let index = 0; index < clients.length; index += 1) {
+      const visibleTasks = await clients[index].tasks()
+      assert.deepEqual(visibleTasks.map((task) => task.id), [taskIds[index]], 'each client session sees only its own tasks')
+    }
+    restoredSessionId = clients[0].sessionId
+    const sessions = await readFile(join(stateRoot, 'mcp-http-sessions.json'), 'utf8')
+    assert.ok(sessions.includes(restoredSessionId), 'daemon sessions persist so an authorized client can reconnect after restart')
+    assert.equal(sessions.includes(mcpToken), false, 'session persistence must not include the bearer')
     await assert.rejects(() => createCoreDaemon({ stateRoot, workspace, principal }), (error) => error.code === 'DAEMON_LOCKED')
   } finally {
     await daemon.stop()
   }
-  const restarted = await createCoreDaemon({ stateRoot, workspace, principal })
+  const restarted = await createCoreDaemon({ stateRoot, workspace, principal, mcpToken })
   try {
-    const client = new ArmorBreakClient({ baseUrl: restarted.url, principal, workspaceId: workspace })
+    const client = new ArmorBreakClient({ baseUrl: restarted.url, token: restarted.mcpToken, sessionId: restoredSessionId, principal, workspaceId: workspace })
     const tasks = await client.tasks()
-    for (const taskId of taskIds) assert.ok(tasks.some((task) => task.id === taskId))
+    assert.deepEqual(tasks.map((task) => task.id), [taskIds[0]], 'restored session keeps its own task scope across daemon restart')
+    const fresh = new ArmorBreakClient({ baseUrl: restarted.url, token: restarted.mcpToken, principal, workspaceId: workspace })
+    assert.deepEqual(await fresh.tasks(), [], 'a new session cannot see tasks from previous clients')
   } finally {
     await restarted.stop()
   }

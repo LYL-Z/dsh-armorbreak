@@ -5,7 +5,7 @@
  */
 export class ArmorBreakClient {
   /**
-   * @param {{engine?: object, baseUrl?: string, token?: string, fetchImpl?: Function, principal?: object, workspaceId?: string}} options
+   * @param {{engine?: object, baseUrl?: string, token?: string, sessionId?: string, fetchImpl?: Function, principal?: object, workspaceId?: string}} options
    */
   constructor(options = {}) {
     if (!options.engine && !options.baseUrl) throw new Error('engine or baseUrl is required')
@@ -13,10 +13,11 @@ export class ArmorBreakClient {
     this.engine = options.engine ?? null
     this.baseUrl = options.baseUrl ? String(options.baseUrl).replace(/\/$/, '') : null
     this.token = options.token ?? null
+    this.sessionId = options.sessionId ?? null
     this.fetchImpl = options.fetchImpl ?? globalThis.fetch
     this.principal = options.principal ?? { id: 'sdk-local', kind: 'local-user' }
     this.workspaceId = options.workspaceId ?? process.cwd()
-    this.initialized = false
+    this.initialized = Boolean(this.sessionId)
     this.nextId = 1
   }
 
@@ -66,12 +67,14 @@ export class ArmorBreakClient {
 
   async rpc(method, params) {
     const endpoint = this.baseUrl.endsWith('/mcp') ? this.baseUrl : `${this.baseUrl}/mcp`
+    const headers = { 'content-type': 'application/json', ...(this.token ? { authorization: `Bearer ${this.token}` } : {}), ...(this.sessionId ? { 'mcp-session-id': this.sessionId } : {}) }
     const response = await this.fetchImpl(endpoint, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', ...(this.token ? { authorization: `Bearer ${this.token}` } : {}) },
+      headers,
       body: JSON.stringify({ jsonrpc: '2.0', id: this.nextId++, method, params }),
     })
     if (!response.ok) throw new Error(`MCP HTTP ${response.status}`)
+    this.sessionId = response.headers.get('mcp-session-id') ?? this.sessionId
     const body = await response.json()
     if (body.error) throw new Error(`${body.error.code}: ${body.error.message}`)
     return body
