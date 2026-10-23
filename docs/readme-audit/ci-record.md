@@ -3,7 +3,8 @@
 - PR：[#15](https://github.com/LYL-Z/dsh-armorbreak/pull/15)
 - 分支：`docs/readme-v22-developer-experience`
 - 基线：`8df5bf98b059139707cc048dcb97f8dea380873e`
-- 首轮 CI：`39928989956`（merge commit `ef67bf99…`）
+- 最新 CI：`39929353734`（head `07ec4ab870e85ffbdb3a13127d2f81bdf963915c`）
+- 首轮 CI：`39928989956`（merge commit `ef67bf99…`，结果相同）
 
 ## 1. CI 结果
 
@@ -13,7 +14,7 @@
 | L1 Docker integration (real daemon) | **success** | 真实 Docker 集成通过 |
 | Node 24 on ubuntu-latest | **success** | 全量测试 |
 | Node 24 on windows-latest | **success** | 全量测试 |
-| Release evidence checks (commit-bound) | **failure** | 预期限制：证据 manifest 绑定基线 `e952e5de…`，PR merge commit 为 `ef67bf99…`；按任务书未修改审计证据 JSON |
+| Release evidence checks (commit-bound) | **failure** | 预期限制：证据 manifest 绑定基线 `e952e5de…`，PR merge commit 与证据 commit 不同；按任务书未修改审计证据 JSON |
 
 失败日志：
 
