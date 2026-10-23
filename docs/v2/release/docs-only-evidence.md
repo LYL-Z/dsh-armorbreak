@@ -23,7 +23,9 @@ SHA (`EVIDENCE_BASE_SHA` from the pull-request event). The validator then:
    SHA-256 and size;
 5. verifies the TAP hash and permits the baseline test-report commit only in
    the path-verified docs-only mode;
-6. rejects Git replace refs and custom `GIT_REPLACE_REF_BASE`.
+6. disables the separate acceptance-only “evidence ancestor” exception while
+   docs-only mode is active;
+7. rejects Git replace refs and custom `GIT_REPLACE_REF_BASE`.
 
 PR titles, labels, and commit messages are not consulted.
 
