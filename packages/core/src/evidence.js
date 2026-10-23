@@ -5,6 +5,7 @@
  * @module dsh-armorbreak/lib/core/evidence
  */
 import { appendJsonl, chainHash, newId, nowIso, readJson, readJsonl, redactText, sanitizeText, sha256, withFileMutex, writeJsonAtomic } from './util.js'
+import { withAppendFileLock } from './append-lock.js'
 
 /**
  * @typedef {'critical'|'high'|'medium'|'low'|'info'} Severity
@@ -50,7 +51,7 @@ export class EvidenceStore {
    * @param {{title: string, kind?: string, excerpt?: string, meta?: Record<string, unknown>, capabilityId?: string, targetPath?: string|null, targetSha256?: string|null}} input
    */
   async addEvidence(input) {
-    return withFileMutex(this.evidenceFile, async () => {
+    return withAppendFileLock(this.evidenceFile, async () => {
       const { headHash, count } = await this.tail()
       const body = {
         schemaVersion: 'armorbreak/v2',
