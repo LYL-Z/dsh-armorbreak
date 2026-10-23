@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import test from 'node:test'
 
-import { classifyDocsOnly, validateEvidence } from '../lib/release/evidenceValidator.js'
+import { classifyDocsBaseline, classifyDocsOnly, validateEvidence } from '../lib/release/evidenceValidator.js'
 
 const hash = (value) => createHash('sha256').update(value).digest('hex')
 
@@ -162,6 +162,71 @@ test('validator accepts a path-verified docs-only baseline and still rejects a p
     const noBase = validateEvidence({ repoRoot: root, commit: docsHead, allowDocsOnly: true })
     assert.equal(noBase.ok, false)
     assert.ok(noBase.issues.some((issue) => /target branch base is required/.test(issue)))
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('docs baseline accepts prior evidence and prior docs-only merges', () => {
+  const { root, base } = fixture()
+  try {
+    write(root, 'docs/v2/acceptance/prior.json', '{}\n')
+    git(root, 'add', 'docs/v2/acceptance/prior.json')
+    git(root, 'commit', '-m', 'evidence: prior')
+    const evidenceBase = git(root, 'rev-parse', 'HEAD')
+    git(root, 'add', 'docs/usage.md')
+    write(root, 'docs/usage.md', '# Usage changed\n')
+    git(root, 'add', 'docs/usage.md')
+    git(root, 'commit', '-m', 'docs: prior docs-only')
+    const priorDocsBase = git(root, 'rev-parse', 'HEAD')
+    const baseline = classifyDocsBaseline({ repoRoot: root, base, head: priorDocsBase })
+    assert.equal(baseline.ok, true, baseline.issues.join('; '))
+    assert.ok(baseline.changed.includes('docs/v2/acceptance/prior.json'))
+    assert.ok(baseline.changed.includes('docs/usage.md'))
+    assert.equal(classifyDocsBaseline({ repoRoot: root, base, head: evidenceBase }).ok, true)
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('docs baseline rejects CI, build and security changes in target base', () => {
+  const { root, base } = fixture()
+  try {
+    for (const [path, content] of [
+      ['.github/workflows/ci.yml', 'name: changed\n'],
+      ['SECURITY.md', '# changed\n'],
+      ['docs/v2/provider-security.md', '# changed\n'],
+    ]) {
+      git(root, 'reset', '--hard', base)
+      const head = commitChange(root, path, content, 'docs: misleading')
+      const baseline = classifyDocsBaseline({ repoRoot: root, base, head })
+      assert.equal(baseline.ok, false, path)
+      assert.ok(baseline.issues.some((issue) => issue.includes(path)))
+    }
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('docs-only rejects a target base with unbound source changes after evidence', () => {
+  const { root, base } = fixture()
+  try {
+    write(root, 'docs/v2/acceptance/test-report.json', JSON.stringify({ commit: base, tapSha256: hash('tap') }))
+    write(root, 'docs/v2/acceptance/evidence-manifest.json', JSON.stringify({
+      schemaVersion: 'armorbreak.evidence-manifest/v1',
+      commit: base,
+      files: {
+        'docs/v2/acceptance/test-report.json': { sha256: hash(JSON.stringify({ commit: base, tapSha256: hash('tap') })), size: Buffer.byteLength(JSON.stringify({ commit: base, tapSha256: hash('tap') })) },
+        'docs/v2/acceptance/test-report.tap': { sha256: hash('tap'), size: 3 },
+      },
+    }))
+    git(root, 'add', 'docs/v2/acceptance')
+    git(root, 'commit', '-m', 'evidence: baseline')
+    const staleSourceBase = commitChange(root, 'lib/source.js', 'export const value = 2\n')
+    const docsHead = commitChange(root, 'README.md', '# README changed\n')
+    const result = validateEvidence({ repoRoot: root, commit: docsHead, base: staleSourceBase, allowDocsOnly: true, allowEvidenceAncestor: true })
+    assert.equal(result.ok, false)
+    assert.ok(result.issues.some((issue) => /docs-only base is not evidence-backed/.test(issue)))
   } finally {
     rmSync(root, { recursive: true, force: true })
   }

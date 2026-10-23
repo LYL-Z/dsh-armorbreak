@@ -9,20 +9,28 @@ const arg = (name) => {
   const index = process.argv.indexOf(name)
   return index >= 0 && process.argv[index + 1] && !process.argv[index + 1].startsWith('--') ? process.argv[index + 1] : undefined
 }
+const isTag = process.env.GITHUB_REF_TYPE === 'tag' || String(process.env.GITHUB_REF ?? '').startsWith('refs/tags/')
 const commit = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
 const base = arg('--base') ?? process.env.EVIDENCE_BASE_SHA
+const allowDocsOnly = process.argv.includes('--allow-docs-only') && !isTag
 const validation = validateEvidence({
   repoRoot: process.cwd(),
   commit,
   base,
-  allowDocsOnly: process.argv.includes('--allow-docs-only'),
+  allowDocsOnly,
   allowEvidenceAncestor: process.argv.includes('--allow-evidence-only'),
 })
-const report = validation.mode === 'docs-only'
-  ? docsOnlyGateReport({ commit, validation })
-  : computeReleaseGates({ commit, allowEvidenceAncestor: true })
+let report
+if (validation.mode === 'docs-only' && !isTag) {
+  if (!base) {
+    report = { schemaVersion: 'armorbreak.release-gates/v2', commit, mode: 'docs-only', applicability: 'BLOCKED', releasable: false, reason: 'docs-only mode requires a target base' }
+  } else {
+    const baseReport = computeReleaseGates({ repoRoot: process.cwd(), commit: base, allowEvidenceAncestor: true })
+    report = docsOnlyGateReport({ commit, baseCommit: base, baseReport, validation })
+  }
+} else {
+  report = computeReleaseGates({ commit, allowEvidenceAncestor: true })
+}
 writeFileSync('docs/v2/acceptance/release-gates.json', `${JSON.stringify(report, null, 2)}\n`)
 console.log(JSON.stringify({ commit, releasable: report.releasable, mode: report.mode ?? 'release-gates', applicability: report.applicability ?? 'RELEASE_GATES', gates: report.gates ? Object.fromEntries(Object.entries(report.gates).map(([name, gate]) => [name, gate.status])) : undefined, testReport: report.testReport }, null, 2))
-if (validation.mode === 'docs-only') {
-  if (!validation.ok) process.exitCode = 1
-} else if (!report.releasable) process.exitCode = 1
+if (!validation.ok || !report.releasable) process.exitCode = 1

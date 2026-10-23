@@ -42,10 +42,29 @@ validator:
 
 PR titles, labels, and commit messages are not consulted.
 
-The release-gate step remains non-releasable for docs-only changes. It emits
-`applicability: NOT_APPLICABLE_DOCS_ONLY`, `releasable: false`, and exits 0 only
-after the same docs-only evidence validation passes. Source changes still run
-the full release gates.
+Docs-only reuse additionally requires the **target base** to be evidence-backed:
+the path set from `manifest.commit..base` may contain only acceptance evidence,
+generated readiness metadata, or previously merged docs-only Markdown. Any
+source, CI, build, security, or other change in that range rejects the PR.
+
+The release-gate step does not skip gate evaluation: for docs-only PRs it
+computes the full gates at the target base and emits
+`applicability: DOCS_ONLY_BASE_GATES`; `releasable` is inherited from that base
+report. If the base is not releasable, the docs PR is blocked. Tags always
+evaluate gates at the tag commit and are never treated as docs-only.
+
+## Residual trust
+
+The workflow runs validation code from the PR checkout. `--require-clean`,
+`GITHUB_SHA == HEAD`, and `.github/CODEOWNERS` reduce accidental/dirty-tree
+risk, but a repository with no enforced ruleset can still run a PR-modified
+workflow. A protected branch/ruleset for `.github/workflows/**`,
+`lib/release/**`, `scripts/v2/**` and acceptance evidence is required before CI
+is treated as an external trust boundary.
+
+Evidence files, including the manifest and TAP, are mutable by design in this
+repository. Evidence-only review should be code-owner reviewed; signed or
+append-only CI provenance would be a stronger future control.
 
 ## Never eligible for docs-only reuse
 

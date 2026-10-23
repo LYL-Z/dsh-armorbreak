@@ -97,14 +97,18 @@ test('failed test run can never be releasable', () => {
   rmSync(repo.root, { recursive: true, force: true })
 })
 
-test('docs-only gate is explicitly not applicable and never releasable', () => {
-  const report = docsOnlyGateReport({
-    commit: COMMIT,
-    validation: { ok: true, mode: 'docs-only', checked: 113, issues: [] },
-  })
+test('docs-only gate inherits the target base gates and never fabricates releasability', () => {
+  const validation = { ok: true, mode: 'docs-only', checked: 113, issues: [] }
+  const baseReport = { releasable: true, gates: { security: { status: 'PASS' } }, testReport: { tests: 396 } }
+  const report = docsOnlyGateReport({ commit: COMMIT, baseCommit: 'b'.repeat(40), baseReport, validation })
   assert.equal(report.mode, 'docs-only')
-  assert.equal(report.applicability, 'NOT_APPLICABLE_DOCS_ONLY')
-  assert.equal(report.releasable, false)
+  assert.equal(report.applicability, 'DOCS_ONLY_BASE_GATES')
+  assert.equal(report.releasable, true)
+  assert.equal(report.gates.security.status, 'PASS')
   assert.equal(report.evidenceValidation.ok, true)
   assert.equal(report.evidenceValidation.checked, 113)
+
+  const blocked = docsOnlyGateReport({ commit: COMMIT, baseCommit: 'b'.repeat(40), baseReport: { releasable: false }, validation })
+  assert.equal(blocked.releasable, false)
+  assert.match(blocked.reason, /cannot bypass/)
 })
