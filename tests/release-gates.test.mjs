@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
 
-import { computeReleaseGates, REQUIRED_M4, sha256File } from '../lib/release/gates.js'
+import { computeReleaseGates, docsOnlyGateReport, REQUIRED_M4, sha256File } from '../lib/release/gates.js'
 
 const COMMIT = 'a'.repeat(40)
 
@@ -95,4 +95,16 @@ test('failed test run can never be releasable', () => {
   assert.equal(report.gates.security.status, 'FAIL')
   assert.equal(report.releasable, false)
   rmSync(repo.root, { recursive: true, force: true })
+})
+
+test('docs-only gate is explicitly not applicable and never releasable', () => {
+  const report = docsOnlyGateReport({
+    commit: COMMIT,
+    validation: { ok: true, mode: 'docs-only', checked: 113, issues: [] },
+  })
+  assert.equal(report.mode, 'docs-only')
+  assert.equal(report.applicability, 'NOT_APPLICABLE_DOCS_ONLY')
+  assert.equal(report.releasable, false)
+  assert.equal(report.evidenceValidation.ok, true)
+  assert.equal(report.evidenceValidation.checked, 113)
 })

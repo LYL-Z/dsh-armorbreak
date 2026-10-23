@@ -140,11 +140,13 @@ jobs:
 
       - name: Evidence hashes and references
         env:
-          EVIDENCE_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-        run: node scripts/v2/validate-evidence.mjs --allow-docs-only --allow-evidence-only
+          EVIDENCE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: node scripts/v2/validate-evidence.mjs --allow-docs-only --allow-evidence-only --require-clean
 
       - name: Evidence-driven release gates
-        run: node scripts/v2/release-gates.mjs
+        env:
+          EVIDENCE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: node scripts/v2/release-gates.mjs --allow-docs-only --allow-evidence-only
 
       - name: GA blocker root-cause map
         run: node scripts/v2/check-blocker-map.mjs

@@ -10,7 +10,8 @@ const arg = (name) => {
 }
 const allowDocsOnly = process.argv.includes('--allow-docs-only')
 const allowEvidenceOnly = process.argv.includes('--allow-evidence-only')
+const requireClean = process.argv.includes('--require-clean')
 const base = arg('--base') ?? process.env.EVIDENCE_BASE_SHA
-const result = validateEvidence({ repoRoot: process.cwd(), commit, base, allowEvidenceAncestor: allowEvidenceOnly, allowDocsOnly })
+const result = validateEvidence({ repoRoot: process.cwd(), commit, base, allowEvidenceAncestor: allowEvidenceOnly, allowDocsOnly, requireClean })
 console.log(JSON.stringify(result, null, 2))
 if (!result.ok) process.exitCode = 1

@@ -23,20 +23,29 @@ The validator supports three explicit modes:
 - **code/security change:** neither mode applies; evidence must match the code
   commit or be regenerated for it.
 
-For docs-only mode the validator:
+For pull requests the base is `github.event.pull_request.base.sha`; for pushes
+it is `github.event.before` (guarded to the same branch). For docs-only mode the
+validator:
 
-1. checks that the base is an ancestor of HEAD;
-2. computes `git diff --name-only --no-renames <base>..HEAD`;
+1. checks that the base is an ancestor of HEAD and, with `--require-clean`,
+   that the worktree is clean;
+2. computes `git diff --name-only --no-renames -z <base>..HEAD`, rejecting
+   backslash paths and non-regular blobs such as gitlinks;
 3. accepts only README Markdown files and non-protected `docs/**/*.md` files;
 4. verifies every file pinned by `evidence-manifest.json` still matches its
-   SHA-256 and size;
+   SHA-256 and size, including the required test report and TAP;
 5. verifies the TAP hash and requires the test-report commit to equal the
-   manifest source commit when docs-only or evidence-only baseline is reused;
+   manifest source commit when a baseline is reused;
 6. disables the separate acceptance-only “evidence ancestor” exception while
    docs-only mode is active;
 7. rejects Git replace refs and custom `GIT_REPLACE_REF_BASE`.
 
 PR titles, labels, and commit messages are not consulted.
+
+The release-gate step remains non-releasable for docs-only changes. It emits
+`applicability: NOT_APPLICABLE_DOCS_ONLY`, `releasable: false`, and exits 0 only
+after the same docs-only evidence validation passes. Source changes still run
+the full release gates.
 
 ## Never eligible for docs-only reuse
 

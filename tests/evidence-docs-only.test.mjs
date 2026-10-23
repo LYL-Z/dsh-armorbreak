@@ -68,6 +68,9 @@ test('docs-only rejects security, source, release-gate, evidence and build-confi
     ['docs/v2/acceptance/test-report.tap', 'tampered', 'evidence'],
     ['.github/workflows/ci.yml', 'name: CI changed\n', 'build/CI config'],
     ['docs/v2/generated/host-matrix.md', '# generated changed\n', 'generated acceptance metadata'],
+    ['docs/v2/provider-security.md', '# Provider security changed\n', 'provider security guidance'],
+    ['docs/acceptance.md', '# Acceptance changed\n', 'acceptance evidence'],
+    ['docs/audit/environment-audit.md', '# Audit changed\n', 'audit evidence'],
   ]
   try {
     for (const [path, content, label] of cases) {
@@ -159,6 +162,32 @@ test('validator accepts a path-verified docs-only baseline and still rejects a p
     const noBase = validateEvidence({ repoRoot: root, commit: docsHead, allowDocsOnly: true })
     assert.equal(noBase.ok, false)
     assert.ok(noBase.issues.some((issue) => /target branch base is required/.test(issue)))
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('docs-only rejects a gitlink disguised as a markdown document', () => {
+  const { root, base } = fixture()
+  try {
+    git(root, 'update-index', '--add', '--cacheinfo', `160000,${base},docs/gitlink.md`)
+    git(root, 'commit', '-m', 'docs: add gitlink')
+    const head = git(root, 'rev-parse', 'HEAD')
+    const result = classifyDocsOnly({ repoRoot: root, base, head })
+    assert.equal(result.ok, false)
+    assert.ok(result.issues.some((issue) => /non-regular document/.test(issue)))
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('validator requireClean rejects a dirty working tree before trusting evidence', () => {
+  const { root, base } = fixture()
+  try {
+    write(root, 'README.md', '# uncommitted change\n')
+    const result = validateEvidence({ repoRoot: root, commit: base, requireClean: true })
+    assert.equal(result.ok, false)
+    assert.ok(result.issues.some((issue) => /working tree is dirty/.test(issue)))
   } finally {
     rmSync(root, { recursive: true, force: true })
   }
