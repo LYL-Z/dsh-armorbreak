@@ -7,8 +7,7 @@
 import { copyFile, mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { existsSync } from 'node:fs'
-
-const SECRET_FIELD = /api[_-]?key|token|secret|password/i
+import { validateNoPlaintextSecrets } from './secrets.js'
 
 function fail(code, message) {
   const error = new Error(message)
@@ -21,7 +20,7 @@ function validateServer(server) {
   if (!server.command || typeof server.command !== 'string') throw fail('CONFIG_INVALID', 'server.command is required')
   if (server.args !== undefined && (!Array.isArray(server.args) || server.args.some((arg) => typeof arg !== 'string'))) throw fail('CONFIG_INVALID', 'server.args must be strings')
   if (server.env !== undefined && (typeof server.env !== 'object' || Array.isArray(server.env))) throw fail('CONFIG_INVALID', 'server.env must be an object')
-  for (const key of Object.keys(server)) if (SECRET_FIELD.test(key)) throw fail('CONFIG_INVALID', 'plaintext secret fields are forbidden; use env placeholders')
+  validateNoPlaintextSecrets(server)
   return server
 }
 

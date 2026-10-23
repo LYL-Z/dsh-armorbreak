@@ -2,6 +2,7 @@
 import { copyFile, mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { existsSync } from 'node:fs'
+import { validateNoPlaintextSecrets } from './secrets.js'
 
 function fail(code, message) {
   const error = new Error(message)
@@ -15,7 +16,7 @@ function quote(value) {
 
 export function renderTomlServer(name, server) {
   if (!server?.command || typeof server.command !== 'string') throw fail('CONFIG_INVALID', 'server.command is required')
-  for (const key of Object.keys(server)) if (/api[_-]?key|token|secret|password/i.test(key)) throw fail('CONFIG_INVALID', 'plaintext secret fields are forbidden; use env placeholders')
+  validateNoPlaintextSecrets(server)
   const lines = [`[mcp_servers.${name}]`, `command = ${quote(server.command)}`]
   if (server.args !== undefined) {
     if (!Array.isArray(server.args) || server.args.some((arg) => typeof arg !== 'string')) throw fail('CONFIG_INVALID', 'server.args must be strings')
