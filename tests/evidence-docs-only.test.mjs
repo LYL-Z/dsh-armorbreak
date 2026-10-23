@@ -1,0 +1,125 @@
+import assert from 'node:assert/strict'
+import { createHash } from 'node:crypto'
+import { execFileSync } from 'node:child_process'
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { dirname, join } from 'node:path'
+import test from 'node:test'
+
+import { classifyDocsOnly, validateEvidence } from '../lib/release/evidenceValidator.js'
+
+const hash = (value) => createHash('sha256').update(value).digest('hex')
+
+function git(root, ...args) {
+  return execFileSync('git', ['-C', root, ...args], { encoding: 'utf8' }).trim()
+}
+
+function write(root, path, content) {
+  mkdirSync(dirname(join(root, path)), { recursive: true })
+  writeFileSync(join(root, path), content)
+}
+
+function fixture() {
+  const root = mkdtempSync(join(tmpdir(), 'abm-docs-only-'))
+  git(root, 'init')
+  git(root, 'config', 'user.email', 'qa@example.test')
+  git(root, 'config', 'user.name', 'QA')
+  write(root, 'README.md', '# README\n')
+  write(root, 'docs/usage.md', '# Usage\n')
+  write(root, 'SECURITY.md', '# Security\n')
+  write(root, 'lib/source.js', 'export const value = 1\n')
+  write(root, 'scripts/v2/release-gates.mjs', 'export const gate = true\n')
+  write(root, '.github/workflows/ci.yml', 'name: CI\n')
+  write(root, 'docs/v2/acceptance/test-report.tap', 'tap')
+  git(root, 'add', '-A')
+  git(root, 'commit', '-m', 'base')
+  const base = git(root, 'rev-parse', 'HEAD')
+  return { root, base }
+}
+
+function commitChange(root, path, content, message = 'change') {
+  write(root, path, content)
+  git(root, 'add', '-A')
+  git(root, 'commit', '-m', message)
+  return git(root, 'rev-parse', 'HEAD')
+}
+
+test('docs-only accepts only real documentation diffs, not commit messages', () => {
+  const { root, base } = fixture()
+  try {
+    commitChange(root, 'README.md', '# README changed\n', 'chore: not a docs message')
+    commitChange(root, 'docs/usage.md', '# Usage changed\n')
+    const head = git(root, 'rev-parse', 'HEAD')
+    const result = classifyDocsOnly({ repoRoot: root, base, head })
+    assert.equal(result.ok, true)
+    assert.deepEqual(result.changed.sort(), ['README.md', 'docs/usage.md'])
+    assert.equal(result.issues.length, 0)
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('docs-only rejects security, source, release-gate, evidence and build-config changes', () => {
+  const { root, base } = fixture()
+  const cases = [
+    ['SECURITY.md', '# Security changed\n', 'security policy'],
+    ['lib/source.js', 'export const value = 2\n', 'source code'],
+    ['scripts/v2/release-gates.mjs', 'export const gate = false\n', 'release gate'],
+    ['docs/v2/acceptance/test-report.tap', 'tampered', 'evidence'],
+    ['.github/workflows/ci.yml', 'name: CI changed\n', 'build/CI config'],
+    ['docs/v2/generated/host-matrix.md', '# generated changed\n', 'generated acceptance metadata'],
+  ]
+  try {
+    for (const [path, content, label] of cases) {
+      git(root, 'reset', '--hard', base)
+      const head = commitChange(root, path, content, 'docs: only markdown')
+      const result = classifyDocsOnly({ repoRoot: root, base, head })
+      assert.equal(result.ok, false, label)
+      assert.ok(result.issues.some((issue) => issue.includes(path)), `${label}: ${result.issues.join('; ')}`)
+    }
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('docs-only rejects git replace refs', () => {
+  const { root, base } = fixture()
+  try {
+    const head = commitChange(root, 'README.md', '# README changed\n')
+    git(root, 'replace', head, base)
+    const result = classifyDocsOnly({ repoRoot: root, base, head })
+    assert.equal(result.ok, false)
+    assert.ok(result.issues.some((issue) => /replace refs/.test(issue)))
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('validator accepts a path-verified docs-only baseline and still rejects a protected diff', () => {
+  const { root, base } = fixture()
+  try {
+    const docsHead = commitChange(root, 'README.md', '# README changed\n')
+    write(root, 'docs/v2/acceptance/test-report.json', JSON.stringify({ commit: base, tapSha256: hash('tap') }))
+    write(root, 'docs/v2/acceptance/evidence-manifest.json', JSON.stringify({
+      schemaVersion: 'armorbreak.evidence-manifest/v1',
+      commit: base,
+      files: {
+        'docs/v2/acceptance/test-report.tap': { sha256: hash('tap'), size: 3 },
+      },
+    }))
+    const accepted = validateEvidence({ repoRoot: root, commit: docsHead, base, allowDocsOnly: true })
+    assert.equal(accepted.ok, true, accepted.issues.join('; '))
+    assert.equal(accepted.mode, 'docs-only')
+
+    const protectedHead = commitChange(root, 'SECURITY.md', '# Security changed\n')
+    const rejected = validateEvidence({ repoRoot: root, commit: protectedHead, base, allowDocsOnly: true })
+    assert.equal(rejected.ok, false)
+    assert.ok(rejected.issues.some((issue) => /non-doc change/.test(issue)))
+
+    const noBase = validateEvidence({ repoRoot: root, commit: docsHead, allowDocsOnly: true })
+    assert.equal(noBase.ok, false)
+    assert.ok(noBase.issues.some((issue) => /target branch base is required/.test(issue)))
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
