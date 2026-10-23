@@ -1,6 +1,9 @@
 # ArmorBreak V2 User Guide (M4-11)
 
-> This guide documents ArmorBreak V2.0.0. Install it into an isolated test profile first; the release evidence and known limitations are in `docs/releases/v2.0.0.md`.
+> **Historical scope:** This guide documents the V2.0.0 user flow. For the current V2.2 release gate and host evidence, use
+> `docs/v2/generated/release-status.md` and `docs/v2/generated/host-matrix.md`.
+>
+> Install it into an isolated test profile first; the V2.0.0 evidence is in `docs/releases/v2.0.0.md`.
 
 ## Install / select
 
@@ -36,8 +39,10 @@
 
 ## Known limitations
 
-- V2 bundle not yet installed in real Desktop; M4-06 blocked.
+- **Historical V2.0 limitation:** the bundle was not yet installed in real Desktop at that time; M4-06 was blocked.
+  This is superseded for DSH Desktop by `docs/v2/acceptance/desktop-e2e.md` (2026-10-21), which records real Desktop
+  `armorbreak_health` and L0 `forensics.hash`; it is not evidence for macOS.
 - Real Garak/PyRIT/Inspect and OCR/PDF/audio runtimes are not bundled.
 - macOS not tested.
 - R_offline for online-LLM workflows is not measured (N/A).
-# prerequisites: Node 24, and CPython >=3.10 for the AISEC worker; Docker/Podman optional for L1.
+> Prerequisites: Node 24, and CPython >=3.10 for the AISEC worker; Docker/Podman optional for L1.

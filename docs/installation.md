@@ -8,14 +8,14 @@
 
 ## 安装（推荐：插件面板 / plugin_manager）
 
-1. 确认 bundle 目录存在：`D:\dsh-ABM\armorbreak`（含 `package.json`、`cordis.patch.yml`）。
+1. 确认 bundle 目录存在：`<BUNDLE_PATH>`（含 `package.json`、`cordis.patch.yml`）。
 2. 在 Harness 会话中让 Agent 执行：
 
    ```
-   plugin_manager action=install_bundle target="D:\\dsh-ABM\\armorbreak"
+   plugin_manager action=install_bundle target="<BUNDLE_PATH>"
    ```
 
-   等价的手工路径：设置 → 插件 → 添加插件 → 输入上述绝对目录。
+   等价的手工路径：设置 → 插件 → 添加插件 → 输入该绝对目录。
 
 3. 读取返回结果：`application` 与 `warnings` 才是结论。`applied` 表示已生效；
    若提示需要重启，**完全退出并重新打开** DeepSeek Harness（不是只关窗口）。
@@ -32,6 +32,10 @@
 - 安装后下一层 patch 插入两行：`armorbreak`（Host 状态路由 + 浏览器半）与 `preset-armorbreak`（模式声明）；
 - 不修改 Harness 核心、不改既有 preset、不改用户其它插件。
 
+> 通用 MCP 宿主（Claude/Cursor/Codex/Hermes 等）与独立 Core 接入不在本文范围。
+> 见 README 的 Quick Start B/C、[通用 MCP 适配器](v2/host-generic.md) 和
+> [Core Public API](v2/core/public-api.md)。
+
 ## 开发/测试 profile 安装（命令行）
 
 `desktop` profile 由 Electron 独占管理，CLI 拒绝操作。开发时使用独立 profile：
@@ -39,7 +43,7 @@
 ```powershell
 $dsh = "$env:LOCALAPPDATA\Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd"
 & $dsh --profile abmtest --from-default-profile web --dump-config   # 创建测试 profile
-& $dsh plugin --profile abmtest add link:"D:\dsh-ABM\armorbreak"     # 安装（自动加入 bundles）
+& $dsh plugin --profile abmtest add link:"<REPO_PATH>"                  # 安装（自动加入 bundles）
 & $dsh --profile abmtest --port 3099 --no-open                        # 启动测试 Web UI
 # 打开打印出的带 token URL，然后新建会话选择破甲模式
 ```
