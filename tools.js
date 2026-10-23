@@ -7,7 +7,7 @@
  * data. Policy enforcement itself lives in lib/core/runner.js and scope.js.
  * @module dsh-armorbreak/tools
  */
-import { basename } from 'node:path'
+import { basename, resolve } from 'node:path'
 import { getRuntime } from './packages/core/index.js'
 import { getWorkflow, listWorkflows } from './lib/core/workflows.js'
 import { generateTaskReport } from './lib/core/reports.js'
@@ -64,19 +64,51 @@ export function toLosslessJson(value, depth = 0, seen = new WeakSet()) {
  * @param {any} args
  * @param {any} exec
  */
+const TOOL_OWNER = Symbol('armorbreak-tool-owner')
+
+function samePath(a, b) {
+  const left = resolve(String(a))
+  const right = resolve(String(b))
+  return process.platform === 'win32' ? left.toLowerCase() === right.toLowerCase() : left === right
+}
+
+function ownerOf(args) {
+  return args?.[TOOL_OWNER] ?? { principalId: null, sessionId: null }
+}
+
+function assertTaskOwner(task, args) {
+  const owner = ownerOf(args)
+  if (!task || (task.principalId ?? null) !== owner.principalId || (task.sessionId ?? null) !== owner.sessionId) {
+    throw new Error('task is outside the authorized principal or session')
+  }
+}
+
 async function enrichArgs(args, exec) {
   const next = { ...(args && typeof args === 'object' ? args : {}) }
-  if (!next.workspace && exec?.agent && pluginCtx) {
+  const runtime = getRuntime()
+  const sessionId = exec?.sessionId ?? exec?.agent?.sessionId ?? exec?.agent?.id ?? null
+  const principalId = exec?.agent?.id === undefined ? null : String(exec.agent.id)
+  let hostWorkspace = null
+  if (pluginCtx) {
     try {
       const workingDirectory = typeof pluginCtx.get === 'function' ? pluginCtx.get('workingDirectory') : undefined
       if (workingDirectory && typeof workingDirectory.ensure === 'function') {
         const dir = await workingDirectory.ensure(exec.agent)
-        if (typeof dir === 'string' && dir !== '') next.workspace = dir
+        if (typeof dir === 'string' && dir !== '') hostWorkspace = runtime.resolveWorkspace(dir)
       }
     } catch {
-      /* no session working directory: keep the process-workspace fallback */
+      /* No host session directory: use the process workspace and fail closed on overrides. */
     }
   }
+  const hasTrustedPrincipal = principalId !== null
+  const trustedWorkspace = hostWorkspace ?? (hasTrustedPrincipal ? runtime.resolveWorkspace() : runtime.resolveWorkspace(next.workspace))
+  if (next.workspace && !samePath(runtime.resolveWorkspace(String(next.workspace)), trustedWorkspace)) {
+    // Non-agent callers are trusted in-process integrations. A model-backed call
+    // must never select the authorization root through its own arguments.
+    if (hasTrustedPrincipal) throw new Error('workspace must match the calling session working directory')
+  }
+  next.workspace = trustedWorkspace
+  Object.defineProperty(next, TOOL_OWNER, { value: { principalId, sessionId: sessionId == null ? null : String(sessionId) } })
   return next
 }
 
@@ -230,7 +262,9 @@ async function loadTask(runtime, args) {
   if (!args.taskId) throw new Error('taskId is required; call armorbreak_task action=list to find it')
   const workspace = workspaceOf(runtime, args)
   const ctx = runtime.workspace(workspace)
-  return { task: await ctx.taskStore.get(String(args.taskId)), ctx, workspace }
+  const task = await ctx.taskStore.get(String(args.taskId))
+  assertTaskOwner(task, args)
+  return { task, ctx, workspace }
 }
 
 /**
@@ -557,6 +591,8 @@ export function apply(ctx) {
             workflowId: workflow?.id ?? null,
             targetPath,
             targetKind: workflow?.targetKind ?? (targetPath ? 'file' : 'none'),
+            principalId: ownerOf(args).principalId,
+            sessionId: ownerOf(args).sessionId,
             steps: workflow?.steps ?? [],
           })
           let scopeNote = ''
@@ -577,7 +613,10 @@ export function apply(ctx) {
           return { text, data: store.summary(task, { includeSteps: true }) }
         }
         if (args.action === 'list') {
-          const tasks = await store.list(20)
+          const owner = ownerOf(args)
+          const tasks = (await store.list(1000)).filter((task) =>
+            (task.principalId ?? null) === owner.principalId && (task.sessionId ?? null) === owner.sessionId,
+          ).slice(0, 20)
           const lines = ['# 任务列表', '', `工作区：\`${workspace}\``, '']
           if (tasks.length === 0) lines.push('（无任务）')
           for (const task of tasks) lines.push(`- \`${task.id}\` **${task.state}** · ${md(task.title)} · 证据 ${task.stats.evidence} / 发现 ${task.stats.findings} · 更新 ${task.updatedAt}`)

@@ -8,7 +8,8 @@
  * rejected rather than silently creating a second task.
  */
 import { createHash } from 'node:crypto'
-import { resolve, sep } from 'node:path'
+import { isAbsolute, join, relative, resolve, sep } from 'node:path'
+import { open, realpath, stat } from 'node:fs/promises'
 import { getRuntime } from '../../lib/core/runtime.js'
 import { ApprovalAuthority } from '../../lib/control/approvalAuthority.js'
 import { listWorkflows } from '../../lib/core/workflows.js'
@@ -24,6 +25,56 @@ function samePath(a, b) {
   const left = resolve(String(a))
   const right = resolve(String(b))
   return process.platform === 'win32' ? left.toLowerCase() === right.toLowerCase() : left === right
+}
+
+function sessionOf(ctx) {
+  const value = ctx?.principal?.sessionId ?? ctx?.connectionId ?? null
+  if (value === null || value === undefined || value === '') return null
+  if (typeof value !== 'string' || value.length > 200) throw new EngineError('INVALID_REQUEST', 'session id is invalid')
+  return value
+}
+
+function taskOwnedBy(task, principal, sessionId) {
+  return task?.principalId === principal.id && (task.sessionId ?? null) === sessionId
+}
+
+function pathWithin(root, target) {
+  const rel = relative(root, target)
+  return rel === '' || (rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel))
+}
+
+async function readTaskReport(store, report) {
+  const reportsRoot = join(store.taskDir(report.taskId), 'reports')
+  const candidate = resolve(String(report.path ?? ''))
+  const lexicalRoot = resolve(reportsRoot)
+  if (!pathWithin(lexicalRoot, candidate) || candidate === lexicalRoot) {
+    throw new EngineError('POLICY_DENIED', 'report path is outside the task report directory')
+  }
+
+  // Open first, then check the opened file identity against its canonical path.
+  // The read uses the same handle, so a path swap after validation cannot redirect it.
+  const handle = await open(candidate, 'r')
+  try {
+    const opened = await handle.stat()
+    if (!opened.isFile() || opened.nlink > 1 || opened.size > 256 * 1024) {
+      throw new EngineError('POLICY_DENIED', 'report file type or size is not allowed')
+    }
+    const [canonicalRoot, canonicalFile] = await Promise.all([realpath(reportsRoot), realpath(candidate)])
+    if (!pathWithin(canonicalRoot, canonicalFile) || canonicalFile === canonicalRoot) {
+      throw new EngineError('POLICY_DENIED', 'report resolves outside the task report directory')
+    }
+    const current = await stat(canonicalFile)
+    if (opened.dev !== current.dev || opened.ino !== current.ino) {
+      throw new EngineError('POLICY_DENIED', 'report changed while it was being opened')
+    }
+    const content = await handle.readFile('utf8')
+    if (report.sha256 && createHash('sha256').update(content).digest('hex') !== report.sha256) {
+      throw new EngineError('EVIDENCE_MISMATCH', 'report hash does not match task metadata')
+    }
+    return content
+  } finally {
+    await handle.close()
+  }
 }
 
 function hash(value) {
@@ -104,11 +155,12 @@ export class TrustedEngine {
     const requestedWorkspace = resolve(String(ctx.workspaceId))
     const allowed = [...configured.workspaces].some((entry) => entry === '*' || samePath(entry, requestedWorkspace))
     if (!allowed) throw new EngineError('POLICY_DENIED', 'principal is not allowed to access this workspace')
+    sessionOf(ctx)
     return configured
   }
 
   checkIdempotency(principal, ctx, payload) {
-    const key = `${principal.id}:${ctx.workspaceId}:${ctx.requestId}`
+    const key = `${principal.id}:${sessionOf(ctx) ?? ''}:${ctx.workspaceId}:${ctx.requestId}`
     const digest = hash(payload)
     const existing = this.idempotency.get(key)
     if (existing) {
@@ -134,8 +186,13 @@ export class TrustedEngine {
     const payload = { title, objective, workflowId: input.workflowId ?? null, targetPath: input.targetPath ?? null, targetKind: input.targetKind ?? 'none', steps: input.steps ?? [] }
     const replay = this.checkIdempotency(principal, ctx, payload)
     if (replay) return replay
-    const promise = this.runtime.workspace(ctx.workspaceId).taskStore.create({ ...payload, operator: principal.id })
-    this.idempotency.set(`${principal.id}:${ctx.workspaceId}:${ctx.requestId}`, { digest: hash(payload), promise })
+    const promise = this.runtime.workspace(ctx.workspaceId).taskStore.create({
+      ...payload,
+      operator: principal.id,
+      principalId: principal.id,
+      sessionId: sessionOf(ctx),
+    })
+    this.idempotency.set(`${principal.id}:${sessionOf(ctx) ?? ''}:${ctx.workspaceId}:${ctx.requestId}`, { digest: hash(payload), promise })
     return promise
   }
 
@@ -153,10 +210,10 @@ export class TrustedEngine {
   /** Persist a sanitized event/evidence envelope into the existing evidence chain. */
   async recordEnvelope(ctx, taskId, { origin = 'sdk', targetHash, payload = {}, event } = {}) {
     return this.bounded(ctx, async () => {
-      this.authenticate(ctx)
+      const principal = this.authenticate(ctx)
       const store = this.runtime.workspace(ctx.workspaceId).taskStore
       const task = await store.get(String(taskId))
-      if (!task || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
+      if (!taskOwnedBy(task, principal, sessionOf(ctx)) || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized principal, session, or workspace')
       const envelope = event
         ? createEventEnvelope({ ctx, taskId: task.id, origin, targetHash, event, payload })
         : createEvidenceEnvelope({ ctx, taskId: task.id, origin, targetHash, payload })
@@ -169,13 +226,14 @@ export class TrustedEngine {
     const principal = this.authenticate(ctx)
     let task
     try { task = await this.runtime.workspace(ctx.workspaceId).taskStore.get(String(taskId)) } catch { throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace') }
-    if (!task || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
+    if (!taskOwnedBy(task, principal, sessionOf(ctx)) || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized principal, session, or workspace')
     return task
   }
 
   async listTasks(ctx) {
-    this.authenticate(ctx)
-    return this.runtime.workspace(ctx.workspaceId).taskStore.list(20)
+    const principal = this.authenticate(ctx)
+    const tasks = await this.runtime.workspace(ctx.workspaceId).taskStore.list(1000)
+    return tasks.filter((task) => taskOwnedBy(task, principal, sessionOf(ctx))).slice(0, 20)
   }
 
   async cancelTask(ctx, taskId, reason = 'cancelled by trusted principal') {
@@ -183,18 +241,18 @@ export class TrustedEngine {
     const store = this.runtime.workspace(ctx.workspaceId).taskStore
     let task
     try { task = await store.get(String(taskId)) } catch { throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace') }
-    if (!task || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
+    if (!taskOwnedBy(task, principal, sessionOf(ctx)) || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized principal, session, or workspace')
     await store.cancel(task, reason.slice(0, 300))
     return { taskId: task.id, state: 'CANCELLED', principalId: principal.id, traceId: ctx.traceId }
   }
 
   async getEvidence(ctx, taskId) {
     return this.bounded(ctx, async () => {
-      this.authenticate(ctx)
+      const principal = this.authenticate(ctx)
       const store = this.runtime.workspace(ctx.workspaceId).taskStore
       let task
       try { task = await store.get(String(taskId)) } catch { throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace') }
-      if (!task || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
+      if (!taskOwnedBy(task, principal, sessionOf(ctx)) || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized principal, session, or workspace')
       const records = await store.evidenceStore(task.id).readEvidence(200)
       return { taskId: task.id, evidence: records.map((record) => ({ id: record.id, title: record.title, kind: record.kind, excerpt: record.excerpt, hash: record.hash, targetSha256: record.targetSha256 })) }
     })
@@ -202,15 +260,13 @@ export class TrustedEngine {
 
   async getReport(ctx, taskId) {
     return this.bounded(ctx, async () => {
-      this.authenticate(ctx)
+      const principal = this.authenticate(ctx)
       const store = this.runtime.workspace(ctx.workspaceId).taskStore
       let task
       try { task = await store.get(String(taskId)) } catch { throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace') }
-      if (!task || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
+      if (!taskOwnedBy(task, principal, sessionOf(ctx)) || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized principal, session, or workspace')
       if (!task.report?.path) throw new EngineError('INVALID_REQUEST', 'task has no report')
-      const { readFile } = await import('node:fs/promises')
-      const content = await readFile(task.report.path, 'utf8')
-      if (content.length > 256 * 1024) throw new EngineError('INVALID_REQUEST', 'report exceeds 256 KiB')
+      const content = await readTaskReport({ taskDir: (id) => store.taskDir(id) }, { ...task.report, taskId: task.id })
       return { taskId: task.id, path: task.report.path, sha256: task.report.sha256, markdown: content }
     })
   }
@@ -245,6 +301,8 @@ export class TrustedEngine {
         targetPath,
         targetKind: selected.targetKind ?? 'file',
         operator: principal.id,
+        principalId: principal.id,
+        sessionId: sessionOf(ctx),
         steps: [{ id: 'analyze', title: selected.title, capabilityId, options: options && typeof options === 'object' ? options : {} }],
       })
       const result = await this.runtime.runner.runCapability({
