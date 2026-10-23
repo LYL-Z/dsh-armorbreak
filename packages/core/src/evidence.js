@@ -4,8 +4,22 @@
  * excerpt, and a per-task hash chain so silent edits are detectable.
  * @module dsh-armorbreak/lib/core/evidence
  */
-import { appendJsonl, chainHash, newId, nowIso, readJson, readJsonl, redactDeep, redactText, sanitizeText, sha256, withFileMutex, writeJsonAtomic } from './util.js'
+import { lstat, realpath } from 'node:fs/promises'
+import { relative, resolve, sep, isAbsolute } from 'node:path'
+import { appendJsonl, chainHash, newId, nowIso, readBounded, readJson, readJsonl, redactDeep, redactText, sanitizeText, sha256, withFileMutex, writeJsonAtomic } from './util.js'
 import { withAppendFileLock } from './append-lock.js'
+
+const HEAD_SCHEMA = 'armorbreak.evidence-head/v1'
+const HEAD_FILE = 'evidence.head.json'
+
+function samePath(left, right) {
+  return process.platform === 'win32' ? left.toLowerCase() === right.toLowerCase() : left === right
+}
+
+function pathIsWithin(root, target) {
+  const rel = relative(root, target)
+  return rel === '' || (rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel))
+}
 
 /**
  * @typedef {'critical'|'high'|'medium'|'low'|'info'} Severity
@@ -36,7 +50,66 @@ export class EvidenceStore {
     this.taskId = options.taskId
     this.audit = options.audit
     this.evidenceFile = `${options.taskDir}/evidence.jsonl`
+    this.headFile = resolve(options.taskDir, HEAD_FILE)
     this.findingsFile = `${options.taskDir}/findings.json`
+  }
+
+  /**
+   * Read the separately persisted chain head. A missing anchor is acceptable
+   * only for a task with no evidence; legacy evidence without an anchor is
+   * deliberately reported as unverified rather than silently trusted.
+   * @returns {Promise<{anchor: any|null, error: string|null}>}
+   */
+  async readHeadAnchor() {
+    const taskRoot = resolve(this.taskDir)
+    try {
+      const { buffer, truncated } = await readBounded(this.headFile, 4096, {
+        authorize: async (candidate) => {
+          try {
+            const [rootReal, rootInfo, headInfo] = await Promise.all([
+              realpath(taskRoot),
+              lstat(taskRoot, { bigint: true }),
+              lstat(candidate, { bigint: true }),
+            ])
+            const target = resolve(candidate)
+            if (!samePath(rootReal, taskRoot) || rootInfo.isSymbolicLink() || !rootInfo.isDirectory() ||
+                !pathIsWithin(taskRoot, target) || !samePath(target, this.headFile) ||
+                headInfo.isSymbolicLink() || !headInfo.isFile()) {
+              return { allowed: false, code: 'EVIDENCE_HEAD_UNSAFE', reason: 'evidence head path is not a regular file inside the task directory' }
+            }
+            const canonical = await realpath(target)
+            if (!samePath(canonical, target)) {
+              return { allowed: false, code: 'EVIDENCE_HEAD_UNSAFE', reason: 'evidence head path resolves through a link' }
+            }
+            return { allowed: true, resolved: canonical }
+          } catch (error) {
+            return { allowed: false, code: error?.code ?? 'EVIDENCE_HEAD_UNSAFE', reason: 'evidence head path could not be verified' }
+          }
+        },
+      })
+      if (truncated) return { anchor: null, error: 'evidence head anchor exceeds the size limit' }
+      let anchor
+      try { anchor = JSON.parse(buffer.toString('utf8')) } catch { return { anchor: null, error: 'evidence head anchor is not valid JSON' } }
+      if (!anchor || anchor.schemaVersion !== HEAD_SCHEMA || anchor.taskId !== this.taskId ||
+          !Number.isSafeInteger(anchor.count) || anchor.count < 0 ||
+          !(anchor.headHash === 'genesis' || /^[a-f0-9]{64}$/i.test(anchor.headHash ?? ''))) {
+        return { anchor: null, error: 'evidence head anchor has an invalid schema or value' }
+      }
+      return { anchor, error: null }
+    } catch (error) {
+      if (error?.code === 'ENOENT') return { anchor: null, error: null }
+      return { anchor: null, error: `evidence head anchor is unsafe or unreadable: ${error?.code ?? error?.message ?? 'unknown error'}` }
+    }
+  }
+
+  /** Persist the latest head after the evidence append; any interrupted update fails closed. */
+  async writeHeadAnchor(count, headHash) {
+    const anchor = { schemaVersion: HEAD_SCHEMA, taskId: this.taskId, count, headHash }
+    await writeJsonAtomic(this.headFile, anchor)
+    const saved = await this.readHeadAnchor()
+    if (saved.error || saved.anchor?.count !== count || saved.anchor?.headHash !== headHash) {
+      throw new Error(saved.error ?? 'evidence head anchor did not persist')
+    }
   }
 
   /** @returns {Promise<{headHash: string, count: number}>} */
@@ -52,6 +125,12 @@ export class EvidenceStore {
    */
   async addEvidence(input) {
     return withAppendFileLock(this.evidenceFile, async () => {
+      const current = await this.verifyChain()
+      if (!current.valid) {
+        const error = new Error(`cannot append to an invalid evidence chain: ${current.reason}`)
+        error.code = 'EVIDENCE_CHAIN_INVALID'
+        throw error
+      }
       const { headHash, count } = await this.tail()
       const body = {
         schemaVersion: 'armorbreak/v2',
@@ -70,6 +149,7 @@ export class EvidenceStore {
       const hash = chainHash(headHash, body)
       const record = { ...body, prevHash: headHash, hash }
       await appendJsonl(this.evidenceFile, record)
+      await this.writeHeadAnchor(record.index, hash)
       await this.audit?.append({ action: 'evidence.add', taskId: this.taskId, evidenceId: record.id, title: record.title, target: record.targetPath })
       return record
     })
@@ -184,12 +264,22 @@ export class EvidenceStore {
    */
   async verifyChain() {
     const records = await readJsonl(this.evidenceFile, { limit: 10000 })
+    const { anchor, error } = await this.readHeadAnchor()
+    if (error) return { valid: false, records: records.length, brokenAt: null, reason: error }
+    if (records.length === 0 && !anchor) return { valid: true, records: 0, brokenAt: null, reason: null }
+    if (!anchor) return { valid: false, records: records.length, brokenAt: records.length || 1, reason: 'evidence head anchor missing' }
+    if (anchor.count > 10000) return { valid: false, records: records.length, brokenAt: null, reason: 'evidence chain exceeds verification limit' }
     let prevHash = 'genesis'
-    for (const record of records) {
+    for (let index = 0; index < records.length; index += 1) {
+      const record = records[index]
+      if (record.index !== index + 1) return { valid: false, records: records.length, brokenAt: record.index ?? index + 1, reason: 'evidence index mismatch' }
       if (record.prevHash !== prevHash) return { valid: false, records: records.length, brokenAt: record.index, reason: 'prevHash mismatch' }
       const { hash, prevHash: recordPrev, ...body } = record
       if (chainHash(prevHash, body) !== hash) return { valid: false, records: records.length, brokenAt: record.index, reason: 'record hash mismatch' }
       prevHash = hash
+    }
+    if (anchor.count !== records.length || anchor.headHash !== (records.at(-1)?.hash ?? 'genesis')) {
+      return { valid: false, records: records.length, brokenAt: records.length + 1, reason: 'evidence head anchor mismatch' }
     }
     return { valid: true, records: records.length, brokenAt: null, reason: null }
   }
