@@ -40,14 +40,30 @@ for (let i = 0; i < iterations; i += 1) {
   core.push(performance.now() - start)
   payloadBytes = Buffer.byteLength(JSON.stringify(caps))
 }
-const server = await createMcpHttpServer({ engine, principal, workspaceId: workspace })
+const httpToken = 'armorbreak-local-benchmark-token'
+const server = await createMcpHttpServer({ engine, principal, workspaceId: workspace, token: httpToken })
 const http = []
 let modelMetrics = null
 try {
-  await fetch(server.url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize' }) })
+  const initialized = await fetch(server.url, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', authorization: `Bearer ${httpToken}` },
+    body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize' }),
+  })
+  if (!initialized.ok) throw new Error(`HTTP benchmark initialize failed: ${initialized.status}`)
+  const sessionId = initialized.headers.get('mcp-session-id')
+  if (!sessionId) throw new Error('HTTP benchmark initialize returned no MCP session')
   for (let i = 0; i < iterations; i += 1) {
     const start = performance.now()
-    const response = await fetch(server.url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 10 + i, method: 'tools/call', params: { name: 'armorbreak_capabilities', arguments: {} } }) })
+    const response = await fetch(server.url, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        authorization: `Bearer ${httpToken}`,
+        'mcp-session-id': sessionId,
+      },
+      body: JSON.stringify({ jsonrpc: '2.0', id: 10 + i, method: 'tools/call', params: { name: 'armorbreak_capabilities', arguments: {} } }),
+    })
     if (!response.ok) throw new Error(`HTTP benchmark failed: ${response.status}`)
     http.push(performance.now() - start)
   }
