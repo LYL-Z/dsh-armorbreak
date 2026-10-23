@@ -8,6 +8,7 @@ import { execFileSync } from 'node:child_process'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { readSafeRepoFile, writeSafeRepoFile } from '../../lib/release/safeEvidenceFile.js'
+import { verifyPortableArtifactAttestation } from '../../lib/release/artifactAttestation.js'
 
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)))
 function readText(relativePath) {
@@ -59,13 +60,20 @@ if (matrix) {
   }
 }
 let artifact
+let artifactAttestation
 try {
   artifact = JSON.parse(readText('docs/v2/acceptance/portable-artifact.json'))
-  if (artifact.signed !== true) blockers.push({ code: 'ARTIFACT_UNSIGNED', detail: 'portable artifact has no production signature' })
   if (artifact.cleanRoom?.result !== 'PASS') blockers.push({ code: 'ARTIFACT_CLEANROOM', detail: 'clean-room check not PASS' })
 } catch {
   blockers.push({ code: 'ARTIFACT_EVIDENCE_MISSING', detail: 'portable artifact evidence missing' })
 }
+const currentCommit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
+artifactAttestation = verifyPortableArtifactAttestation({
+  repoRoot: root,
+  artifactPath: process.env.ARMORBREAK_PORTABLE_ARTIFACT,
+  artifactEvidence: artifact,
+  sourceCommit: currentCommit,
+})
 let tags = []
 try { tags = execFileSync('git', ['tag', '--list'], { cwd: root, encoding: 'utf8' }).trim().split(/\r?\n/).filter(Boolean) } catch { /* git may be absent in a source archive */ }
 const releaseTag = tags.includes('v2.2.0')
@@ -100,13 +108,15 @@ const productionSignatureBlockers = Object.entries(taskProductionSignature)
   .filter(([, value]) => value === 'BLOCKED_EXTERNAL')
   .map(([id]) => ({ code: `${id}_PRODUCTION_SIGNATURE_BLOCKED`, detail: `${id} production signature is BLOCKED_EXTERNAL` }))
 const gaBlockers = [...blockers, ...waived, ...realEndpointBlockers, ...independentReviewBlockers, ...hostInstallBlockers, ...productionSignatureBlockers]
-if (artifact?.signed !== true) gaBlockers.push({ code: 'ARTIFACT_UNSIGNED', detail: 'portable artifact has no production signature' })
+if (!artifactAttestation.ok) {
+  gaBlockers.push({ code: 'ARTIFACT_ATTESTATION_NOT_VERIFIED', detail: artifactAttestation.code })
+}
 const uniqueGaBlockers = [...new Map(gaBlockers.map((item) => [item.code, item])).values()]
 const preReleaseReady = activeBlockers.length === 0
 const gaReady = uniqueGaBlockers.length === 0 && !releaseTag
 const report = {
   schemaVersion: 'armorbreak.v2-readiness/v1',
-  commit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
+  commit: currentCommit,
   preReleaseReady,
   gaReady,
   ready: preReleaseReady,
@@ -121,7 +131,7 @@ const report = {
   gaBlockers: uniqueGaBlockers,
   waived,
   waiver: waiverDoc ? { approvedBy: waiverDoc.approvedBy, approvedAt: waiverDoc.approvedAt, independentReview: waiverDoc.independentReview, count: waived.length, ref: 'docs/v2/release/waivers.json' } : null,
-  artifact: artifact ? { version: artifact.version, signed: artifact.signed, sha256: artifact.sha256 } : null,
+  artifact: artifact ? { version: artifact.version, signed: artifact.signed, sha256: artifact.sha256, attestation: artifactAttestation } : null,
 }
 console.log(JSON.stringify(report, null, 2))
 if (process.argv.includes('--write')) {

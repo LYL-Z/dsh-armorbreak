@@ -11,7 +11,7 @@ test('pre-release passes with real hosts and zero waivers while GA remains block
   assert.equal(strictReport.releaseTag, false)
   assert.equal(typeof strictReport.preReleaseTag, 'boolean')
   assert.equal(strictReport.blockers.length, 0)
-  assert.ok(!strictReport.gaBlockers.some((blocker) => blocker.code === 'ARTIFACT_UNSIGNED'))
+  assert.ok(strictReport.gaBlockers.some((blocker) => blocker.code === 'ARTIFACT_ATTESTATION_NOT_VERIFIED'))
   assert.ok(strictReport.gaBlockers.some((blocker) => blocker.code === 'ABU-311_REAL_ENDPOINT_BLOCKED'))
   assert.ok(strictReport.gaBlockers.some((blocker) => blocker.code === 'ABU-409_INDEPENDENT_REVIEW_BLOCKED'))
   assert.equal(strictReport.taskStatus['ABU-101'], 'TESTED')

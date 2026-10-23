@@ -3,8 +3,8 @@
   "generatedAt": "2026-10-22T15:28:04.888Z",
   "source": "docs/v2/acceptance/v2.2-readiness.json",
   "counts": {
-    "acceptanceBlockers": 6,
-    "uniqueRootCauses": 4,
+    "acceptanceBlockers": 7,
+    "uniqueRootCauses": 5,
     "derivedBlockers": 1
   },
   "rootCauses": [
@@ -48,6 +48,14 @@
       "blockers": [
         "ABU-409_INDEPENDENT_REVIEW_BLOCKED"
       ]
+    },
+    {
+      "id": "ARTIFACT-MAIN-ATTESTATION",
+      "label": "Current-main artifact provenance must be cryptographically verified",
+      "derived": false,
+      "blockers": [
+        "ARTIFACT_ATTESTATION_NOT_VERIFIED"
+      ]
     }
   ],
   "blockers": [
@@ -85,6 +93,12 @@
       "code": "ABU-409_INDEPENDENT_REVIEW_BLOCKED",
       "detail": "ABU-409 independent review is BLOCKED_EXTERNAL",
       "rootCause": "EXT-INDEPENDENT-REVIEW",
+      "derived": false
+    },
+    {
+      "code": "ARTIFACT_ATTESTATION_NOT_VERIFIED",
+      "detail": "The portable artifact must match the current main commit and verify against the release attestation workflow identity.",
+      "rootCause": "ARTIFACT-MAIN-ATTESTATION",
       "derived": false
     }
   ]
