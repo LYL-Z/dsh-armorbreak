@@ -8,7 +8,7 @@ ArmorBreak is an open-source toolkit for **authorized reverse engineering, stati
 
 > **Current release scope:** `2.2.0-rc.1` is an engineering candidate, **not** full V2.2 GA. Offline Golden and the recorded local-model loop have passed. Official OpenAI / Anthropic / Gemini live certification is **not** complete. Independent security review is **not** fully signed, and no independent human security certification has been obtained.
 >
-> Documentation baseline: `8df5bf98b059139707cc048dcb97f8dea380873e`（2026-10-23）
+> Documentation baseline: `9172f7b50352bbe152a0bd001678cfd271fd65bb`（2026-10-23）
 
 **Start here:** [Quick Start](#quick-start) · [Generic MCP integration](docs/v2/host-generic.md) · [Security Policy](SECURITY.md) · [Verification evidence](docs/v2/acceptance/golden-status.json)
 
@@ -219,7 +219,7 @@ ArmorBreak separates implementation from verification.
 | `LIVE_GOLDEN_PASS` | Official paid endpoints with real calls | **EXTERNAL_UNVERIFIED** |
 | `EXTERNAL_UNVERIFIED` | Blocked by credentials, balance, or independent review | OpenAI / Anthropic / Gemini / independent review |
 
-Recorded test result at this baseline: **388 tests / 387 pass / 0 fail / 1 skipped**. Treat this as a baseline record, not a live badge.
+Recorded test result at this baseline: **400 tests / 399 pass / 0 fail / 1 skipped**. Treat this as a baseline record, not a live badge.
 
 Host matrix summary: **12 entries**, **10 L0 completions**, **9 third-party L0 entries**. Claude Code MCP and Claude Cowork CLI are separate rows. Gemini CLI and Antigravity are separate rows. Pi uses a native TypeScript extension, not MCP.
 
@@ -246,7 +246,7 @@ ArmorBreak is for **authorized** security research. A scan finding is not a conf
 This is a status statement, not a security certification.
 
 - **Design goal:** enforce scoped authorization, fail closed on L1/L2, keep the model out of the approval path, and leave reviewable evidence.
-- **Automated tests:** the baseline suite records 388 tests / 387 pass / 1 skipped, plus offline-boundary and desktop L0 evidence. Tests reduce known risk; they do not prove absence of vulnerabilities.
+- **Automated tests:** the baseline suite records 400 tests / 399 pass / 1 skipped, plus offline-boundary and desktop L0 evidence. Tests reduce known risk; they do not prove absence of vulnerabilities.
 - **AI-assisted review:** four review rounds have completed an initial pass. Some findings remain unresolved and must be remediated and re-tested before they can be treated as closed.
 - **Pending:** remediation, regression tests, and evidence-based re-verification of unresolved findings.
 - **Not obtained:** independent human security certification. GitHub OIDC/Sigstore attestation is build provenance, not a security certification.

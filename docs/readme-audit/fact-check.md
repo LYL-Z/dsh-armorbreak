@@ -1,6 +1,6 @@
 # README 技术事实审计
 
-- 基线：`8df5bf98b059139707cc048dcb97f8dea380873e`
+- 基线：`9172f7b50352bbe152a0bd001678cfd271fd65bb`
 - 日期：2026-10-23
 - 范围：README/README.zh-CN、安装/使用/兼容性文档、旧 README 归档
 - 原则：事实优先于营销；无法验证的内容标 `NOT_VERIFIED` 或 `EXTERNAL_UNVERIFIED`
@@ -19,7 +19,7 @@
 | DSH Skills | 7 | `skills.js` | PASS |
 | DSH 模型工具 | 10 | `tools.js` 中 10 个 `armorbreak_*` 工具 | PASS |
 | MCP Server 工具 | 7 | `packages/mcp-server/index.js` 的 `TOOLS` | PASS |
-| 测试记录 | 388 tests / 387 pass / 0 fail / 1 skipped | `docs/v2/acceptance/test-report.json` | PASS（基线记录） |
+| 测试记录 | 400 tests / 399 pass / 0 fail / 1 skipped | `docs/v2/acceptance/test-report.json` | PASS（基线记录） |
 | Host 矩阵 | 12 入口 / 10 L0 / 9 第三方 L0 | `docs/v2/acceptance/compatibility-matrix.json` | PASS |
 | Offline Golden | PASS | `docs/v2/acceptance/golden-status.json` | PASS |
 | 本地模型闭环 | PASS | `provider-live-ollama.json` + Pi L0 | PASS |

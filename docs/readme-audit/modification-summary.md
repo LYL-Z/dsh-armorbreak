@@ -1,7 +1,7 @@
 # 文档修改对照
 
 - 分支：`docs/readme-v22-developer-experience`
-- 基线：`8df5bf98b059139707cc048dcb97f8dea380873e`
+- 基线：`9172f7b50352bbe152a0bd001678cfd271fd65bb`
 - 范围：README、文档信息架构、安装/使用/兼容性/用户指南、旧 README 归档
 - 非范围：生产代码、权限策略、Release Gate、测试断言、审计证据 JSON、SBOM、Tag/Release
 

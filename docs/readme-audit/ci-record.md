@@ -2,7 +2,7 @@
 
 - PR：[#15](https://github.com/LYL-Z/dsh-armorbreak/pull/15)
 - 分支：`docs/readme-v22-developer-experience`
-- 基线：`8df5bf98b059139707cc048dcb97f8dea380873e`
+- 基线：`9172f7b50352bbe152a0bd001678cfd271fd65bb`
 - CI（head `4737e64c97026bcbf2da9edf9dfaef8c3a2c694e`）：`39929603859`
 - 首轮 CI：`39928989956`（merge commit `ef67bf99…`，结果相同）
 - 前一轮：`39929353734`（head `07ec4ab…`，结果相同）
@@ -28,7 +28,7 @@ test report commit is stale
 
 ## 2. 本地验证
 
-- `npm test`：**388 tests / 387 pass / 0 fail / 1 skipped**
+- `npm test`：**400 tests / 399 pass / 0 fail / 1 skipped**
 - `node scripts/v2/check-docs-consistency.mjs`：PASS
 - `node scripts/v2/generate-docs.mjs --check`：PASS
 - 相关 docs/hardening tests：7 pass

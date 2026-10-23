@@ -6,7 +6,7 @@ ArmorBreak 是一个开源工具包，面向**授权逆向工程、静态分析�
 
 > **当前发布范围：** `2.2.0-rc.1` 是工程候选版本，**不是**完整 V2.2 GA。Offline Golden 与已记录的本地模型闭环已通过；OpenAI / Anthropic / Gemini 官方真实端点认证**尚未完成**；独立安全审查**尚未完整签署**，且尚未取得独立人类安全认证。
 >
-> 文档基线：`8df5bf98b059139707cc048dcb97f8dea380873e`（2026-10-23）
+> 文档基线：`9172f7b50352bbe152a0bd001678cfd271fd65bb`（2026-10-23）
 
 **快速入口：** [快速开始](#快速开始) · [通用 MCP 接入](docs/v2/host-generic.md) · [安全政策](SECURITY.md) · [验收状态](docs/v2/acceptance/golden-status.json)
 
@@ -216,7 +216,7 @@ ArmorBreak 将“实现存在”与“已验证”分开。
 | `LIVE_GOLDEN_PASS` | 官方付费端点真实调用 | **EXTERNAL_UNVERIFIED** |
 | `EXTERNAL_UNVERIFIED` | 受凭据、余额或独立审查阻塞 | OpenAI / Anthropic / Gemini / 独立审查 |
 
-本基线记录的测试结果：**388 tests / 387 pass / 0 fail / 1 skipped**。这是基线记录，不是实时徽章。
+本基线记录的测试结果：**400 tests / 399 pass / 0 fail / 1 skipped**。这是基线记录，不是实时徽章。
 
 宿主矩阵摘要：**12 个入口、10 个 L0 完成、9 个第三方 L0**。Claude Code MCP 与 Claude Cowork CLI 分开记录；Gemini CLI 与 Antigravity 分开记录；Pi 使用原生 TypeScript 扩展，不是 MCP。
 
@@ -243,7 +243,7 @@ ArmorBreak 只用于**已授权**安全研究。扫描发现不等于已确认�
 这是状态说明，不是安全认证。
 
 - **设计目标：** 强制授权范围、L1/L2 失败关闭、模型不进入审批路径，并留下可复核证据。
-- **自动化测试：** 基线记录为 388 tests / 387 pass / 1 skipped，另有离线边界与 Desktop L0 证据。测试能降低已知风险，但不能证明不存在漏洞。
+- **自动化测试：** 基线记录为 400 tests / 399 pass / 1 skipped，另有离线边界与 Desktop L0 证据。测试能降低已知风险，但不能证明不存在漏洞。
 - **AI 辅助审查：** 四轮审查已完成初审；仍有发现尚未修复，必须完成修复、回归测试和复验后才能视为关闭。
 - **待完成：** 未修复项的修复、回归测试与基于证据的复验。
 - **尚未取得：** 独立人类安全认证。GitHub OIDC/Sigstore attestation 是构建来源证明，不是安全认证。

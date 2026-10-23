@@ -2,7 +2,7 @@
 
 - 日期：2026-10-23
 - 工作区：`D:\ArmorBreak-Docs\armorbreak-docs`（独立 clone，未进入其他审计工作树）
-- 基线：`8df5bf98b059139707cc048dcb97f8dea380873e`
+- 基线：`9172f7b50352bbe152a0bd001678cfd271fd65bb`
 
 ## 1. 首屏信息设计
 
@@ -62,7 +62,7 @@ node --test tests/provider-golden.test.mjs tests/provider-protocols.test.mjs tes
 - `node --test tests/docs-consistency.test.mjs tests/generated-docs.test.mjs tests/hardening.test.mjs`：7 pass
 - 本地链接检查：72 个相对链接，0 broken（检查 README、README.zh-CN、installation、usage、compatibility、user-guide）
 - 外部徽章 HEAD：4/4 HTTP 200
-- 全量测试：**388 tests / 387 pass / 0 fail / 1 skipped**（安装 devDependency `typescript@5.9.3` 后；依赖来自 `package.json`，未提交 `node_modules`）
+- 全量测试：**400 tests / 399 pass / 0 fail / 1 skipped**（安装 devDependency `typescript@5.9.3` 后；依赖来自 `package.json`，未提交 `node_modules`）
 
 ## 5. 已知问题 / 未解决项
 
