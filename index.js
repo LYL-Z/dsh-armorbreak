@@ -14,10 +14,10 @@
  * @module dsh-armorbreak
  */
 import { getRuntime } from './packages/core/index.js'
+import { readTaskReport } from './packages/engine-node/index.js'
 import { getWorkflow, listWorkflows } from './lib/core/workflows.js'
 import { createMockTarget, runScenario } from './lib/aisec/evaluator.js'
 import { buildEvaluationDashboard } from './lib/aisec/reportDashboard.js'
-import { readFile } from 'node:fs/promises'
 
 export const inject = ['webServer']
 
@@ -522,7 +522,7 @@ export function createReportHandler(runtime) {
       const ctx = runtime.workspace(workspaceRoot)
       const task = await ctx.taskStore.get(taskId)
       if (!task.report?.path) throw new Error('task has no generated report yet')
-      const text = await readFile(task.report.path, 'utf8')
+      const text = await readTaskReport(ctx.taskStore, { ...task.report, taskId: task.id })
       sendJson(res, 200, {
         taskId,
         path: task.report.path,

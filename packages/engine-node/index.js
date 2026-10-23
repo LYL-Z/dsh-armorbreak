@@ -8,6 +8,7 @@
  * rejected rather than silently creating a second task.
  */
 import { createHash } from 'node:crypto'
+import { constants } from 'node:fs'
 import { isAbsolute, join, relative, resolve, sep } from 'node:path'
 import { open, realpath, stat } from 'node:fs/promises'
 import { getRuntime } from '../../lib/core/runtime.js'
@@ -20,6 +21,7 @@ const MAX_TITLE = 300
 const MAX_OBJECTIVE = 5000
 const MAX_TARGET = 4096
 const MAX_IDEMPOTENCY = 10_000
+const MAX_REPORT_BYTES = 256 * 1024
 
 function samePath(a, b) {
   const left = resolve(String(a))
@@ -43,35 +45,88 @@ function pathWithin(root, target) {
   return rel === '' || (rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel))
 }
 
-async function readTaskReport(store, report) {
-  const reportsRoot = join(store.taskDir(report.taskId), 'reports')
+function denyReport(message) {
+  throw new EngineError('POLICY_DENIED', message)
+}
+
+function assertCanonicalReportPaths(taskDirectory, reportsRoot, candidate, canonicalPaths) {
+  const [canonicalTaskDirectory, canonicalRoot, canonicalFile] = canonicalPaths
+  // Reject any symlink/junction in the task/report path, including a reports
+  // root that was redirected together with the candidate file.
+  if (!samePath(taskDirectory, canonicalTaskDirectory) ||
+      !samePath(reportsRoot, canonicalRoot) ||
+      !samePath(candidate, canonicalFile) ||
+      !pathWithin(canonicalTaskDirectory, canonicalRoot) ||
+      !pathWithin(canonicalRoot, canonicalFile) ||
+      samePath(canonicalRoot, canonicalTaskDirectory) ||
+      samePath(canonicalFile, canonicalRoot)) {
+    denyReport('report resolves outside the task report directory or through a link')
+  }
+  return { canonicalRoot, canonicalFile }
+}
+
+async function canonicalReportPaths(taskDirectory, reportsRoot, candidate) {
+  const values = await Promise.all([realpath(taskDirectory), realpath(reportsRoot), realpath(candidate)])
+  return assertCanonicalReportPaths(taskDirectory, reportsRoot, candidate, values)
+}
+
+async function readBoundedReport(handle) {
+  const buffer = Buffer.alloc(MAX_REPORT_BYTES + 1)
+  let offset = 0
+  while (offset < buffer.length) {
+    const { bytesRead } = await handle.read(buffer, offset, buffer.length - offset, offset)
+    if (bytesRead === 0) break
+    offset += bytesRead
+  }
+  if (offset > MAX_REPORT_BYTES) denyReport('report exceeds 256 KiB')
+  return buffer.subarray(0, offset)
+}
+
+export async function readTaskReport(store, report) {
+  const taskDirectory = resolve(store.taskDir(report.taskId))
+  const reportsRoot = join(taskDirectory, 'reports')
   const candidate = resolve(String(report.path ?? ''))
-  const lexicalRoot = resolve(reportsRoot)
-  if (!pathWithin(lexicalRoot, candidate) || candidate === lexicalRoot) {
-    throw new EngineError('POLICY_DENIED', 'report path is outside the task report directory')
+  if (!pathWithin(reportsRoot, candidate) || samePath(candidate, reportsRoot)) {
+    denyReport('report path is outside the task report directory')
+  }
+  if (typeof report.sha256 !== 'string' || !/^[a-f\d]{64}$/i.test(report.sha256)) {
+    throw new EngineError('EVIDENCE_MISMATCH', 'report metadata must contain a valid SHA-256 digest')
   }
 
-  // Open first, then check the opened file identity against its canonical path.
-  // The read uses the same handle, so a path swap after validation cannot redirect it.
-  const handle = await open(candidate, 'r')
+  // Resolve the trusted path before opening, then resolve it again afterwards.
+  // On Windows O_NOFOLLOW is unavailable; canonical path equality and the
+  // opened-file identity checks below reject junction swaps before any bytes
+  // are read. On POSIX, O_NOFOLLOW rejects a final-component symlink and
+  // O_NONBLOCK prevents a substituted FIFO from hanging the report reader.
+  const initialPaths = await canonicalReportPaths(taskDirectory, reportsRoot, candidate)
+  if (process.platform !== 'win32' &&
+      (typeof constants.O_NOFOLLOW !== 'number' || typeof constants.O_NONBLOCK !== 'number')) {
+    denyReport('the platform cannot guarantee a bounded no-follow report open')
+  }
+  const flags = constants.O_RDONLY | (process.platform === 'win32' ? 0 : constants.O_NOFOLLOW | constants.O_NONBLOCK)
+  const handle = await open(candidate, flags)
   try {
-    const opened = await handle.stat()
-    if (!opened.isFile() || opened.nlink > 1 || opened.size > 256 * 1024) {
-      throw new EngineError('POLICY_DENIED', 'report file type or size is not allowed')
+    const opened = await handle.stat({ bigint: true })
+    if (!opened.isFile() || opened.nlink !== 1n || opened.dev === 0n || opened.ino === 0n || opened.size > BigInt(MAX_REPORT_BYTES)) {
+      denyReport('report file type, identity, link count, or size is not allowed')
     }
-    const [canonicalRoot, canonicalFile] = await Promise.all([realpath(reportsRoot), realpath(candidate)])
-    if (!pathWithin(canonicalRoot, canonicalFile) || canonicalFile === canonicalRoot) {
-      throw new EngineError('POLICY_DENIED', 'report resolves outside the task report directory')
+
+    const currentPaths = await canonicalReportPaths(taskDirectory, reportsRoot, candidate)
+    if (!samePath(initialPaths.canonicalRoot, currentPaths.canonicalRoot) ||
+        !samePath(initialPaths.canonicalFile, currentPaths.canonicalFile)) {
+      denyReport('report path changed while it was being opened')
     }
-    const current = await stat(canonicalFile)
-    if (opened.dev !== current.dev || opened.ino !== current.ino) {
-      throw new EngineError('POLICY_DENIED', 'report changed while it was being opened')
+    const current = await stat(currentPaths.canonicalFile, { bigint: true })
+    if (!current.isFile() || current.nlink !== 1n || current.dev !== opened.dev || current.ino !== opened.ino) {
+      denyReport('report file identity changed while it was being opened')
     }
-    const content = await handle.readFile('utf8')
-    if (report.sha256 && createHash('sha256').update(content).digest('hex') !== report.sha256) {
+
+    const bytes = await readBoundedReport(handle)
+    const actualDigest = createHash('sha256').update(bytes).digest('hex')
+    if (actualDigest !== report.sha256.toLowerCase()) {
       throw new EngineError('EVIDENCE_MISMATCH', 'report hash does not match task metadata')
     }
-    return content
+    return bytes.toString('utf8')
   } finally {
     await handle.close()
   }
