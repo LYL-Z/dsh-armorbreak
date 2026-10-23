@@ -9,7 +9,8 @@ function fail(code, message) {
 
 function isRetryable(error) {
   if (error?.retryable === true) return true
-  const status = Number(error?.status ?? 0)
+  const codeStatus = /^PROVIDER_HTTP_(\d{3})$/.exec(String(error?.code ?? ''))?.[1]
+  const status = Number(error?.statusCode ?? error?.status ?? codeStatus ?? 0)
   return status === 429 || status >= 500
 }
 
