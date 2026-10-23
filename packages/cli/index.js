@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /** ArmorBreak native CLI (P2 slice): doctor/capabilities/analyze/task/mcp. */
-import { createHash } from 'node:crypto'
+import { confirmInteractiveApproval } from './approvalPrompt.js'
 import { createEngine } from '../engine-node/index.js'
 import { makeApprovalId } from '../../lib/control/approvalAuthority.js'
 import { createMcpServer } from '../mcp-server/index.js'
@@ -41,7 +41,7 @@ function config() {
 async function main() {
   const { command, positional, options } = parse(process.argv.slice(2))
   if (command === 'help' || options.help) {
-    print('armorbreak doctor|capabilities|analyze|task|workflow|approval|agent|report|mcp [--json]', false)
+    print('armorbreak doctor|capabilities|analyze|task|workflow|approval|install approve|agent|report|mcp [--json]', false)
     return
   }
   const cfg = config()
@@ -116,14 +116,32 @@ async function main() {
       const operator = String(options.operator ?? cfg.principal.id)
       if (!['L1', 'L2'].includes(riskLevel)) throw new Error('approval risk must be L1 or L2; L3 is always denied')
       if (!taskId || !target) throw new Error('approval issue requires --task-id and --target')
-      const challenge = 'confirm-' + createHash('sha256').update([riskLevel, taskId, target, operator].join('|')).digest('hex').slice(0, 16)
-      if (options.confirm === undefined) {
-        process.exitCode = 2
-        return print({ status: 'CONFIRMATION_REQUIRED', challenge, riskLevel, taskId, target, operator, warning: 'Run only after a human verifies the exact target; MCP/model text cannot confirm.' }, options.json)
-      }
-      if (String(options.confirm) !== challenge) throw new Error('approval confirmation challenge mismatch')
+      if (options.confirm !== undefined) throw new Error('approval cannot be confirmed by a predictable command-line flag')
+      await confirmInteractiveApproval({
+        action: `APPROVE ${riskLevel}`,
+        details: [`task: ${taskId}`, `target: ${target}`, `operator: ${operator}`],
+        expected: `APPROVE ${riskLevel} ${taskId} ${target}`,
+      })
       const issued = engine.approvalAuthority.issue({ id: makeApprovalId(), riskLevel, taskId, target, operator, ttlMs: 5 * 60 * 1000 })
       return print({ status: 'ISSUED', ...issued }, options.json)
+    }
+    if (command === 'install' && positional[0] === 'approve') {
+      const planId = String(options['plan-id'] ?? positional[1] ?? '')
+      if (!planId) throw new Error('install approve requires --plan-id')
+      const plan = await engine.runtime.installer.get(planId)
+      if (plan.status !== 'VERIFIED') throw new Error(`installation plan must be VERIFIED; got ${plan.status}`)
+      const operator = cfg.principal.id
+      await confirmInteractiveApproval({
+        action: 'APPROVE INSTALLATION',
+        details: [`plan: ${plan.planId}`, `plan hash: ${plan.planHash}`, `artifact SHA-256: ${plan.artifact.sha256}`, `artifact path: ${plan.artifact.path}`, `operator: ${operator}`],
+        expected: `APPROVE INSTALL ${plan.planId} ${plan.planHash}`,
+      })
+      const approvalId = `install:${plan.planId}`
+      const approvalToken = engine.runtime.approvalAuthority.issue({
+        id: approvalId, riskLevel: 'L2', taskId: plan.planId, target: plan.planHash, operator, ttlMs: 5 * 60 * 1000,
+      }).token
+      const approved = await engine.runtime.installer.approve(plan, { approvalToken, operator })
+      return print({ status: approved.status, planId: approved.planId, planHash: approved.planHash, approvedBy: approved.approvedBy, approvedAt: approved.approvedAt }, options.json)
     }
     if (command === 'analyze') {
       if (!options.target || !options.capability) throw new Error('analyze requires --target and --capability')

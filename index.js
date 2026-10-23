@@ -404,11 +404,7 @@ export function createActionHandler(runtime) {
           return
         }
         if (action === 'install.approve') {
-          if (body.confirm !== 'approve-install') throw new Error('explicit confirm=approve-install is required')
-          const operator = String(body.operator ?? 'local-ui')
-          const token = runtime.approvalAuthority.issue({ id: `install:${plan.planId}`, riskLevel: 'L2', taskId: plan.planId, target: plan.planHash, operator }).token
-          const approved = await runtime.installer.approve(plan, { approvalToken: token, operator })
-          sendJson(res, 200, { ok: true, action, plan: approved })
+          denied(res, 'installation approval must be issued by the interactive host CLI')
           return
         }
         if (action === 'install.activate') {

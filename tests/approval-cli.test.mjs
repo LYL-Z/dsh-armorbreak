@@ -15,32 +15,20 @@ async function fixture() {
   return { stateRoot, workspace, env, run }
 }
 
-test('approval CLI requires an explicit human challenge and Engine consumes the token', async () => {
+test('approval CLI refuses a predictable non-interactive confirmation flag', async () => {
   const f = await fixture()
   const target = join(f.workspace, 'sample.bin')
   const base = ['approval', 'issue', '--risk', 'L1', '--task-id', 'task-approval', '--target', target, '--operator', 'alice', '--json']
-  const challenge = f.run(...base)
-  assert.equal(challenge.status, 2)
-  const pending = JSON.parse(challenge.stdout)
-  assert.equal(pending.status, 'CONFIRMATION_REQUIRED')
-  assert.match(pending.challenge, /^confirm-[a-f0-9]{16}$/)
-  const wrong = f.run(...base, '--confirm', 'confirm-deadbeef')
-  assert.equal(wrong.status, 1)
-  const issued = f.run(...base, '--confirm', pending.challenge)
-  assert.equal(issued.status, 0)
-  const result = JSON.parse(issued.stdout)
-  assert.equal(result.status, 'ISSUED')
-  assert.match(result.token, /^abappr1\./)
-
-  const engine = await createEngine({ stateRoot: f.stateRoot, principals: [{ id: 'alice', kind: 'local-user', workspaces: [f.workspace] }] })
-  const ctx = { principal: { id: 'alice', kind: 'local-user' }, workspaceId: f.workspace, requestId: 'approval-consume', traceId: 'approval-consume' }
-  const approved = await engine.verifyApproval(ctx, { riskLevel: 'L1', taskId: 'task-approval', target, approvalToken: result.token })
-  assert.equal(approved.operator, 'alice')
-  await assert.rejects(() => engine.verifyApproval(ctx, { riskLevel: 'L1', taskId: 'task-approval', target, approvalToken: result.token }), (error) => error.code === 'TOKEN_REPLAYED')
-  await engine.close()
+  const direct = f.run(...base)
+  assert.equal(direct.status, 1)
+  assert.match(direct.stderr, /interactive terminal/i)
+  const guessed = f.run(...base, '--confirm', 'confirm-0000000000000000')
+  assert.equal(guessed.status, 1)
+  assert.match(guessed.stderr, /predictable command-line flag/i)
+  assert.doesNotMatch(direct.stdout + direct.stderr + guessed.stdout + guessed.stderr, /abappr1\./)
 })
 
-test('approval CLI refuses L3 and missing confirmation material', async () => {
+test('approval CLI refuses L3 and installation approval without an interactive terminal', async () => {
   const f = await fixture()
   const l3 = f.run('approval', 'issue', '--risk', 'L3', '--task-id', 't', '--target', 'x', '--operator', 'alice', '--json')
   assert.equal(l3.status, 1)
@@ -48,4 +36,21 @@ test('approval CLI refuses L3 and missing confirmation material', async () => {
   const missing = f.run('approval', 'issue', '--risk', 'L2', '--task-id', 't', '--operator', 'alice', '--json')
   assert.equal(missing.status, 1)
   assert.match(missing.stderr, /task-id|target/)
+
+  const artifactPath = join(f.workspace, 'bundle.tgz')
+  const { writeFile } = await import('node:fs/promises')
+  await writeFile(artifactPath, 'synthetic bundle')
+  const engine = await createEngine({ stateRoot: f.stateRoot, principals: [{ id: 'alice', kind: 'local-user', workspaces: [f.workspace] }] })
+  try {
+    let plan = await engine.runtime.installer.plan({ artifactPath, components: [{ name: 'bundle', version: '1', license: 'MIT', commit: 'abc', digest: 'sha256:test', scripts: {} }] })
+    await engine.runtime.installer.persist(plan)
+    plan = await engine.runtime.installer.stage(plan)
+    plan = await engine.runtime.installer.verify(plan)
+    const attempt = f.run('install', 'approve', '--plan-id', plan.planId, '--json')
+    assert.equal(attempt.status, 1)
+    assert.match(attempt.stderr, /interactive terminal/i)
+    assert.equal((await engine.runtime.installer.get(plan.planId)).status, 'VERIFIED')
+  } finally {
+    await engine.close()
+  }
 })
