@@ -337,7 +337,13 @@ export class ExecutionRunner {
           : 'no registered capability declares directory support'
         throw new ExecutionError('TARGET_NOT_FILE', `capability ${capability.id} only accepts a file target but received a directory: ${input.targetPath}. ${hint}; or run a directory workflow (WebCodeSecurityReview / DependencyAudit) instead.`)
       }
-      const read = await readBounded(input.targetPath, limits.maxInputBytes)
+      const read = await readBounded(input.targetPath, limits.maxInputBytes, {
+        authorize: async (file) => {
+          const check = await ctx.scope.checkFile({ taskId: task.id, targetPath: file, workspaceRoot: task.workspace })
+          if (!check.allowed) throw new PolicyDeniedError(check.code, check.reason)
+          return check
+        },
+      })
       buffer = read.buffer
       text = looksTextual(read.buffer) ? textOf(read.buffer) : null
       if (read.truncated) log(`input truncated to ${limits.maxInputBytes} bytes (file is ${read.size} bytes)`)
@@ -387,7 +393,17 @@ export class ExecutionRunner {
           throw new ExecutionError('PATH_ESCAPE', `readFile target escapes the analyzed directory (resolved to ${resolved}): ${absPath}`)
         }
         if (controller.signal.aborted) throw new ExecutionError('CANCELLED', 'execution cancelled')
-        const read = await readBounded(resolved, Math.min(maxBytes, limits.maxFileReadBytes))
+        const read = await readBounded(resolved, Math.min(maxBytes, limits.maxFileReadBytes), {
+          authorize: async (file) => {
+            const currentResolved = realpathOf(file)
+            if (!isPathInside(root, file) || !isPathInside(realRoot, currentResolved)) {
+              throw new PolicyDeniedError('PATH_ESCAPE', `readFile target escaped the analyzed directory: ${file}`)
+            }
+            const check = await ctx.scope.checkFile({ taskId: task.id, targetPath: file, workspaceRoot: task.workspace })
+            if (!check.allowed) throw new PolicyDeniedError(check.code, check.reason)
+            return check
+          },
+        })
         // Contract (docs/CONTRACT.md): env.readFile resolves to a Buffer.
         if (read.truncated) env.targetTruncated = true
         return read.buffer

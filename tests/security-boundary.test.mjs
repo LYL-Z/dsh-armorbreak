@@ -8,7 +8,7 @@
  */
 import assert from 'node:assert/strict'
 import { createServer } from 'node:http'
-import { mkdtemp, mkdir, readFile, writeFile } from 'node:fs/promises'
+import { link, mkdtemp, mkdir, readFile, rename, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
@@ -110,6 +110,71 @@ test('gated file reader stays inside the workspace and marks truncation/hash sco
   assert.ok(searched.data.matches.length >= 1)
   const stat = await statPath(scope, { workspaceRoot: workspace, path: big })
   assert.equal(stat.data.kind, 'file')
+})
+
+test('L0 file reader rejects a junction retargeted after the scope check', async () => {
+  const base = await mkdtemp(join(tmpdir(), 'abm-sec-l0-race-'))
+  const workspace = join(base, 'workspace')
+  const inside = join(workspace, 'inside')
+  const retained = join(workspace, 'inside-retained')
+  const outside = join(base, 'outside')
+  const target = join(inside, 'sample.txt')
+  await mkdir(inside, { recursive: true })
+  await mkdir(outside, { recursive: true })
+  await writeFile(target, 'SAFE_IN_WORKSPACE')
+  await writeFile(join(outside, 'sample.txt'), 'OUTSIDE_SYNTHETIC_SECRET')
+
+  const scope = new ScopePolicy({ stateRoot: join(base, 'state') })
+  let swapped = false
+  const checkFile = scope.checkFile.bind(scope)
+  scope.checkFile = async (input) => {
+    const result = await checkFile(input)
+    if (result.allowed && !swapped && input.targetPath === target) {
+      await rename(inside, retained)
+      await symlink(outside, inside, 'junction')
+      swapped = true
+    }
+    return result
+  }
+
+  try {
+    const result = await readFileBounded(scope, { workspaceRoot: workspace, path: target })
+    assert.equal(swapped, true)
+    assert.equal(result.allowed, false)
+    assert.ok(['OUT_OF_SCOPE', 'PATH_CHANGED'].includes(result.code), `unexpected denial code: ${result.code}`)
+    assert.notEqual(result.data?.text, 'OUTSIDE_SYNTHETIC_SECRET')
+  } finally {
+    await rm(base, { recursive: true, force: true })
+  }
+})
+
+test('L0 file reader rejects multiply-linked files whose other path is unverified', async (t) => {
+  const base = await mkdtemp(join(tmpdir(), 'abm-sec-hardlink-'))
+  const workspace = join(base, 'workspace')
+  const target = join(workspace, 'linked.txt')
+  const external = join(base, 'external.txt')
+  await mkdir(workspace, { recursive: true })
+  await writeFile(external, 'OUTSIDE_SYNTHETIC_SECRET')
+  try {
+    await link(external, target)
+  } catch (error) {
+    await rm(base, { recursive: true, force: true })
+    if (['EPERM', 'EACCES', 'ENOSYS', 'EXDEV'].includes(error?.code)) {
+      t.skip(`hard link creation unavailable on this filesystem: ${error.code}`)
+      return
+    }
+    throw error
+  }
+
+  try {
+    const scope = new ScopePolicy({ stateRoot: join(base, 'state') })
+    const result = await readFileBounded(scope, { workspaceRoot: workspace, path: target })
+    assert.equal(result.allowed, false)
+    assert.equal(result.code, 'HARDLINK_NOT_ALLOWED')
+    assert.notEqual(result.data?.text, 'OUTSIDE_SYNTHETIC_SECRET')
+  } finally {
+    await rm(base, { recursive: true, force: true })
+  }
 })
 
 test('http probe pins the validated IP, never follows redirects, and truncates streamed bodies', async () => {

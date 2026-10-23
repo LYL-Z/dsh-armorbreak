@@ -8,7 +8,8 @@
  * results are written by the runtime, not by the model.
  * @module dsh-armorbreak/lib/core/files
  */
-import { readdir, readFile, stat } from 'node:fs/promises'
+import { constants } from 'node:fs'
+import { lstat, open, readdir, stat } from 'node:fs/promises'
 import { realpathSync } from 'node:fs'
 import { extname, resolve } from 'node:path'
 import { sha256 } from './util.js'
@@ -62,6 +63,106 @@ async function authorizePath(scope, workspaceRoot, targetPath) {
   return { ...check, resolved: check.resolved ?? realpathOrResolved(targetPath) }
 }
 
+/** Compare canonical paths without relying on case sensitivity on Windows. */
+function samePath(left, right) {
+  const a = resolve(left)
+  const b = resolve(right)
+  return process.platform === 'win32' ? a.toLowerCase() === b.toLowerCase() : a === b
+}
+
+/** Compare the stable file identity exposed by the platform. */
+function sameFileIdentity(left, right) {
+  return left.dev === right.dev && left.ino !== 0n && left.ino === right.ino
+}
+
+/**
+ * Open the path authorized by ScopePolicy and bind later reads to that handle.
+ * Reauthorization plus path/handle identity comparison catches path replacement
+ * around the open; O_NOFOLLOW additionally rejects a final-component symlink
+ * where the platform supports it. Hard links are rejected because their other
+ * names cannot be proven to stay inside the authorized tree.
+ */
+async function openAuthorizedFile(scope, workspaceRoot, targetPath) {
+  const auth = await authorizePath(scope, workspaceRoot, targetPath)
+  if (!auth.allowed) return { error: auth }
+
+  let handle
+  try {
+    const flags = constants.O_RDONLY | (constants.O_NOFOLLOW ?? 0)
+    handle = await open(auth.resolved, flags)
+    const opened = await handle.stat({ bigint: true })
+    if (!opened.isFile()) {
+      await handle.close()
+      return { error: { allowed: false, code: 'NOT_A_FILE', reason: `not a regular file: ${auth.resolved}` } }
+    }
+    if (opened.nlink > 1n) {
+      await handle.close()
+      return { error: { allowed: false, code: 'HARDLINK_NOT_ALLOWED', reason: 'refusing a file with multiple hard links because its other path cannot be verified' } }
+    }
+
+    const finalEntry = await lstat(auth.resolved, { bigint: true })
+    if (finalEntry.isSymbolicLink() || !sameFileIdentity(opened, finalEntry)) {
+      await handle.close()
+      return { error: { allowed: false, code: 'PATH_CHANGED', reason: 'file identity changed while opening the authorized path' } }
+    }
+
+    const currentAuth = await authorizePath(scope, workspaceRoot, targetPath)
+    if (!currentAuth.allowed) {
+      await handle.close()
+      return { error: currentAuth }
+    }
+    if (!samePath(auth.resolved, currentAuth.resolved)) {
+      await handle.close()
+      return { error: { allowed: false, code: 'PATH_CHANGED', reason: 'path resolved to a different file after authorization' } }
+    }
+
+    const currentEntry = await stat(auth.resolved, { bigint: true })
+    if (!sameFileIdentity(opened, currentEntry)) {
+      await handle.close()
+      return { error: { allowed: false, code: 'PATH_CHANGED', reason: 'opened file no longer matches the authorized path' } }
+    }
+    return { handle, info: opened, resolved: auth.resolved, authorization: auth }
+  } catch (error) {
+    await handle?.close().catch(() => {})
+    const code = error?.code === 'ELOOP' ? 'PATH_CHANGED' : 'FILE_OPEN_FAILED'
+    return { error: { allowed: false, code, reason: `could not safely open authorized file: ${error?.message ?? error}` } }
+  }
+}
+
+/** Read at most `maxBytes + 1` bytes from an already verified handle. */
+async function readBoundedHandle(handle, maxBytes) {
+  const buffer = Buffer.alloc(maxBytes + 1)
+  const { bytesRead } = await handle.read(buffer, 0, buffer.length, 0)
+  return buffer.subarray(0, bytesRead)
+}
+
+/** Recheck a directory around enumeration; file contents are opened separately. */
+async function readAuthorizedDirectory(scope, workspaceRoot, targetPath, options) {
+  const auth = await authorizePath(scope, workspaceRoot, targetPath)
+  if (!auth.allowed) return { error: auth }
+  try {
+    const currentAuth = await authorizePath(scope, workspaceRoot, targetPath)
+    if (!currentAuth.allowed) return { error: currentAuth }
+    if (!samePath(auth.resolved, currentAuth.resolved)) {
+      return { error: { allowed: false, code: 'PATH_CHANGED', reason: 'directory resolved to a different location after authorization' } }
+    }
+    const before = await lstat(auth.resolved, { bigint: true })
+    if (before.isSymbolicLink() || !before.isDirectory()) {
+      return { error: { allowed: false, code: 'NOT_A_DIRECTORY', reason: `not a real directory: ${auth.resolved}` } }
+    }
+    const entries = await readdir(auth.resolved, options)
+    const after = await lstat(auth.resolved, { bigint: true })
+    const afterAuth = await authorizePath(scope, workspaceRoot, targetPath)
+    if (!afterAuth.allowed) return { error: afterAuth }
+    if (!samePath(auth.resolved, afterAuth.resolved) || !after.isDirectory() || !sameFileIdentity(before, after)) {
+      return { error: { allowed: false, code: 'PATH_CHANGED', reason: 'directory identity changed during enumeration' } }
+    }
+    return { entries, resolved: auth.resolved }
+  } catch (error) {
+    return { error: { allowed: false, code: 'DIRECTORY_READ_FAILED', reason: `could not safely enumerate authorized directory: ${error?.message ?? error}` } }
+  }
+}
+
 /**
  * List one directory (non-recursive).
  * @param {import('./scope.js').ScopePolicy} scope
@@ -69,19 +170,17 @@ async function authorizePath(scope, workspaceRoot, targetPath) {
  */
 export async function listDirectory(scope, input) {
   const targetPath = String(input.path ?? input.workspaceRoot)
-  const auth = await authorizePath(scope, input.workspaceRoot, targetPath)
-  if (!auth.allowed) return auth
-  const info = await stat(auth.resolved)
-  if (!info.isDirectory()) return { allowed: false, code: 'NOT_A_DIRECTORY', reason: `not a directory: ${auth.resolved}` }
-  const entries = await readdir(auth.resolved, { withFileTypes: true })
+  const listed = await readAuthorizedDirectory(scope, input.workspaceRoot, targetPath, { withFileTypes: true })
+  if (listed.error) return listed.error
+  const entries = listed.entries
   const items = entries
     .slice(0, FILE_TOOL_LIMITS.maxListEntries)
     .map((entry) => ({ name: entry.name, kind: entry.isDirectory() ? 'directory' : entry.isSymbolicLink() ? 'symlink' : 'file' }))
     .sort((a, b) => (a.kind === b.kind ? a.name.localeCompare(b.name) : a.kind === 'directory' ? -1 : 1))
   return {
     allowed: true,
-    resolved: auth.resolved,
-    data: { path: auth.resolved, entries: items, truncated: entries.length > FILE_TOOL_LIMITS.maxListEntries },
+    resolved: listed.resolved,
+    data: { path: listed.resolved, entries: items, truncated: entries.length > FILE_TOOL_LIMITS.maxListEntries },
   }
 }
 
@@ -91,28 +190,33 @@ export async function listDirectory(scope, input) {
  * @param {{workspaceRoot: string, path: string, maxBytes?: number}} input
  */
 export async function readFileBounded(scope, input) {
-  const auth = await authorizePath(scope, input.workspaceRoot, input.path)
-  if (!auth.allowed) return auth
-  const info = await stat(auth.resolved)
-  if (!info.isFile()) return { allowed: false, code: 'NOT_A_FILE', reason: `not a regular file: ${auth.resolved}` }
+  const opened = await openAuthorizedFile(scope, input.workspaceRoot, input.path)
+  if (opened.error) return opened.error
   const maxBytes = Math.max(1024, Math.min(Number(input.maxBytes ?? FILE_TOOL_LIMITS.maxReadBytes), FILE_TOOL_LIMITS.maxReadBytes))
-  const buffer = await readFile(auth.resolved, { encoding: null })
-  const analyzed = buffer.subarray(0, maxBytes)
-  const binary = looksBinary(analyzed)
-  return {
-    allowed: true,
-    resolved: auth.resolved,
-    data: {
-      path: auth.resolved,
-      totalBytes: buffer.length,
-      analyzedBytes: analyzed.length,
-      truncated: buffer.length > analyzed.length,
-      hashScope: buffer.length > analyzed.length ? 'analyzed-range' : 'full-file',
-      fullFileSha256: buffer.length <= maxBytes ? sha256(buffer) : null,
-      analyzedRangeSha256: sha256(analyzed),
-      binary,
-      text: binary ? null : analyzed.toString('utf8'),
-    },
+  try {
+    const analyzed = await readBoundedHandle(opened.handle, maxBytes)
+    const binary = looksBinary(analyzed.subarray(0, maxBytes))
+    const truncated = opened.info.size > BigInt(analyzed.length) || analyzed.length > maxBytes
+    const bytes = analyzed.subarray(0, maxBytes)
+    return {
+      allowed: true,
+      resolved: opened.resolved,
+      data: {
+        path: opened.resolved,
+        totalBytes: Number(opened.info.size),
+        analyzedBytes: bytes.length,
+        truncated,
+        hashScope: truncated ? 'analyzed-range' : 'full-file',
+        fullFileSha256: truncated ? null : sha256(bytes),
+        analyzedRangeSha256: sha256(bytes),
+        binary,
+        text: binary ? null : bytes.toString('utf8'),
+      },
+    }
+  } catch (error) {
+    return { allowed: false, code: 'FILE_READ_FAILED', reason: `could not read authorized file handle: ${error?.message ?? error}` }
+  } finally {
+    await opened.handle.close().catch(() => {})
   }
 }
 
@@ -124,16 +228,29 @@ export async function readFileBounded(scope, input) {
 export async function statPath(scope, input) {
   const auth = await authorizePath(scope, input.workspaceRoot, input.path)
   if (!auth.allowed) return auth
-  const info = await stat(auth.resolved)
+  let info
+  if ((await stat(auth.resolved)).isFile()) {
+    const opened = await openAuthorizedFile(scope, input.workspaceRoot, input.path)
+    if (opened.error) return opened.error
+    info = opened.info
+    await opened.handle.close()
+  } else {
+    const currentAuth = await authorizePath(scope, input.workspaceRoot, input.path)
+    if (!currentAuth.allowed) return currentAuth
+    if (!samePath(auth.resolved, currentAuth.resolved)) return { allowed: false, code: 'PATH_CHANGED', reason: 'path resolved to a different location after authorization' }
+    const finalEntry = await lstat(auth.resolved)
+    if (finalEntry.isSymbolicLink()) return { allowed: false, code: 'PATH_CHANGED', reason: 'refusing a symlinked path' }
+    info = await stat(auth.resolved)
+  }
   return {
     allowed: true,
     resolved: auth.resolved,
     data: {
       path: auth.resolved,
       kind: info.isDirectory() ? 'directory' : info.isFile() ? 'file' : 'other',
-      size: info.size,
-      mtime: info.mtime.toISOString(),
-      mode: info.mode,
+      size: Number(info.size),
+      mtime: new Date(Number(info.mtimeMs)).toISOString(),
+      mode: Number(info.mode),
     },
   }
 }
@@ -162,7 +279,9 @@ export async function searchFiles(scope, input) {
   /** @param {string} dir @param {number} depth */
   const walk = async (dir, depth) => {
     if (matches.length >= maxResults || truncated) return
-    const entries = await readdir(dir, { withFileTypes: true }).catch(() => [])
+    const listed = await readAuthorizedDirectory(scope, input.workspaceRoot, dir, { withFileTypes: true }).catch(() => ({ error: true }))
+    if (!listed || listed.error) return
+    const entries = listed.entries
     for (const entry of entries) {
       if (matches.length >= maxResults || scanned >= FILE_TOOL_LIMITS.maxSearchFiles) {
         truncated = true
@@ -175,10 +294,18 @@ export async function searchFiles(scope, input) {
         continue
       }
       if (!entry.isFile() || !TEXT_EXTENSIONS.has(extname(entry.name).toLowerCase())) continue
-      const info = await stat(full).catch(() => null)
-      if (!info || info.size > FILE_TOOL_LIMITS.maxReadBytes) continue
-      const buffer = await readFile(full).catch(() => null)
-      if (!buffer || looksBinary(buffer)) continue
+      const opened = await openAuthorizedFile(scope, input.workspaceRoot, full).catch(() => ({ error: true }))
+      if (!opened || opened.error) continue
+      let buffer
+      try {
+        if (opened.info.size > BigInt(FILE_TOOL_LIMITS.maxReadBytes)) continue
+        buffer = await readBoundedHandle(opened.handle, FILE_TOOL_LIMITS.maxReadBytes)
+      } catch {
+        continue
+      } finally {
+        await opened.handle.close().catch(() => {})
+      }
+      if (!buffer || buffer.length > FILE_TOOL_LIMITS.maxReadBytes || looksBinary(buffer)) continue
       scanned += 1
       const lines = buffer.toString('utf8').split(/\r?\n/)
       for (let index = 0; index < lines.length; index += 1) {
