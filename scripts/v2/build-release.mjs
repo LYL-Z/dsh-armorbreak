@@ -7,12 +7,13 @@
  */
 import { createHash, generateKeyPairSync } from 'node:crypto'
 import { execFileSync, spawnSync } from 'node:child_process'
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { basename, join, relative, resolve } from 'node:path'
 import { gzipSync } from 'node:zlib'
 import { fileURLToPath } from 'node:url'
 import { signArtifact, verifyArtifactSignature } from './artifact-signature.mjs'
+import { readSafeRepoFile } from '../../lib/release/safeEvidenceFile.js'
 
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)))
 const args = process.argv.slice(2)
@@ -21,20 +22,32 @@ const outDir = resolve(value('--out', join(root, 'dist')))
 const evidencePath = resolve(value('--evidence', join(root, 'docs/v2/acceptance/release-build.json')))
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
+function gitPaths(args) {
+  return execFileSync('git', args, { cwd: root }).toString('utf8').split('\0').filter(Boolean).map((path) => path.replaceAll('\\', '/'))
+}
+
+const dirtyPaths = [...new Set([
+  ...gitPaths(['diff', '--name-only', '-z', 'HEAD', '--']),
+  ...gitPaths(['ls-files', '--others', '--exclude-standard', '-z']),
+])]
+const reviewEvidence = (path) => path === 'FOUR_REVIEW_UNIFIED_FINDINGS.json' || path === 'FOUR_REVIEW_RECONCILIATION.md'
+const evidenceOnly = (path) => path.startsWith('docs/v2/acceptance/') || path === 'docs/v2/release/readiness.json' || reviewEvidence(path)
+const dirtySourcePaths = dirtyPaths.filter((path) => !evidenceOnly(path))
+if (dirtySourcePaths.length) throw new Error(`release build requires committed source; dirty source paths: ${dirtySourcePaths.join(', ')}`)
 
 const EXCLUDE = new Set(['.git', 'node_modules', 'dist', '.armorbreak', '.github'])
-const EXCLUDE_PATHS = new Set(['docs/v2/release/readiness.json', 'docs/v2/release/sbom.spdx.json'])
-function files(current = root, prefix = '') {
-  const out = []
-  for (const entry of readdirSync(current, { withFileTypes: true })) {
-    if (EXCLUDE.has(entry.name)) continue
-    const full = join(current, entry.name)
-    const rel = prefix ? `${prefix}/${entry.name}` : entry.name
-    if (EXCLUDE_PATHS.has(rel) || rel.startsWith('docs/v2/acceptance/')) continue
-    if (entry.isDirectory()) out.push(...files(full, rel))
-    else if (entry.isFile()) out.push(rel)
-  }
-  return out
+const EXCLUDE_PATHS = new Set([
+  'docs/v2/release/readiness.json', 'docs/v2/release/sbom.spdx.json',
+  'FOUR_REVIEW_UNIFIED_FINDINGS.json', 'FOUR_REVIEW_RECONCILIATION.md',
+])
+function files() {
+  return gitPaths(['ls-files', '-z']).filter((rel) => {
+    if (EXCLUDE_PATHS.has(rel) || rel.startsWith('docs/v2/acceptance/') || rel.endsWith('.pyc')) return false
+    return ![...EXCLUDE].some((directory) => rel === directory || rel.startsWith(`${directory}/`))
+  }).map((path) => {
+    const bytes = readSafeRepoFile(root, path)
+    return { path, bytes, size: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') }
+  }).sort((left, right) => left.path.localeCompare(right.path))
 }
 
 function octal(value, length) { return `${value.toString(8).padStart(length - 1, '0')}\0` }
@@ -69,12 +82,11 @@ function header(name, size, type = '0') {
   block.write(`${sum.toString(8).padStart(6, '0')}\0 `, 148, 8, 'ascii')
   return block
 }
-function tar(paths) {
+function tar(entries) {
   const chunks = []
-  for (const rel of paths.sort()) {
-    const full = join(root, rel)
-    const body = readFileSync(full)
-    chunks.push(header(rel, body.length), body)
+  for (const entry of entries) {
+    const body = entry.bytes
+    chunks.push(header(entry.path, body.length), body)
     const pad = (512 - (body.length % 512)) % 512
     if (pad) chunks.push(Buffer.alloc(pad))
   }
@@ -82,25 +94,34 @@ function tar(paths) {
   return Buffer.concat(chunks)
 }
 
-function buildOnce(name) {
-  const paths = files().filter((path) => !path.startsWith('docs/v2/acceptance/') && !path.endsWith('release-build.json'))
-  const archive = gzipSync(tar(paths), { level: 9 })
+function buildOnce(name, entries) {
+  const archive = gzipSync(tar(entries), { level: 9 })
   const target = join(outDir, name)
   writeFileSync(target, archive)
-  return { target, sha256: createHash('sha256').update(archive).digest('hex'), bytes: archive.length, paths }
+  return { target, sha256: createHash('sha256').update(archive).digest('hex'), bytes: archive.length, entries }
 }
 
 mkdirSync(outDir, { recursive: true })
 const name = `armorbreak-portable-${pkg.version}.tar.gz`
-const first = buildOnce(name)
-const second = buildOnce(`${name}.reproduce`)
+const sourceEntries = files()
+const first = buildOnce(name, sourceEntries)
+const second = buildOnce(`${name}.reproduce`, sourceEntries)
 const reproducible = first.sha256 === second.sha256
 if (!reproducible) console.error(`reproducibility mismatch: ${first.sha256} != ${second.sha256}`)
 const sbomPath = join(outDir, `${name}.sbom.cdx.json`)
 const sbom = {
   bomFormat: 'CycloneDX', specVersion: '1.5', version: 1,
   metadata: { component: { type: 'application', name: pkg.name, version: pkg.version, hashes: [{ alg: 'SHA-256', content: first.sha256 }] } },
-  components: ['protocol', 'core', 'engine-node', 'mcp-server', 'cli', 'installer', 'provider-router', 'adapter-dsh', 'skill-router', 'sdk-ts', 'core-daemon', 'migration'].map((name) => ({ type: 'library', name: `@armorbreak/${name}`, version: pkg.version })),
+  components: [...new Set(sourceEntries.map((entry) => entry.path.startsWith('packages/') ? entry.path.split('/')[1] : null).filter(Boolean))]
+    .sort()
+    .map((name) => {
+      const componentFiles = sourceEntries.filter((entry) => entry.path.startsWith(`packages/${name}/`))
+        .map(({ path, size, sha256 }) => ({ path, size, sha256 }))
+      return {
+        type: 'library', name: `@armorbreak/${name}`, version: pkg.version,
+        hashes: [{ alg: 'SHA-256', content: createHash('sha256').update(JSON.stringify(componentFiles)).digest('hex') }],
+      }
+    }),
 }
 writeFileSync(sbomPath, `${JSON.stringify(sbom, null, 2)}\n`)
 const { privateKey, publicKey } = generateKeyPairSync('ed25519')
@@ -126,7 +147,11 @@ const manifest = {
   schemaVersion: 'armorbreak.release-build/v1', generatedAt: new Date().toISOString(), commit, package: pkg.name, version: pkg.version,
   artifact: basename(first.target), bytes: first.bytes, sha256: first.sha256, reproducible,
   sbom: basename(sbomPath), sbomSha256: createHash('sha256').update(readFileSync(sbomPath)).digest('hex'),
-  files: first.paths.length, cleanRoom, signature: { algorithm: 'ed25519', testKey: true, valid: signatureValid, signature: signature.signature, publicKey: publicKey.export({ type: 'spki', format: 'pem' }) },
+  files: first.entries.length,
+  contentManifest: first.entries.map(({ path, size, sha256 }) => ({ path, size, sha256 })),
+  contentManifestSha256: createHash('sha256').update(JSON.stringify(first.entries.map(({ path, size, sha256 }) => ({ path, size, sha256 })))).digest('hex'),
+  toolchain: { node: process.version, platform: process.platform, arch: process.arch, zlib: process.versions.zlib },
+  cleanRoom, signature: { algorithm: 'ed25519', testKey: true, valid: signatureValid, signature: signature.signature, publicKey: publicKey.export({ type: 'spki', format: 'pem' }) },
   productionSigned: false,
   limitations: ['Test Ed25519 key verifies the signing mechanism; it is not a production identity.', 'Docker/npm publish not performed by this builder.'],
 }
