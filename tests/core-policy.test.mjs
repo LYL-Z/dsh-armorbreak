@@ -26,6 +26,7 @@ test('authorize creates a signed durable record and list shows it active', async
     ttlMs: 60_000,
   })
   assert.match(record.id, /^authz_/)
+  assert.equal(record.kind, 'authorization')
   assert.equal(record.signature.length, 64)
   const listed = await scope.listAuthorizations()
   assert.equal(listed.length, 1)

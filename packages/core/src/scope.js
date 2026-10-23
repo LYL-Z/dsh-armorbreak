@@ -304,54 +304,6 @@ export class ScopePolicy {
   }
 
   /**
-   * Create a durable authorization record.
-   * @param {{purpose: string, operator: string, paths?: string[], networkTargets?: NetworkTarget[]|string[], riskCeiling?: RiskLevel, expiresAt?: string, ttlMs?: number}} input
-   */
-  async authorize(input) {
-    await this.load()
-    const purpose = String(input.purpose ?? '').trim()
-    const operator = String(input.operator ?? '').trim()
-    if (purpose.length < 4) throw new Error('authorization needs a purpose of at least 4 characters (what is being researched and why)')
-    if (operator.length < 2) throw new Error('authorization needs an operator: the human or team granting it')
-    const paths = (Array.isArray(input.paths) ? input.paths : [])
-      .filter((item) => typeof item === 'string' && item.trim() !== '')
-      .map((item) => resolve(item))
-    /** @type {NetworkTarget[]} */
-    const networkTargets = (Array.isArray(input.networkTargets) ? input.networkTargets : [])
-      .filter(Boolean)
-      .map((item) => {
-        if (typeof item === 'string') {
-          const parsed = parseNetworkTarget(item)
-          return { host: parsed.host, ports: parsed.port !== null ? [parsed.port] : [] }
-        }
-        return { host: String(item.host ?? '').toLowerCase(), ports: Array.isArray(item.ports) ? item.ports : [] }
-      })
-      .filter((item) => item.host !== '')
-    if (paths.length === 0 && networkTargets.length === 0) {
-      throw new Error('authorization must cover at least one path or one network target; empty authorizations grant nothing')
-    }
-    const createdAt = new Date(this.clock()).toISOString()
-    const expiresAt = input.expiresAt && !Number.isNaN(Date.parse(input.expiresAt))
-      ? new Date(input.expiresAt).toISOString()
-      : new Date(this.clock() + (input.ttlMs ?? 24 * 60 * 60 * 1000)).toISOString()
-    const body = {
-      kind: 'authorization',
-      purpose,
-      operator,
-      paths,
-      networkTargets,
-      riskCeiling: input.riskCeiling ?? 'L2',
-      createdAt,
-      expiresAt,
-    }
-    const record = { id: newId('authz'), ...body }
-    record.signature = sha256(canonicalJson(record))
-    this.state.authorizations.push(record)
-    await this.save()
-    return record
-  }
-
-  /**
    * Model-facing part 1: record an authorization REQUEST. This does not grant
    * anything; activation requires a platform approval grant (see below).
    * @param {{purpose: string, operator: string, paths?: string[], networkTargets?: NetworkTarget[]|string[], riskCeiling?: RiskLevel, ttlMs?: number}} input
@@ -427,7 +379,7 @@ export class ScopePolicy {
    */
   async authorize(input) {
     await this.load()
-    const record = { id: newId('authz'), ...normalizeAuthorizationInput(input, this.clock()) }
+    const record = { id: newId('authz'), ...normalizeAuthorizationInput(input, this.clock()), kind: 'authorization' }
     record.signature = sha256(canonicalJson(record))
     this.state.authorizations.push(record)
     await this.save()
