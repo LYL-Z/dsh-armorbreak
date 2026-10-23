@@ -30,8 +30,8 @@ For docs-only mode the validator:
 3. accepts only README Markdown files and non-protected `docs/**/*.md` files;
 4. verifies every file pinned by `evidence-manifest.json` still matches its
    SHA-256 and size;
-5. verifies the TAP hash and permits the baseline test-report commit only in
-   the path-verified docs-only mode;
+5. verifies the TAP hash and requires the test-report commit to equal the
+   manifest source commit when docs-only or evidence-only baseline is reused;
 6. disables the separate acceptance-only “evidence ancestor” exception while
    docs-only mode is active;
 7. rejects Git replace refs and custom `GIT_REPLACE_REF_BASE`.
