@@ -5,6 +5,7 @@ import { execFileSync } from 'node:child_process'
 import { classifyEvidenceOnly, validateEvidence } from '../../lib/release/evidenceValidator.js'
 import { computeReleaseGates } from '../../lib/release/gates.js'
 import { readSafeRepoFile, writeSafeRepoFile } from '../../lib/release/safeEvidenceFile.js'
+import { verifyPortableArtifactAttestation } from '../../lib/release/artifactAttestation.js'
 
 const root = process.cwd()
 const shaPattern = /^[a-f0-9]{40}$/i
@@ -27,6 +28,7 @@ function recordMatches(manifest, path, bytes) {
 const pkg = readJson('package.json')
 const gates = readJson('docs/v2/acceptance/release-gates.json')
 const sbom = readJson('docs/v2/release/sbom.spdx.json')
+const artifact = readJson('docs/v2/acceptance/portable-artifact.json')
 const manifest = readJson('docs/v2/acceptance/evidence-manifest.json')
 const testReport = readJson('docs/v2/acceptance/test-report.json')
 const head = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
@@ -76,7 +78,13 @@ for (const file of required) {
 }
 const incomplete = required.filter((file) => statuses[file] !== 'DONE')
 const sbomOk = Boolean(sbom && typeof sbom === 'object' && sbom.spdxVersion && pkg?.version && String(sbom.name ?? '').includes(pkg.version))
-const ready = Boolean(gates?.releasable === true && incomplete.length === 0 && sbomOk && evidenceOk)
+const artifactAttestation = verifyPortableArtifactAttestation({
+  repoRoot: root,
+  artifactPath: process.env.ARMORBREAK_PORTABLE_ARTIFACT,
+  artifactEvidence: artifact,
+  sourceCommit: head,
+})
+const ready = Boolean(gates?.releasable === true && incomplete.length === 0 && sbomOk && evidenceOk && artifactAttestation.ok)
 const result = {
   schemaVersion: 'armorbreak.release-readiness/v1',
   generatedAt: new Date().toISOString(),
@@ -92,12 +100,14 @@ const result = {
     checks: { manifestValid, evidenceLineage, testsPassed, gatesValid, gateResultsMatch, validatorOk: evidenceValidation.ok, validatorIssues: evidenceValidation.issues, sourceChanges },
   },
   gates: gates?.gates ?? null,
+  artifactAttestation,
   m4: statuses,
   incomplete,
   ready,
   reason: ready ? 'all required gates/tasks/evidence match the tested source commit' :
     !evidenceOk ? 'release evidence is stale, unsafe, incomplete, or not bound to the tested source commit' :
-      'release blocked by incomplete gates/tasks or missing SBOM; this is not a test-pass claim',
+      !artifactAttestation.ok ? `release artifact provenance is not verified (${artifactAttestation.code})` :
+        'release blocked by incomplete gates/tasks or missing SBOM; this is not a test-pass claim',
 }
 if (!process.argv.includes('--check-only')) {
   writeSafeRepoFile(root, 'docs/v2/release/readiness.json', `${JSON.stringify(result, null, 2)}\n`, { requiredPrefix: 'docs/v2/release/' })

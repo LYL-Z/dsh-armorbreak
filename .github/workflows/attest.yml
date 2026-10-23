@@ -33,6 +33,7 @@ jobs:
           node scripts/v2/check-docs-consistency.mjs
           node scripts/v2/validate-evidence.mjs --allow-evidence-only --allow-readiness --require-clean
           node scripts/v2/release-gates.mjs --allow-evidence-only --allow-readiness
+          node scripts/v2/check-release.mjs --check-only
           node scripts/v2/v2-readiness.mjs --require-ready --no-waivers
           node scripts/v2/check-blocker-map.mjs
           node scripts/v2/release-smoke.mjs

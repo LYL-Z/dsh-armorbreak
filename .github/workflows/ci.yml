@@ -148,6 +148,9 @@ jobs:
           EVIDENCE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: node scripts/v2/release-gates.mjs --allow-docs-only --allow-evidence-only --allow-readiness
 
+      - name: Check release evidence readiness
+        run: node scripts/v2/check-release.mjs --check-only
+
       - name: Live pre-release readiness
         run: node scripts/v2/v2-readiness.mjs --require-ready --no-waivers
 
