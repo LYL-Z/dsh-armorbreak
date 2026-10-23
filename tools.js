@@ -100,12 +100,9 @@ async function enrichArgs(args, exec) {
       /* No host session directory: use the process workspace and fail closed on overrides. */
     }
   }
-  const hasTrustedPrincipal = principalId !== null
-  const trustedWorkspace = hostWorkspace ?? (hasTrustedPrincipal ? runtime.resolveWorkspace() : runtime.resolveWorkspace(next.workspace))
+  const trustedWorkspace = hostWorkspace ?? runtime.resolveWorkspace()
   if (next.workspace && !samePath(runtime.resolveWorkspace(String(next.workspace)), trustedWorkspace)) {
-    // Non-agent callers are trusted in-process integrations. A model-backed call
-    // must never select the authorization root through its own arguments.
-    if (hasTrustedPrincipal) throw new Error('workspace must match the calling session working directory')
+    throw new Error('workspace must match the calling session working directory')
   }
   next.workspace = trustedWorkspace
   Object.defineProperty(next, TOOL_OWNER, { value: { principalId, sessionId: sessionId == null ? null : String(sessionId) } })
@@ -284,7 +281,7 @@ export function apply(ctx) {
       parameters: {
         type: 'object',
         properties: {
-          workspace: { type: 'string', description: 'Absolute workspace directory whose task store and policy to inspect. Defaults to the session working directory.' },
+          workspace: { type: 'string', description: 'Host-resolved session workspace. If supplied, it must match the current session directory.' },
           probeVersions: { type: 'boolean', description: 'When true, run bounded `--version` probes for installed external tools (slower). Default false.' },
         },
         additionalProperties: false,
@@ -502,7 +499,7 @@ export function apply(ctx) {
         type: 'object',
         properties: {
           action: { type: 'string', enum: ['list', 'read', 'stat', 'search'], description: 'list: directory entries; read: bounded file content + hashes; stat: metadata; search: bounded regex search over text files.' },
-          workspace: { type: 'string', description: 'Absolute workspace directory. Defaults to the session working directory.' },
+          workspace: { type: 'string', description: 'Host-resolved session workspace. If supplied, it must match the current session directory.' },
           path: { type: 'string', description: 'Absolute file or directory path. Defaults to the workspace root for list/search.' },
           pattern: { type: 'string', description: 'search: JavaScript regular expression (case-insensitive), max 200 chars.' },
           maxBytes: { type: 'number', description: 'read: at most this many bytes (default 262144, max 262144).' },
@@ -565,7 +562,7 @@ export function apply(ctx) {
         type: 'object',
         properties: {
           action: { type: 'string', enum: ['create', 'list', 'get', 'cancel', 'note', 'finalize'], description: 'Operation to perform.' },
-          workspace: { type: 'string', description: 'Absolute workspace directory. Defaults to the session working directory; pass it explicitly when analyzing another directory.' },
+          workspace: { type: 'string', description: 'Host-resolved session workspace. If supplied, it must match the current session directory.' },
           taskId: { type: 'string', description: 'Exact task id for get/cancel/note/finalize.' },
           title: { type: 'string', description: 'create: short human title for the objective.' },
           objective: { type: 'string', description: 'create: what question the task must answer and the expected output.' },
@@ -671,7 +668,7 @@ export function apply(ctx) {
         properties: {
           capability: { type: 'string', description: 'Exact capability id from armorbreak_capabilities (for example binary.identify, android.manifest, network.flows, sast.scan).' },
           target: { type: 'string', description: 'Absolute path of the file or directory to analyze. Required for file/directory capabilities; omit for network capabilities and pass options.url instead.' },
-          workspace: { type: 'string', description: 'Absolute workspace directory for task/evidence storage. Defaults to the session working directory.' },
+          workspace: { type: 'string', description: 'Host-resolved session workspace for task/evidence storage. If supplied, it must match the current session directory.' },
           options: { type: 'object', description: 'Capability-specific options. See the capability schema from armorbreak_capabilities.' },
           taskId: { type: 'string', description: 'Existing task to attach this execution to. Omit to create a new ad-hoc task automatically.' },
         },
@@ -752,7 +749,7 @@ export function apply(ctx) {
           action: { type: 'string', enum: ['list', 'start', 'run', 'run_async', 'status', 'cancel', 'resume', 'retry'], description: 'list workflows; start creates a task; run executes synchronously; run_async executes in the background; status includes queue state; cancel aborts; resume recovers an interrupted task; retry resets failed/skipped steps and runs in the background.' },
           workflow: { type: 'string', description: 'start: workflow id from action=list (exact case).' },
           target: { type: 'string', description: 'start: absolute path of the file or directory to analyze (required unless the workflow needs no target).' },
-          workspace: { type: 'string', description: 'Absolute workspace directory for task/evidence storage.' },
+          workspace: { type: 'string', description: 'Host-resolved session workspace for task/evidence storage. If supplied, it must match the current session directory.' },
           taskId: { type: 'string', description: 'run/run_async/status/cancel/resume/retry: exact task id.' },
           title: { type: 'string', description: 'start: optional human title for the task.' },
           maxSteps: { type: 'number', description: 'run/run_async: maximum steps per execution window (1-50, default 50).' },
@@ -884,7 +881,7 @@ export function apply(ctx) {
         type: 'object',
         properties: {
           action: { type: 'string', enum: ['list', 'get', 'verify', 'chain'], description: 'list evidence and findings; get one finding or evidence record; verify sets a finding status; chain validates the evidence and audit hash chains.' },
-          workspace: { type: 'string', description: 'Absolute workspace directory. Defaults to the session working directory.' },
+          workspace: { type: 'string', description: 'Host-resolved session workspace. If supplied, it must match the current session directory.' },
           taskId: { type: 'string', description: 'Exact task id.' },
           limit: { type: 'number', description: 'list: maximum findings/evidence to print (default 30).' },
           severity: { type: 'string', enum: ['critical', 'high', 'medium', 'low', 'info'], description: 'list: filter findings by severity.' },
@@ -960,7 +957,7 @@ export function apply(ctx) {
         properties: {
           taskId: { type: 'string', description: 'Exact task id to report on.' },
           format: { type: 'string', enum: ['markdown', 'html', 'json', 'sarif', 'pdf'], description: 'Report format. Default markdown.' },
-          workspace: { type: 'string', description: 'Absolute workspace directory. Defaults to the session working directory.' },
+          workspace: { type: 'string', description: 'Host-resolved session workspace. If supplied, it must match the current session directory.' },
         },
         required: ['taskId'],
         additionalProperties: false,
