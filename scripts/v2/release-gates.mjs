@@ -25,11 +25,15 @@ if (validation.mode === 'docs-only' && !isTag) {
   if (!base) {
     report = { schemaVersion: 'armorbreak.release-gates/v2', commit, mode: 'docs-only', applicability: 'BLOCKED', releasable: false, reason: 'docs-only mode requires a target base' }
   } else {
-    const baseReport = computeReleaseGates({ repoRoot: process.cwd(), commit: base, allowEvidenceAncestor: true })
+    const baseReport = computeReleaseGates({ repoRoot: process.cwd(), commit: base, allowEvidenceAncestor: true, allowDocsAncestor: true })
     report = docsOnlyGateReport({ commit, baseCommit: base, baseReport, validation })
   }
 } else {
   report = computeReleaseGates({ commit, allowEvidenceAncestor: true })
+}
+if (!validation.ok) {
+  report.releasable = false
+  report.reason = `evidence validation failed: ${validation.issues.join('; ')}`
 }
 writeFileSync('docs/v2/acceptance/release-gates.json', `${JSON.stringify(report, null, 2)}\n`)
 console.log(JSON.stringify({ commit, releasable: report.releasable, mode: report.mode ?? 'release-gates', applicability: report.applicability ?? 'RELEASE_GATES', gates: report.gates ? Object.fromEntries(Object.entries(report.gates).map(([name, gate]) => [name, gate.status])) : undefined, testReport: report.testReport }, null, 2))
