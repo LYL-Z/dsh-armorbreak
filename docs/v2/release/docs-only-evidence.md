@@ -18,8 +18,8 @@ The validator supports three explicit modes:
 - **docs-only:** `--allow-docs-only`, validated against a trusted target-branch
   base SHA (`EVIDENCE_BASE_SHA` from the pull-request event);
 - **evidence-only:** `--allow-evidence-only`, validated against the manifest's
-  source commit; only `docs/v2/acceptance/**` and
-  `docs/v2/release/readiness.json` may differ;
+  source commit; only `docs/v2/acceptance/**` may differ; `readiness.json` is
+  not accepted as an evidence-only path;
 - **code/security change:** neither mode applies; evidence must match the code
   commit or be regenerated for it.
 
