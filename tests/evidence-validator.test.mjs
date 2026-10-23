@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import test from 'node:test'
 
 import { validateEvidence } from '../lib/release/evidenceValidator.js'
@@ -34,6 +34,17 @@ function fixture() {
   return root
 }
 
+function addPinnedFiles(root, additions) {
+  const manifestPath = join(root, 'docs/v2/acceptance/evidence-manifest.json')
+  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'))
+  for (const [path, content] of Object.entries(additions)) {
+    mkdirSync(dirname(join(root, path)), { recursive: true })
+    writeFileSync(join(root, path), content)
+    manifest.files[path] = { sha256: hash(content), size: Buffer.byteLength(content) }
+  }
+  writeFileSync(manifestPath, JSON.stringify(manifest))
+}
+
 test('evidence validator accepts pinned files and rejects tamper/missing', () => {
   const root = fixture()
   assert.equal(validateEvidence({ repoRoot: root, commit: 'a'.repeat(40) }).ok, true)
@@ -42,6 +53,43 @@ test('evidence validator accepts pinned files and rejects tamper/missing', () =>
   assert.equal(tampered.ok, false)
   assert.ok(tampered.issues.some((issue) => /hash mismatch/.test(issue)))
   rmSync(root, { recursive: true, force: true })
+})
+
+test('evidence validator rejects dangling embedded acceptance references', () => {
+  const root = fixture()
+  addPinnedFiles(root, {
+    'docs/v2/acceptance/host-e2e.json': JSON.stringify({
+      evidence: ['docs/v2/acceptance/host-model/pi/l0.json'],
+    }),
+  })
+  try {
+    const result = validateEvidence({ repoRoot: root, commit: 'a'.repeat(40) })
+    assert.equal(result.ok, false)
+    assert.ok(result.issues.some((issue) => /referenced evidence path is missing or unsafe.*host-model\/pi\/l0\.json/.test(issue)))
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('evidence validator rejects stale embedded hashes for nested relative evidence', () => {
+  const root = fixture()
+  const evidence = 'current nested evidence\n'
+  addPinnedFiles(root, {
+    'docs/v2/acceptance/host-audit/sample.jsonl': evidence,
+    'docs/v2/acceptance/host-e2e.json': JSON.stringify({
+      files: {
+        'host-audit/sample.jsonl': { sha256: hash('stale evidence\n'), size: Buffer.byteLength('stale evidence\n') },
+      },
+    }),
+  })
+  try {
+    const result = validateEvidence({ repoRoot: root, commit: 'a'.repeat(40) })
+    assert.equal(result.ok, false)
+    assert.ok(result.issues.some((issue) => /embedded SHA-256 mismatch.*host-audit\/sample\.jsonl/.test(issue)))
+    assert.ok(result.issues.some((issue) => /embedded byte size mismatch.*host-audit\/sample\.jsonl/.test(issue)))
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
 })
 
 test('evidence validator refuses a parent junction to acceptance data outside the repository', (t) => {

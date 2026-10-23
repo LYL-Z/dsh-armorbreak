@@ -22,7 +22,7 @@
       "reportSha256": "bbb692e35a356d5d2680891f824a28ac48f9875f3798a86f99967699a9b4190d",
       "evidence": [
         "docs/v2/acceptance/provider-live-ollama.json",
-        "docs/v2/acceptance/host-model/pi/l0.json"
+        "docs/v2/acceptance/host-model/pi/pi-l0.json"
       ]
     },
     "LIVE_GOLDEN_PASS": {
