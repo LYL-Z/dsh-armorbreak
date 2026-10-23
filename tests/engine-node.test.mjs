@@ -123,6 +123,12 @@ test('approval tokens are bound, expire and cannot be replayed', async () => {
   const forged = authority.issue({ id: 'appr-2', riskLevel: 'L1', taskId: 'task-approval', target: workspace, operator: 'bob', ttlMs: 60_000 })
   await assert.rejects(() => engine.verifyApproval(alice, { riskLevel: 'L1', taskId: 'task-approval', target: workspace, approvalToken: forged.token }), (error) => error.code === 'TOKEN_BINDING_MISMATCH')
 
+  const sessionToken = authority.issue({ id: 'appr-session', riskLevel: 'L1', taskId: 'task-approval', target: workspace, operator: 'alice', sessionId: 'session-a', ttlMs: 60_000 })
+  await assert.rejects(
+    () => engine.verifyApproval(ctx({ id: 'alice', kind: 'local-user', sessionId: 'session-b' }, workspace, 'approve-session'), { riskLevel: 'L1', taskId: 'task-approval', target: workspace, approvalToken: sessionToken.token }),
+    (error) => error.code === 'TOKEN_BINDING_MISMATCH',
+  )
+
   const expiring = authority.issue({ id: 'appr-3', riskLevel: 'L2', taskId: 'task-approval', target: workspace, operator: 'alice', ttlMs: 1000 })
   now += 2000
   await assert.rejects(() => engine.verifyApproval(alice, { riskLevel: 'L2', taskId: 'task-approval', target: workspace, approvalToken: expiring.token }), (error) => error.code === 'TOKEN_EXPIRED')

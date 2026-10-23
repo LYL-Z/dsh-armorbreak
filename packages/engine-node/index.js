@@ -202,7 +202,7 @@ export class TrustedEngine {
     if (!['L1', 'L2'].includes(riskLevel)) throw new EngineError('INVALID_REQUEST', 'approval is only valid for L1/L2')
     if (!approvalToken) throw new EngineError('APPROVAL_REQUIRED', 'an approval token is required')
     if (!taskId || !target) throw new EngineError('INVALID_REQUEST', 'taskId and target are required')
-    const result = this.approvalAuthority.consume(String(approvalToken), { taskId: String(taskId), target: String(target), riskLevel, operator: principal.id, sessionId: ctx.principal.sessionId })
+    const result = this.approvalAuthority.consume(String(approvalToken), { taskId: String(taskId), target: String(target), riskLevel, operator: principal.id, sessionId: sessionOf(ctx) })
     if (!result.valid) throw new EngineError(result.code ?? 'POLICY_DENIED', result.reason ?? 'approval rejected')
     return { approvalId: result.payload.id, riskLevel, operator: principal.id, expiresAt: result.payload.expiresAt, taskId: String(taskId) }
   }
