@@ -13,7 +13,12 @@ const dirtyPaths = execFileSync('git', ['diff', '--name-only', 'HEAD'], { cwd: r
 const dirtySourcePaths = dirtyPaths.filter((path) => !path.startsWith(`${dir}/`) && path !== 'docs/v2/release/readiness.json')
 if (dirtySourcePaths.length) throw new Error(`evidence manifest must bind committed source; dirty paths: ${dirtySourcePaths.join(', ')}`)
 const files = {}
-const skip = (name) => name === 'evidence-manifest.json' || name === 'release-gates.json' || name === 'release-smoke.json' || name.endsWith('.log')
+const INCLUDED_LOG_PATHS = new Set(['docs/v2/acceptance/host-model/pi/install-uninstall.log'])
+const skip = (relativePath) => {
+  const name = relativePath.slice(relativePath.lastIndexOf('/') + 1)
+  return name === 'evidence-manifest.json' || name === 'release-gates.json' || name === 'release-smoke.json' ||
+    (name.endsWith('.log') && !INCLUDED_LOG_PATHS.has(relativePath))
+}
 
 function walk(relativeDirectory) {
   const absoluteDirectory = join(root, ...relativeDirectory.split('/'))
@@ -23,7 +28,7 @@ function walk(relativeDirectory) {
   for (const entry of entries) {
     const relativePath = `${relativeDirectory}/${entry.name}`
     if (entry.isSymbolicLink()) throw new Error(`refusing symlink or junction in acceptance evidence: ${relativePath}`)
-    if (skip(entry.name)) continue
+    if (skip(relativePath)) continue
     if (entry.isDirectory()) {
       walk(relativePath)
       continue

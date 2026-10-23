@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { createHash } from 'node:crypto'
 import { spawnSync } from 'node:child_process'
 import { copyFileSync, linkSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -9,6 +10,7 @@ import test from 'node:test'
 const repoRoot = fileURLToPath(new URL('..', import.meta.url))
 const sourceManifestBuilder = join(repoRoot, 'scripts/v2/build-evidence-manifest.mjs')
 const sourceSafeFile = join(repoRoot, 'lib/release/safeEvidenceFile.js')
+const sha256 = (value) => createHash('sha256').update(value).digest('hex')
 
 function fixture(t) {
   const root = mkdtempSync(join(tmpdir(), 'abm-manifest-builder-'))
@@ -59,4 +61,19 @@ test('manifest builder refuses to bind uncommitted source changes', (t) => {
   assert.notEqual(rejected.status, 0)
   assert.match(`${rejected.stdout}\n${rejected.stderr}`, /committed source; dirty paths: README\.md/)
   assert.equal(readFileSync(manifestPath, 'utf8'), prior)
+})
+
+test('manifest builder includes the referenced Pi install log but keeps unrelated logs excluded', (t) => {
+  const root = fixture(t)
+  const piLog = join(root, 'docs/v2/acceptance/host-model/pi/install-uninstall.log')
+  const otherLog = join(root, 'docs/v2/acceptance/host-model/pi/noise.log')
+  mkdirSync(join(root, 'docs/v2/acceptance/host-model/pi'), { recursive: true })
+  writeFileSync(piLog, 'referenced install evidence\n')
+  writeFileSync(otherLog, 'unreferenced log\n')
+
+  const result = runBuilder(root)
+  assert.equal(result.status, 0, result.stderr)
+  const manifest = JSON.parse(readFileSync(join(root, 'docs/v2/acceptance/evidence-manifest.json'), 'utf8'))
+  assert.equal(manifest.files['docs/v2/acceptance/host-model/pi/install-uninstall.log'].sha256, sha256('referenced install evidence\n'))
+  assert.equal(manifest.files['docs/v2/acceptance/host-model/pi/noise.log'], undefined)
 })

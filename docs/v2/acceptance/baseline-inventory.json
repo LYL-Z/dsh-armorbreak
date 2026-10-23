@@ -16,7 +16,9 @@
     "pass": 189,
     "fail": 0,
     "skipped": 1,
-    "source": "docs/v2/acceptance/unit-tests.log",
+    "source": null,
+    "sourceEvidenceStatus": "MISSING_FROM_MAIN_AND_REVIEWER_B_C_ARCHIVES",
+    "verification": "UNVERIFIED_FROM_RAW_TEST_OUTPUT; reported counts retained as historical metadata",
     "freshRun": true,
     "skippedExamples": [
       "sast.semgrep missing external tool guidance"
