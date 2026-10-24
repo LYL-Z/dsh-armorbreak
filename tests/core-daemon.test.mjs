@@ -211,12 +211,18 @@ test('Core daemon cleanup preserves an outside lock when stateRoot is swapped be
   const originalLock = await readFile(join(stateRoot, 'daemon.json'), 'utf8')
 
   let swapped = false
+  let swapDenied = false
   const originalRename = fsSync.renameSync
   fsSync.renameSync = (from, to) => {
     if (!swapped && String(from).toLowerCase() === join(stateRoot, 'daemon.json').toLowerCase()) {
-      originalRename(stateRoot, retained)
-      symlinkSync(outside, stateRoot, process.platform === 'win32' ? 'junction' : 'dir')
-      swapped = true
+      try {
+        originalRename(stateRoot, retained)
+        symlinkSync(outside, stateRoot, process.platform === 'win32' ? 'junction' : 'dir')
+        swapped = true
+      } catch (error) {
+        if (process.platform !== 'win32' || !['EPERM', 'EBUSY', 'EACCES'].includes(error?.code)) throw error
+        swapDenied = true
+      }
     }
     return originalRename(from, to)
   }
@@ -224,9 +230,15 @@ test('Core daemon cleanup preserves an outside lock when stateRoot is swapped be
 
   try {
     await daemon.stop()
-    assert.equal(swapped, true, 'the parent swap must land at the lock rename boundary')
     assert.equal(await readFile(outsideLock, 'utf8'), outsideSentinel)
-    assert.equal(await readFile(join(retained, 'daemon.json'), 'utf8'), originalLock)
+    if (process.platform === 'win32') {
+      assert.equal(swapped, false)
+      assert.equal(swapDenied, true, 'Windows must deny renaming a stateRoot that still contains the open lock handle')
+      await assert.rejects(() => readFile(join(stateRoot, 'daemon.json'), 'utf8'), (error) => error.code === 'ENOENT')
+    } else {
+      assert.equal(swapped, true, 'the parent swap must land at the lock rename boundary')
+      assert.equal(await readFile(join(retained, 'daemon.json'), 'utf8'), originalLock)
+    }
   } finally {
     fsSync.renameSync = originalRename
     syncBuiltinESMExports()
