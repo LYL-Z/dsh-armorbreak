@@ -9,6 +9,33 @@ const HERE = resolve(fileURLToPath(new URL('.', import.meta.url)))
 const DEFAULT_ROOT = resolve(HERE, '..')
 const LOOPBACK = new Set(['127.0.0.1', '::1', 'localhost'])
 
+function expectedAuthority(host, port) {
+  const urlHost = host.includes(':') ? `[${host}]` : host
+  return new URL(`http://${urlHost}:${port}/`)
+}
+
+function parseAuthority(value) {
+  if (typeof value !== 'string' || value.length === 0) return null
+  try {
+    const url = new URL(`http://${value}/`)
+    if (url.origin === 'null' || url.username || url.password || url.pathname !== '/' || url.search || url.hash) return null
+    return url.host
+  } catch {
+    return null
+  }
+}
+
+function parseOrigin(value) {
+  if (typeof value !== 'string' || value.length === 0) return null
+  try {
+    const url = new URL(value)
+    if (url.origin === 'null' || url.username || url.password || url.pathname !== '/' || url.search || url.hash) return null
+    return url
+  } catch {
+    return null
+  }
+}
+
 function readJson(root, rel, fallback = null) {
   try { return JSON.parse(readFileSync(join(root, rel), 'utf8')) } catch { return fallback }
 }
@@ -99,6 +126,18 @@ function send(res, status, body, type = 'application/json; charset=utf-8') {
 export async function createWorkbenchServer({ root = DEFAULT_ROOT, host = '127.0.0.1', port = 0 } = {}) {
   if (!LOOPBACK.has(host)) throw new Error('Workbench must bind loopback')
   const server = createServer(async (req, res) => {
+    const expectedOrigin = expectedAuthority(host, req.socket.localPort)
+    const requestAuthority = parseAuthority(req.headers.host)
+    if (!requestAuthority || requestAuthority !== expectedOrigin.host) {
+      return send(res, 403, JSON.stringify({ error: 'host not allowed' }))
+    }
+    const origin = req.headers.origin
+    if (origin !== undefined) {
+      const parsedOrigin = parseOrigin(origin)
+      if (!parsedOrigin || parsedOrigin.origin !== expectedOrigin.origin) {
+        return send(res, 403, JSON.stringify({ error: 'origin not allowed' }))
+      }
+    }
     const url = new URL(req.url, `http://${req.headers.host ?? '127.0.0.1'}`)
     if (req.method === 'GET' && url.pathname === '/health') return send(res, 200, JSON.stringify({ ok: true }))
     if (req.method === 'GET' && url.pathname === '/api/state') return send(res, 200, JSON.stringify(readState(root)))
