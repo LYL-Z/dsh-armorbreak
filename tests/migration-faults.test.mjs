@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import test from 'node:test'
-import { applyMigration, recoverInterruptedMigrations } from '../lib/migrations/v1-to-v2.js'
+import { applyMigration, recoverInterruptedMigrations, rollbackMigration } from '../lib/migrations/v1-to-v2.js'
 
 const sha256 = (value) => createHash('sha256').update(value).digest('hex')
 const childScript = fileURLToPath(new URL('../scripts/v2/migrate-fault-child.mjs', import.meta.url))
@@ -50,6 +50,21 @@ test('a real SIGKILL child during migration is recovered from the prepared manif
   const { root, originals } = await workspaceWithTwoTasks()
   const child = spawnSync(process.execPath, [childScript, root], { encoding: 'utf8', timeout: 30_000 })
   assert.ok(child.status !== 0 || child.signal, `child unexpectedly completed: ${JSON.stringify(child)}`)
+  const recovered = await recoverInterruptedMigrations({ workspaceRoot: root })
+  assert.equal(recovered.recovered, 2)
+  await assertOriginals(root, originals)
+})
+
+test('a truncated rollback target is restored from its durable backup during recovery', async () => {
+  const { root, originals } = await workspaceWithTwoTasks()
+  const applied = await applyMigration({ workspaceRoot: root })
+  await assert.rejects(() => rollbackMigration({
+    manifestPath: applied.manifestPath,
+    onAfterTargetTruncate(index) {
+      if (index === 0) throw new Error('INJECTED_ROLLBACK_INTERRUPTION')
+    },
+  }), /INJECTED_ROLLBACK_INTERRUPTION/)
+
   const recovered = await recoverInterruptedMigrations({ workspaceRoot: root })
   assert.equal(recovered.recovered, 2)
   await assertOriginals(root, originals)

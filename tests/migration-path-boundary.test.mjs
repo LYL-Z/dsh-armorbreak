@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
-import { mkdir, mkdtemp, readFile, symlink, writeFile } from 'node:fs/promises'
+import { createHash } from 'node:crypto'
+import { mkdir, mkdtemp, readFile, rename, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
@@ -110,4 +111,82 @@ test('migration rollback rejects a backup-root junction or symlink', async (t) =
 
   await assert.rejects(() => rollbackMigration({ manifestPath }), /symlink or junction/)
   assert.equal(await readFile(target, 'utf8'), 'SYNTHETIC-TASK-ORIGINAL')
+})
+
+test('migration rollback pins the opened task file across an ancestor junction swap', async (t) => {
+  const root = await mkdtemp(join(tmpdir(), 'abm-migration-ancestor-race-'))
+  const workspaceRoot = join(root, 'workspace')
+  const taskDir = join(workspaceRoot, '.armorbreak', 'tasks', 'task_synthetic')
+  const retainedTaskDir = `${taskDir}-retained`
+  const target = join(taskDir, 'task.json')
+  const migrationDir = join(workspaceRoot, '.armorbreak', 'migrations', 'synthetic-ancestor-race')
+  const backupRoot = join(migrationDir, 'tasks')
+  const backup = join(backupRoot, 'task.json.backup')
+  const manifestPath = join(migrationDir, 'manifest.json')
+  const outsideDir = join(root, 'outside-task-dir')
+  const outsideTarget = join(outsideDir, 'task.json')
+  const raceMarker = 'SYNTHETIC_EXTERNAL_RENAME_RACE'
+  let moved = false
+  let linked = false
+  let swapError = null
+  let rollbackError = null
+
+  try {
+    await mkdir(taskDir, { recursive: true })
+    await mkdir(backupRoot, { recursive: true })
+    await mkdir(outsideDir, { recursive: true })
+    await writeFile(target, 'SYNTHETIC-IN-ROOT-TASK')
+    await writeFile(outsideTarget, 'SYNTHETIC-OUTSIDE-MIGRATION-TARGET')
+    const backupBytes = Buffer.from('SYNTHETIC-BACKUP-BYTES')
+    await writeFile(backup, backupBytes)
+    await writeFile(manifestPath, JSON.stringify({
+      schemaVersion: 'armorbreak.migration/v1',
+      status: 'completed',
+      workspaceRoot,
+      items: [{ file: target, backup, beforeSha256: createHash('sha256').update(backupBytes).digest('hex'), taskId: 'task_synthetic' }],
+    }))
+
+    try {
+      await rollbackMigration({
+        manifestPath,
+        workspaceRoot,
+        async onBeforeTargetWrite() {
+          try {
+            await rename(taskDir, retainedTaskDir)
+            moved = true
+            await symlink(outsideDir, taskDir, process.platform === 'win32' ? 'junction' : 'dir')
+            linked = true
+            await writeFile(join(outsideDir, 'task.json.synthetic-tmp'), raceMarker)
+          } catch (error) {
+            swapError = error
+            throw error
+          }
+        },
+      })
+    } catch (error) { rollbackError = error }
+
+    if (process.platform === 'win32') assert.equal(swapError?.code, 'EPERM')
+    else assert.match(rollbackError?.message ?? '', /outside its allowed migration root/)
+
+    assert.equal(await readFile(outsideTarget, 'utf8'), 'SYNTHETIC-OUTSIDE-MIGRATION-TARGET')
+    assert.equal(JSON.parse(await readFile(manifestPath, 'utf8')).status, 'rolling-back')
+
+    if (linked) {
+      await rm(taskDir, { recursive: true, force: true })
+      linked = false
+    }
+    if (moved) {
+      await rename(retainedTaskDir, taskDir)
+      moved = false
+    }
+    const recovered = await recoverInterruptedMigrations({ workspaceRoot })
+    assert.equal(recovered.recovered, 1)
+    assert.equal(await readFile(target, 'utf8'), backupBytes.toString())
+    assert.equal(await readFile(outsideTarget, 'utf8'), 'SYNTHETIC-OUTSIDE-MIGRATION-TARGET')
+    assert.equal(JSON.parse(await readFile(manifestPath, 'utf8')).status, 'rolled-back')
+  } finally {
+    if (linked) await rm(taskDir, { recursive: true, force: true }).catch(() => {})
+    if (moved) await rename(retainedTaskDir, taskDir).catch(() => {})
+    await rm(root, { recursive: true, force: true }).catch(() => {})
+  }
 })

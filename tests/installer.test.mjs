@@ -43,18 +43,20 @@ test('install transaction requires stage/verify/approval before activation and r
   assert.equal(JSON.parse(await readFile(join(installer.root, 'active.json'), 'utf8')).planId, plan.planId)
   const rolled = await installer.rollback(active)
   assert.equal(rolled.status, 'ROLLED_BACK')
+  assert.equal(rolled.cleanup.status, 'DEFERRED')
   const pointer = await readFile(join(installer.root, 'active.json'), 'utf8').catch(() => null)
   assert.equal(pointer, null)
 })
 
-test('failed pre-activation transaction cleans staging and leaves no half install', async () => {
+test('failed pre-activation transaction records deferred cleanup and leaves no half install active', async () => {
   const { artifact, installer } = await fixture()
   const plan = await installer.plan({ artifactPath: artifact, components: [goodComponent] })
   const staged = await installer.stage(plan)
   const failed = await installer.fail(staged, new Error('simulated copy failure'))
   assert.equal(failed.status, 'FAILED')
+  assert.equal(failed.cleanup.status, 'DEFERRED')
   await assert.rejects(() => readFile(join(installer.root, 'active.json')), /ENOENT/)
   const { existsSync } = await import('node:fs')
-  assert.equal(existsSync(join(installer.staging, plan.planId)), false)
+  assert.equal(existsSync(join(installer.staging, plan.planId)), true)
   assert.equal(existsSync(join(installer.installed, plan.planId)), false)
 })
