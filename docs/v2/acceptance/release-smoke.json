@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.release-smoke/v1",
-  "generatedAt": "2026-10-24T03:50:53.025Z",
-  "commit": "a470c17b6028785686177d6f827be9f7c6509da7",
+  "generatedAt": "2026-10-24T10:28:36.286Z",
+  "commit": "dc7c436898037bfa65eda841033f3594bc2c2734",
   "version": "2.2.0-rc.1",
   "checks": [
     {
@@ -27,7 +27,7 @@
     {
       "id": "readiness-evidence-current",
       "status": "PASS",
-      "detail": "readiness=a470c17b6028785686177d6f827be9f7c6509da7 manifest=a470c17b6028785686177d6f827be9f7c6509da7 tests=a470c17b6028785686177d6f827be9f7c6509da7"
+      "detail": "readiness=dc7c436898037bfa65eda841033f3594bc2c2734 manifest=dc7c436898037bfa65eda841033f3594bc2c2734 tests=dc7c436898037bfa65eda841033f3594bc2c2734"
     },
     {
       "id": "docs-consistency",
@@ -40,9 +40,9 @@
       "detail": "114 files verified"
     },
     {
-      "id": "release-gates",
+      "id": "release-gates-local-checks",
       "status": "PASS",
-      "detail": "all gates are evidence-verified and mandatory M4 tasks are DONE"
+      "detail": "local gates and mandatory M4 tasks pass; external exact-commit artifact provenance is still required"
     },
     {
       "id": "tag-immutable",

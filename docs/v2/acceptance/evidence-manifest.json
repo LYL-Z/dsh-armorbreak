@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.evidence-manifest/v1",
-  "commit": "a470c17b6028785686177d6f827be9f7c6509da7",
-  "generatedAt": "2026-10-24T03:50:10.631Z",
+  "commit": "dc7c436898037bfa65eda841033f3594bc2c2734",
+  "generatedAt": "2026-10-24T10:27:59.207Z",
   "files": {
     "docs/v2/acceptance/airgap-container.json": {
       "sha256": "967dc9c1443f006ac5e6552b0b080c797ef7f906239d049b06e95f522ad24397",
@@ -360,7 +360,7 @@
       "size": 4182
     },
     "docs/v2/acceptance/portable-artifact.json": {
-      "sha256": "c24feb46e919d27b076d6877980f9a23b8fdcfc91d4daa98cb4006a297062b72",
+      "sha256": "4b7bae93e42762cd737bb9171678b2feef207158f683debec6cda4685eded820",
       "size": 665
     },
     "docs/v2/acceptance/provider-live-ollama.json": {
@@ -372,8 +372,8 @@
       "size": 601
     },
     "docs/v2/acceptance/release-build.json": {
-      "sha256": "a64c50c8f742d9b02165a458ee484a252e07be00ff18acbab7bb18e9393ea680",
-      "size": 103877
+      "sha256": "7f64fe6d62f0e83e6e486945fa777bbb709b66a51b9a7ffa1afda5fb0baf69b8",
+      "size": 81255
     },
     "docs/v2/acceptance/release-scope.json": {
       "sha256": "ad6df3b7d03b8b9096c66ed5fdf34db69f5c96fb6b30f0eb849356fbd5eb0dff",
@@ -432,16 +432,16 @@
       "size": 1370
     },
     "docs/v2/acceptance/test-report.json": {
-      "sha256": "1945aeeb8b720314fdfff4f6269cf79fc65ae6a7f0b4e78b77842b7e62e0de6a",
+      "sha256": "972b13c4499a6dd996f46f14528cfe3570cb5992759e273b36104ec79b0ecaa3",
       "size": 667
     },
     "docs/v2/acceptance/test-report.tap": {
-      "sha256": "fa4e47523f7c12ca40f2e38dbec0df89d506d8c9d1ea049e8b5c9a5438387536",
-      "size": 116438
+      "sha256": "a97f40ca835920a893cbecb5f37af71695816d79c76c6ece6123ba4911ffdb6e",
+      "size": 121593
     },
     "docs/v2/acceptance/v2.2-readiness.json": {
-      "sha256": "74d610c5528dd7c2eec403f20efe0970b4400f5a89a7296b033d9c534f75365c",
-      "size": 6930
+      "sha256": "a7eab6525ea651e4e57bb91b56b2a50ee18d81c6a4395e1a446cb9985379a7b1",
+      "size": 16626
     },
     "docs/v2/acceptance/workbench-rendered.html": {
       "sha256": "dde7bb89e017bba7de18201dac3e8caee9c3e0801fd245ec0eaf5690ad42acd3",
