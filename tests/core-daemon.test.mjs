@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { link, mkdtemp, readFile, writeFile } from 'node:fs/promises'
+import { link, mkdir, mkdtemp, readdir, readFile, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
@@ -95,4 +95,20 @@ test('Core daemon refuses a hard-linked stale lock instead of reusing it', async
     (error) => error.code === 'DAEMON_LOCK_UNSAFE',
   )
   assert.equal(await readFile(protectedPath, 'utf8'), original)
+})
+
+test('Core daemon refuses a symlinked or junction state root before writing outside it', async () => {
+  const parent = await mkdtemp(join(tmpdir(), 'abm-daemon-junction-state-'))
+  const linkedStateRoot = join(parent, 'configured-state')
+  const outsideTarget = join(parent, 'outside-target')
+  const workspace = await mkdtemp(join(tmpdir(), 'abm-daemon-junction-ws-'))
+  const principal = { id: 'daemon-junction-test', kind: 'local-user', workspaces: [workspace] }
+  await mkdir(outsideTarget)
+  await symlink(outsideTarget, linkedStateRoot, process.platform === 'win32' ? 'junction' : 'dir')
+
+  await assert.rejects(
+    () => createCoreDaemon({ stateRoot: linkedStateRoot, workspace, principal }),
+    (error) => error.code === 'DAEMON_PATH_UNSAFE',
+  )
+  assert.deepEqual(await readdir(outsideTarget), [], 'a linked state root must not receive daemon or approval files')
 })

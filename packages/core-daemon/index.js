@@ -1,12 +1,59 @@
 /** Independent local Core daemon with a stateRoot lock and MCP HTTP endpoint. */
-import { closeSync, fstatSync, fsyncSync, ftruncateSync, linkSync, lstatSync, mkdirSync, openSync, renameSync, rmSync, unlinkSync, writeSync } from 'node:fs'
-import { join, resolve } from 'node:path'
+import { closeSync, fstatSync, fsyncSync, ftruncateSync, linkSync, lstatSync, mkdirSync, openSync, realpathSync, renameSync, rmSync, unlinkSync, writeSync } from 'node:fs'
+import { join, parse, resolve, sep } from 'node:path'
 import { randomBytes, randomUUID } from 'node:crypto'
 import { createEngine } from '../engine-node/index.js'
 import { createMcpHttpServer } from '../mcp-server/http.js'
 import { readSafeRepoFile } from '../../lib/release/safeEvidenceFile.js'
 
 function fail(code, message) { const error = new Error(message); error.code = code; return error }
+
+function samePath(left, right) {
+  return process.platform === 'win32' ? left.toLowerCase() === right.toLowerCase() : left === right
+}
+
+function sameDirectoryIdentity(left, right) {
+  return left.dev === right.dev && left.ino !== 0n && left.ino === right.ino
+}
+
+function ensureRealStateDirectory(stateRoot) {
+  const absolute = resolve(stateRoot)
+  const root = parse(absolute).root
+  let current = root
+
+  for (const part of absolute.slice(root.length).split(sep).filter(Boolean)) {
+    const next = join(current, part)
+    const parentBefore = lstatSync(current, { bigint: true })
+    let info
+    try {
+      info = lstatSync(next, { bigint: true })
+    } catch (error) {
+      if (error?.code !== 'ENOENT') throw error
+      try { mkdirSync(next) } catch (mkdirError) {
+        if (mkdirError?.code !== 'EEXIST') throw mkdirError
+      }
+      const parentAfter = lstatSync(current, { bigint: true })
+      if (parentAfter.isSymbolicLink() || !sameDirectoryIdentity(parentBefore, parentAfter)) {
+        throw fail('DAEMON_PATH_UNSAFE', `daemon state parent changed while creating: ${current}`)
+      }
+      info = lstatSync(next, { bigint: true })
+    }
+
+    if (info.isSymbolicLink() || !info.isDirectory()) {
+      throw fail('DAEMON_PATH_UNSAFE', `daemon state path contains a symlink, junction, or non-directory: ${next}`)
+    }
+    let canonical
+    try { canonical = realpathSync(next) } catch (error) {
+      throw fail('DAEMON_PATH_UNSAFE', `daemon state directory cannot be resolved safely: ${error.message}`)
+    }
+    if (!samePath(canonical, next)) {
+      throw fail('DAEMON_PATH_UNSAFE', `daemon state directory resolves through a symlink or junction: ${next}`)
+    }
+    current = next
+  }
+
+  return absolute
+}
 
 function pidAlive(pid) {
   try { process.kill(pid, 0); return true } catch { return false }
@@ -103,8 +150,7 @@ export async function createCoreDaemon({ stateRoot, workspace, principal, host =
     throw fail('DAEMON_INVALID', 'mcpToken must be at least 32 bytes when supplied')
   }
   const bearerToken = mcpToken ?? randomBytes(32).toString('base64url')
-  const stateDirectory = resolve(stateRoot)
-  mkdirSync(stateDirectory, { recursive: true })
+  const stateDirectory = ensureRealStateDirectory(stateRoot)
   const lockPath = join(stateDirectory, 'daemon.json')
   const lockDescriptor = acquireLock(stateDirectory, lockPath)
   const lockIdentity = fstatSync(lockDescriptor, { bigint: true })
