@@ -12,6 +12,8 @@ import { constants } from 'node:fs'
 import { lstat, open, readdir, stat } from 'node:fs/promises'
 import { realpathSync } from 'node:fs'
 import { extname, resolve } from 'node:path'
+import { performance } from 'node:perf_hooks'
+import { Worker } from 'node:worker_threads'
 import { sha256 } from './util.js'
 
 export const FILE_TOOL_LIMITS = Object.freeze({
@@ -24,6 +26,132 @@ export const FILE_TOOL_LIMITS = Object.freeze({
 
 /** Extensions considered textual for bounded search. */
 const TEXT_EXTENSIONS = new Set(['.js', '.mjs', '.cjs', '.ts', '.tsx', '.jsx', '.json', '.md', '.txt', '.log', '.xml', '.yml', '.yaml', '.html', '.htm', '.css', '.csv', '.ini', '.conf', '.properties', '.sql', '.py', '.go', '.rs', '.java', '.c', '.h', '.cpp', '.hpp', '.cs', '.php', '.rb', '.sh', '.ps1', '.kt', '.swift', '.toml'])
+
+const MAX_SEARCH_PATTERN_LENGTH = 200
+const REGEX_WORKER_START_TIMEOUT_MS = 500
+const REGEX_FILE_TIMEOUT_MS = 100
+const REGEX_SEARCH_BUDGET_MS = 1_000
+const MAX_CONCURRENT_REGEX_WORKERS = 4
+let activeRegexWorkers = 0
+
+/** @param {string} code @param {string} message */
+function regexMatcherError(code, message) {
+  const error = new Error(message)
+  error.code = code
+  return error
+}
+
+/**
+ * Create an isolated matcher so a pathological expression cannot block the
+ * file-tool event loop. Callers must terminate it when the search is complete.
+ * @param {string} pattern
+ */
+function createRegexMatcher(pattern) {
+  if (activeRegexWorkers >= MAX_CONCURRENT_REGEX_WORKERS) {
+    throw regexMatcherError('REGEX_CAPACITY', 'regular-expression search capacity is temporarily exhausted')
+  }
+
+  let worker
+  try {
+    worker = new Worker(new URL('./searchRegexWorker.js', import.meta.url), {
+      execArgv: [],
+      workerData: { pattern },
+    })
+    activeRegexWorkers += 1
+  } catch (error) {
+    throw regexMatcherError('REGEX_MATCHER_FAILED', `could not start isolated matcher: ${error?.message ?? error}`)
+  }
+
+  let nextId = 0
+  let pending = null
+  let terminated = false
+  let resolveReady
+  let rejectReady
+  const readyPromise = new Promise((resolvePromise, rejectPromise) => {
+    resolveReady = resolvePromise
+    rejectReady = rejectPromise
+  })
+
+  worker.on('message', (message) => {
+    if (message?.type === 'ready') {
+      resolveReady()
+      return
+    }
+    if (message?.type === 'invalid') {
+      rejectReady(regexMatcherError('INVALID_PATTERN', `invalid regular expression: ${message.reason}`))
+      return
+    }
+    if (message?.type === 'matches' && pending?.id === message.id) {
+      clearTimeout(pending.timer)
+      const current = pending
+      pending = null
+      current.resolve(message.lineIndexes)
+    }
+  })
+  worker.on('error', (error) => {
+    const failure = regexMatcherError('REGEX_MATCHER_FAILED', `isolated matcher failed: ${error?.message ?? error}`)
+    rejectReady(failure)
+    if (pending) {
+      clearTimeout(pending.timer)
+      const current = pending
+      pending = null
+      current.reject(failure)
+    }
+  })
+  worker.on('exit', (code) => {
+    if (terminated) return
+    const failure = regexMatcherError('REGEX_MATCHER_FAILED', `isolated matcher exited unexpectedly (${code})`)
+    rejectReady(failure)
+    if (pending) {
+      clearTimeout(pending.timer)
+      const current = pending
+      pending = null
+      current.reject(failure)
+    }
+  })
+
+  return {
+    async ready() {
+      let timer
+      try {
+        await Promise.race([
+          readyPromise,
+          new Promise((_, reject) => {
+            timer = setTimeout(() => reject(regexMatcherError('REGEX_TIMEOUT', 'isolated matcher startup timed out')), REGEX_WORKER_START_TIMEOUT_MS)
+          }),
+        ])
+      } finally {
+        clearTimeout(timer)
+      }
+    },
+    match(text, maxMatches, timeoutMs) {
+      return new Promise((resolvePromise, rejectPromise) => {
+        const id = ++nextId
+        const timer = setTimeout(() => {
+          pending = null
+          rejectPromise(regexMatcherError('REGEX_TIMEOUT', `regular expression exceeded its ${timeoutMs}ms time budget`))
+        }, timeoutMs)
+        pending = { id, resolve: resolvePromise, reject: rejectPromise, timer }
+        try {
+          worker.postMessage({ type: 'match', id, text, maxMatches })
+        } catch (error) {
+          clearTimeout(timer)
+          pending = null
+          rejectPromise(regexMatcherError('REGEX_MATCHER_FAILED', `could not send text to isolated matcher: ${error?.message ?? error}`))
+        }
+      })
+    },
+    async terminate() {
+      if (terminated) return
+      terminated = true
+      try {
+        await worker.terminate()
+      } finally {
+        activeRegexWorkers = Math.max(0, activeRegexWorkers - 1)
+      }
+    },
+  }
+}
 
 /** @param {string} p */
 function realpathOrResolved(p) {
@@ -265,25 +393,37 @@ export async function searchFiles(scope, input) {
   const root = String(input.path ?? input.workspaceRoot)
   const auth = await authorizePath(scope, input.workspaceRoot, root)
   if (!auth.allowed) return auth
-  let expression
-  try {
-    expression = new RegExp(String(input.pattern), 'i')
-  } catch (error) {
-    return { allowed: false, code: 'INVALID_PATTERN', reason: `invalid regular expression: ${error?.message ?? error}` }
+  const pattern = String(input.pattern)
+  if (pattern.length > MAX_SEARCH_PATTERN_LENGTH) {
+    return { allowed: false, code: 'PATTERN_TOO_LONG', reason: `regular-expression pattern exceeds ${MAX_SEARCH_PATTERN_LENGTH} characters` }
   }
-  const maxResults = Math.max(1, Math.min(Number(input.maxResults ?? FILE_TOOL_LIMITS.maxSearchResults), FILE_TOOL_LIMITS.maxSearchResults))
+  let matcher
+  try {
+    matcher = createRegexMatcher(pattern)
+    await matcher.ready()
+  } catch (error) {
+    await matcher?.terminate().catch(() => {})
+    const code = error?.code === 'INVALID_PATTERN' ? 'INVALID_PATTERN' : error?.code === 'REGEX_TIMEOUT' ? 'REGEX_TIMEOUT' : error?.code === 'REGEX_CAPACITY' ? 'REGEX_CAPACITY' : 'REGEX_MATCHER_FAILED'
+    return { allowed: false, code, reason: `regular-expression search unavailable: ${error?.message ?? error}` }
+  }
+  const requestedMaxResults = Number(input.maxResults ?? FILE_TOOL_LIMITS.maxSearchResults)
+  const maxResults = Number.isFinite(requestedMaxResults)
+    ? Math.max(1, Math.min(Math.trunc(requestedMaxResults), FILE_TOOL_LIMITS.maxSearchResults))
+    : FILE_TOOL_LIMITS.maxSearchResults
   /** @type {{file: string, line: number, text: string}[]} */
   const matches = []
   let scanned = 0
   let truncated = false
+  let regexElapsedMs = 0
+  let matcherFailure = null
   /** @param {string} dir @param {number} depth */
   const walk = async (dir, depth) => {
-    if (matches.length >= maxResults || truncated) return
+    if (matches.length >= maxResults || truncated || matcherFailure) return
     const listed = await readAuthorizedDirectory(scope, input.workspaceRoot, dir, { withFileTypes: true }).catch(() => ({ error: true }))
     if (!listed || listed.error) return
     const entries = listed.entries
     for (const entry of entries) {
-      if (matches.length >= maxResults || scanned >= FILE_TOOL_LIMITS.maxSearchFiles) {
+      if (matches.length >= maxResults || scanned >= FILE_TOOL_LIMITS.maxSearchFiles || matcherFailure) {
         truncated = true
         return
       }
@@ -307,25 +447,49 @@ export async function searchFiles(scope, input) {
       }
       if (!buffer || buffer.length > FILE_TOOL_LIMITS.maxReadBytes || looksBinary(buffer)) continue
       scanned += 1
-      const lines = buffer.toString('utf8').split(/\r?\n/)
-      for (let index = 0; index < lines.length; index += 1) {
-        if (expression.test(lines[index])) {
+      const remainingBudget = REGEX_SEARCH_BUDGET_MS - regexElapsedMs
+      if (remainingBudget <= 0) {
+        matcherFailure = regexMatcherError('REGEX_TIMEOUT', `regular-expression search exceeded its ${REGEX_SEARCH_BUDGET_MS}ms total time budget`)
+        return
+      }
+      const remainingResults = maxResults - matches.length
+      const text = buffer.toString('utf8')
+      const startedAt = performance.now()
+      try {
+        const lineIndexes = await matcher.match(text, remainingResults, Math.min(REGEX_FILE_TIMEOUT_MS, remainingBudget))
+        regexElapsedMs += performance.now() - startedAt
+        const lines = text.split(/\r?\n/)
+        for (const index of lineIndexes) {
           matches.push({ file: full, line: index + 1, text: lines[index].slice(0, 300) })
-          if (matches.length >= maxResults) {
-            truncated = true
-            break
-          }
         }
+        if (matches.length >= maxResults) {
+          truncated = true
+          return
+        }
+      } catch (error) {
+        regexElapsedMs += performance.now() - startedAt
+        matcherFailure = regexMatcherError(
+          error?.code === 'REGEX_TIMEOUT' ? 'REGEX_TIMEOUT' : 'REGEX_MATCHER_FAILED',
+          `regular-expression search failed closed: ${error?.message ?? error}`,
+        )
+        return
       }
       if (truncated) return
     }
   }
-  await walk(auth.resolved, 0)
+  try {
+    await walk(auth.resolved, 0)
+  } finally {
+    await matcher.terminate()
+  }
+  if (matcherFailure) {
+    return { allowed: false, code: matcherFailure.code, reason: matcherFailure.message }
+  }
   return {
     allowed: true,
     data: {
       root: auth.resolved,
-      pattern: String(input.pattern),
+      pattern,
       matches,
       scannedFiles: scanned,
       truncated: truncated || scanned >= FILE_TOOL_LIMITS.maxSearchFiles,
