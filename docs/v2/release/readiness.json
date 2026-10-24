@@ -1,19 +1,19 @@
 {
   "schemaVersion": "armorbreak.release-readiness/v1",
-  "generatedAt": "2026-10-24T10:28:30.331Z",
+  "generatedAt": "2026-10-24T12:52:23.893Z",
   "package": {
     "name": "dsh-armorbreak",
     "version": "2.2.0-rc.1"
   },
   "sbom": true,
-  "commit": "dc7c436898037bfa65eda841033f3594bc2c2734",
-  "evaluatedAtCommit": "dc7c436898037bfa65eda841033f3594bc2c2734",
+  "commit": "7250b3f5f3bf511f87014b8b9db5b313b9eb1c8d",
+  "evaluatedAtCommit": "7250b3f5f3bf511f87014b8b9db5b313b9eb1c8d",
   "evidence": {
-    "manifestCommit": "dc7c436898037bfa65eda841033f3594bc2c2734",
-    "testReportCommit": "dc7c436898037bfa65eda841033f3594bc2c2734",
+    "manifestCommit": "7250b3f5f3bf511f87014b8b9db5b313b9eb1c8d",
+    "testReportCommit": "7250b3f5f3bf511f87014b8b9db5b313b9eb1c8d",
     "testCounts": {
-      "tests": 497,
-      "pass": 497,
+      "tests": 500,
+      "pass": 500,
       "fail": 0,
       "skipped": 0,
       "cancelled": 0,
@@ -157,7 +157,7 @@
   },
   "artifactAttestation": {
     "ok": false,
-    "code": "ARTIFACT_PATH_OUTSIDE_DIST"
+    "code": "ARTIFACT_PATH_NOT_PROVIDED"
   },
   "releaseAuthorization": {
     "status": "BLOCKED",
@@ -174,5 +174,5 @@
   },
   "incomplete": [],
   "ready": false,
-  "reason": "release artifact provenance is not verified (ARTIFACT_PATH_OUTSIDE_DIST)"
+  "reason": "release artifact provenance is not verified (ARTIFACT_PATH_NOT_PROVIDED)"
 }

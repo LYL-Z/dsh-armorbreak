@@ -1,10 +1,10 @@
 {
   "schemaVersion": "armorbreak.ga-blocker-map/v1",
-  "generatedAt": "2026-10-22T15:28:04.888Z",
+  "generatedAt": "2026-10-24T12:47:24.350Z",
   "source": "docs/v2/acceptance/v2.2-readiness.json",
   "counts": {
-    "acceptanceBlockers": 7,
-    "uniqueRootCauses": 5,
+    "acceptanceBlockers": 18,
+    "uniqueRootCauses": 7,
     "derivedBlockers": 1
   },
   "rootCauses": [
@@ -56,49 +56,140 @@
       "blockers": [
         "ARTIFACT_ATTESTATION_NOT_VERIFIED"
       ]
+    },
+    {
+      "id": "EXT-HOST-INSTALL-EVIDENCE",
+      "label": "Signed host-install receipts from independently controlled host verification",
+      "derived": false,
+      "blockers": [
+        "HOST_DSH_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+        "HOST_CODEX_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+        "HOST_HERMES_AGENT_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+        "HOST_CLAUDE_COWORK_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+        "HOST_CURSOR_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+        "HOST_WORKBUDDY_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+        "HOST_ZCODE_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+        "HOST_PI_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+        "HOST_TRAE_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+        "HOST_ANTIGRAVITY_EXTERNAL_EVIDENCE_NOT_VERIFIED"
+      ]
+    },
+    {
+      "id": "EXT-PRODUCTION-SIGNATURE",
+      "label": "Production artifact signature from a protected signing identity",
+      "derived": false,
+      "blockers": [
+        "ABU-408_PRODUCTION_SIGNATURE_BLOCKED"
+      ]
     }
   ],
   "blockers": [
     {
       "code": "ABU-311_REAL_ENDPOINT_BLOCKED",
-      "detail": "ABU-311 real endpoint is BLOCKED_EXTERNAL",
+      "detail": "ABU-311 realEndpoint evidence is not verified: signed external GA evidence bundle is missing or unsafe",
       "rootCause": "EXT-OPENAI-ENDPOINTS",
       "derived": false
     },
     {
       "code": "ABU-312_REAL_ENDPOINT_BLOCKED",
-      "detail": "ABU-312 real endpoint is BLOCKED_EXTERNAL",
+      "detail": "ABU-312 realEndpoint evidence is not verified: signed external GA evidence bundle is missing or unsafe",
       "rootCause": "EXT-OPENAI-ENDPOINTS",
       "derived": false
     },
     {
       "code": "ABU-313_REAL_ENDPOINT_BLOCKED",
-      "detail": "ABU-313 real endpoint is BLOCKED_EXTERNAL",
+      "detail": "ABU-313 realEndpoint evidence is not verified: signed external GA evidence bundle is missing or unsafe",
       "rootCause": "EXT-ANTHROPIC-ENDPOINT",
       "derived": false
     },
     {
       "code": "ABU-314_REAL_ENDPOINT_BLOCKED",
-      "detail": "ABU-314 real endpoint is BLOCKED_EXTERNAL",
+      "detail": "ABU-314 realEndpoint evidence is not verified: signed external GA evidence bundle is missing or unsafe",
       "rootCause": "EXT-GEMINI-ENDPOINT",
       "derived": false
     },
     {
       "code": "ABU-318_REAL_ENDPOINT_BLOCKED",
-      "detail": "ABU-318 real endpoint is BLOCKED_EXTERNAL",
+      "detail": "ABU-318 realEndpoint evidence is not verified: signed external GA evidence bundle is missing or unsafe",
       "rootCause": "EXT-CROSS-PROTOCOL-GOLDEN",
       "derived": true
     },
     {
       "code": "ABU-409_INDEPENDENT_REVIEW_BLOCKED",
-      "detail": "ABU-409 independent review is BLOCKED_EXTERNAL",
+      "detail": "ABU-409 independentReview evidence is not verified: signed external GA evidence bundle is missing or unsafe",
       "rootCause": "EXT-INDEPENDENT-REVIEW",
       "derived": false
     },
     {
       "code": "ARTIFACT_ATTESTATION_NOT_VERIFIED",
-      "detail": "The portable artifact must match the current main commit and verify against the release attestation workflow identity.",
+      "detail": "ARTIFACT_PATH_NOT_PROVIDED",
       "rootCause": "ARTIFACT-MAIN-ATTESTATION",
+      "derived": false
+    },
+    {
+      "code": "HOST_DSH_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "DSH hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe",
+      "rootCause": "EXT-HOST-INSTALL-EVIDENCE",
+      "derived": false
+    },
+    {
+      "code": "HOST_CODEX_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "Codex hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe",
+      "rootCause": "EXT-HOST-INSTALL-EVIDENCE",
+      "derived": false
+    },
+    {
+      "code": "HOST_HERMES_AGENT_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "Hermes Agent hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe",
+      "rootCause": "EXT-HOST-INSTALL-EVIDENCE",
+      "derived": false
+    },
+    {
+      "code": "HOST_CLAUDE_COWORK_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "Claude Cowork hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe",
+      "rootCause": "EXT-HOST-INSTALL-EVIDENCE",
+      "derived": false
+    },
+    {
+      "code": "HOST_CURSOR_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "Cursor hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe",
+      "rootCause": "EXT-HOST-INSTALL-EVIDENCE",
+      "derived": false
+    },
+    {
+      "code": "HOST_WORKBUDDY_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "WorkBuddy hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe",
+      "rootCause": "EXT-HOST-INSTALL-EVIDENCE",
+      "derived": false
+    },
+    {
+      "code": "HOST_ZCODE_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "ZCode hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe",
+      "rootCause": "EXT-HOST-INSTALL-EVIDENCE",
+      "derived": false
+    },
+    {
+      "code": "HOST_PI_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "Pi hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe",
+      "rootCause": "EXT-HOST-INSTALL-EVIDENCE",
+      "derived": false
+    },
+    {
+      "code": "HOST_TRAE_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "TRAE hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe",
+      "rootCause": "EXT-HOST-INSTALL-EVIDENCE",
+      "derived": false
+    },
+    {
+      "code": "HOST_ANTIGRAVITY_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "Antigravity hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe",
+      "rootCause": "EXT-HOST-INSTALL-EVIDENCE",
+      "derived": false
+    },
+    {
+      "code": "ABU-408_PRODUCTION_SIGNATURE_BLOCKED",
+      "detail": "ABU-408 productionSignature evidence is not verified: signed external GA evidence bundle is missing or unsafe",
+      "rootCause": "EXT-PRODUCTION-SIGNATURE",
       "derived": false
     }
   ]
