@@ -112,7 +112,8 @@ export function parseNetworkTarget(raw) {
     const bits = text.slice(slash + 1)
     if (isIP(address) !== 0 && /^\d{1,3}$/.test(bits)) return { host: `${address}/${bits}`, port: null }
   }
-  text = text.replace(/[/?#].*$/, '')
+  const suffixStart = text.search(/[/?#]/)
+  if (suffixStart >= 0) text = text.slice(0, suffixStart)
   const ipv6Bracket = text.match(/^\[([0-9a-f:]+)\](?::(\d+))?$/)
   if (ipv6Bracket) return { host: ipv6Bracket[1], port: ipv6Bracket[2] ? Number(ipv6Bracket[2]) : null }
   const withPort = text.match(/^([^:]+):(\d+)$/)

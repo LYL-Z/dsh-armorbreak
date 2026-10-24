@@ -6,6 +6,7 @@
 import { execFile } from 'node:child_process'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { readSafeRepoFile } from '../../../lib/release/safeEvidenceFile.js'
 import { escapeHtml, nowIso, sanitizeText, sha256 } from './util.js'
 import { SEVERITY_SCORE } from './evidence.js'
 
@@ -185,12 +186,15 @@ function renderMarkdown(data) {
 }
 
 /** @param {unknown} value */
-function mdCell(value) {
+export function escapeMarkdownTableCell(value) {
   return String(value ?? '')
-    .replace(/\|/g, '\\|')
-    .replace(/\r?\n/g, ' ')
+    .replace(/\r\n?|\n/g, ' ')
     .slice(0, 400)
+    .replace(/\\/g, '\\\\')
+    .replace(/\|/g, '\\|')
 }
+
+const mdCell = escapeMarkdownTableCell
 
 /**
  * @param {Awaited<ReturnType<typeof collect>>} data
@@ -401,10 +405,9 @@ export async function generateTaskReport(runtime, task, opts = {}) {
       )
     })
     const pdfFile = join(dir, `${base}.pdf`)
-    const { readFile, stat } = await import('node:fs/promises')
-    const bytes = await stat(pdfFile).then((info) => info.size).catch(() => 0)
-    if (!bytes) throw new Error('LibreOffice reported success but produced no PDF; use format=html instead')
-    return { format: 'pdf', path: pdfFile, sha256: sha256(await readFile(pdfFile)), generatedAt: nowIso(), bytes }
+    const pdf = readSafeRepoFile(dir, `${base}.pdf`, { maxBytes: Number.MAX_SAFE_INTEGER - 1 })
+    if (!pdf.length) throw new Error('LibreOffice reported success but produced no PDF; use format=html instead')
+    return { format: 'pdf', path: pdfFile, sha256: sha256(pdf), generatedAt: nowIso(), bytes: pdf.length }
   }
   throw new Error(`unsupported report format "${format}"; use markdown|html|json|sarif|pdf`)
 }

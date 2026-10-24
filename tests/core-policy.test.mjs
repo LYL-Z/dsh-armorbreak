@@ -82,6 +82,7 @@ test('sensitive host paths are denied even inside an authorized tree', async () 
 
 test('network target parsing and matching (exact, wildcard, CIDR, ports)', () => {
   assert.deepEqual(parseNetworkTarget('https://API.Example.com:8443/v1'), { host: 'api.example.com', port: 8443 })
+  assert.deepEqual(parseNetworkTarget(`https://api.example.test/${'x'.repeat(100_000)}?query=${'y'.repeat(100_000)}`), { host: 'api.example.test', port: null })
   assert.deepEqual(parseNetworkTarget('[::1]:8080'), { host: '::1', port: 8080 })
   const target = { host: 'api.example.com', port: 443 }
   assert.equal(networkTargetMatches({ host: 'api.example.com' }, target), true)
