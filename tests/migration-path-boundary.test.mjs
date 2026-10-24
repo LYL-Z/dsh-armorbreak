@@ -175,6 +175,11 @@ test('migration rollback pins the opened task file across an ancestor junction s
       assert.match(rollbackError?.message ?? '', /outside its allowed migration root/)
     }
 
+    if (moved) {
+      assert.equal(await readFile(join(retainedTaskDir, 'task.json'), 'utf8'), 'SYNTHETIC-IN-ROOT-TASK')
+    } else {
+      assert.equal(await readFile(target, 'utf8'), 'SYNTHETIC-IN-ROOT-TASK')
+    }
     assert.equal(await readFile(outsideTarget, 'utf8'), 'SYNTHETIC-OUTSIDE-MIGRATION-TARGET')
     assert.equal(JSON.parse(await readFile(manifestPath, 'utf8')).status, 'rolling-back')
 
