@@ -40,9 +40,11 @@ const EXCLUDE_PATHS = new Set([
   'docs/v2/release/readiness.json', 'docs/v2/release/sbom.spdx.json',
   'FOUR_REVIEW_UNIFIED_FINDINGS.json', 'FOUR_REVIEW_RECONCILIATION.md',
 ])
+const EXCLUDE_PATH_PREFIXES = ['fixtures/gate-b-sample/']
 function files() {
   return gitPaths(['ls-files', '-z']).filter((rel) => {
     if (EXCLUDE_PATHS.has(rel) || rel.startsWith('docs/v2/acceptance/') || rel.endsWith('.pyc')) return false
+    if (EXCLUDE_PATH_PREFIXES.some((prefix) => rel.startsWith(prefix))) return false
     return ![...EXCLUDE].some((directory) => rel === directory || rel.startsWith(`${directory}/`))
   }).map((path) => {
     const bytes = readSafeRepoFile(root, path)
