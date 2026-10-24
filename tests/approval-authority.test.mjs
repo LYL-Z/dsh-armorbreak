@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
-import { mkdtemp, writeFile, access } from 'node:fs/promises'
+import { mkdtemp, writeFile, access, link, readFile } from 'node:fs/promises'
+import { createHash } from 'node:crypto'
 import { spawn } from 'node:child_process'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -59,6 +60,52 @@ test('separate stale instances reload approval state and preserve revocations', 
   stale.revoke(other.payload.id)
   const fresh = new ApprovalAuthority({ stateRoot, clock })
   assert.equal(fresh.verify(revoked.token).code, 'TOKEN_REVOKED')
+})
+
+test('approval key refuses a hard-linked invalid file without overwriting its other name', async () => {
+  const stateRoot = await mkdtemp(join(tmpdir(), 'abm-appr-linked-key-'))
+  const protectedPath = join(stateRoot, 'protected.data')
+  const keyPath = join(stateRoot, 'approval.key')
+  const original = Buffer.from('short protected data')
+  await writeFile(protectedPath, original)
+  await link(protectedPath, keyPath)
+
+  assert.throws(() => new ApprovalAuthority({ stateRoot }), /approval key is unreadable|hard links/i)
+  assert.deepEqual(await readFile(protectedPath), original)
+})
+
+test('concurrent approval authority initialization preserves one stable signing key', async () => {
+  const stateRoot = await mkdtemp(join(tmpdir(), 'abm-appr-init-race-'))
+  const start = join(stateRoot, 'start.signal')
+  const moduleUrl = new URL('../lib/control/approvalAuthority.js', import.meta.url).href
+  const source = `import { createHash } from 'node:crypto';\nimport fs from 'node:fs';\nconst { ApprovalAuthority } = await import(${JSON.stringify(moduleUrl)});\nfs.writeFileSync(process.env.READY, 'ready');\nconst wait = new Int32Array(new SharedArrayBuffer(4));\nconst until = Date.now() + 10000;\nwhile (!fs.existsSync(process.env.START) && Date.now() < until) Atomics.wait(wait, 0, 0, 5);\nif (!fs.existsSync(process.env.START)) process.exit(3);\nconst authority = new ApprovalAuthority({ stateRoot: process.env.STATE_ROOT });\nconsole.log(createHash('sha256').update(authority.secret).digest('hex'));\n`
+  const launch = (name) => new Promise((resolve, reject) => {
+    const child = spawn(process.execPath, ['--input-type=module', '-e', source], {
+      env: { ...process.env, STATE_ROOT: stateRoot, START: start, READY: join(stateRoot, `${name}.ready`) },
+      stdio: ['ignore', 'pipe', 'pipe'],
+    })
+    let stdout = ''
+    let stderr = ''
+    child.stdout.setEncoding('utf8').on('data', (chunk) => { stdout += chunk })
+    child.stderr.setEncoding('utf8').on('data', (chunk) => { stderr += chunk })
+    child.on('error', reject)
+    child.on('close', (code) => code === 0 ? resolve(stdout.trim()) : reject(new Error(`child exited ${code}: ${stderr}`)))
+  })
+  const resultsPromise = Promise.all([launch('one'), launch('two')])
+  const readyPaths = [join(stateRoot, 'one.ready'), join(stateRoot, 'two.ready')]
+  const deadline = Date.now() + 10000
+  while (Date.now() < deadline) {
+    const ready = await Promise.all(readyPaths.map(async (file) => access(file).then(() => true, () => false)))
+    if (ready.every(Boolean)) break
+    await new Promise((resolve) => setTimeout(resolve, 10))
+  }
+  const ready = await Promise.all(readyPaths.map(async (file) => access(file).then(() => true, () => false)))
+  assert.ok(ready.every(Boolean), 'both child processes reached the barrier')
+  await writeFile(start, 'go')
+  const hashes = await resultsPromise
+  const parent = new ApprovalAuthority({ stateRoot })
+  hashes.push(createHash('sha256').update(parent.secret).digest('hex'))
+  assert.equal(new Set(hashes).size, 1, 'every initializer and later process must use the persisted key')
 })
 
 test('two processes cannot consume the same approval nonce', async () => {

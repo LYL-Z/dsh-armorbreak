@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdtemp, readFile, writeFile } from 'node:fs/promises'
+import { link, mkdtemp, readFile, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
@@ -59,4 +59,40 @@ test('Core daemon supports three clients and survives restart', async () => {
   } finally {
     await restarted.stop()
   }
+})
+
+test('concurrent Core daemon startup atomically grants one lock owner', async () => {
+  const stateRoot = await mkdtemp(join(tmpdir(), 'abm-daemon-race-state-'))
+  const workspace = await mkdtemp(join(tmpdir(), 'abm-daemon-race-ws-'))
+  const principal = { id: 'daemon-race-test', kind: 'local-user', workspaces: [workspace] }
+  const outcomes = await Promise.allSettled([
+    createCoreDaemon({ stateRoot, workspace, principal }),
+    createCoreDaemon({ stateRoot, workspace, principal }),
+  ])
+  const daemons = outcomes.filter((item) => item.status === 'fulfilled').map((item) => item.value)
+  const rejected = outcomes.filter((item) => item.status === 'rejected')
+  try {
+    assert.equal(daemons.length, 1, 'only the process that created daemon.json may start')
+    assert.equal(rejected.length, 1)
+    assert.equal(rejected[0].reason.code, 'DAEMON_LOCKED')
+  } finally {
+    await Promise.all(daemons.map((daemon) => daemon.stop()))
+  }
+})
+
+test('Core daemon refuses a hard-linked stale lock instead of reusing it', async () => {
+  const stateRoot = await mkdtemp(join(tmpdir(), 'abm-daemon-linked-state-'))
+  const workspace = await mkdtemp(join(tmpdir(), 'abm-daemon-linked-ws-'))
+  const principal = { id: 'daemon-linked-test', kind: 'local-user', workspaces: [workspace] }
+  const protectedPath = join(stateRoot, 'protected.json')
+  const lockPath = join(stateRoot, 'daemon.json')
+  const original = `${JSON.stringify({ schemaVersion: 'armorbreak.core-daemon/v1', pid: 2147483647, startedAt: 'stale' })}\n`
+  await writeFile(protectedPath, original)
+  await link(protectedPath, lockPath)
+
+  await assert.rejects(
+    () => createCoreDaemon({ stateRoot, workspace, principal }),
+    (error) => error.code === 'DAEMON_LOCK_UNSAFE',
+  )
+  assert.equal(await readFile(protectedPath, 'utf8'), original)
 })
