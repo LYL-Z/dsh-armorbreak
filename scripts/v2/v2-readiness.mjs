@@ -9,6 +9,7 @@ import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { readSafeRepoFile, writeSafeRepoFile } from '../../lib/release/safeEvidenceFile.js'
 import { verifyPortableArtifactAttestation } from '../../lib/release/artifactAttestation.js'
+import { verifyExternalGaEvidence } from '../../lib/release/externalGaEvidence.js'
 
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)))
 function readText(relativePath) {
@@ -74,6 +75,11 @@ artifactAttestation = verifyPortableArtifactAttestation({
   artifactEvidence: artifact,
   sourceCommit: currentCommit,
 })
+const externalAcceptanceEvidence = verifyExternalGaEvidence({
+  repoRoot: root,
+  sourceCommit: currentCommit,
+  artifactEvidence: artifact,
+})
 let tags = []
 try { tags = execFileSync('git', ['tag', '--list'], { cwd: root, encoding: 'utf8' }).trim().split(/\r?\n/).filter(Boolean) } catch { /* git may be absent in a source archive */ }
 const releaseTag = tags.includes('v2.2.0')
@@ -95,19 +101,7 @@ if (!noWaivers) {
 }
 const activeBlockers = blockers.filter((blocker) => !waiverCodes.has(blocker.code))
 const waived = blockers.filter((blocker) => waiverCodes.has(blocker.code))
-const realEndpointBlockers = Object.entries(taskRealEndpoint)
-  .filter(([, value]) => value === 'BLOCKED_EXTERNAL')
-  .map(([id]) => ({ code: `${id}_REAL_ENDPOINT_BLOCKED`, detail: `${id} real endpoint is BLOCKED_EXTERNAL` }))
-const independentReviewBlockers = Object.entries(taskIndependentReview)
-  .filter(([, value]) => value === 'BLOCKED_EXTERNAL')
-  .map(([id]) => ({ code: `${id}_INDEPENDENT_REVIEW_BLOCKED`, detail: `${id} independent review is BLOCKED_EXTERNAL` }))
-const hostInstallBlockers = Object.entries(taskHostInstall)
-  .filter(([, value]) => value === 'BLOCKED_EXTERNAL')
-  .map(([id]) => ({ code: `${id}_HOST_INSTALL_BLOCKED`, detail: `${id} real host install is BLOCKED_EXTERNAL` }))
-const productionSignatureBlockers = Object.entries(taskProductionSignature)
-  .filter(([, value]) => value === 'BLOCKED_EXTERNAL')
-  .map(([id]) => ({ code: `${id}_PRODUCTION_SIGNATURE_BLOCKED`, detail: `${id} production signature is BLOCKED_EXTERNAL` }))
-const gaBlockers = [...blockers, ...waived, ...realEndpointBlockers, ...independentReviewBlockers, ...hostInstallBlockers, ...productionSignatureBlockers]
+const gaBlockers = [...blockers, ...waived, ...externalAcceptanceEvidence.blockers]
 if (!artifactAttestation.ok) {
   gaBlockers.push({ code: 'ARTIFACT_ATTESTATION_NOT_VERIFIED', detail: artifactAttestation.code })
 }
@@ -127,6 +121,7 @@ const report = {
   taskIndependentReview,
   taskHostInstall,
   taskProductionSignature,
+  externalAcceptanceEvidence,
   blockers: activeBlockers,
   gaBlockers: uniqueGaBlockers,
   waived,
