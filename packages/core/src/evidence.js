@@ -21,6 +21,16 @@ function pathIsWithin(root, target) {
   return rel === '' || (rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel))
 }
 
+function stableValue(value) {
+  if (Array.isArray(value)) return value.map(stableValue)
+  if (!value || typeof value !== 'object') return value
+  return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stableValue(value[key])]))
+}
+
+function findingStateHash(finding) {
+  return sha256(JSON.stringify(stableValue(finding)))
+}
+
 /**
  * @typedef {'critical'|'high'|'medium'|'low'|'info'} Severity
  * @typedef {'observed'|'corroborated'|'hypothesis'|'unverified'} Verification
@@ -49,6 +59,7 @@ export class EvidenceStore {
     this.taskDir = options.taskDir
     this.taskId = options.taskId
     this.audit = options.audit
+    this.findingAudit = options.audit ?? null
     this.evidenceFile = `${options.taskDir}/evidence.jsonl`
     this.headFile = resolve(options.taskDir, HEAD_FILE)
     this.findingsFile = `${options.taskDir}/findings.json`
@@ -163,7 +174,69 @@ export class EvidenceStore {
   /** @returns {Promise<{findings: any[]}>} */
   async readFindings() {
     const state = await readJson(this.findingsFile, { findings: [] })
-    return { findings: Array.isArray(state.findings) ? state.findings : [] }
+    const findings = Array.isArray(state.findings) ? state.findings : []
+    if (!this.findingAudit) {
+      return {
+        findings: findings.map((finding) => ({
+          ...finding,
+          severity: 'info',
+          severityScore: SEVERITY_SCORE.info,
+          cvss: null,
+          verification: 'unverified',
+          evidenceIds: [],
+        })),
+        integrityStatus: findings.length ? 'UNVERIFIED_NO_AUDIT' : 'VERIFIED',
+      }
+    }
+    const chain = await this.findingAudit.verify()
+    if (!chain.valid) {
+      const error = new Error(`finding integrity audit is invalid: ${chain.reason ?? 'unknown chain error'}`)
+      error.code = 'FINDING_AUDIT_INVALID'
+      throw error
+    }
+    const events = await this.findingAudit.read({ taskId: this.taskId, limit: 1000 })
+    const committed = new Map()
+    for (const event of events) {
+      if (!['finding.record', 'finding.merge', 'finding.verify'].includes(event.action) || typeof event.findingId !== 'string') continue
+      committed.set(event.findingId, /^[a-f0-9]{64}$/i.test(event.stateHash ?? '') ? event.stateHash.toLowerCase() : null)
+    }
+    const byId = new Map()
+    for (const finding of findings) {
+      if (typeof finding?.id !== 'string') continue
+      if (byId.has(finding.id)) {
+        const error = new Error(`finding snapshot contains duplicate id: ${finding.id}`)
+        error.code = 'FINDING_INTEGRITY_INVALID'
+        throw error
+      }
+      byId.set(finding.id, finding)
+    }
+    for (const [findingId, stateHash] of committed) {
+      if (stateHash && !byId.has(findingId)) {
+        const error = new Error(`finding snapshot is missing audited finding: ${findingId}`)
+        error.code = 'FINDING_INTEGRITY_MISMATCH'
+        throw error
+      }
+    }
+    let legacyCount = 0
+    const verified = findings.map((finding) => {
+      const expectedHash = typeof finding?.id === 'string' ? committed.get(finding.id) : null
+      if (expectedHash && expectedHash !== findingStateHash(finding)) {
+        const error = new Error(`finding snapshot does not match its audit commitment: ${finding.id}`)
+        error.code = 'FINDING_INTEGRITY_MISMATCH'
+        throw error
+      }
+      if (expectedHash) return finding
+      legacyCount += 1
+      return {
+        ...finding,
+        severity: 'info',
+        severityScore: SEVERITY_SCORE.info,
+        cvss: null,
+        verification: 'unverified',
+        evidenceIds: [],
+      }
+    })
+    return { findings: verified, integrityStatus: legacyCount ? 'UNVERIFIED_LEGACY' : 'VERIFIED' }
   }
 
   /**
@@ -172,6 +245,11 @@ export class EvidenceStore {
    * @param {{evidenceIds?: string[], capabilityId?: string, targetPath?: string|null}} context
    */
   async addFinding(raw, context = {}) {
+    if (!this.findingAudit) {
+      const error = new Error('finding persistence requires an integrity audit log')
+      error.code = 'FINDING_AUDIT_REQUIRED'
+      throw error
+    }
     return withFileMutex(this.findingsFile, async () => {
       const store = await this.readFindings()
     const severity = oneOf(raw.severity, SEVERITIES, 'info')
@@ -186,6 +264,7 @@ export class EvidenceStore {
       existing.evidenceIds = unique([...(existing.evidenceIds ?? []), ...(context.evidenceIds ?? [])])
       existing.updatedAt = nowIso()
       await writeJsonAtomic(this.findingsFile, { version: 1, taskId: this.taskId, findings: store.findings })
+      await this.findingAudit.append({ action: 'finding.merge', taskId: this.taskId, findingId: existing.id, stateHash: findingStateHash(existing) })
       return { finding: existing, merged: true }
     }
     const finding = {
@@ -211,7 +290,7 @@ export class EvidenceStore {
     }
     store.findings.push(finding)
     await writeJsonAtomic(this.findingsFile, { version: 1, taskId: this.taskId, findings: store.findings })
-    await this.audit?.append({ action: 'finding.record', taskId: this.taskId, findingId: finding.id, severity, verification, title })
+    await this.findingAudit.append({ action: 'finding.record', taskId: this.taskId, findingId: finding.id, severity, verification, title, stateHash: findingStateHash(finding) })
     return { finding, merged: false }
     })
   }
@@ -222,6 +301,11 @@ export class EvidenceStore {
    * @param {{verification?: Verification, note?: string, severity?: Severity, evidenceIds?: string[]}} patch
    */
   async verifyFinding(findingId, patch) {
+    if (!this.findingAudit) {
+      const error = new Error('finding verification requires an integrity audit log')
+      error.code = 'FINDING_AUDIT_REQUIRED'
+      throw error
+    }
     return withFileMutex(this.findingsFile, async () => {
       const store = await this.readFindings()
     const finding = store.findings.find((item) => item.id === findingId)
@@ -249,11 +333,11 @@ export class EvidenceStore {
     }
     finding.updatedAt = nowIso()
     await writeJsonAtomic(this.findingsFile, { version: 1, taskId: this.taskId, findings: store.findings })
-    await this.audit?.append({
+    await this.findingAudit.append({
       action: 'finding.verify', taskId: this.taskId, findingId,
       priorVerification, priorSeverity,
       verification: finding.verification, severity: finding.severity,
-      evidenceIds: citedIds, note: patch.note ?? null,
+      evidenceIds: citedIds, note: patch.note ?? null, stateHash: findingStateHash(finding),
     })
     return finding
     })
