@@ -5,7 +5,7 @@
   "name": "dsh-armorbreak-2.2.0-rc.1",
   "documentNamespace": "https://github.com/LYL-Z/dsh-armorbreak/sbom/2.2.0-rc.1",
   "creationInfo": {
-    "created": "2026-10-24T02:18:54.926Z",
+    "created": "2026-10-24T04:23:18.293Z",
     "creators": [
       "Tool: scripts/v2/build-sbom.mjs"
     ]
@@ -256,7 +256,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "d563fcf9aa08faa18c2e326d0f3a21a20b14656b6ce8bddd707a12b93bbf2d06"
+          "checksumValue": "7839ecd43ab368dbfbdf5ed6436779ab53a0b3d7f6edb34bb5641aa555858fe7"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -271,7 +271,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "52d5ca98eb4eb7a5227927a147244992520b277785c7259ef96672c78641d8c3"
+          "checksumValue": "ad7af680ba895637ba8f87164b07585b6d8ee7f86c3e9cb7296749e862c39d1a"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -436,7 +436,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "1725000bcb5e453daabd0be3c2abadaac00784e2a7deca4ba336db51ac96c8a7"
+          "checksumValue": "0453ef73a35cfad0aa1d9a4097cb591020928c8369b74d7d3520e94131b1a485"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -1637,7 +1637,7 @@
     {
       "annotationType": "OTHER",
       "annotator": "Tool: scripts/v2/build-sbom.mjs",
-      "annotationDate": "2026-10-24T02:18:54.926Z",
+      "annotationDate": "2026-10-24T04:23:18.293Z",
       "comment": "External tools are not bundled; their licenses must be reviewed separately before distribution."
     }
   ]
