@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict'
-import { link, mkdir, mkdtemp, readdir, readFile, symlink, writeFile } from 'node:fs/promises'
+import fs, { link, mkdir, mkdtemp, readdir, readFile, symlink, writeFile } from 'node:fs/promises'
+import fsSync from 'node:fs'
+import { renameSync, symlinkSync } from 'node:fs'
+import { syncBuiltinESMExports } from 'node:module'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
@@ -111,4 +114,41 @@ test('Core daemon refuses a symlinked or junction state root before writing outs
     (error) => error.code === 'DAEMON_PATH_UNSAFE',
   )
   assert.deepEqual(await readdir(outsideTarget), [], 'a linked state root must not receive daemon or approval files')
+})
+
+test('Core daemon rejects a stateRoot junction swapped at lock creation before writing state outside it', async () => {
+  const parent = await mkdtemp(join(tmpdir(), 'abm-daemon-parent-swap-'))
+  const stateRoot = join(parent, 'state')
+  const retained = join(parent, 'state-retained')
+  const outside = join(parent, 'outside')
+  const workspace = await mkdtemp(join(tmpdir(), 'abm-daemon-parent-swap-ws-'))
+  const principal = { id: 'daemon-parent-swap-test', kind: 'local-user', workspaces: [workspace] }
+  await mkdir(stateRoot)
+  await mkdir(outside)
+
+  let swapped = false
+  const originalOpen = fsSync.openSync
+  fsSync.openSync = (file, ...args) => {
+    if (!swapped && String(file).toLowerCase() === join(stateRoot, 'daemon.json').toLowerCase()) {
+      renameSync(stateRoot, retained)
+      symlinkSync(outside, stateRoot, process.platform === 'win32' ? 'junction' : 'dir')
+      swapped = true
+    }
+    return originalOpen(file, ...args)
+  }
+  syncBuiltinESMExports()
+
+  try {
+    await assert.rejects(
+      () => createCoreDaemon({ stateRoot, workspace, principal }),
+      (error) => error.code === 'DAEMON_PATH_UNSAFE',
+    )
+    assert.equal(swapped, true)
+    assert.deepEqual(await readdir(outside), [], 'a swapped stateRoot must not receive a lock or daemon state')
+  } finally {
+    fsSync.openSync = originalOpen
+    syncBuiltinESMExports()
+    await fs.rm(parent, { recursive: true, force: true })
+    await fs.rm(workspace, { recursive: true, force: true })
+  }
 })
