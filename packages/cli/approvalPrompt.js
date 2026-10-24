@@ -1,26 +1,34 @@
-import { createInterface } from 'node:readline/promises'
-import { stdin, stdout } from 'node:process'
+function approvalError(code, message) {
+  const error = new Error(message)
+  error.code = code
+  return error
+}
 
-/** Require a live terminal confirmation; command-line flags are not consent. */
-export async function confirmInteractiveApproval({ action, details = [], expected, input = stdin, output = stdout } = {}) {
-  if (!input?.isTTY || !output?.isTTY) {
-    const error = new Error('approval requires an interactive terminal')
-    error.code = 'INTERACTIVE_APPROVAL_REQUIRED'
-    throw error
+/**
+ * Request approval from a trusted host surface. A terminal and its input stream
+ * may be controlled by the same caller requesting approval, so they are not an
+ * authority and cannot be used to mint an approval token.
+ */
+export async function requestTrustedHostApproval(provider, request = {}) {
+  if (!provider || typeof provider.request !== 'function') {
+    throw approvalError('TRUSTED_APPROVAL_PROVIDER_REQUIRED', 'approval requires a trusted host approval provider; terminal input is not an approval authority')
   }
-  if (typeof expected !== 'string' || !expected) throw new Error('approval confirmation phrase is required')
-
-  output.write(`\n${String(action ?? 'APPROVAL').toUpperCase()}\n`)
-  for (const detail of details) output.write(`  ${String(detail)}\n`)
-  const terminal = createInterface({ input, output })
+  if (typeof request.agent !== 'string' || !request.agent || typeof request.callId !== 'string' || !request.callId || typeof request.sessionId !== 'string' || !request.sessionId) {
+    throw approvalError('TRUSTED_APPROVAL_CONTEXT_REQUIRED', 'trusted host approval requires host-provided agent, call, and session identifiers')
+  }
+  let outcome
   try {
-    const answer = await terminal.question(`Type exactly: ${expected}\n> `)
-    if (answer !== expected) {
-      const error = new Error('interactive approval phrase did not match')
-      error.code = 'APPROVAL_CONFIRMATION_MISMATCH'
-      throw error
-    }
-  } finally {
-    terminal.close()
+    outcome = await provider.request({ ...request, toolName: 'armorbreak' })
+  } catch {
+    outcome = 'unavailable'
   }
+  if (outcome !== 'allowed-once') {
+    throw approvalError('TRUSTED_APPROVAL_DENIED', 'trusted host approval was not granted; no approval token was issued')
+  }
+  return outcome
+}
+
+/** Terminal text is deliberately never accepted as proof of human approval. */
+export async function confirmInteractiveApproval() {
+  throw approvalError('TRUSTED_APPROVAL_PROVIDER_REQUIRED', 'terminal input is not a trusted approval authority')
 }
