@@ -1,5 +1,5 @@
 /** Independent local Core daemon with a stateRoot lock and MCP HTTP endpoint. */
-import { closeSync, fstatSync, fsyncSync, ftruncateSync, linkSync, lstatSync, mkdirSync, openSync, readdirSync, realpathSync, renameSync, rmSync, unlinkSync, writeSync } from 'node:fs'
+import { closeSync, fstatSync, fsyncSync, ftruncateSync, linkSync, lstatSync, mkdirSync, openSync, readdirSync, realpathSync, renameSync, unlinkSync, writeSync } from 'node:fs'
 import { basename, dirname, join, parse, resolve, sep } from 'node:path'
 import { randomBytes, randomUUID } from 'node:crypto'
 import { createEngine } from '../engine-node/index.js'
@@ -128,23 +128,11 @@ function acquireLock(stateRoot, lockPath) {
   }
   if (pidAlive(existing.pid)) throw fail('DAEMON_LOCKED', `daemon already running pid=${existing.pid}`)
 
-  // Move the verified stale entry out of the acquisition name before deleting it.
-  // A second starter can then win the exclusive create, but cannot be overwritten.
-  const staleName = `daemon.json.${process.pid}.${randomUUID()}.stale`
-  const stalePath = join(stateRoot, staleName)
-  try { renameSync(lockPath, stalePath) } catch (error) {
-    if (error?.code === 'ENOENT') throw fail('DAEMON_LOCKED', 'daemon lock changed during stale-lock recovery; retry startup')
-    throw error
-  }
-  const moved = readLock(stateRoot, staleName)
-  if (!moved || moved.pid !== existing.pid || moved.startedAt !== existing.startedAt || pidAlive(moved.pid)) {
-    throw fail('DAEMON_LOCKED', 'daemon lock changed during stale-lock recovery; refusing to replace it')
-  }
-  rmSync(stalePath)
-  try { return openSync(lockPath, 'wx+', 0o600) } catch (error) {
-    if (error?.code === 'EEXIST') throw fail('DAEMON_LOCKED', 'another daemon acquired the lock during startup')
-    throw error
-  }
+  // Replacing a stale lock by path would let a swapped stateRoot redirect the
+  // rename/delete to a different directory after readLock validated the old one.
+  // Require explicit operator recovery until we have a platform-safe,
+  // directory-handle-relative stale-lock operation.
+  throw fail('DAEMON_LOCK_STALE', 'stale daemon lock found; automatic replacement is disabled; verify no daemon is running before removing the lock')
 }
 
 function removeOwnedLock(lockPath, descriptor, identity) {

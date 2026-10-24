@@ -100,6 +100,48 @@ test('Core daemon refuses a hard-linked stale lock instead of reusing it', async
   assert.equal(await readFile(protectedPath, 'utf8'), original)
 })
 
+test('Core daemon leaves stale locks untouched when the stateRoot could be swapped before stale recovery', async () => {
+  const parent = await mkdtemp(join(tmpdir(), 'abm-daemon-stale-swap-'))
+  const stateRoot = join(parent, 'state')
+  const retained = join(parent, 'state-retained')
+  const outside = await mkdtemp(join(tmpdir(), 'abm-daemon-stale-outside-'))
+  const workspace = await mkdtemp(join(tmpdir(), 'abm-daemon-stale-ws-'))
+  const principal = { id: 'daemon-stale-swap-test', kind: 'local-user', workspaces: [workspace] }
+  await mkdir(stateRoot)
+  const stale = `${JSON.stringify({ schemaVersion: 'armorbreak.core-daemon/v1', pid: 2147483647, startedAt: 'stale-internal-lock' })}\n`
+  const outsideSentinel = `${JSON.stringify({ schemaVersion: 'armorbreak.core-daemon/v1', pid: 2147483647, startedAt: 'outside-sentinel-must-survive' })}\n`
+  await writeFile(join(stateRoot, 'daemon.json'), stale)
+  await writeFile(join(outside, 'daemon.json'), outsideSentinel)
+
+  let swapped = false
+  const originalRename = fsSync.renameSync
+  fsSync.renameSync = (from, to) => {
+    if (!swapped && String(from).toLowerCase() === join(stateRoot, 'daemon.json').toLowerCase()) {
+      originalRename(stateRoot, retained)
+      symlinkSync(outside, stateRoot, process.platform === 'win32' ? 'junction' : 'dir')
+      swapped = true
+    }
+    return originalRename(from, to)
+  }
+  syncBuiltinESMExports()
+
+  try {
+    await assert.rejects(
+      () => createCoreDaemon({ stateRoot, workspace, principal }),
+      (error) => error.code === 'DAEMON_LOCK_STALE',
+    )
+    assert.equal(swapped, false, 'stale-lock recovery must not perform a path-based rename')
+    assert.equal(await readFile(join(stateRoot, 'daemon.json'), 'utf8'), stale)
+    assert.equal(await readFile(join(outside, 'daemon.json'), 'utf8'), outsideSentinel)
+  } finally {
+    fsSync.renameSync = originalRename
+    syncBuiltinESMExports()
+    await fs.rm(parent, { recursive: true, force: true })
+    await fs.rm(outside, { recursive: true, force: true })
+    await fs.rm(workspace, { recursive: true, force: true })
+  }
+})
+
 test('Core daemon refuses a symlinked or junction state root before writing outside it', async () => {
   const parent = await mkdtemp(join(tmpdir(), 'abm-daemon-junction-state-'))
   const linkedStateRoot = join(parent, 'configured-state')
