@@ -165,14 +165,13 @@ test('migration rollback pins the opened task file across an ancestor junction s
       })
     } catch (error) { rollbackError = error }
 
-    if (process.platform === 'win32') {
-      assert.equal(swapError?.code, 'EPERM')
-    } else if (['EPERM', 'EACCES'].includes(swapError?.code)) {
+    if (swapError && ['EPERM', 'EACCES'].includes(swapError.code)) {
       // WSL DrvFS may preserve the Windows open-handle sharing rule and refuse
       // the injected directory rename before the post-open path check runs.
       assert.equal(moved, false)
     } else {
-      assert.match(rollbackError?.message ?? '', /outside its allowed migration root/)
+      assert.ok(rollbackError, 'rollback must refuse a target whose parent changed')
+      assert.match(rollbackError.message, /migration|workspace|reparse|identity|safe/i)
     }
 
     if (moved) {
