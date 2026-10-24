@@ -5,7 +5,7 @@
   "name": "dsh-armorbreak-2.2.0-rc.1",
   "documentNamespace": "https://github.com/LYL-Z/dsh-armorbreak/sbom/2.2.0-rc.1",
   "creationInfo": {
-    "created": "2026-10-24T05:24:20.406Z",
+    "created": "2026-10-24T10:22:08.444Z",
     "creators": [
       "Tool: scripts/v2/build-sbom.mjs"
     ]
@@ -1637,7 +1637,7 @@
     {
       "annotationType": "OTHER",
       "annotator": "Tool: scripts/v2/build-sbom.mjs",
-      "annotationDate": "2026-10-24T05:24:20.406Z",
+      "annotationDate": "2026-10-24T10:22:08.444Z",
       "comment": "External tools are not bundled; their licenses must be reviewed separately before distribution."
     }
   ]
