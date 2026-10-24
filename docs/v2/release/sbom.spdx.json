@@ -5,7 +5,7 @@
   "name": "dsh-armorbreak-2.2.0-rc.1",
   "documentNamespace": "https://github.com/LYL-Z/dsh-armorbreak/sbom/2.2.0-rc.1",
   "creationInfo": {
-    "created": "2026-10-23T15:19:15.403Z",
+    "created": "2026-10-24T02:18:54.926Z",
     "creators": [
       "Tool: scripts/v2/build-sbom.mjs"
     ]
@@ -466,7 +466,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "5a13f3368f4b3de511b697ed489edd04bd0b96af550e686808af28d4710d49e2"
+          "checksumValue": "001eeeefe51d4ed74846c8848f94f6daef944033ebfd3bd68f7fe7351fe0704c"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -541,7 +541,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "409b0ad2b9199b9b19ad67051b9a34662b34a61886df2879087bd4e84f8a6ecc"
+          "checksumValue": "e0a302f5c1bb05650b3e6617c91248123c98e1b6b3d6799cf48cf9d5c3c73166"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -586,7 +586,22 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "acdd5764fa1c7a03d0bb4cd2aff9331f22a7bf2a794acc74b9a896050740bbf6"
+          "checksumValue": "b1bd814246aa06d56ffff55a7daefc10a51f674cc9416d27aa2d4fc4cc41e97c"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "fileCopyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "./packages/core/src/searchRegexWorker.js",
+      "SPDXID": "SPDXRef-File-b20e5a9982643e9e875912d5",
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "79a6c0a75a680ae4432545ab457b97ce45f86571a337a8c7e8e103b50195f59f"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -661,7 +676,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "e97806a5607fbd3e6c18429c00f3414ee056bf4ad362bc028d39fbd77f658e4b"
+          "checksumValue": "af725717913e88707d44c54abe3cf7e1d5d4ab0368afdca7b63f7f4d0d52aaad"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -1360,6 +1375,11 @@
     {
       "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
       "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-File-b20e5a9982643e9e875912d5"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-f2e2d4652b1793c35519baf7",
+      "relationshipType": "CONTAINS",
       "relatedSpdxElement": "SPDXRef-File-5a0d75a4984a90ed966d20f5"
     },
     {
@@ -1617,7 +1637,7 @@
     {
       "annotationType": "OTHER",
       "annotator": "Tool: scripts/v2/build-sbom.mjs",
-      "annotationDate": "2026-10-23T15:19:15.403Z",
+      "annotationDate": "2026-10-24T02:18:54.926Z",
       "comment": "External tools are not bundled; their licenses must be reviewed separately before distribution."
     }
   ]
