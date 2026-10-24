@@ -40,7 +40,7 @@ const EXCLUDE_PATHS = new Set([
   'docs/v2/release/readiness.json', 'docs/v2/release/sbom.spdx.json',
   'FOUR_REVIEW_UNIFIED_FINDINGS.json', 'FOUR_REVIEW_RECONCILIATION.md',
 ])
-const EXCLUDE_PATH_PREFIXES = ['fixtures/gate-b-sample/']
+const EXCLUDE_PATH_PREFIXES = ['fixtures/', 'tests/']
 function files() {
   return gitPaths(['ls-files', '-z']).filter((rel) => {
     if (EXCLUDE_PATHS.has(rel) || rel.startsWith('docs/v2/acceptance/') || rel.endsWith('.pyc')) return false

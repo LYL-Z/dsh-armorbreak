@@ -24,7 +24,7 @@ test('release build is reproducible, hashed, SBOM-backed and test-signature veri
     assert.equal(manifest.contentManifest.length, manifest.files)
     assert.match(manifest.contentManifestSha256, /^[a-f0-9]{64}$/)
     assert.ok(manifest.contentManifest.every((file) => /^[a-f0-9]{64}$/.test(file.sha256) && Number.isSafeInteger(file.size)))
-    assert.ok(!manifest.contentManifest.some((file) => file.path.startsWith('fixtures/gate-b-sample/')))
+    assert.ok(!manifest.contentManifest.some((file) => file.path.startsWith('fixtures/') || file.path.startsWith('tests/')))
     assert.ok(!manifest.contentManifest.some((file) => file.path === 'FOUR_REVIEW_UNIFIED_FINDINGS.json' || file.path.endsWith('.pyc') || file.path.startsWith('.runtime/')))
     assert.equal(typeof manifest.toolchain.zlib, 'string')
     const artifact = await readFile(join(out, manifest.artifact))
