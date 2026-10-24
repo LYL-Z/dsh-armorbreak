@@ -44,8 +44,9 @@ test('install transaction requires stage/verify/approval before activation and r
   const rolled = await installer.rollback(active)
   assert.equal(rolled.status, 'ROLLED_BACK')
   assert.equal(rolled.cleanup.status, 'DEFERRED')
-  const pointer = await readFile(join(installer.root, 'active.json'), 'utf8').catch(() => null)
-  assert.equal(pointer, null)
+  const pointer = JSON.parse(await readFile(join(installer.root, 'active.json'), 'utf8'))
+  assert.equal(pointer.active, false)
+  assert.equal(pointer.rolledBackPlanId, plan.planId)
 })
 
 test('failed pre-activation transaction records deferred cleanup and leaves no half install active', async () => {

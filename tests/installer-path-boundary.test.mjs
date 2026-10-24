@@ -100,6 +100,44 @@ test('installer rollback never reaches recursive delete after a parent junction 
   assert.equal(existsSync(retainedInstalled), false)
 })
 
+test('installer rollback fails closed if the root is replaced before active-pointer rename', async (t) => {
+  const { root, installer } = await fixture()
+  t.after(() => rm(root, { recursive: true, force: true }))
+  const retainedRoot = `${installer.root}-retained`
+  const outsideRoot = join(root, 'outside-installer-root')
+  const outsidePointer = join(outsideRoot, 'active.json')
+  await mkdir(installer.root, { recursive: true })
+  await mkdir(outsideRoot, { recursive: true })
+  await writeFile(join(installer.root, 'active.json'), 'CURRENT-POINTER')
+  await writeFile(outsidePointer, 'KEEP-EXTERNAL-POINTER')
+
+  const originalRename = fs.promises.rename
+  let injected = false
+  fs.promises.rename = async function (from, to) {
+    if (!injected && String(to).toLowerCase() === installer.activePointer.toLowerCase()) {
+      await originalRename(installer.root, retainedRoot)
+      await symlink(outsideRoot, installer.root, process.platform === 'win32' ? 'junction' : 'dir')
+      injected = true
+    }
+    return originalRename.call(this, from, to)
+  }
+  syncBuiltinESMExports()
+  try {
+    await assert.rejects(
+      () => installer.rollback({ planId: 'plan-0123456789abcdef', status: 'ACTIVE' }),
+      /ENOENT|managed path contains a symlink or junction/,
+    )
+    assert.equal(injected, true)
+    assert.equal(await readFile(outsidePointer, 'utf8'), 'KEEP-EXTERNAL-POINTER')
+    assert.equal(await readFile(join(retainedRoot, 'active.json'), 'utf8'), 'CURRENT-POINTER')
+  } finally {
+    fs.promises.rename = originalRename
+    syncBuiltinESMExports()
+    await fs.promises.unlink(installer.root).catch(() => {})
+    if (existsSync(retainedRoot)) await originalRename(retainedRoot, installer.root)
+  }
+})
+
 test('installer failure does not recurse through a replaced staging junction or symlink', async (t) => {
   const { root, installer } = await fixture()
   const victim = join(root, 'junction-victim')
