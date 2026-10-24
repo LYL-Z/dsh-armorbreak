@@ -1,10 +1,10 @@
 {
   "schemaVersion": "armorbreak.v2-readiness/v1",
-  "commit": "e952e5de3f7b8ee63629f6566475936ba7bf5c14",
+  "commit": "a470c17b6028785686177d6f827be9f7c6509da7",
   "preReleaseReady": true,
   "gaReady": false,
   "ready": true,
-  "preReleaseTag": true,
+  "preReleaseTag": false,
   "releaseTag": false,
   "taskStatus": {
     "ABU-101": "TESTED",
@@ -276,6 +276,10 @@
     {
       "code": "ABU-409_INDEPENDENT_REVIEW_BLOCKED",
       "detail": "ABU-409 independent review is BLOCKED_EXTERNAL"
+    },
+    {
+      "code": "ARTIFACT_ATTESTATION_NOT_VERIFIED",
+      "detail": "ARTIFACT_PATH_NOT_PROVIDED"
     }
   ],
   "waived": [],
@@ -288,7 +292,11 @@
   },
   "artifact": {
     "version": "2.2.0-rc.1",
-    "signed": true,
-    "sha256": "d4c21e02cdc1b5f118817ce61de7f7b8e3c791a92b3c1fa932ab7b2fee263088"
+    "signed": false,
+    "sha256": "149304e9cb1110f35eb63ebc19e73e4c58b82914403562103dd2904f63864493",
+    "attestation": {
+      "ok": false,
+      "code": "ARTIFACT_PATH_NOT_PROVIDED"
+    }
   }
 }

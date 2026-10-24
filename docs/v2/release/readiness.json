@@ -1,24 +1,35 @@
 {
   "schemaVersion": "armorbreak.release-readiness/v1",
-  "generatedAt": "2026-10-22T16:27:46.527Z",
+  "generatedAt": "2026-10-24T03:50:15.050Z",
   "package": {
     "name": "dsh-armorbreak",
     "version": "2.2.0-rc.1"
   },
   "sbom": true,
-  "commit": "e952e5de3f7b8ee63629f6566475936ba7bf5c14",
+  "commit": "a470c17b6028785686177d6f827be9f7c6509da7",
+  "evaluatedAtCommit": "a470c17b6028785686177d6f827be9f7c6509da7",
   "evidence": {
-    "manifestCommit": "e952e5de3f7b8ee63629f6566475936ba7bf5c14",
-    "testReportCommit": "e952e5de3f7b8ee63629f6566475936ba7bf5c14",
+    "manifestCommit": "a470c17b6028785686177d6f827be9f7c6509da7",
+    "testReportCommit": "a470c17b6028785686177d6f827be9f7c6509da7",
     "testCounts": {
-      "tests": 388,
-      "pass": 387,
+      "tests": 481,
+      "pass": 481,
       "fail": 0,
-      "skipped": 1,
+      "skipped": 0,
       "cancelled": 0,
       "todo": 0
     },
-    "current": true
+    "current": true,
+    "checks": {
+      "manifestValid": true,
+      "evidenceLineage": true,
+      "testsPassed": true,
+      "gatesValid": true,
+      "gateResultsMatch": true,
+      "validatorOk": true,
+      "validatorIssues": [],
+      "sourceChanges": []
+    }
   },
   "gates": {
     "security": {
@@ -144,21 +155,20 @@
       ]
     }
   },
+  "artifactAttestation": {
+    "ok": false,
+    "code": "ARTIFACT_PATH_NOT_PROVIDED"
+  },
   "m4": {
-    "AB2-M4-01.md": "DONE",
-    "AB2-M4-02.md": "DONE",
     "AB2-M4-03.md": "DONE",
     "AB2-M4-04.md": "DONE",
-    "AB2-M4-05.md": "DONE",
     "AB2-M4-06.md": "DONE",
     "AB2-M4-07.md": "DONE",
-    "AB2-M4-08.md": "DONE",
-    "AB2-M4-09.md": "DONE",
     "AB2-M4-10.md": "DONE",
     "AB2-M4-11.md": "DONE",
     "AB2-M4-12.md": "DONE"
   },
   "incomplete": [],
-  "ready": true,
-  "reason": "all required gates/tasks/evidence match the current commit"
+  "ready": false,
+  "reason": "release artifact provenance is not verified (ARTIFACT_PATH_NOT_PROVIDED)"
 }
