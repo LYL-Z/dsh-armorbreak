@@ -194,3 +194,43 @@ test('Core daemon rejects a stateRoot junction swapped at lock creation before w
     await fs.rm(workspace, { recursive: true, force: true })
   }
 })
+
+test('Core daemon cleanup preserves an outside lock when stateRoot is swapped before rename', async () => {
+  const parent = await mkdtemp(join(tmpdir(), 'abm-daemon-stop-swap-'))
+  const stateRoot = join(parent, 'state')
+  const retained = join(parent, 'state-retained')
+  const outside = join(parent, 'outside')
+  const workspace = await mkdtemp(join(tmpdir(), 'abm-daemon-stop-swap-ws-'))
+  const principal = { id: 'daemon-stop-swap-test', kind: 'local-user', workspaces: [workspace] }
+  await mkdir(stateRoot)
+  await mkdir(outside)
+  const daemon = await createCoreDaemon({ stateRoot, workspace, principal })
+  const outsideLock = join(outside, 'daemon.json')
+  const outsideSentinel = '{"sentinel":"must-survive-parent-swap"}\n'
+  await writeFile(outsideLock, outsideSentinel)
+  const originalLock = await readFile(join(stateRoot, 'daemon.json'), 'utf8')
+
+  let swapped = false
+  const originalRename = fsSync.renameSync
+  fsSync.renameSync = (from, to) => {
+    if (!swapped && String(from).toLowerCase() === join(stateRoot, 'daemon.json').toLowerCase()) {
+      originalRename(stateRoot, retained)
+      symlinkSync(outside, stateRoot, process.platform === 'win32' ? 'junction' : 'dir')
+      swapped = true
+    }
+    return originalRename(from, to)
+  }
+  syncBuiltinESMExports()
+
+  try {
+    await daemon.stop()
+    assert.equal(swapped, true, 'the parent swap must land at the lock rename boundary')
+    assert.equal(await readFile(outsideLock, 'utf8'), outsideSentinel)
+    assert.equal(await readFile(join(retained, 'daemon.json'), 'utf8'), originalLock)
+  } finally {
+    fsSync.renameSync = originalRename
+    syncBuiltinESMExports()
+    await fs.rm(parent, { recursive: true, force: true })
+    await fs.rm(workspace, { recursive: true, force: true })
+  }
+})
