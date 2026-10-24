@@ -91,9 +91,10 @@ test('concurrent approval authority initialization preserves one stable signing 
     child.on('error', reject)
     child.on('close', (code) => code === 0 ? resolve(stdout.trim()) : reject(new Error(`child exited ${code}: ${stderr}`)))
   })
-  const resultsPromise = Promise.all([launch('one'), launch('two')])
-  const readyPaths = [join(stateRoot, 'one.ready'), join(stateRoot, 'two.ready')]
-  const deadline = Date.now() + 10000
+  const names = ['one', 'two', 'three', 'four']
+  const resultsPromise = Promise.all(names.map(launch))
+  const readyPaths = names.map((name) => join(stateRoot, `${name}.ready`))
+  const deadline = Date.now() + 20000
   while (Date.now() < deadline) {
     const ready = await Promise.all(readyPaths.map(async (file) => access(file).then(() => true, () => false)))
     if (ready.every(Boolean)) break
