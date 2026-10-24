@@ -1,6 +1,6 @@
 /** Independent local Core daemon with a stateRoot lock and MCP HTTP endpoint. */
-import { closeSync, fstatSync, fsyncSync, ftruncateSync, linkSync, lstatSync, mkdirSync, openSync, realpathSync, renameSync, rmSync, unlinkSync, writeSync } from 'node:fs'
-import { join, parse, resolve, sep } from 'node:path'
+import { closeSync, fstatSync, fsyncSync, ftruncateSync, linkSync, lstatSync, mkdirSync, openSync, readdirSync, realpathSync, renameSync, rmSync, unlinkSync, writeSync } from 'node:fs'
+import { basename, dirname, join, parse, resolve, sep } from 'node:path'
 import { randomBytes, randomUUID } from 'node:crypto'
 import { createEngine } from '../engine-node/index.js'
 import { createMcpHttpServer } from '../mcp-server/http.js'
@@ -148,6 +148,18 @@ function acquireLock(stateRoot, lockPath) {
 }
 
 function removeOwnedLock(lockPath, descriptor, identity) {
+  const opened = fstatSync(descriptor, { bigint: true })
+  let source
+  try {
+    source = lstatSync(lockPath, { bigint: true })
+  } catch (error) {
+    if (error?.code === 'ENOENT') return
+    throw error
+  }
+  if (source.isSymbolicLink() || !source.isFile() || source.nlink !== 1n
+    || source.dev !== identity.dev || source.ino === 0n || source.ino !== identity.ino
+    || opened.dev !== identity.dev || opened.ino !== identity.ino) return
+
   const tombstone = `${lockPath}.${process.pid}.${randomUUID()}.stopped`
   try {
     renameSync(lockPath, tombstone)
@@ -156,21 +168,36 @@ function removeOwnedLock(lockPath, descriptor, identity) {
     throw error
   }
   try {
-    const moved = lstatSync(tombstone, { bigint: true })
-    const opened = fstatSync(descriptor, { bigint: true })
+    let movedPath = tombstone
+    let moved
+    try {
+      moved = lstatSync(movedPath, { bigint: true })
+    } catch (error) {
+      if (error?.code !== 'ENOENT') throw error
+      // On WSL DrvFS, renaming through a parent junction can move the entry
+      // while making the junction-relative tombstone temporarily unresolvable.
+      // The source path was checked against the open descriptor immediately
+      // before the atomic rename. Readdir confirms the unique tombstone entry
+      // exists, then the link at that canonical path is removed.
+      const canonicalParent = realpathSync(dirname(lockPath))
+      movedPath = join(canonicalParent, basename(tombstone))
+      if (!readdirSync(canonicalParent).includes(basename(tombstone))) return
+      unlinkSync(movedPath)
+      return
+    }
     if (moved.isSymbolicLink() || !moved.isFile() || moved.nlink !== 1n
       || moved.dev !== identity.dev || moved.ino === 0n || moved.ino !== identity.ino
       || opened.dev !== identity.dev || opened.ino !== identity.ino) {
       try {
         // linkSync fails atomically if another daemon already owns lockPath.
-        linkSync(tombstone, lockPath)
-        unlinkSync(tombstone)
+        linkSync(movedPath, lockPath)
+        unlinkSync(movedPath)
       } catch (error) {
         if (error?.code !== 'EEXIST') throw error
       }
       return
     }
-    unlinkSync(tombstone)
+    unlinkSync(movedPath)
   } catch (error) {
     if (error?.code !== 'ENOENT') throw error
   }
