@@ -10,6 +10,7 @@ import test from 'node:test'
 const repoRoot = fileURLToPath(new URL('..', import.meta.url))
 const sourceManifestBuilder = join(repoRoot, 'scripts/v2/build-evidence-manifest.mjs')
 const sourceSafeFile = join(repoRoot, 'lib/release/safeEvidenceFile.js')
+const sourceSafeWindowsWriter = join(repoRoot, 'lib/release/safe-evidence-write-windows.ps1')
 const sha256 = (value) => createHash('sha256').update(value).digest('hex')
 
 function fixture(t) {
@@ -20,6 +21,7 @@ function fixture(t) {
   mkdirSync(join(root, 'docs/v2/acceptance'), { recursive: true })
   copyFileSync(sourceManifestBuilder, join(root, 'scripts/v2/build-evidence-manifest.mjs'))
   copyFileSync(sourceSafeFile, join(root, 'lib/release/safeEvidenceFile.js'))
+  copyFileSync(sourceSafeWindowsWriter, join(root, 'lib/release/safe-evidence-write-windows.ps1'))
   writeFileSync(join(root, 'package.json'), '{"type":"module"}\n')
   writeFileSync(join(root, 'README.md'), '# baseline\n')
   writeFileSync(join(root, 'docs/v2/acceptance/test-report.tap'), 'TAP version 13\n# tests 1\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n')
