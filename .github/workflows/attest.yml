@@ -50,14 +50,21 @@ jobs:
       - name: Verify attestation and write evidence
         env:
           GH_TOKEN: ${{ github.token }}
+          SOURCE_REF: ${{ github.ref }}
+          SOURCE_COMMIT: ${{ github.sha }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
+          ATTESTATION_ID: ${{ steps.attest.outputs.attestation-id }}
+          BUNDLE_PATH: ${{ steps.attest.outputs.bundle-path }}
         run: |
           mkdir -p docs/v2/acceptance
           gh attestation verify dist/armorbreak-portable-*.tar.gz \
-            --repo "${{ github.repository }}" \
-            --signer-workflow "${{ github.repository }}/.github/workflows/attest.yml" \
-            --cert-identity "https://github.com/${{ github.repository }}/.github/workflows/attest.yml@refs/heads/main" \
+            --repo "$SOURCE_REPOSITORY" \
+            --signer-workflow "$SOURCE_REPOSITORY/.github/workflows/attest.yml" \
+            --cert-identity "https://github.com/$SOURCE_REPOSITORY/.github/workflows/attest.yml@$SOURCE_REF" \
+            --source-ref "$SOURCE_REF" \
+            --source-digest "$SOURCE_COMMIT" \
             --format json > docs/v2/acceptance/github-attestation.json
-          node -e "const fs=require('fs');const a=JSON.parse(fs.readFileSync('docs/v2/acceptance/github-attestation.json'));console.log(JSON.stringify({attestationId:'${{ steps.attest.outputs.attestation-id }}',bundlePath:'${{ steps.attest.outputs.bundle-path }}',verified:true,count:Array.isArray(a)?a.length:1},null,2))"
+          node -e "const fs=require('fs');const a=JSON.parse(fs.readFileSync('docs/v2/acceptance/github-attestation.json'));console.log(JSON.stringify({attestationId:process.env.ATTESTATION_ID,bundlePath:process.env.BUNDLE_PATH,verified:true,sourceRepository:process.env.SOURCE_REPOSITORY,sourceRef:process.env.SOURCE_REF,sourceCommit:process.env.SOURCE_COMMIT,count:Array.isArray(a)?a.length:1},null,2))"
 
       - name: Generate current readiness with verified artifact provenance
         env:
