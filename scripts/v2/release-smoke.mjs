@@ -33,7 +33,7 @@ add('docs-consistency', docIssues.length === 0, docIssues.join('; ') || 'no issu
 const evidence = validateEvidence({ repoRoot: root, commit, allowEvidenceAncestor: true, allowReadiness: true })
 add('evidence-hashes', evidence.ok, evidence.issues.join('; ') || `${evidence.checked} files verified`)
 const gates = computeReleaseGates({ repoRoot: root, commit, allowEvidenceAncestor: true })
-add('release-gates', gates.releasable === true, gates.reason)
+add('release-gates-local-checks', gates.localChecksPass === true && gates.releasable === false && gates.releaseAuthorization?.status === 'BLOCKED', gates.reason)
 add('tag-immutable', (() => {
   try { return execFileSync('git', ['rev-parse', 'v2.0.0^{commit}'], { encoding: 'utf8' }).trim() === 'f96d03acad441b4b5a4b9d141dd553e3224c3745' } catch { return false }
 })(), 'v2.0.0 tag still points at the published merge commit')

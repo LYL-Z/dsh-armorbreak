@@ -60,11 +60,14 @@ const trackedChanges = execFileSync('git', ['diff', '--name-only', 'HEAD'], { cw
 const sourceChanges = trackedChanges.filter((path) =>
   !path.startsWith('docs/v2/acceptance/') && path !== 'docs/v2/release/readiness.json')
 const gateResultsMatch = Boolean(gates?.gates && recomputedGates.gates &&
-  gates.releasable === recomputedGates.releasable &&
+  gates.localChecksPass === recomputedGates.localChecksPass &&
+  gates.releasable === false && recomputedGates.releasable === false &&
   Object.keys(recomputedGates.gates).every((name) => gates.gates[name]?.status === recomputedGates.gates[name]?.status))
-const gatesValid = Boolean(gates?.schemaVersion === 'armorbreak.release-gates/v2' &&
+const gatesValid = Boolean(gates?.schemaVersion === 'armorbreak.release-gates/v3' &&
   (gates.commit === head || gates.commit === sourceCommit) && gates.evidenceManifest?.valid === true &&
   gates.evidenceManifest.commit === sourceCommit && gates.evidenceManifest.currentCommit === gates.commit &&
+  gates.localChecksPass === recomputedGates.localChecksPass &&
+  gates.evidenceProvenance?.status === 'UNVERIFIED' && gates.releaseAuthorization?.status === 'BLOCKED' &&
   gates.testReport?.status === 'PASS' && countKeys.every((key) => gates.testReport[key] === tapCounts?.[key]) && gateResultsMatch)
 const evidenceOk = Boolean(evidenceValidation.ok && manifestValid && evidenceLineage && testsPassed && gatesValid && sourceChanges.length === 0)
 
@@ -84,7 +87,7 @@ const artifactAttestation = verifyPortableArtifactAttestation({
   artifactEvidence: artifact,
   sourceCommit: head,
 })
-const ready = Boolean(gates?.releasable === true && incomplete.length === 0 && sbomOk && evidenceOk && artifactAttestation.ok)
+const ready = Boolean(gates?.localChecksPass === true && incomplete.length === 0 && sbomOk && evidenceOk && artifactAttestation.ok)
 const result = {
   schemaVersion: 'armorbreak.release-readiness/v1',
   generatedAt: new Date().toISOString(),
@@ -101,6 +104,10 @@ const result = {
   },
   gates: gates?.gates ?? null,
   artifactAttestation,
+  releaseAuthorization: {
+    status: ready ? 'AUTHORIZED_BY_VERIFIED_ARTIFACT_PROVENANCE' : 'BLOCKED',
+    reason: ready ? 'all local checks pass and the exact source commit is bound to a trusted artifact attestation' : 'release requires current local checks, complete tasks, SBOM, and trusted exact-commit artifact provenance',
+  },
   m4: statuses,
   incomplete,
   ready,

@@ -49,8 +49,10 @@ source, CI, build, security, or other change in that range rejects the PR.
 
 The release-gate step does not skip gate evaluation: for docs-only PRs it
 computes the full gates at the target base and emits
-`applicability: DOCS_ONLY_BASE_GATES`; `releasable` is inherited from that base
-report. If the base is not releasable, the docs PR is blocked. Tags always
+`applicability: DOCS_ONLY_BASE_GATES`; `localChecksPass` is inherited from that
+base report. A docs-only report never grants release authorization: `releasable`
+stays false until the exact source commit and artifact have trusted provenance.
+If the base local checks do not pass, the docs PR is blocked. Tags always
 evaluate gates at the tag commit and are never treated as docs-only.
 
 ## Residual trust

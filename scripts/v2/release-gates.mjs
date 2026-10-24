@@ -26,7 +26,14 @@ const validation = validateEvidence({
 let report
 if (validation.mode === 'docs-only' && !isTag) {
   if (!base) {
-    report = { schemaVersion: 'armorbreak.release-gates/v2', commit, mode: 'docs-only', applicability: 'BLOCKED', releasable: false, reason: 'docs-only mode requires a target base' }
+    report = {
+      schemaVersion: 'armorbreak.release-gates/v3', commit, mode: 'docs-only', applicability: 'BLOCKED',
+      localChecksPass: false,
+      evidenceProvenance: { status: 'UNVERIFIED', reason: 'docs-only base was not supplied' },
+      releaseAuthorization: { status: 'BLOCKED', reason: 'docs-only mode requires a target base' },
+      releasable: false,
+      reason: 'docs-only mode requires a target base',
+    }
   } else {
     const baseReport = computeReleaseGates({ repoRoot: process.cwd(), commit: base, allowEvidenceAncestor: true, allowDocsAncestor: true })
     report = docsOnlyGateReport({ commit, baseCommit: base, baseReport, validation })
@@ -35,9 +42,12 @@ if (validation.mode === 'docs-only' && !isTag) {
     report = computeReleaseGates({ commit, allowEvidenceAncestor: !isTag })
 }
 if (!validation.ok) {
+  report.localChecksPass = false
+  report.evidenceProvenance = { status: 'UNVERIFIED', reason: 'evidence validation failed' }
+  report.releaseAuthorization = { status: 'BLOCKED', reason: 'evidence validation failed' }
   report.releasable = false
   report.reason = `evidence validation failed: ${validation.issues.join('; ')}`
 }
 writeSafeRepoFile(process.cwd(), 'docs/v2/acceptance/release-gates.json', `${JSON.stringify(report, null, 2)}\n`, { requiredPrefix: 'docs/v2/acceptance/' })
-console.log(JSON.stringify({ commit, releasable: report.releasable, mode: report.mode ?? 'release-gates', applicability: report.applicability ?? 'RELEASE_GATES', gates: report.gates ? Object.fromEntries(Object.entries(report.gates).map(([name, gate]) => [name, gate.status])) : undefined, testReport: report.testReport }, null, 2))
-if (!validation.ok || !report.releasable) process.exitCode = 1
+console.log(JSON.stringify({ commit, localChecksPass: report.localChecksPass, releasable: report.releasable, releaseAuthorization: report.releaseAuthorization, mode: report.mode ?? 'release-gates', applicability: report.applicability ?? 'RELEASE_GATES', gates: report.gates ? Object.fromEntries(Object.entries(report.gates).map(([name, gate]) => [name, gate.status])) : undefined, testReport: report.testReport }, null, 2))
+if (!validation.ok || !report.localChecksPass) process.exitCode = 1
