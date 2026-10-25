@@ -195,8 +195,13 @@ test('Core daemon rejects a stateRoot junction swapped at lock creation before w
   }
 })
 
-test('Core daemon cleanup preserves an outside lock when stateRoot is swapped before rename', async () => {
-  const parent = await mkdtemp(join(tmpdir(), 'abm-daemon-stop-swap-'))
+test('Core daemon cleanup preserves an outside lock when stateRoot swap is attempted before rename', async () => {
+  // Keep the daemon state fixture on a caller-selected native filesystem when
+  // requested, while the workspace and all other test data remain under the
+  // normal D: temp root. This lets WSL exercise Linux rename semantics without
+  // placing the protected workspace on /dev/shm.
+  const stateTempRoot = process.env.ABM_TEST_STATE_TMPDIR || tmpdir()
+  const parent = await mkdtemp(join(stateTempRoot, 'abm-daemon-stop-swap-'))
   const stateRoot = join(parent, 'state')
   const retained = join(parent, 'state-retained')
   const outside = join(parent, 'outside')
@@ -212,6 +217,11 @@ test('Core daemon cleanup preserves an outside lock when stateRoot is swapped be
 
   let swapped = false
   let swapDenied = false
+  const expectLockedDirectoryRenameDenial = process.platform === 'win32' || (
+    process.platform === 'linux' &&
+    process.env.ABM_TEST_EXPECT_LOCKED_DIR_RENAME_DENIAL === '1' &&
+    /^\/mnt\/[a-z]\//i.test(tmpdir())
+  )
   const originalRename = fsSync.renameSync
   fsSync.renameSync = (from, to) => {
     if (!swapped && String(from).toLowerCase() === join(stateRoot, 'daemon.json').toLowerCase()) {
@@ -220,7 +230,7 @@ test('Core daemon cleanup preserves an outside lock when stateRoot is swapped be
         symlinkSync(outside, stateRoot, process.platform === 'win32' ? 'junction' : 'dir')
         swapped = true
       } catch (error) {
-        if (process.platform !== 'win32' || !['EPERM', 'EBUSY', 'EACCES'].includes(error?.code)) throw error
+        if (!expectLockedDirectoryRenameDenial || !['EPERM', 'EBUSY', 'EACCES'].includes(error?.code)) throw error
         swapDenied = true
       }
     }
@@ -231,10 +241,12 @@ test('Core daemon cleanup preserves an outside lock when stateRoot is swapped be
   try {
     await daemon.stop()
     assert.equal(await readFile(outsideLock, 'utf8'), outsideSentinel)
-    if (process.platform === 'win32') {
+    assert.deepEqual(await readdir(outside), ['daemon.json'])
+    if (expectLockedDirectoryRenameDenial) {
       assert.equal(swapped, false)
-      assert.equal(swapDenied, true, 'Windows must deny renaming a stateRoot that still contains the open lock handle')
+      assert.equal(swapDenied, true, 'the filesystem must deny renaming a stateRoot that still contains the open lock handle')
       await assert.rejects(() => readFile(join(stateRoot, 'daemon.json'), 'utf8'), (error) => error.code === 'ENOENT')
+      assert.equal(fsSync.existsSync(retained), false)
     } else {
       assert.equal(swapped, true, 'the parent swap must land at the lock rename boundary')
       assert.equal(await readFile(join(retained, 'daemon.json'), 'utf8'), originalLock)
