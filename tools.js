@@ -7,7 +7,7 @@
  * data. Policy enforcement itself lives in lib/core/runner.js and scope.js.
  * @module dsh-armorbreak/tools
  */
-import { basename } from 'node:path'
+import { basename, resolve } from 'node:path'
 import { getRuntime } from './packages/core/index.js'
 import { getWorkflow, listWorkflows } from './lib/core/workflows.js'
 import { generateTaskReport } from './lib/core/reports.js'
@@ -64,19 +64,48 @@ export function toLosslessJson(value, depth = 0, seen = new WeakSet()) {
  * @param {any} args
  * @param {any} exec
  */
+const TOOL_OWNER = Symbol('armorbreak-tool-owner')
+
+function samePath(a, b) {
+  const left = resolve(String(a))
+  const right = resolve(String(b))
+  return process.platform === 'win32' ? left.toLowerCase() === right.toLowerCase() : left === right
+}
+
+function ownerOf(args) {
+  return args?.[TOOL_OWNER] ?? { principalId: null, sessionId: null }
+}
+
+function assertTaskOwner(task, args) {
+  const owner = ownerOf(args)
+  if (!task || (task.principalId ?? null) !== owner.principalId || (task.sessionId ?? null) !== owner.sessionId) {
+    throw new Error('task is outside the authorized principal or session')
+  }
+}
+
 async function enrichArgs(args, exec) {
   const next = { ...(args && typeof args === 'object' ? args : {}) }
-  if (!next.workspace && exec?.agent && pluginCtx) {
+  const runtime = getRuntime()
+  const sessionId = exec?.sessionId ?? exec?.agent?.sessionId ?? exec?.agent?.id ?? null
+  const principalId = exec?.agent?.id === undefined ? null : String(exec.agent.id)
+  let hostWorkspace = null
+  if (pluginCtx) {
     try {
       const workingDirectory = typeof pluginCtx.get === 'function' ? pluginCtx.get('workingDirectory') : undefined
       if (workingDirectory && typeof workingDirectory.ensure === 'function') {
-        const dir = await workingDirectory.ensure(exec.agent)
-        if (typeof dir === 'string' && dir !== '') next.workspace = dir
+        const dir = await workingDirectory.ensure(exec?.agent)
+        if (typeof dir === 'string' && dir !== '') hostWorkspace = runtime.resolveWorkspace(dir)
       }
     } catch {
-      /* no session working directory: keep the process-workspace fallback */
+      /* No host session directory: use the process workspace and fail closed on overrides. */
     }
   }
+  const trustedWorkspace = hostWorkspace ?? runtime.resolveWorkspace()
+  if (next.workspace && !samePath(runtime.resolveWorkspace(String(next.workspace)), trustedWorkspace)) {
+    throw new Error('workspace must match the calling session working directory')
+  }
+  next.workspace = trustedWorkspace
+  Object.defineProperty(next, TOOL_OWNER, { value: { principalId, sessionId: sessionId == null ? null : String(sessionId) } })
   return next
 }
 
@@ -230,7 +259,9 @@ async function loadTask(runtime, args) {
   if (!args.taskId) throw new Error('taskId is required; call armorbreak_task action=list to find it')
   const workspace = workspaceOf(runtime, args)
   const ctx = runtime.workspace(workspace)
-  return { task: await ctx.taskStore.get(String(args.taskId)), ctx, workspace }
+  const task = await ctx.taskStore.get(String(args.taskId))
+  assertTaskOwner(task, args)
+  return { task, ctx, workspace }
 }
 
 /**
@@ -250,7 +281,7 @@ export function apply(ctx) {
       parameters: {
         type: 'object',
         properties: {
-          workspace: { type: 'string', description: 'Absolute workspace directory whose task store and policy to inspect. Defaults to the session working directory.' },
+          workspace: { type: 'string', description: 'Host-resolved session workspace. If supplied, it must match the current session directory.' },
           probeVersions: { type: 'boolean', description: 'When true, run bounded `--version` probes for installed external tools (slower). Default false.' },
         },
         additionalProperties: false,
@@ -468,7 +499,7 @@ export function apply(ctx) {
         type: 'object',
         properties: {
           action: { type: 'string', enum: ['list', 'read', 'stat', 'search'], description: 'list: directory entries; read: bounded file content + hashes; stat: metadata; search: bounded regex search over text files.' },
-          workspace: { type: 'string', description: 'Absolute workspace directory. Defaults to the session working directory.' },
+          workspace: { type: 'string', description: 'Host-resolved session workspace. If supplied, it must match the current session directory.' },
           path: { type: 'string', description: 'Absolute file or directory path. Defaults to the workspace root for list/search.' },
           pattern: { type: 'string', description: 'search: JavaScript regular expression (case-insensitive), max 200 chars.' },
           maxBytes: { type: 'number', description: 'read: at most this many bytes (default 262144, max 262144).' },
@@ -531,7 +562,7 @@ export function apply(ctx) {
         type: 'object',
         properties: {
           action: { type: 'string', enum: ['create', 'list', 'get', 'cancel', 'note', 'finalize'], description: 'Operation to perform.' },
-          workspace: { type: 'string', description: 'Absolute workspace directory. Defaults to the session working directory; pass it explicitly when analyzing another directory.' },
+          workspace: { type: 'string', description: 'Host-resolved session workspace. If supplied, it must match the current session directory.' },
           taskId: { type: 'string', description: 'Exact task id for get/cancel/note/finalize.' },
           title: { type: 'string', description: 'create: short human title for the objective.' },
           objective: { type: 'string', description: 'create: what question the task must answer and the expected output.' },
@@ -557,6 +588,8 @@ export function apply(ctx) {
             workflowId: workflow?.id ?? null,
             targetPath,
             targetKind: workflow?.targetKind ?? (targetPath ? 'file' : 'none'),
+            principalId: ownerOf(args).principalId,
+            sessionId: ownerOf(args).sessionId,
             steps: workflow?.steps ?? [],
           })
           let scopeNote = ''
@@ -577,7 +610,10 @@ export function apply(ctx) {
           return { text, data: store.summary(task, { includeSteps: true }) }
         }
         if (args.action === 'list') {
-          const tasks = await store.list(20)
+          const owner = ownerOf(args)
+          const tasks = (await store.list(1000)).filter((task) =>
+            (task.principalId ?? null) === owner.principalId && (task.sessionId ?? null) === owner.sessionId,
+          ).slice(0, 20)
           const lines = ['# 任务列表', '', `工作区：\`${workspace}\``, '']
           if (tasks.length === 0) lines.push('（无任务）')
           for (const task of tasks) lines.push(`- \`${task.id}\` **${task.state}** · ${md(task.title)} · 证据 ${task.stats.evidence} / 发现 ${task.stats.findings} · 更新 ${task.updatedAt}`)
@@ -632,7 +668,7 @@ export function apply(ctx) {
         properties: {
           capability: { type: 'string', description: 'Exact capability id from armorbreak_capabilities (for example binary.identify, android.manifest, network.flows, sast.scan).' },
           target: { type: 'string', description: 'Absolute path of the file or directory to analyze. Required for file/directory capabilities; omit for network capabilities and pass options.url instead.' },
-          workspace: { type: 'string', description: 'Absolute workspace directory for task/evidence storage. Defaults to the session working directory.' },
+          workspace: { type: 'string', description: 'Host-resolved session workspace for task/evidence storage. If supplied, it must match the current session directory.' },
           options: { type: 'object', description: 'Capability-specific options. See the capability schema from armorbreak_capabilities.' },
           taskId: { type: 'string', description: 'Existing task to attach this execution to. Omit to create a new ad-hoc task automatically.' },
         },
@@ -713,7 +749,7 @@ export function apply(ctx) {
           action: { type: 'string', enum: ['list', 'start', 'run', 'run_async', 'status', 'cancel', 'resume', 'retry'], description: 'list workflows; start creates a task; run executes synchronously; run_async executes in the background; status includes queue state; cancel aborts; resume recovers an interrupted task; retry resets failed/skipped steps and runs in the background.' },
           workflow: { type: 'string', description: 'start: workflow id from action=list (exact case).' },
           target: { type: 'string', description: 'start: absolute path of the file or directory to analyze (required unless the workflow needs no target).' },
-          workspace: { type: 'string', description: 'Absolute workspace directory for task/evidence storage.' },
+          workspace: { type: 'string', description: 'Host-resolved session workspace for task/evidence storage. If supplied, it must match the current session directory.' },
           taskId: { type: 'string', description: 'run/run_async/status/cancel/resume/retry: exact task id.' },
           title: { type: 'string', description: 'start: optional human title for the task.' },
           maxSteps: { type: 'number', description: 'run/run_async: maximum steps per execution window (1-50, default 50).' },
@@ -845,13 +881,14 @@ export function apply(ctx) {
         type: 'object',
         properties: {
           action: { type: 'string', enum: ['list', 'get', 'verify', 'chain'], description: 'list evidence and findings; get one finding or evidence record; verify sets a finding status; chain validates the evidence and audit hash chains.' },
-          workspace: { type: 'string', description: 'Absolute workspace directory. Defaults to the session working directory.' },
+          workspace: { type: 'string', description: 'Host-resolved session workspace. If supplied, it must match the current session directory.' },
           taskId: { type: 'string', description: 'Exact task id.' },
           limit: { type: 'number', description: 'list: maximum findings/evidence to print (default 30).' },
           severity: { type: 'string', enum: ['critical', 'high', 'medium', 'low', 'info'], description: 'list: filter findings by severity.' },
           findingId: { type: 'string', description: 'get/verify: exact finding id.' },
           evidenceId: { type: 'string', description: 'get: exact evidence id.' },
           verification: { type: 'string', enum: ['observed', 'corroborated', 'hypothesis', 'unverified'], description: 'verify: new verification level, justified by the evidence you cite in note.' },
+          evidenceIds: { type: 'array', items: { type: 'string', minLength: 1, maxLength: 160 }, maxItems: 100, description: 'verify: task-local evidence ids supporting a verification or severity increase; corroborated requires at least two.' },
           note: { type: 'string', description: 'verify: why the status changed and what evidence supports it.' },
         },
         required: ['action'],
@@ -893,6 +930,7 @@ export function apply(ctx) {
             verification: args.verification,
             severity: args.severity,
             note: args.note,
+            evidenceIds: args.evidenceIds,
           })
           return { text: `发现 \`${updated.id}\` 验证状态更新为 **${updated.verification}**。`, data: updated }
         }
@@ -921,7 +959,7 @@ export function apply(ctx) {
         properties: {
           taskId: { type: 'string', description: 'Exact task id to report on.' },
           format: { type: 'string', enum: ['markdown', 'html', 'json', 'sarif', 'pdf'], description: 'Report format. Default markdown.' },
-          workspace: { type: 'string', description: 'Absolute workspace directory. Defaults to the session working directory.' },
+          workspace: { type: 'string', description: 'Host-resolved session workspace. If supplied, it must match the current session directory.' },
         },
         required: ['taskId'],
         additionalProperties: false,

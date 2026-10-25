@@ -26,6 +26,7 @@ test('authorize creates a signed durable record and list shows it active', async
     ttlMs: 60_000,
   })
   assert.match(record.id, /^authz_/)
+  assert.equal(record.kind, 'authorization')
   assert.equal(record.signature.length, 64)
   const listed = await scope.listAuthorizations()
   assert.equal(listed.length, 1)
@@ -81,6 +82,7 @@ test('sensitive host paths are denied even inside an authorized tree', async () 
 
 test('network target parsing and matching (exact, wildcard, CIDR, ports)', () => {
   assert.deepEqual(parseNetworkTarget('https://API.Example.com:8443/v1'), { host: 'api.example.com', port: 8443 })
+  assert.deepEqual(parseNetworkTarget(`https://api.example.test/${'x'.repeat(100_000)}?query=${'y'.repeat(100_000)}`), { host: 'api.example.test', port: null })
   assert.deepEqual(parseNetworkTarget('[::1]:8080'), { host: '::1', port: 8080 })
   const target = { host: 'api.example.com', port: 443 }
   assert.equal(networkTargetMatches({ host: 'api.example.com' }, target), true)
@@ -110,6 +112,67 @@ test('L2 network execution requires authorization and an active approval', async
   const wrongTask = await scope.checkNetwork({ taskId: 't2', target: '10.20.0.5', approvalId: approval.id })
   assert.equal(wrongTask.allowed, false)
   assert.equal(wrongTask.code, 'NETWORK_APPROVAL_TASK_MISMATCH')
+})
+
+test('checkNetwork fails closed when hostname DNS fails or returns no usable addresses', async () => {
+  const failingResolvers = [
+    async () => { throw new Error('synthetic resolver failure') },
+    async () => [],
+    async () => ['not-an-ip-address'],
+  ]
+  for (const dnsLookup of failingResolvers) {
+    const target = 'dns-fail-closed.example.invalid:443'
+    const scope = new ScopePolicy({ stateRoot: await tempDir(), dnsLookup })
+    await scope.authorize({ purpose: 'synthetic DNS fail-closed test', operator: 'audit-user', networkTargets: [target], riskCeiling: 'L2' })
+    const approval = await scope.recordApproval({ kind: 'L2', taskId: 'dns-fail-closed', target, outcome: 'allowed-once', source: 'test' })
+
+    const result = await scope.checkNetwork({ taskId: 'dns-fail-closed', target, approvalId: approval.id })
+    assert.equal(result.allowed, false)
+    assert.equal(result.code, 'NETWORK_DNS_FAILED')
+    assert.deepEqual(result.resolvedIps, [])
+  }
+})
+
+test('checkNetwork rejects DNS answers containing private, reserved, or mixed public/private addresses', async () => {
+  const answers = [
+    ['127.0.0.1'],
+    ['10.20.0.5'],
+    ['172.16.1.5'],
+    ['192.168.1.5'],
+    ['169.254.10.2'],
+    ['::1'],
+    ['fc00::1'],
+    ['fe80::1'],
+    ['2001:db8::1'],
+    ['8.8.8.8', '127.0.0.1'],
+  ]
+  for (const resolvedIps of answers) {
+    const target = 'dns-private-denied.example.invalid:443'
+    const scope = new ScopePolicy({ stateRoot: await tempDir(), dnsLookup: async () => resolvedIps })
+    await scope.authorize({ purpose: 'synthetic DNS address test', operator: 'audit-user', networkTargets: [target], riskCeiling: 'L2' })
+    const approval = await scope.recordApproval({ kind: 'L2', taskId: 'dns-private-denied', target, outcome: 'allowed-once', source: 'test' })
+
+    const result = await scope.checkNetwork({ taskId: 'dns-private-denied', target, approvalId: approval.id })
+    assert.equal(result.allowed, false, `${resolvedIps.join(', ')} must be denied`)
+    assert.equal(result.code, 'NETWORK_NON_PUBLIC_ADDRESS_DENIED')
+  }
+})
+
+test('checkNetwork accepts public DNS answers and still permits explicitly authorized private IP literals', async () => {
+  const target = 'dns-public.example.invalid:443'
+  const scope = new ScopePolicy({ stateRoot: await tempDir(), dnsLookup: async () => ['8.8.8.8', '2606:4700:4700::1111'] })
+  await scope.authorize({ purpose: 'synthetic public DNS test', operator: 'audit-user', networkTargets: [target, '10.20.0.0/16'], riskCeiling: 'L2' })
+  const approval = await scope.recordApproval({ kind: 'L2', taskId: 'dns-public', target, outcome: 'allowed-once', source: 'test' })
+
+  const publicResult = await scope.checkNetwork({ taskId: 'dns-public', target, approvalId: approval.id })
+  assert.equal(publicResult.allowed, true)
+  assert.deepEqual(publicResult.resolvedIps, ['8.8.8.8', '2606:4700:4700::1111'])
+
+  const privateLiteral = '10.20.0.5:443'
+  const literalApproval = await scope.recordApproval({ kind: 'L2', taskId: 'dns-public', target: privateLiteral, outcome: 'allowed-once', source: 'test' })
+  const literalResult = await scope.checkNetwork({ taskId: 'dns-public', target: privateLiteral, approvalId: literalApproval.id })
+  assert.equal(literalResult.allowed, true)
+  assert.deepEqual(literalResult.resolvedIps, ['10.20.0.5'])
 })
 
 test('recordApproval refuses non-grant outcomes', async () => {

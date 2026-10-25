@@ -347,7 +347,7 @@ test('workbench creates a mock evaluation and exposes evaluations/knowledge/cata
   assert.equal(catalog.captured.json.automaticInstall, false)
 })
 
-test('workbench installation follows stage/verify/approve/activate/rollback and requires explicit confirmation', async () => {
+test('workbench can prepare an installation but approval requires the trusted host surface', async () => {
   const { runtime, workspace } = await realWorkspaceRuntime()
   const artifactPath = join(workspace, 'bundle.tgz')
   await writeFile(artifactPath, 'INSTALL-BUNDLE')
@@ -373,13 +373,16 @@ test('workbench installation follows stage/verify/approve/activate/rollback and 
   assert.equal(verified.captured.json.plan.status, 'VERIFIED')
 
   const refused = fakeResponse()
-  await action(actionReq({ action: 'install.approve', planId: plan.planId }), refused)
-  assert.equal(refused.captured.status, 400)
-  assert.match(refused.captured.json.error, /confirm/i)
+  await action(actionReq({ action: 'install.approve', planId: plan.planId, confirm: 'approve-install', operator: 'alice' }), refused)
+  assert.equal(refused.captured.status, 403)
+  assert.match(refused.captured.json.error, /MODEL_CANNOT_AUTHORIZE/)
+  assert.equal((await runtime.installer.get(plan.planId)).status, 'VERIFIED')
 
-  const approved = fakeResponse()
-  await action(actionReq({ action: 'install.approve', planId: plan.planId, confirm: 'approve-install', operator: 'alice' }), approved)
-  assert.equal(approved.captured.json.plan.status, 'APPROVED')
+  const approvalToken = runtime.approvalAuthority.issue({
+    id: `install:${plan.planId}`, riskLevel: 'L2', taskId: plan.planId, target: plan.planHash, operator: 'alice',
+  }).token
+  const approved = await runtime.installer.approve(verified.captured.json.plan, { approvalToken, operator: 'alice' })
+  assert.equal(approved.status, 'APPROVED')
   const active = fakeResponse()
   await action(actionReq({ action: 'install.activate', planId: plan.planId }), active)
   assert.equal(active.captured.json.plan.status, 'ACTIVE')

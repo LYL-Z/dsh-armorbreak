@@ -14,6 +14,8 @@ import test from 'node:test'
 async function loadTools() {
   const stateRoot = await mkdtemp(join(tmpdir(), 'abm-tool-state-'))
   process.env.ARMORBREAK_HOME = stateRoot
+  let hostWorkspace = null
+  const workingDirectory = { async ensure() { return hostWorkspace } }
   /** @type {Map<string, any>} */
   const defs = new Map()
   const ctx = {
@@ -23,14 +25,14 @@ async function loadTools() {
         return () => {}
       },
     },
-    get() {
-      return undefined
+    get(name) {
+      return name === 'workingDirectory' ? workingDirectory : undefined
     },
     logger: { warn() {} },
   }
   const module = await import('../tools.js')
   module.apply(ctx)
-  return { defs, ctx }
+  return { defs, ctx, setWorkspace(value) { hostWorkspace = value } }
 }
 
 function mockExec(signal) {
@@ -65,11 +67,12 @@ test('tools.js registers ten model-facing tools with valid JSON schemas', async 
 })
 
 test('armorbreak_health reports environment, isolation denial and capability count', async () => {
-  const { defs } = await loadTools()
+  const { defs, setWorkspace } = await loadTools()
   const workspace = await mkdtemp(join(tmpdir(), 'abm-tool-ws-'))
+  setWorkspace(workspace)
   const value = await defs.get('armorbreak_health').execute({ workspace }, mockExec())
   assert.match(value.text, /环境健康|ArmorBreak/)
-  assert.equal(value.data.version, '2.2.0-rc.1')
+  assert.equal(value.data.version, '2.2.0')
   assert.ok(value.data.registry.capabilities > 0)
   assert.equal(typeof value.data.isolation.available, 'boolean')
   assert.ok(Array.isArray(value.data.capabilities))
@@ -88,8 +91,9 @@ test('armorbreak_capabilities lists real capabilities and describes one', async 
 })
 
 test('armorbreak_task create/list/get works on the real task store', async () => {
-  const { defs } = await loadTools()
+  const { defs, setWorkspace } = await loadTools()
   const workspace = await mkdtemp(join(tmpdir(), 'abm-tool-ws-'))
+  setWorkspace(workspace)
   const target = join(workspace, 'artifact.bin')
   await writeFile(target, 'artifact-bytes')
   const created = await defs.get('armorbreak_task').execute(
@@ -108,8 +112,9 @@ test('armorbreak_task create/list/get works on the real task store', async () =>
 })
 
 test('armorbreak_analyze rejects unknown capabilities with an actionable message', async () => {
-  const { defs } = await loadTools()
+  const { defs, setWorkspace } = await loadTools()
   const workspace = await mkdtemp(join(tmpdir(), 'abm-tool-ws-'))
+  setWorkspace(workspace)
   await assert.rejects(
     () => defs.get('armorbreak_analyze').execute({ capability: 'does.not_exist', workspace }, mockExec()),
     /unknown capability/,
@@ -117,8 +122,9 @@ test('armorbreak_analyze rejects unknown capabilities with an actionable message
 })
 
 test('armorbreak_analyze runs a real L0 capability and produces a report', async (t) => {
-  const { defs } = await loadTools()
+  const { defs, setWorkspace } = await loadTools()
   const workspace = await mkdtemp(join(tmpdir(), 'abm-tool-ws-'))
+  setWorkspace(workspace)
   const health = await defs.get('armorbreak_health').execute({ workspace }, mockExec())
   // Prefer a format-agnostic L0 file capability so any small fixture is valid input.
   const preferred = ['binary.identify', 'forensics.filetype', 'ctf.classify', 'ctf.flag_scan']
@@ -143,8 +149,9 @@ test('armorbreak_analyze runs a real L0 capability and produces a report', async
 })
 
 test('armorbreak_scope separates request from platform-approved activation, then revokes', async () => {
-  const { defs, ctx } = await loadTools()
+  const { defs, ctx, setWorkspace } = await loadTools()
   const workspace = await mkdtemp(join(tmpdir(), 'abm-tool-ws-'))
+  setWorkspace(workspace)
   const scopePath = await mkdtemp(join(tmpdir(), 'abm-scope-'))
   const requested = await defs.get('armorbreak_scope').execute(
     { action: 'request', workspace, purpose: 'tool wiring test', operator: 'tester', paths: [scopePath], ttlHours: 1 },
@@ -163,7 +170,7 @@ test('armorbreak_scope separates request from platform-approved activation, then
   )
 
   // Inject a mock platform approval service and retry activation.
-  ctx.get = () => ({ request: async () => 'allowed-once' })
+  ctx.get = (name) => name === 'approval' ? ({ request: async () => 'allowed-once' }) : name === 'workingDirectory' ? ({ async ensure() { return workspace } }) : undefined
   const activated = await defs.get('armorbreak_scope').execute(
     { action: 'activate', workspace, requestId: requested.data.id },
     { agent: {}, callId: 'call_test_activate', signal: new AbortController().signal },
@@ -183,7 +190,7 @@ test('armorbreak_scope separates request from platform-approved activation, then
 })
 
 test('armorbreak_workflow lists and rejects unknown workflow ids', async () => {
-  const { defs } = await loadTools()
+  const { defs, setWorkspace } = await loadTools()
   const listed = await defs.get('armorbreak_workflow').execute({ action: 'list' }, mockExec())
   assert.ok(listed.data.workflows.length >= 8)
   const ids = listed.data.workflows.map((workflow) => workflow.id)
@@ -191,6 +198,7 @@ test('armorbreak_workflow lists and rejects unknown workflow ids', async () => {
     assert.ok(ids.includes(required), `missing workflow ${required}`)
   }
   const workspace = await mkdtemp(join(tmpdir(), 'abm-tool-ws-'))
+  setWorkspace(workspace)
   await assert.rejects(
     () => defs.get('armorbreak_workflow').execute({ action: 'start', workflow: 'NoSuchWorkflow', target: workspace, workspace }, mockExec()),
     /unknown workflow/,

@@ -2,6 +2,9 @@
 import { copyFile, mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { existsSync } from 'node:fs'
+import { validateNoPlaintextSecrets } from './secrets.js'
+
+const SERVER_NAME = /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/
 
 function fail(code, message) {
   const error = new Error(message)
@@ -11,6 +14,13 @@ function fail(code, message) {
 
 function quote(value) { return JSON.stringify(String(value)) }
 
+function validateServerName(name) {
+  if (typeof name !== 'string' || !SERVER_NAME.test(name)) {
+    throw fail('CONFIG_INVALID', 'serverName must be a 1–64 character YAML identifier')
+  }
+  return name
+}
+
 function markers(name) {
   return {
     start: `  # >>> armorbreak managed: ${name}`,
@@ -19,8 +29,9 @@ function markers(name) {
 }
 
 export function renderYamlServer(name, server) {
+  validateServerName(name)
   if (!server?.command || typeof server.command !== 'string') throw fail('CONFIG_INVALID', 'server.command is required')
-  for (const key of Object.keys(server)) if (/api[_-]?key|token|secret|password/i.test(key)) throw fail('CONFIG_INVALID', 'plaintext secret fields are forbidden; use env placeholders')
+  validateNoPlaintextSecrets(server)
   if (server.args !== undefined && (!Array.isArray(server.args) || server.args.some((arg) => typeof arg !== 'string'))) throw fail('CONFIG_INVALID', 'server.args must be strings')
   if (server.env !== undefined && (typeof server.env !== 'object' || Array.isArray(server.env))) throw fail('CONFIG_INVALID', 'server.env must be an object')
   const { start, end } = markers(name)
@@ -50,6 +61,7 @@ function sectionBounds(text) {
 
 export async function planYamlInstall({ configPath, serverName = 'armorbreak', server, force = false } = {}) {
   if (!configPath) throw fail('CONFIG_INVALID', 'configPath is required')
+  validateServerName(serverName)
   const abs = resolve(configPath)
   const before = existsSync(abs) ? await readFile(abs, 'utf8') : ''
   const { start, end } = markers(serverName)
@@ -59,7 +71,7 @@ export async function planYamlInstall({ configPath, serverName = 'armorbreak', s
   let sectionHasName = false
   if (section) {
     for (let i = section.start + 1; i < section.end; i += 1) {
-      if (new RegExp(`^\\s{2}${serverName}:\\s*$`).test(section.lines[i])) sectionHasName = true
+      if (section.lines[i].trim() === `${serverName}:`) sectionHasName = true
     }
   }
   if (sectionHasName && !hasMarkers) throw fail('CONFIG_CONFLICT', `unmanaged mcp_servers.${serverName} already exists`)
@@ -109,6 +121,7 @@ export async function rollbackYamlInstall(backupPath, configPath) {
 }
 
 export async function uninstallYamlServer({ configPath, serverName = 'armorbreak' } = {}) {
+  validateServerName(serverName)
   const abs = resolve(configPath)
   if (!existsSync(abs)) return { changed: false }
   const before = await readFile(abs, 'utf8')

@@ -18,8 +18,10 @@ The validator supports three explicit modes:
 - **docs-only:** `--allow-docs-only`, validated against a trusted target-branch
   base SHA (`EVIDENCE_BASE_SHA` from the pull-request event);
 - **evidence-only:** `--allow-evidence-only`, validated against the manifest's
-  source commit; only `docs/v2/acceptance/**` may differ; `readiness.json` is
-  not accepted as an evidence-only path;
+  source commit; `docs/v2/acceptance/**` may differ, and generated readiness
+  metadata is accepted only with the explicit `--allow-readiness` option.
+  V2.2 Stable writes `stable-readiness.json`; the historical Full GA
+  `readiness.json` snapshot remains unchanged;
 - **code/security change:** neither mode applies; evidence must match the code
   commit or be regenerated for it.
 
@@ -49,8 +51,10 @@ source, CI, build, security, or other change in that range rejects the PR.
 
 The release-gate step does not skip gate evaluation: for docs-only PRs it
 computes the full gates at the target base and emits
-`applicability: DOCS_ONLY_BASE_GATES`; `releasable` is inherited from that base
-report. If the base is not releasable, the docs PR is blocked. Tags always
+`applicability: DOCS_ONLY_BASE_GATES`; `localChecksPass` is inherited from that
+base report. A docs-only report never grants release authorization: `releasable`
+stays false until the exact source commit and artifact have trusted provenance.
+If the base local checks do not pass, the docs PR is blocked. Tags always
 evaluate gates at the tag commit and are never treated as docs-only.
 
 ## Residual trust

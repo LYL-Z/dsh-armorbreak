@@ -36,9 +36,10 @@ test('typed SDK works over direct Engine transport', async () => {
 
 test('typed SDK works over MCP HTTP transport', async () => {
   const f = await fixture()
-  const server = await createMcpHttpServer({ engine: f.engine, principal: f.principal, workspaceId: f.workspace })
+  const token = 'sdk-mcp-http-integration-token-32-bytes'
+  const server = await createMcpHttpServer({ engine: f.engine, principal: f.principal, workspaceId: f.workspace, token })
   try {
-    const client = new ArmorBreakClient({ baseUrl: server.url, principal: f.principal, workspaceId: f.workspace })
+    const client = new ArmorBreakClient({ baseUrl: server.url, token, principal: f.principal, workspaceId: f.workspace })
     assert.equal((await client.capabilities()).length, 46)
     const result = await client.analyze({ capability: 'forensics.hash', target: join(f.workspace, 'sample.txt') })
     assert.equal(result.state, 'COMPLETED')

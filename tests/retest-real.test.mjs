@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, rmSync, rmdirSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
@@ -50,17 +50,50 @@ test('retest rejects historical, concurrent, foreign and non-exact-README tasks'
     assert.equal(validateTask({ taskId, startedAt: started, operator: 'other', root, workspace: root }).pass, false)
     writeFileSync(join(dir, 'task.json'), JSON.stringify({ ...task, targetPath: join(root, '..', 'README.md') }))
     assert.equal(validateTask({ taskId, startedAt: started, operator: 'test-host', root, workspace: root }).pass, false)
-    writeFileSync(join(dir, 'task.json'), JSON.stringify(task))
-    try {
-      const linkRoot = mkdtempSync(join(tmpdir(), 'abm-retest-link-'))
-      symlinkSync(join(root, 'README.md'), join(linkRoot, 'README.md'))
-      writeFileSync(join(linkRoot, '.armorbreak'), '')
-      mkdirSync(join(linkRoot, '.armorbreak/tasks', taskId), { recursive: true })
-      writeFileSync(join(linkRoot, '.armorbreak/tasks', taskId, 'task.json'), JSON.stringify({ ...task, workspace: linkRoot, targetPath: join(linkRoot, 'README.md') }))
-      assert.equal(validateTask({ taskId, startedAt: started, operator: 'test-host', root: linkRoot, workspace: linkRoot }).pass, false)
-      rmSync(linkRoot, { recursive: true, force: true })
-    } catch { /* Windows may disallow symlink creation without privilege */ }
   } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('retest rejects a task whose README target is reached through a symlink', (t) => {
+  const root = mkdtempSync(join(tmpdir(), 'abm-retest-linked-readme-'))
+  const workspace = join(root, 'workspace')
+  const outside = join(root, 'outside')
+  const taskId = 'task_test_linked_readme'
+  const readmePath = join(workspace, 'README.md')
+  const taskDir = join(workspace, '.armorbreak/tasks', taskId)
+  try {
+    mkdirSync(taskDir, { recursive: true })
+    mkdirSync(outside, { recursive: true })
+    writeFileSync(join(outside, 'README.md'), '# outside synthetic README\n')
+    try {
+      symlinkSync(outside, readmePath, process.platform === 'win32' ? 'junction' : 'dir')
+    } catch (error) {
+      if (['EPERM', 'EACCES', 'ENOTSUP', 'UNKNOWN'].includes(error?.code)) {
+        t.skip(`directory link creation is unavailable: ${String(error.code)}`)
+        return
+      }
+      throw error
+    }
+    const task = {
+      id: taskId,
+      state: 'COMPLETED',
+      operator: 'test-host',
+      workspace,
+      targetPath: readmePath,
+      createdAt: new Date().toISOString(),
+      report: { path: join(taskDir, 'report.md'), sha256: createHash('sha256').update('# test report\n').digest('hex') },
+    }
+    writeFileSync(task.report.path, '# test report\n')
+    writeFileSync(join(taskDir, 'evidence.jsonl'), `${JSON.stringify({ id: 'ev_linked' })}\n`)
+    writeFileSync(join(taskDir, 'task.json'), JSON.stringify(task))
+    const started = new Date(Date.now() - 5000).toISOString()
+    assert.equal(validateTask({ taskId, startedAt: started, operator: 'test-host', root: workspace, workspace }).pass, false)
+  } finally {
+    try {
+      if (process.platform === 'win32') rmdirSync(readmePath)
+      else unlinkSync(readmePath)
+    } catch { /* absent when the OS refused link creation */ }
     rmSync(root, { recursive: true, force: true })
   }
 })

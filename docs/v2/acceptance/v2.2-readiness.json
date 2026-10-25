@@ -1,10 +1,10 @@
 {
   "schemaVersion": "armorbreak.v2-readiness/v1",
-  "commit": "e952e5de3f7b8ee63629f6566475936ba7bf5c14",
+  "commit": "86ddb6b717ac309b51a89e98a5a6e241d747e7cf",
   "preReleaseReady": true,
   "gaReady": false,
   "ready": true,
-  "preReleaseTag": true,
+  "preReleaseTag": false,
   "releaseTag": false,
   "taskStatus": {
     "ABU-101": "TESTED",
@@ -248,34 +248,279 @@
     "ABU-405": null,
     "ABU-406": null,
     "ABU-407": null,
-    "ABU-408": "GITHUB_ATTESTED",
+    "ABU-408": "BLOCKED_EXTERNAL",
     "ABU-409": null
+  },
+  "externalAcceptanceEvidence": {
+    "ok": false,
+    "code": "EXTERNAL_GA_EVIDENCE_NOT_VERIFIED",
+    "bundleSource": "ARMORBREAK_EXTERNAL_GA_EVIDENCE_BUNDLE",
+    "bundleSha256": null,
+    "trustConfiguration": {
+      "status": "UNVERIFIED",
+      "source": "ARMORBREAK_EXTERNAL_GA_TRUSTED_SIGNERS_SHA256",
+      "sha256": null
+    },
+    "releaseAuthorization": {
+      "status": "REVIEW",
+      "reason": "Evidence validation does not grant release authority; formal publication requires a protected external approval path."
+    },
+    "sourceCommit": "86ddb6b717ac309b51a89e98a5a6e241d747e7cf",
+    "requiredClaims": 17,
+    "verifiedClaims": [],
+    "blockers": [
+      {
+        "code": "ABU-311_REAL_ENDPOINT_BLOCKED",
+        "detail": "ABU-311 realEndpoint evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "code": "ABU-312_REAL_ENDPOINT_BLOCKED",
+        "detail": "ABU-312 realEndpoint evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "code": "ABU-313_REAL_ENDPOINT_BLOCKED",
+        "detail": "ABU-313 realEndpoint evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "code": "ABU-314_REAL_ENDPOINT_BLOCKED",
+        "detail": "ABU-314 realEndpoint evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "code": "ABU-318_REAL_ENDPOINT_BLOCKED",
+        "detail": "ABU-318 realEndpoint evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "code": "ABU-409_INDEPENDENT_REVIEW_BLOCKED",
+        "detail": "ABU-409 independentReview evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "code": "HOST_DSH_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+        "detail": "DSH hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "code": "HOST_CODEX_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+        "detail": "Codex hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "code": "HOST_HERMES_AGENT_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+        "detail": "Hermes Agent hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "code": "HOST_CLAUDE_COWORK_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+        "detail": "Claude Cowork hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "code": "HOST_CURSOR_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+        "detail": "Cursor hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "code": "HOST_WORKBUDDY_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+        "detail": "WorkBuddy hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "code": "HOST_ZCODE_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+        "detail": "ZCode hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "code": "HOST_PI_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+        "detail": "Pi hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "code": "HOST_TRAE_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+        "detail": "TRAE hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "code": "HOST_ANTIGRAVITY_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+        "detail": "Antigravity hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "code": "ABU-408_PRODUCTION_SIGNATURE_BLOCKED",
+        "detail": "ABU-408 productionSignature evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+      }
+    ],
+    "claimResults": [
+      {
+        "claimId": "realEndpoint:ABU-311",
+        "verified": false,
+        "signerRole": "provider-verifier",
+        "reason": "signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "claimId": "realEndpoint:ABU-312",
+        "verified": false,
+        "signerRole": "provider-verifier",
+        "reason": "signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "claimId": "realEndpoint:ABU-313",
+        "verified": false,
+        "signerRole": "provider-verifier",
+        "reason": "signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "claimId": "realEndpoint:ABU-314",
+        "verified": false,
+        "signerRole": "provider-verifier",
+        "reason": "signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "claimId": "realEndpoint:ABU-318",
+        "verified": false,
+        "signerRole": "provider-verifier",
+        "reason": "signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "claimId": "independentReview:ABU-409",
+        "verified": false,
+        "signerRole": "independent-reviewer",
+        "reason": "signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "claimId": "hostInstall:DSH",
+        "verified": false,
+        "signerRole": "host-verifier",
+        "reason": "signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "claimId": "hostInstall:Codex",
+        "verified": false,
+        "signerRole": "host-verifier",
+        "reason": "signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "claimId": "hostInstall:Hermes Agent",
+        "verified": false,
+        "signerRole": "host-verifier",
+        "reason": "signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "claimId": "hostInstall:Claude Cowork",
+        "verified": false,
+        "signerRole": "host-verifier",
+        "reason": "signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "claimId": "hostInstall:Cursor",
+        "verified": false,
+        "signerRole": "host-verifier",
+        "reason": "signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "claimId": "hostInstall:WorkBuddy",
+        "verified": false,
+        "signerRole": "host-verifier",
+        "reason": "signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "claimId": "hostInstall:ZCode",
+        "verified": false,
+        "signerRole": "host-verifier",
+        "reason": "signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "claimId": "hostInstall:Pi",
+        "verified": false,
+        "signerRole": "host-verifier",
+        "reason": "signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "claimId": "hostInstall:TRAE",
+        "verified": false,
+        "signerRole": "host-verifier",
+        "reason": "signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "claimId": "hostInstall:Antigravity",
+        "verified": false,
+        "signerRole": "host-verifier",
+        "reason": "signed external GA evidence bundle is missing or unsafe"
+      },
+      {
+        "claimId": "productionSignature:ABU-408",
+        "verified": false,
+        "signerRole": "production-signer",
+        "reason": "signed external GA evidence bundle is missing or unsafe"
+      }
+    ]
+  },
+  "gaEvidenceStatus": "BLOCKED",
+  "releaseAuthorization": {
+    "status": "REVIEW",
+    "reason": "Evidence validation does not grant release authority; formal publication requires a protected external approval path."
   },
   "blockers": [],
   "gaBlockers": [
     {
       "code": "ABU-311_REAL_ENDPOINT_BLOCKED",
-      "detail": "ABU-311 real endpoint is BLOCKED_EXTERNAL"
+      "detail": "ABU-311 realEndpoint evidence is not verified: signed external GA evidence bundle is missing or unsafe"
     },
     {
       "code": "ABU-312_REAL_ENDPOINT_BLOCKED",
-      "detail": "ABU-312 real endpoint is BLOCKED_EXTERNAL"
+      "detail": "ABU-312 realEndpoint evidence is not verified: signed external GA evidence bundle is missing or unsafe"
     },
     {
       "code": "ABU-313_REAL_ENDPOINT_BLOCKED",
-      "detail": "ABU-313 real endpoint is BLOCKED_EXTERNAL"
+      "detail": "ABU-313 realEndpoint evidence is not verified: signed external GA evidence bundle is missing or unsafe"
     },
     {
       "code": "ABU-314_REAL_ENDPOINT_BLOCKED",
-      "detail": "ABU-314 real endpoint is BLOCKED_EXTERNAL"
+      "detail": "ABU-314 realEndpoint evidence is not verified: signed external GA evidence bundle is missing or unsafe"
     },
     {
       "code": "ABU-318_REAL_ENDPOINT_BLOCKED",
-      "detail": "ABU-318 real endpoint is BLOCKED_EXTERNAL"
+      "detail": "ABU-318 realEndpoint evidence is not verified: signed external GA evidence bundle is missing or unsafe"
     },
     {
       "code": "ABU-409_INDEPENDENT_REVIEW_BLOCKED",
-      "detail": "ABU-409 independent review is BLOCKED_EXTERNAL"
+      "detail": "ABU-409 independentReview evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+    },
+    {
+      "code": "HOST_DSH_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "DSH hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+    },
+    {
+      "code": "HOST_CODEX_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "Codex hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+    },
+    {
+      "code": "HOST_HERMES_AGENT_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "Hermes Agent hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+    },
+    {
+      "code": "HOST_CLAUDE_COWORK_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "Claude Cowork hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+    },
+    {
+      "code": "HOST_CURSOR_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "Cursor hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+    },
+    {
+      "code": "HOST_WORKBUDDY_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "WorkBuddy hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+    },
+    {
+      "code": "HOST_ZCODE_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "ZCode hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+    },
+    {
+      "code": "HOST_PI_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "Pi hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+    },
+    {
+      "code": "HOST_TRAE_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "TRAE hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+    },
+    {
+      "code": "HOST_ANTIGRAVITY_EXTERNAL_EVIDENCE_NOT_VERIFIED",
+      "detail": "Antigravity hostInstall evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+    },
+    {
+      "code": "ABU-408_PRODUCTION_SIGNATURE_BLOCKED",
+      "detail": "ABU-408 productionSignature evidence is not verified: signed external GA evidence bundle is missing or unsafe"
+    },
+    {
+      "code": "ARTIFACT_ATTESTATION_NOT_VERIFIED",
+      "detail": "ARTIFACT_PATH_NOT_PROVIDED"
     }
   ],
   "waived": [],
@@ -288,7 +533,11 @@
   },
   "artifact": {
     "version": "2.2.0-rc.1",
-    "signed": true,
-    "sha256": "d4c21e02cdc1b5f118817ce61de7f7b8e3c791a92b3c1fa932ab7b2fee263088"
+    "signed": false,
+    "sha256": "b227e13fd44da9ecb89512e30caf6f5ffe2b31684ba16033c105ce8ffb9bb880",
+    "attestation": {
+      "ok": false,
+      "code": "ARTIFACT_PATH_NOT_PROVIDED"
+    }
   }
 }

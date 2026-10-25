@@ -14,7 +14,11 @@
   },
   "headlessWithoutExtensionFlag": {
     "result": "PASS",
-    "evidence": "install-uninstall.log"
+    "evidence": {
+      "path": "install-uninstall.log",
+      "sha256": "80e7fd021a420d63d809282ca0a0ca54de9872fd1b32621c6e011384e2d879dd",
+      "size": 3910
+    }
   },
   "remove": {
     "result": "PASS"

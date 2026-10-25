@@ -14,7 +14,7 @@ test('MCP HTTP supports explicit TLS with a test certificate', async () => {
   const principal = { id: 'tls-test', kind: 'local-user', workspaces: [workspace] }
   const engine = await createEngine({ stateRoot, principals: [principal] })
   const tls = { key: await readFile('tests/fixtures/tls/key.pem', 'utf8'), cert: await readFile('tests/fixtures/tls/cert.pem', 'utf8') }
-  const server = await createMcpHttpServer({ engine, principal, workspaceId: workspace, tls })
+  const server = await createMcpHttpServer({ engine, principal, workspaceId: workspace, tls, allowUnauthenticatedLoopback: true })
   try {
     assert.match(server.url, /^https:\/\//)
     const result = await new Promise((resolve, reject) => {

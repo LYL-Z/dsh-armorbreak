@@ -10,7 +10,7 @@ import { join } from 'node:path'
 import test from 'node:test'
 import { ArmorBreakRuntime } from '../lib/core/runtime.js'
 import { PolicyDeniedError } from '../lib/core/runner.js'
-import { generateTaskReport } from '../lib/core/reports.js'
+import { escapeMarkdownTableCell, generateTaskReport } from '../lib/core/reports.js'
 
 async function tempDir(prefix = 'abm-core-') {
   return mkdtemp(join(tmpdir(), prefix))
@@ -279,6 +279,12 @@ test('report formats render findings, evidence and SARIF metadata', async () => 
   } catch (error) {
     assert.match(String(error.message), /LibreOffice|PDF/i)
   }
+})
+
+test('Markdown table cells neutralize backslash escapes and line breaks', () => {
+  const escaped = escapeMarkdownTableCell('a\\|b|c\r\nd')
+  assert.equal(escaped, ['a', '\\\\', '\\|', 'b', '\\|', 'c d'].join(''))
+  assert.equal(escapeMarkdownTableCell(`${'x'.repeat(399)}\\|tail`), `${'x'.repeat(399)}\\\\`)
 })
 
 test('state summary exposes tasks, capabilities and secret-free policy', async () => {

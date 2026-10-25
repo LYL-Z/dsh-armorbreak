@@ -1,5 +1,6 @@
 ﻿import assert from 'node:assert/strict'
-import { mkdtemp } from 'node:fs/promises'
+import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
+import { createHash } from 'node:crypto'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
@@ -50,6 +51,42 @@ test('forged operators, unknown principals and cross-workspace reads are rejecte
   await engine.close()
 })
 
+test('task access is isolated by trusted principal and session within one workspace', async () => {
+  const { engine, workspace } = await fixture()
+  const aliceSessionA = ctx({ id: 'alice', kind: 'local-user', sessionId: 'session-a' }, workspace, 'session-a-create')
+  const aliceSessionB = ctx({ id: 'alice', kind: 'local-user', sessionId: 'session-b' }, workspace, 'session-b-read')
+  const task = await engine.createTask(aliceSessionA, { title: 'session-bound task', targetKind: 'none' })
+
+  await assert.rejects(() => engine.getTask(aliceSessionB, task.id), (error) => error.code === 'POLICY_DENIED')
+  assert.deepEqual(await engine.listTasks(aliceSessionB), [])
+  assert.equal((await engine.getTask(aliceSessionA, task.id)).id, task.id)
+  assert.deepEqual((await engine.listTasks(aliceSessionA)).map((item) => item.id), [task.id])
+  await engine.close()
+})
+
+test('getReport rejects paths outside the task reports directory and reads a pinned in-root file', async () => {
+  const { engine, workspace } = await fixture()
+  const alice = ctx({ id: 'alice', kind: 'local-user', sessionId: 'report-session' }, workspace, 'report-create')
+  const task = await engine.createTask(alice, { title: 'report path test', targetKind: 'none' })
+  const store = engine.runtime.workspace(workspace).taskStore
+  const reports = join(store.taskDir(task.id), 'reports')
+  await mkdir(reports, { recursive: true })
+  const content = '# synthetic in-root report\n'
+  const reportPath = join(reports, 'report.md')
+  await writeFile(reportPath, content)
+  task.report = { format: 'markdown', path: reportPath, sha256: createHash('sha256').update(content).digest('hex') }
+  await store.save(task)
+  assert.equal((await engine.getReport(alice, task.id)).markdown, content)
+
+  const outside = join(workspace, 'outside-report.md')
+  await writeFile(outside, 'SYNTHETIC_OUTSIDE_REPORT')
+  task.report.path = outside
+  task.report.sha256 = createHash('sha256').update('SYNTHETIC_OUTSIDE_REPORT').digest('hex')
+  await store.save(task)
+  await assert.rejects(() => engine.getReport(alice, task.id), (error) => error.code === 'POLICY_DENIED')
+  await engine.close()
+})
+
 test('requestId reuse with a different payload is rejected', async () => {
   const { engine, workspace } = await fixture()
   const alice = ctx({ id: 'alice', kind: 'local-user' }, workspace, 'same-request')
@@ -85,6 +122,12 @@ test('approval tokens are bound, expire and cannot be replayed', async () => {
 
   const forged = authority.issue({ id: 'appr-2', riskLevel: 'L1', taskId: 'task-approval', target: workspace, operator: 'bob', ttlMs: 60_000 })
   await assert.rejects(() => engine.verifyApproval(alice, { riskLevel: 'L1', taskId: 'task-approval', target: workspace, approvalToken: forged.token }), (error) => error.code === 'TOKEN_BINDING_MISMATCH')
+
+  const sessionToken = authority.issue({ id: 'appr-session', riskLevel: 'L1', taskId: 'task-approval', target: workspace, operator: 'alice', sessionId: 'session-a', ttlMs: 60_000 })
+  await assert.rejects(
+    () => engine.verifyApproval(ctx({ id: 'alice', kind: 'local-user', sessionId: 'session-b' }, workspace, 'approve-session'), { riskLevel: 'L1', taskId: 'task-approval', target: workspace, approvalToken: sessionToken.token }),
+    (error) => error.code === 'TOKEN_BINDING_MISMATCH',
+  )
 
   const expiring = authority.issue({ id: 'appr-3', riskLevel: 'L2', taskId: 'task-approval', target: workspace, operator: 'alice', ttlMs: 1000 })
   now += 2000

@@ -84,7 +84,13 @@ export class TaskStore {
 
   /** @param {string} taskId */
   taskDir(taskId) {
-    return join(this.tasksDir, taskId)
+    const value = String(taskId ?? '')
+    // Task ids are a single path component. Reject traversal and platform
+    // separators before any read or write reaches the filesystem.
+    if (!/^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/.test(value) || value === '.' || value === '..') {
+      throw new Error('invalid task id')
+    }
+    return join(this.tasksDir, value)
   }
 
   /** @param {string} taskId */
@@ -105,6 +111,8 @@ export class TaskStore {
    *   targetPath?: string|null,
    *   targetKind?: 'file'|'directory'|'none',
    *   operator?: string,
+   *   principalId?: string|null,
+   *   sessionId?: string|null,
    *   steps?: Array<{id: string, title: string, capabilityId: string, options?: Record<string, unknown>}>,
    *   tags?: string[],
    * }} input
@@ -139,6 +147,8 @@ export class TaskStore {
       targetPath: input.targetPath ?? null,
       targetKind: input.targetKind ?? 'file',
       operator: input.operator ?? 'local-user',
+      principalId: input.principalId ?? null,
+      sessionId: input.sessionId ?? null,
       tags: Array.isArray(input.tags) ? input.tags.slice(0, 20) : [],
       workspace: this.workspaceRoot,
       state: 'CREATED',

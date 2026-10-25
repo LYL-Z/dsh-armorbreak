@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
 
-import { applyYamlInstall, planYamlInstall, rollbackYamlInstall, uninstallYamlServer } from '../packages/installer/yaml.js'
+import { applyYamlInstall, planYamlInstall, renderYamlServer, rollbackYamlInstall, uninstallYamlServer } from '../packages/installer/yaml.js'
 
 const hash = (value) => createHash('sha256').update(value).digest('hex')
 
@@ -48,4 +48,28 @@ test('YAML installer rejects unmanaged collision/secrets and rollback is byte-ex
   await rollbackYamlInstall(applied.backupPath, fresh)
   assert.equal(hash(await readFile(fresh, 'utf8')), hash(freshOriginal))
   await assert.rejects(() => planYamlInstall({ configPath: join(dir, 'bad.yaml'), server: { command: 'node', apiKey: 'x' } }), (error) => error.code === 'CONFIG_INVALID')
+})
+
+test('YAML installer rejects unsafe server names before interpreting or rendering them', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'abm-yaml-name-'))
+  const configPath = join(dir, 'config.yaml')
+  const original = 'mcp_servers:\n  node_repl:\n    enabled: true\n'
+  await writeFile(configPath, original)
+
+  for (const serverName of ['bad.*(a+)+$', 'armorbreak\n  attacker:']) {
+    await assert.rejects(
+      () => planYamlInstall({ configPath, serverName, server: { command: 'node' } }),
+      (error) => error.code === 'CONFIG_INVALID',
+    )
+    await assert.rejects(
+      () => uninstallYamlServer({ configPath, serverName }),
+      (error) => error.code === 'CONFIG_INVALID',
+    )
+    assert.throws(
+      () => renderYamlServer(serverName, { command: 'node' }),
+      (error) => error.code === 'CONFIG_INVALID',
+    )
+  }
+
+  assert.equal(await readFile(configPath, 'utf8'), original)
 })

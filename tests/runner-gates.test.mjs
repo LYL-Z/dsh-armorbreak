@@ -23,6 +23,9 @@ async function gateRuntime(opts = {}) {
   const workspace = await tempDir('abm-gate-ws-')
   const runtime = new ArmorBreakRuntime({ stateRoot })
   await runtime.init()
+  // The success branch needs a deterministic public DNS answer now that
+  // hostname resolution errors and empty answers fail closed.
+  runtime.scope.dnsLookup = async (host) => host === 'lab.example.test' ? ['8.8.8.8'] : []
   runtime.isolationProviders = {
     diagnose: async () => opts.isolationAvailable
       ? { providers: [{ id: 'test-container', state: 'DaemonReady' }], recommended: 'test-container', l1: { available: true, verified: false, provider: 'test-container', state: 'DaemonReady', reason: 'test provider daemon ready' } }

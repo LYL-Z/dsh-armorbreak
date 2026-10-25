@@ -12,12 +12,12 @@ ArmorBreak 是面向**已授权逆向工程、源码安全审查、网络流量�
 **[快速开始](#本地快速体验)** · **[选择接入方式](#选择接入方式)** · **[真实分析](#真实分析不是概念演示)** · **[文档导航](#文档导航)** · **[English](README.md)**
 
 [![CI](https://github.com/LYL-Z/dsh-armorbreak/actions/workflows/ci.yml/badge.svg)](https://github.com/LYL-Z/dsh-armorbreak/actions/workflows/ci.yml)
-![工程候选](https://img.shields.io/badge/status-engineering%20candidate-orange)
+![Stable 范围政策](https://img.shields.io/badge/release-scope%20defined-blue)
 ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22-43853d)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 > [!IMPORTANT]
-> **发布与安全声明：** `2.2.0-rc.1` 是工程候选版本，**不是** V2.2 正式 GA，也未取得独立人类安全认证。四轮 AI 辅助审计已完成初审，相关发现仍须完成修复与复测；OpenAI、Anthropic、Gemini 官方真实端点**尚未验证**。详情见[验证状态](#验证状态)与[安全政策](SECURITY.md)。
+> **V2.2 Stable 范围：** `2.2.0` 定义为 **Verified Core / Experimental Provider Integrations**。发布必须通过绑定到精确合并后 `main` 提交的版本化 Stable Gate；当前发布状态以 GitHub Releases 页面为准。OpenAI、Anthropic、Gemini 商业端点仍为 `LIVE_UNVERIFIED`。AI 辅助审查按 AI 审查记录披露，不称为人类认证。原 Full GA 记录仍保持 `gaReady:false`，目前列有 18 项阻断。详见 [Stable 政策](docs/v2/release/v2.2-stable-policy-v1.md) 与[验证状态](#验证状态)。
 
 ## 为什么选择 ArmorBreak？
 
@@ -127,11 +127,13 @@ flowchart LR
 | Core 与协议实现 | 代码和接口契约存在 | 不代表没有安全漏洞 |
 | 四类模型 API 协议 | `MOCK_GOLDEN_PASS` | 不代表官方端点已通过 |
 | 本地 Ollama 工具闭环 | `LOCAL_MODEL_PASS` | 不代表 OpenAI/Anthropic/Gemini 实测通过 |
+| 官方商业 Provider Live | LIVE_UNVERIFIED | 不代表 OpenAI、Anthropic 或 Gemini 官方端点已认证兼容 |
 | 各 Agent 接入 | 各宿主保留不同等级证据 | 不代表所有宿主完成 MCP 模型端到端调用 |
-| 四轮 AI 辅助安全审计 | 初审完成；部分发现待修复/复测 | 不构成人类独立安全认证 |
-| V2.2 正式 GA | `gaReady: false` | 不代表有正式发布授权 |
+| AI 辅助安全审查 | 报告及针对性复核均注明目标提交和证据 | 不等于人类安全认证，结果不能自动继承到其他 SHA |
+| V2.2 Stable | 已定义 Verified Core / Experimental Provider Integrations 范围；发布须通过精确 main Stable Gate | 不代表 Full GA 通过或未验证宿主/Provider 已获支持 |
+| 历史 Full V2.2 GA | gaReady:false；记录有 18 项阻断 | Stable 范围或 AI 审查满足独立 Full GA 合同 |
 
-[历史基线测试报告](docs/v2/acceptance/test-report.json)对应其记录的源码 Commit，结果是 **400 tests / 399 pass / 0 fail / 1 skipped**。这只是历史证据，**不能代表当前工作区刚刚通过这些测试**。最新 CI 请查看[工作流](https://github.com/LYL-Z/dsh-armorbreak/actions/workflows/ci.yml)。
+README 更新时最近一轮完整 PR #18 检查为 [CI run 40203187699](https://github.com/LYL-Z/dsh-armorbreak/actions/runs/40203187699)，目标是 PR HEAD `6ad35b0121b546edc6d71efe6691b67eba7505d8`：Windows 529/529、Ubuntu 531/531，失败 0、跳过 0。该结果只绑定到对应 PR HEAD，不能代替后续精确 `main` SHA 的 CI 与来源证明。
 
 **信任边界：**L0 为本地/离线；L1 需要可用隔离及平台审批；L2 需要已授权范围及平台审批；L3 始终拒绝。GitHub OIDC/Sigstore Attestation 属于**构建来源证明**，不是独立安全认证。参见 [SECURITY.md](SECURITY.md)。
 
@@ -146,7 +148,7 @@ flowchart LR
 | 核查模型 API 的实测状态 | [Provider 矩阵](docs/v2/provider-matrix.md) · [Golden 状态](docs/v2/acceptance/golden-status.json) |
 | 了解权限及威胁模型 | [安全模型](docs/security-model.md) · [威胁模型](docs/v2/threat-model.md) |
 | 升级或回滚 | [升级指南](docs/v2/release/upgrade-guide.md) |
-| 查看限制和发布阻断 | [已知问题](docs/known-issues.md) · [GA 复核](docs/v2/release/v2.2-ga-review.md) |
+| 查看限制和发布门禁 | [已知问题](docs/known-issues.md) · [Stable 政策](docs/v2/release/v2.2-stable-policy-v1.md) · [历史 Full GA 复核](docs/v2/release/v2.2-ga-review.md) |
 | 阅读历史技术长文 | [技术归档](docs/readme-archive-v2.2.md) · [性能基准](docs/benchmarks.md) |
 
 ## 贡献与负责任使用

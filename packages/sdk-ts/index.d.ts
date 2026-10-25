@@ -54,6 +54,7 @@ export class ArmorBreakClient {
     engine?: object
     baseUrl?: string
     token?: string
+    sessionId?: string
     fetchImpl?: Function
     principal?: InvocationPrincipal
     workspaceId?: string

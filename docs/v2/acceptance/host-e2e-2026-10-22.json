@@ -1,6 +1,7 @@
 {
   "schemaVersion": "armorbreak.host-e2e/v1",
   "generatedAt": "2026-10-22T09:55:00.000-07:00",
+  "snapshotScope": "Point-in-time MCP client registration and handshake snapshot at generatedAt; later host-model-e2e and compatibility-matrix runs are separate later evidence.",
   "environment": {
     "os": "win32",
     "arch": "x64",
@@ -198,8 +199,8 @@
       "size": 1262
     },
     "host-audit/zcode.jsonl": {
-      "sha256": "6ed547e9a5905a196624fc4234b905cb255092b69e6d90d9fa3fb2b9423ace74",
-      "size": 615
+      "sha256": "5cf2cba9ed42366bba944392e4a8c1ad7b7009db568ce7c1e8deba1f18f396b7",
+      "size": 2460
     },
     "host-audit/trae.jsonl": {
       "sha256": "54aca792c1b3b3c35c19d056ba791e6ccfb868738bb532a5bcf5f09766627739",

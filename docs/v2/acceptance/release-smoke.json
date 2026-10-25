@@ -1,33 +1,38 @@
 {
   "schemaVersion": "armorbreak.release-smoke/v1",
-  "generatedAt": "2026-10-22T16:27:47.674Z",
-  "commit": "e952e5de3f7b8ee63629f6566475936ba7bf5c14",
-  "version": "2.2.0-rc.1",
+  "generatedAt": "2026-10-25T14:29:25.225Z",
+  "commit": "7ea088034678642e85e067e9e7846ff032e40974",
+  "version": "2.2.0",
   "checks": [
     {
       "id": "package-version",
       "status": "PASS",
-      "detail": "2.2.0-rc.1"
+      "detail": "2.2.0"
     },
     {
       "id": "bundle-version",
       "status": "PASS",
-      "detail": "2.2.0-rc.1"
+      "detail": "2.2.0"
     },
     {
       "id": "sbom-version",
       "status": "PASS",
-      "detail": "dsh-armorbreak-2.2.0-rc.1"
+      "detail": "dsh-armorbreak-2.2.0"
     },
     {
-      "id": "readiness-version",
+      "id": "historical-readiness-preserved",
       "status": "PASS",
       "detail": "2.2.0-rc.1"
     },
     {
+      "id": "legacy-full-ga-still-blocked",
+      "status": "PASS",
+      "detail": "18 historical blockers; gaReady=false"
+    },
+    {
       "id": "readiness-evidence-current",
       "status": "PASS",
-      "detail": "readiness=e952e5de3f7b8ee63629f6566475936ba7bf5c14 manifest=e952e5de3f7b8ee63629f6566475936ba7bf5c14 tests=e952e5de3f7b8ee63629f6566475936ba7bf5c14"
+      "detail": "readiness=7ea088034678642e85e067e9e7846ff032e40974 manifest=7ea088034678642e85e067e9e7846ff032e40974 tests=7ea088034678642e85e067e9e7846ff032e40974"
     },
     {
       "id": "docs-consistency",
@@ -37,12 +42,12 @@
     {
       "id": "evidence-hashes",
       "status": "PASS",
-      "detail": "113 files verified"
+      "detail": "114 files verified"
     },
     {
-      "id": "release-gates",
+      "id": "release-gates-local-checks",
       "status": "PASS",
-      "detail": "all gates are evidence-verified and mandatory M4 tasks are DONE"
+      "detail": "local gates and mandatory M4 tasks pass; external exact-commit artifact provenance is still required"
     },
     {
       "id": "tag-immutable",

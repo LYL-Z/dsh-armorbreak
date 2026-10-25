@@ -4,7 +4,9 @@
 
 ## Prerequisites (all must be true)
 
-1. `docs/v2/acceptance/release-gates.json` → `releasable=true`.
+1. `docs/v2/acceptance/release-gates.json` → `localChecksPass=true`; this local
+   consistency result is not release authorization. `releasable` remains false
+   until the exact source commit and artifact have trusted provenance.
 2. M4-03/04/06/07/10/11/12 status DONE (not REVIEW).
 3. Signed bundle lock + SBOM + license audit attached to the release.
 4. Migration preview on a copy of real v1.2 data; no automatic apply.

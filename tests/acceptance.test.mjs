@@ -5,7 +5,7 @@
  * the model-facing tool wiring.
  */
 import assert from 'node:assert/strict'
-import { copyFile, mkdtemp, readFile, writeFile } from 'node:fs/promises'
+import { mkdtemp, readFile, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
@@ -16,12 +16,16 @@ async function tempDir(prefix = 'abm-acc-') {
 }
 
 /** Load tools.js against a mock registry and a fresh runtime state root. */
-async function loadTools() {
+async function loadTools(workspace) {
   const stateRoot = await tempDir('abm-acc-state-')
   process.env.ARMORBREAK_HOME = stateRoot
   /** @type {Map<string, any>} */
   const defs = new Map()
-  const ctx = { tools: { register: (definition) => (defs.set(definition.name, definition), () => {}) }, get: () => undefined, logger: { warn() {} } }
+  const ctx = {
+    tools: { register: (definition) => (defs.set(definition.name, definition), () => {}) },
+    get: (key) => key === 'workingDirectory' && workspace ? { ensure: async () => workspace } : undefined,
+    logger: { warn() {} },
+  }
   const module = await import('../tools.js')
   module.apply(ctx)
   return { defs, stateRoot }
@@ -31,17 +35,26 @@ function mockExec(signal) {
   return { agent: undefined, callId: 'call_accept_0001', signal: signal ?? new AbortController().signal }
 }
 
+function syntheticPeFixture() {
+  const image = Buffer.alloc(0x188)
+  image.write('MZ', 0, 'latin1')
+  image.writeUInt32LE(0x80, 0x3c)
+  image.write('PE\0\0', 0x80, 'latin1')
+  image.writeUInt16LE(0x8664, 0x84) // x86-64
+  image.writeUInt16LE(0, 0x86) // no sections or executable code
+  image.writeUInt16LE(0xf0, 0x94) // PE32+ optional header size
+  image.writeUInt16LE(0x0002, 0x96) // executable-image
+  image.writeUInt16LE(0x20b, 0x98) // PE32+
+  image.writeUInt32LE(0x188, 0x98 + 60) // SizeOfHeaders
+  image.writeUInt32LE(0, 0x98 + 108) // no data directories
+  return image
+}
+
 test('real BinaryStaticAnalysis workflow runs through the tool layer and produces evidence + report', async (t) => {
-  const { defs } = await loadTools()
   const workspace = await tempDir('abm-acc-ws-')
-  const source = 'D:\\dsh-ABM\\fixtures\\notepad.exe'
+  const { defs } = await loadTools(workspace)
   const target = join(workspace, 'notepad.exe')
-  try {
-    await copyFile(source, target)
-  } catch {
-    t.skip('notepad.exe fixture not available on this host')
-    return
-  }
+  await writeFile(target, syntheticPeFixture())
   const health = await defs.get('armorbreak_health').execute({ workspace }, mockExec())
   const hasBinary = health.data.capabilities.some((capability) => capability.id === 'binary.identify')
   if (!hasBinary) {
@@ -215,8 +228,8 @@ test('audit log redacts credentials and cannot be forgotten on capability failur
 })
 
 test('unsupported report format and missing task produce actionable errors', async () => {
-  const { defs } = await loadTools()
   const workspace = await tempDir('abm-acc-ws-')
+  const { defs } = await loadTools(workspace)
   await assert.rejects(() => defs.get('armorbreak_report').execute({ taskId: 'task_nope', workspace, format: 'markdown' }, mockExec()), /task not found/)
   const created = await defs.get('armorbreak_task').execute({ action: 'create', workspace, title: 'format task' }, mockExec())
   await assert.rejects(

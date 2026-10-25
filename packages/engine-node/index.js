@@ -8,7 +8,9 @@
  * rejected rather than silently creating a second task.
  */
 import { createHash } from 'node:crypto'
-import { resolve, sep } from 'node:path'
+import { constants } from 'node:fs'
+import { isAbsolute, join, relative, resolve, sep } from 'node:path'
+import { open, realpath, stat } from 'node:fs/promises'
 import { getRuntime } from '../../lib/core/runtime.js'
 import { ApprovalAuthority } from '../../lib/control/approvalAuthority.js'
 import { listWorkflows } from '../../lib/core/workflows.js'
@@ -19,11 +21,115 @@ const MAX_TITLE = 300
 const MAX_OBJECTIVE = 5000
 const MAX_TARGET = 4096
 const MAX_IDEMPOTENCY = 10_000
+const MAX_REPORT_BYTES = 256 * 1024
 
 function samePath(a, b) {
   const left = resolve(String(a))
   const right = resolve(String(b))
   return process.platform === 'win32' ? left.toLowerCase() === right.toLowerCase() : left === right
+}
+
+function sessionOf(ctx) {
+  const value = ctx?.principal?.sessionId ?? ctx?.connectionId ?? null
+  if (value === null || value === undefined || value === '') return null
+  if (typeof value !== 'string' || value.length > 200) throw new EngineError('INVALID_REQUEST', 'session id is invalid')
+  return value
+}
+
+function taskOwnedBy(task, principal, sessionId) {
+  return task?.principalId === principal.id && (task.sessionId ?? null) === sessionId
+}
+
+function pathWithin(root, target) {
+  const rel = relative(root, target)
+  return rel === '' || (rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel))
+}
+
+function denyReport(message) {
+  throw new EngineError('POLICY_DENIED', message)
+}
+
+function assertCanonicalReportPaths(taskDirectory, reportsRoot, candidate, canonicalPaths) {
+  const [canonicalTaskDirectory, canonicalRoot, canonicalFile] = canonicalPaths
+  // Reject any symlink/junction in the task/report path, including a reports
+  // root that was redirected together with the candidate file.
+  if (!samePath(taskDirectory, canonicalTaskDirectory) ||
+      !samePath(reportsRoot, canonicalRoot) ||
+      !samePath(candidate, canonicalFile) ||
+      !pathWithin(canonicalTaskDirectory, canonicalRoot) ||
+      !pathWithin(canonicalRoot, canonicalFile) ||
+      samePath(canonicalRoot, canonicalTaskDirectory) ||
+      samePath(canonicalFile, canonicalRoot)) {
+    denyReport('report resolves outside the task report directory or through a link')
+  }
+  return { canonicalRoot, canonicalFile }
+}
+
+async function canonicalReportPaths(taskDirectory, reportsRoot, candidate) {
+  const values = await Promise.all([realpath(taskDirectory), realpath(reportsRoot), realpath(candidate)])
+  return assertCanonicalReportPaths(taskDirectory, reportsRoot, candidate, values)
+}
+
+async function readBoundedReport(handle) {
+  const buffer = Buffer.alloc(MAX_REPORT_BYTES + 1)
+  let offset = 0
+  while (offset < buffer.length) {
+    const { bytesRead } = await handle.read(buffer, offset, buffer.length - offset, offset)
+    if (bytesRead === 0) break
+    offset += bytesRead
+  }
+  if (offset > MAX_REPORT_BYTES) denyReport('report exceeds 256 KiB')
+  return buffer.subarray(0, offset)
+}
+
+export async function readTaskReport(store, report) {
+  const taskDirectory = resolve(store.taskDir(report.taskId))
+  const reportsRoot = join(taskDirectory, 'reports')
+  const candidate = resolve(String(report.path ?? ''))
+  if (!pathWithin(reportsRoot, candidate) || samePath(candidate, reportsRoot)) {
+    denyReport('report path is outside the task report directory')
+  }
+  if (typeof report.sha256 !== 'string' || !/^[a-f\d]{64}$/i.test(report.sha256)) {
+    throw new EngineError('EVIDENCE_MISMATCH', 'report metadata must contain a valid SHA-256 digest')
+  }
+
+  // Resolve the trusted path before opening, then resolve it again afterwards.
+  // On Windows O_NOFOLLOW is unavailable; canonical path equality and the
+  // opened-file identity checks below reject junction swaps before any bytes
+  // are read. On POSIX, O_NOFOLLOW rejects a final-component symlink and
+  // O_NONBLOCK prevents a substituted FIFO from hanging the report reader.
+  const initialPaths = await canonicalReportPaths(taskDirectory, reportsRoot, candidate)
+  if (process.platform !== 'win32' &&
+      (typeof constants.O_NOFOLLOW !== 'number' || typeof constants.O_NONBLOCK !== 'number')) {
+    denyReport('the platform cannot guarantee a bounded no-follow report open')
+  }
+  const flags = constants.O_RDONLY | (process.platform === 'win32' ? 0 : constants.O_NOFOLLOW | constants.O_NONBLOCK)
+  const handle = await open(candidate, flags)
+  try {
+    const opened = await handle.stat({ bigint: true })
+    if (!opened.isFile() || opened.nlink !== 1n || opened.dev === 0n || opened.ino === 0n || opened.size > BigInt(MAX_REPORT_BYTES)) {
+      denyReport('report file type, identity, link count, or size is not allowed')
+    }
+
+    const currentPaths = await canonicalReportPaths(taskDirectory, reportsRoot, candidate)
+    if (!samePath(initialPaths.canonicalRoot, currentPaths.canonicalRoot) ||
+        !samePath(initialPaths.canonicalFile, currentPaths.canonicalFile)) {
+      denyReport('report path changed while it was being opened')
+    }
+    const current = await stat(currentPaths.canonicalFile, { bigint: true })
+    if (!current.isFile() || current.nlink !== 1n || current.dev !== opened.dev || current.ino !== opened.ino) {
+      denyReport('report file identity changed while it was being opened')
+    }
+
+    const bytes = await readBoundedReport(handle)
+    const actualDigest = createHash('sha256').update(bytes).digest('hex')
+    if (actualDigest !== report.sha256.toLowerCase()) {
+      throw new EngineError('EVIDENCE_MISMATCH', 'report hash does not match task metadata')
+    }
+    return bytes.toString('utf8')
+  } finally {
+    await handle.close()
+  }
 }
 
 function hash(value) {
@@ -104,11 +210,12 @@ export class TrustedEngine {
     const requestedWorkspace = resolve(String(ctx.workspaceId))
     const allowed = [...configured.workspaces].some((entry) => entry === '*' || samePath(entry, requestedWorkspace))
     if (!allowed) throw new EngineError('POLICY_DENIED', 'principal is not allowed to access this workspace')
+    sessionOf(ctx)
     return configured
   }
 
   checkIdempotency(principal, ctx, payload) {
-    const key = `${principal.id}:${ctx.workspaceId}:${ctx.requestId}`
+    const key = `${principal.id}:${sessionOf(ctx) ?? ''}:${ctx.workspaceId}:${ctx.requestId}`
     const digest = hash(payload)
     const existing = this.idempotency.get(key)
     if (existing) {
@@ -134,8 +241,13 @@ export class TrustedEngine {
     const payload = { title, objective, workflowId: input.workflowId ?? null, targetPath: input.targetPath ?? null, targetKind: input.targetKind ?? 'none', steps: input.steps ?? [] }
     const replay = this.checkIdempotency(principal, ctx, payload)
     if (replay) return replay
-    const promise = this.runtime.workspace(ctx.workspaceId).taskStore.create({ ...payload, operator: principal.id })
-    this.idempotency.set(`${principal.id}:${ctx.workspaceId}:${ctx.requestId}`, { digest: hash(payload), promise })
+    const promise = this.runtime.workspace(ctx.workspaceId).taskStore.create({
+      ...payload,
+      operator: principal.id,
+      principalId: principal.id,
+      sessionId: sessionOf(ctx),
+    })
+    this.idempotency.set(`${principal.id}:${sessionOf(ctx) ?? ''}:${ctx.workspaceId}:${ctx.requestId}`, { digest: hash(payload), promise })
     return promise
   }
 
@@ -145,7 +257,7 @@ export class TrustedEngine {
     if (!['L1', 'L2'].includes(riskLevel)) throw new EngineError('INVALID_REQUEST', 'approval is only valid for L1/L2')
     if (!approvalToken) throw new EngineError('APPROVAL_REQUIRED', 'an approval token is required')
     if (!taskId || !target) throw new EngineError('INVALID_REQUEST', 'taskId and target are required')
-    const result = this.approvalAuthority.consume(String(approvalToken), { taskId: String(taskId), target: String(target), riskLevel, operator: principal.id, sessionId: ctx.principal.sessionId })
+    const result = this.approvalAuthority.consume(String(approvalToken), { taskId: String(taskId), target: String(target), riskLevel, operator: principal.id, sessionId: sessionOf(ctx) })
     if (!result.valid) throw new EngineError(result.code ?? 'POLICY_DENIED', result.reason ?? 'approval rejected')
     return { approvalId: result.payload.id, riskLevel, operator: principal.id, expiresAt: result.payload.expiresAt, taskId: String(taskId) }
   }
@@ -153,10 +265,10 @@ export class TrustedEngine {
   /** Persist a sanitized event/evidence envelope into the existing evidence chain. */
   async recordEnvelope(ctx, taskId, { origin = 'sdk', targetHash, payload = {}, event } = {}) {
     return this.bounded(ctx, async () => {
-      this.authenticate(ctx)
+      const principal = this.authenticate(ctx)
       const store = this.runtime.workspace(ctx.workspaceId).taskStore
       const task = await store.get(String(taskId))
-      if (!task || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
+      if (!taskOwnedBy(task, principal, sessionOf(ctx)) || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized principal, session, or workspace')
       const envelope = event
         ? createEventEnvelope({ ctx, taskId: task.id, origin, targetHash, event, payload })
         : createEvidenceEnvelope({ ctx, taskId: task.id, origin, targetHash, payload })
@@ -169,13 +281,14 @@ export class TrustedEngine {
     const principal = this.authenticate(ctx)
     let task
     try { task = await this.runtime.workspace(ctx.workspaceId).taskStore.get(String(taskId)) } catch { throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace') }
-    if (!task || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
+    if (!taskOwnedBy(task, principal, sessionOf(ctx)) || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized principal, session, or workspace')
     return task
   }
 
   async listTasks(ctx) {
-    this.authenticate(ctx)
-    return this.runtime.workspace(ctx.workspaceId).taskStore.list(20)
+    const principal = this.authenticate(ctx)
+    const tasks = await this.runtime.workspace(ctx.workspaceId).taskStore.list(1000)
+    return tasks.filter((task) => taskOwnedBy(task, principal, sessionOf(ctx))).slice(0, 20)
   }
 
   async cancelTask(ctx, taskId, reason = 'cancelled by trusted principal') {
@@ -183,18 +296,18 @@ export class TrustedEngine {
     const store = this.runtime.workspace(ctx.workspaceId).taskStore
     let task
     try { task = await store.get(String(taskId)) } catch { throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace') }
-    if (!task || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
+    if (!taskOwnedBy(task, principal, sessionOf(ctx)) || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized principal, session, or workspace')
     await store.cancel(task, reason.slice(0, 300))
     return { taskId: task.id, state: 'CANCELLED', principalId: principal.id, traceId: ctx.traceId }
   }
 
   async getEvidence(ctx, taskId) {
     return this.bounded(ctx, async () => {
-      this.authenticate(ctx)
+      const principal = this.authenticate(ctx)
       const store = this.runtime.workspace(ctx.workspaceId).taskStore
       let task
       try { task = await store.get(String(taskId)) } catch { throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace') }
-      if (!task || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
+      if (!taskOwnedBy(task, principal, sessionOf(ctx)) || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized principal, session, or workspace')
       const records = await store.evidenceStore(task.id).readEvidence(200)
       return { taskId: task.id, evidence: records.map((record) => ({ id: record.id, title: record.title, kind: record.kind, excerpt: record.excerpt, hash: record.hash, targetSha256: record.targetSha256 })) }
     })
@@ -202,15 +315,13 @@ export class TrustedEngine {
 
   async getReport(ctx, taskId) {
     return this.bounded(ctx, async () => {
-      this.authenticate(ctx)
+      const principal = this.authenticate(ctx)
       const store = this.runtime.workspace(ctx.workspaceId).taskStore
       let task
       try { task = await store.get(String(taskId)) } catch { throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace') }
-      if (!task || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace')
+      if (!taskOwnedBy(task, principal, sessionOf(ctx)) || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized principal, session, or workspace')
       if (!task.report?.path) throw new EngineError('INVALID_REQUEST', 'task has no report')
-      const { readFile } = await import('node:fs/promises')
-      const content = await readFile(task.report.path, 'utf8')
-      if (content.length > 256 * 1024) throw new EngineError('INVALID_REQUEST', 'report exceeds 256 KiB')
+      const content = await readTaskReport({ taskDir: (id) => store.taskDir(id) }, { ...task.report, taskId: task.id })
       return { taskId: task.id, path: task.report.path, sha256: task.report.sha256, markdown: content }
     })
   }
@@ -245,6 +356,8 @@ export class TrustedEngine {
         targetPath,
         targetKind: selected.targetKind ?? 'file',
         operator: principal.id,
+        principalId: principal.id,
+        sessionId: sessionOf(ctx),
         steps: [{ id: 'analyze', title: selected.title, capabilityId, options: options && typeof options === 'object' ? options : {} }],
       })
       const result = await this.runtime.runner.runCapability({

@@ -3,7 +3,8 @@
  * Records are redacted before they are written; the chain makes silent edits detectable.
  * @module dsh-armorbreak/lib/core/audit
  */
-import { appendJsonl, chainHash, nowIso, readJsonl, redactDeep, withFileMutex } from './util.js'
+import { appendJsonl, chainHash, nowIso, readJsonl, redactDeep } from './util.js'
+import { withAppendFileLock } from './append-lock.js'
 
 /** Fields never written to the audit log. */
 const DROP_KEYS = new Set(['buffer', 'text', 'content', 'bytes', 'signal'])
@@ -52,7 +53,7 @@ export class AuditLog {
    * @returns {Promise<{seq: number, hash: string}>}
    */
   async append(event) {
-    return withFileMutex(this.file, async () => {
+    return withAppendFileLock(this.file, async () => {
       const { seq, prevHash } = await this.tail()
       const payload = {
         seq: seq + 1,

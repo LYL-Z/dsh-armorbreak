@@ -19,6 +19,7 @@ import { createProviderRouter } from '../../packages/provider-router/index.js'
 import { createProviderClient } from '../../packages/provider-router/client.js'
 import { runToolLoop } from '../../packages/provider-router/toolLoop.js'
 import { createEngine } from '../../packages/engine-node/index.js'
+import { readSafeRepoFile, writeSafeRepoFile } from '../../lib/release/safeEvidenceFile.js'
 
 const ROOT = resolve(new URL('../..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'))
 const TARGET = join(ROOT, 'README.md')
@@ -342,10 +343,15 @@ export async function runProvider(spec, { run = false } = {}) {
   const tool = stages.tool_call?.status === 'PASS'
   const status = passed ? 'PASS' : connectivity ? (tool ? 'PARTIAL' : 'BASIC') : 'FAIL'
   const evidence = { ...base, endedAt: new Date().toISOString(), at: new Date().toISOString(), status, compatibilityGrade: passed ? 'FULL' : status, requestCount, maxRequests: 5, retry429: 0, verification: { toolProtocol: stages.tool_call?.status === 'PASS' ? 'TOOL_PROTOCOL_VERIFIED' : 'FAIL', coreToolExecution: stages.tool_loop?.coreToolExecution === 'CORE_TOOL_EXECUTION_VERIFIED' ? 'CORE_TOOL_EXECUTION_VERIFIED' : 'FAIL' } }
-  const livePath = join(ROOT, 'docs/v2/acceptance/provider-live.json')
-  const live = existsSync(livePath) ? JSON.parse(readFileSync(livePath, 'utf8')) : { schemaVersion: 'armorbreak.provider-live/v1', providers: {} }
+  let live
+  try {
+    live = JSON.parse(readSafeRepoFile(ROOT, 'docs/v2/acceptance/provider-live.json', { requiredPrefix: 'docs/v2/acceptance/' }).toString('utf8'))
+  } catch (error) {
+    if (error?.code !== 'ENOENT') throw error
+    live = { schemaVersion: 'armorbreak.provider-live/v1', providers: {} }
+  }
   live.providers[spec.id] = { status, grade: evidence.compatibilityGrade, runId, at: evidence.endedAt, model: spec.model, requestCount, verification: evidence.verification, stages: Object.fromEntries(Object.entries(stages).map(([name, value]) => [name, value.status])) }
-  writeFileSync(livePath, JSON.stringify(sanitize(live, secrets), null, 2) + '\n')
+  writeSafeRepoFile(ROOT, 'docs/v2/acceptance/provider-live.json', `${JSON.stringify(sanitize(live, secrets), null, 2)}\n`, { requiredPrefix: 'docs/v2/acceptance/' })
   return evidence
 }
 

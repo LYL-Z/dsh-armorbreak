@@ -12,12 +12,12 @@ ArmorBreak is an open-source toolkit for **authorized** reverse engineering, sou
 **[Quick start](#try-it-locally)** · **[Integrations](#choose-an-integration)** · **[Real analysis](#a-real-analysis-not-a-mockup)** · **[Documentation](#documentation)** · **[中文](README.zh-CN.md)**
 
 [![CI](https://github.com/LYL-Z/dsh-armorbreak/actions/workflows/ci.yml/badge.svg)](https://github.com/LYL-Z/dsh-armorbreak/actions/workflows/ci.yml)
-![Engineering candidate](https://img.shields.io/badge/status-engineering%20candidate-orange)
+![Stable scope policy](https://img.shields.io/badge/release-scope%20defined-blue)
 ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22-43853d)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 > [!IMPORTANT]
-> **Release and assurance:** `2.2.0-rc.1` is an engineering candidate, **not** a full V2.2 GA release or an independently certified security product. Four AI-assisted security reviews have finished their initial passes; findings still require remediation and retesting. Official OpenAI, Anthropic, and Gemini endpoints remain **unverified**. See [verification status](#verification-status) and [security policy](SECURITY.md).
+> **V2.2 Stable scope:** `2.2.0` is defined as **Verified Core / Experimental Provider Integrations**. Publication is controlled by the versioned Stable Gate on the exact merged `main` commit; the GitHub Releases page is the source for current publication state. OpenAI, Anthropic, and Gemini commercial endpoints remain `LIVE_UNVERIFIED`. AI-assisted review is recorded as AI review, not human certification. The separate historical Full GA record remains `gaReady:false` with 18 blockers. See the [Stable policy](docs/v2/release/v2.2-stable-policy-v1.md) and [verification status](#verification-status).
 
 ## Why ArmorBreak?
 
@@ -127,11 +127,13 @@ Explore the [long-form architecture notes](docs/readme-archive-v2.2.md), [Core c
 | Core and protocol implementation | Source and contracts exist | Absence of vulnerabilities |
 | Four model API protocol families | `MOCK_GOLDEN_PASS` | Official API compatibility |
 | Local Ollama tool loop | `LOCAL_MODEL_PASS` | OpenAI/Anthropic/Gemini live certification |
+| Official commercial Provider Live | LIVE_UNVERIFIED | Certified compatibility with OpenAI, Anthropic, or Gemini endpoints |
 | Host integrations | Evidence grades vary by host | A full model-to-MCP loop in every host |
-| AI-assisted security reviews | Four initial reviews completed; fixes/retests pending | Independent human security certification |
-| Full V2.2 GA | `gaReady: false` | Authorization to release as GA |
+| AI-assisted security reviews | Reports and focused reviews identify their reviewed commit and evidence | Human security certification or results for a different SHA |
+| V2.2 Stable | Versioned Verified Core / Experimental Provider Integrations scope; publication requires the exact-main Stable Gate | Full GA approval or unverified host/provider support |
+| Historical Full V2.2 GA | gaReady:false; 18 recorded blockers | Stable scope or AI review satisfying the separate Full GA contract |
 
-The [recorded baseline test report](docs/v2/acceptance/test-report.json) is **400 tests / 399 pass / 0 fail / 1 skipped** at its **specified source commit**. This is historical evidence, **not** an automatically updated claim about your checkout. See the [CI workflow](https://github.com/LYL-Z/dsh-armorbreak/actions/workflows/ci.yml) for current results.
+The latest complete PR #18 run available for this README update was [CI run 40203187699](https://github.com/LYL-Z/dsh-armorbreak/actions/runs/40203187699) at PR HEAD `6ad35b0121b546edc6d71efe6691b67eba7505d8`: Windows 529/529 and Ubuntu 531/531, with 0 failures and 0 skipped. These results are bound to that PR HEAD; they do not replace CI and provenance checks for a later exact `main` SHA.
 
 **Trust boundaries:** L0 is local/offline; L1 requires usable isolation and platform approval; L2 requires authorized scope and platform approval; L3 is always denied. GitHub OIDC/Sigstore attestation is **build provenance**, not independent security certification. See [SECURITY.md](SECURITY.md).
 
@@ -146,7 +148,7 @@ The [recorded baseline test report](docs/v2/acceptance/test-report.json) is **40
 | Verify model protocol support | [Provider matrix](docs/v2/provider-matrix.md) · [Golden evidence](docs/v2/acceptance/golden-status.json) |
 | Understand permission boundaries | [Security model](docs/security-model.md) · [Threat model](docs/v2/threat-model.md) |
 | Upgrade or roll back | [Upgrade guide](docs/v2/release/upgrade-guide.md) |
-| Review limitations and release gates | [Known issues](docs/known-issues.md) · [GA review](docs/v2/release/v2.2-ga-review.md) |
+| Review limitations and release gates | [Known issues](docs/known-issues.md) · [Stable policy](docs/v2/release/v2.2-stable-policy-v1.md) · [Historical Full GA review](docs/v2/release/v2.2-ga-review.md) |
 | Explore detailed design and benchmarks | [Long-form archive](docs/readme-archive-v2.2.md) · [Benchmarks](docs/benchmarks.md) |
 
 ## Contributing and responsible use

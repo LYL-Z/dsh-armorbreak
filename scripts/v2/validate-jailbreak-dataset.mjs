@@ -3,9 +3,13 @@
  * AB2-M3-07 live JailbreakBench metadata validation.
  * Raw harmful/benign rows are processed in memory, aggregated, then discarded.
  */
-import { writeFile } from 'node:fs/promises'
 import { createHash } from 'node:crypto'
+import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { aggregateDataset, validateDataset } from '../../lib/aisec/jailbreakDataset.js'
+import { writeSafeRepoFile } from '../../lib/release/safeEvidenceFile.js'
+
+const root = resolve(fileURLToPath(new URL('../..', import.meta.url)))
 
 const base = 'https://huggingface.co/datasets/JailbreakBench/JBB-Behaviors/resolve/main'
 const sha256 = (buffer) => createHash('sha256').update(buffer).digest('hex')
@@ -67,6 +71,6 @@ const report = {
   rawStored: false,
   result: harmful.status === 200 && benign.status === 200 && license.status === 200 ? 'PASS' : 'FAIL',
 }
-await writeFile('docs/v2/acceptance/jailbreak-live.json', `${JSON.stringify(report, null, 2)}\n`)
+writeSafeRepoFile(root, 'docs/v2/acceptance/jailbreak-live.json', `${JSON.stringify(report, null, 2)}\n`, { requiredPrefix: 'docs/v2/acceptance/' })
 console.log(JSON.stringify({ result: report.result, files: report.files, aggregate, rawStored: false }, null, 2))
 if (report.result !== 'PASS') process.exitCode = 1

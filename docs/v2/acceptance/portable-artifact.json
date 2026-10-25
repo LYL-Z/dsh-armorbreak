@@ -1,30 +1,21 @@
 {
   "schemaVersion": "armorbreak.portable-artifact/v1",
-  "generatedAt": "2026-10-22T13:10:59.263Z",
-  "sourceCommit": "e952e5de3f7b8ee63629f6566475936ba7bf5c14",
-  "version": "2.2.0-rc.1",
-  "artifact": "armorbreak-portable-2.2.0-rc.1.tar.gz",
-  "bytes": 2826014,
-  "sha256": "d4c21e02cdc1b5f118817ce61de7f7b8e3c791a92b3c1fa932ab7b2fee263088",
-  "sbom": "armorbreak-portable-2.2.0-rc.1.tar.gz.sbom.cdx.json",
+  "generatedAt": "2026-10-25T14:25:52.862Z",
+  "sourceCommit": "7ea088034678642e85e067e9e7846ff032e40974",
+  "version": "2.2.0",
+  "artifact": "armorbreak-portable-2.2.0.tar.gz",
+  "bytes": 5332908,
+  "sha256": "31b61ec646f661b6fd4cfa0ebdcbf7149dea3697383536e033f3d63953deb55f",
+  "sbom": "armorbreak-portable-2.2.0.tar.gz.sbom.cdx.json",
   "cleanRoom": {
     "extracted": true,
     "cliCapabilities": 46,
     "result": "PASS",
     "stderr": ""
   },
-  "signed": true,
+  "signed": false,
   "limitations": [
-    "GitHub OIDC/Sigstore build provenance; no project-held release key.",
+    "Test Ed25519 signature only; no production identity.",
     "Docker/npm publish not performed."
-  ],
-  "productionSigned": true,
-  "signatureKind": "github-oidc-sigstore-attestation",
-  "attestation": {
-    "verified": true,
-    "subjectSha256": "d4c21e02cdc1b5f118817ce61de7f7b8e3c791a92b3c1fa932ab7b2fee263088",
-    "workflowRun": "39813208090",
-    "commit": "e952e5de3f7b8ee63629f6566475936ba7bf5c14",
-    "evidence": "docs/v2/acceptance/github-attestation.json"
-  }
+  ]
 }

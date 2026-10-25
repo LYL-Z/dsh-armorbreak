@@ -10,10 +10,11 @@ const arg = (name) => {
 }
 const isTag = process.env.GITHUB_REF_TYPE === 'tag' || String(process.env.GITHUB_REF ?? '').startsWith('refs/tags/')
 const allowDocsOnly = process.argv.includes('--allow-docs-only') && !isTag
-const allowEvidenceOnly = process.argv.includes('--allow-evidence-only')
+const allowEvidenceOnly = process.argv.includes('--allow-evidence-only') && !isTag
+const allowReadiness = process.argv.includes('--allow-readiness') && allowEvidenceOnly && !isTag
 const requireClean = process.argv.includes('--require-clean')
 const base = arg('--base') ?? process.env.EVIDENCE_BASE_SHA
-const result = validateEvidence({ repoRoot: process.cwd(), commit, base, allowEvidenceAncestor: allowEvidenceOnly, allowDocsOnly, requireClean })
+const result = validateEvidence({ repoRoot: process.cwd(), commit, base, allowEvidenceAncestor: allowEvidenceOnly, allowDocsOnly, allowReadiness, requireClean })
 if (process.env.GITHUB_SHA && process.env.GITHUB_SHA !== commit) {
   result.ok = false
   result.issues.push(`HEAD ${commit} does not match GITHUB_SHA ${process.env.GITHUB_SHA}`)
