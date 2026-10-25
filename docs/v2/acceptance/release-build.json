@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.release-build/v1",
-  "generatedAt": "2026-10-25T14:25:52.862Z",
-  "commit": "7ea088034678642e85e067e9e7846ff032e40974",
+  "generatedAt": "2026-10-25T14:55:23.253Z",
+  "commit": "82a77b8ceb60d7c10a2d0ff92f7faaea45298e68",
   "package": "dsh-armorbreak",
   "version": "2.2.0",
   "artifact": "armorbreak-portable-2.2.0.tar.gz",
@@ -2550,8 +2550,8 @@
     "algorithm": "ed25519",
     "testKey": true,
     "valid": true,
-    "signature": "Cjq5noUcRFH3UH9GKB84XB7Q6sF3tUY8SrXSRZRGAQ5WrqEJY1waINB2A1cPemmkFptradiso2IUcfxsCuMUAg==",
-    "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAjcVn1evKGtrXfI6ljQuSuqxH84b3SLQtwkiXWDyOJCM=\n-----END PUBLIC KEY-----\n"
+    "signature": "ZaSFSA2IImMQCPWuVAM/2U1uFZAKXvS+Clxuj34/Eb04XRxua1r2aiandhx+LZfWj3N4V/YWR2vvIGmGRm+3BA==",
+    "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA7++OBxI++xnieBfBvN3eD6jDvSBaNQcrEVAY6GeHhkw=\n-----END PUBLIC KEY-----\n"
   },
   "productionSigned": false,
   "limitations": [

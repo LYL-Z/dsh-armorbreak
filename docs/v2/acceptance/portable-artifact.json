@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.portable-artifact/v1",
-  "generatedAt": "2026-10-25T14:25:52.862Z",
-  "sourceCommit": "7ea088034678642e85e067e9e7846ff032e40974",
+  "generatedAt": "2026-10-25T14:55:23.253Z",
+  "sourceCommit": "82a77b8ceb60d7c10a2d0ff92f7faaea45298e68",
   "version": "2.2.0",
   "artifact": "armorbreak-portable-2.2.0.tar.gz",
   "bytes": 5332908,
