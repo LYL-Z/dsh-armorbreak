@@ -120,12 +120,7 @@ function acquireLock(stateRoot, lockPath) {
   }
 
   const existing = readLock(stateRoot)
-  if (!existing) {
-    try { return openSync(lockPath, 'wx+', 0o600) } catch (error) {
-      if (error?.code === 'EEXIST') throw fail('DAEMON_LOCKED', 'another daemon acquired the lock during startup')
-      throw error
-    }
-  }
+  if (!existing) throw fail('DAEMON_LOCKED', 'daemon lock changed while it was being checked; verify the state before retrying')
   if (pidAlive(existing.pid)) throw fail('DAEMON_LOCKED', `daemon already running pid=${existing.pid}`)
 
   // Replacing a stale lock by path would let a swapped stateRoot redirect the

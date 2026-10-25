@@ -142,6 +142,49 @@ test('Core daemon leaves stale locks untouched when the stateRoot could be swapp
   }
 })
 
+test('Core daemon fails closed when its lock disappears during a stateRoot swap', async () => {
+  const parent = await mkdtemp(join(tmpdir(), 'abm-daemon-lock-disappear-'))
+  const stateRoot = join(parent, 'state')
+  const retained = join(parent, 'state-retained')
+  const outside = join(parent, 'outside')
+  const workspace = await mkdtemp(join(tmpdir(), 'abm-daemon-lock-disappear-ws-'))
+  const principal = { id: 'daemon-lock-disappear-test', kind: 'local-user', workspaces: [workspace] }
+  await mkdir(stateRoot)
+  await mkdir(outside)
+  await writeFile(join(stateRoot, 'daemon.json'), `${JSON.stringify({ schemaVersion: 'armorbreak.core-daemon/v1', pid: 2147483647, startedAt: 'stale' })}\n`)
+
+  let swapped = false
+  let createAttempts = 0
+  const lockPath = join(stateRoot, 'daemon.json')
+  const originalOpen = fsSync.openSync
+  fsSync.openSync = (file, ...args) => {
+    if (String(file).toLowerCase() === lockPath.toLowerCase() && args[0] === 'wx+') createAttempts += 1
+    else if (!swapped && String(file).toLowerCase() === lockPath.toLowerCase()) {
+      fsSync.unlinkSync(lockPath)
+      renameSync(stateRoot, retained)
+      symlinkSync(outside, stateRoot, process.platform === 'win32' ? 'junction' : 'dir')
+      swapped = true
+    }
+    return originalOpen(file, ...args)
+  }
+  syncBuiltinESMExports()
+
+  try {
+    await assert.rejects(
+      () => createCoreDaemon({ stateRoot, workspace, principal }),
+      (error) => error.code === 'DAEMON_LOCKED',
+    )
+    assert.equal(swapped, true, 'the fixture must replace stateRoot after its old lock was checked')
+    assert.equal(createAttempts, 1, 'the daemon must not reopen a path after a missing lock is observed')
+    assert.deepEqual(await readdir(outside), [], 'a replaced stateRoot must not receive a new lock')
+  } finally {
+    fsSync.openSync = originalOpen
+    syncBuiltinESMExports()
+    await fs.rm(parent, { recursive: true, force: true })
+    await fs.rm(workspace, { recursive: true, force: true })
+  }
+})
+
 test('Core daemon refuses a symlinked or junction state root before writing outside it', async () => {
   const parent = await mkdtemp(join(tmpdir(), 'abm-daemon-junction-state-'))
   const linkedStateRoot = join(parent, 'configured-state')
