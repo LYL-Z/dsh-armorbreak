@@ -5,6 +5,8 @@ import { basename, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { verifyPortableArtifactAttestation } from '../../lib/release/artifactAttestation.js'
 import { evaluateStableGate, stableGateRequiredRulesetName } from '../../lib/release/stableGate.js'
+import { loadNamedRuleset } from '../../lib/release/githubRulesets.js'
+
 import { readSafeRepoFile, writeSafeRepoFile } from '../../lib/release/safeEvidenceFile.js'
 
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)))
@@ -88,8 +90,10 @@ function main() {
   const ciRun = runGitHubWorkflow('.github/workflows/ci.yml', 'CI', sourceCommit)
   const attestationRun = runGitHubWorkflow('.github/workflows/attest.yml', 'Release attestation', sourceCommit)
   const mainProtection = ghJson(['api', `repos/${repository}/branches/main/protection`])
-  const tagRulesets = ghJson(['api', `repos/${repository}/rulesets`])
-  const releaseRuleset = tagRulesets.find((item) => item?.name === stableGateRequiredRulesetName)
+  const releaseRuleset = loadNamedRuleset(stableGateRequiredRulesetName, {
+    listRulesets: () => ghJson(['api', `repos/${repository}/rulesets`]),
+    getRuleset: (id) => ghJson(['api', `repos/${repository}/rulesets/${id}`]),
+  })
   const identity = ghJson(['api', 'user'])
   const repositoryInfo = ghJson(['api', `repos/${repository}`])
   const report = evaluateStableGate({
