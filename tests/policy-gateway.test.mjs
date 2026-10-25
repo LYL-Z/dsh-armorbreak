@@ -46,6 +46,10 @@ test('unknown actions and model-supplied authorization are denied', async () => 
   assert.equal(operatorAuth.allowed, true, 'operator control action is allowed; target authorization remains in ScopePolicy')
   const install = await gateway.decide({ action: 'supplychain.install', identity: { kind: 'model' } })
   assert.equal(install.allowed, false)
+  const uiInstallApproval = await gateway.decide({ action: 'ui.install.approve', identity: { kind: 'ui' }, permission: 'SUPPLY_CHAIN' })
+  assert.equal(uiInstallApproval.allowed, false)
+  assert.equal(uiInstallApproval.code, 'MODEL_CANNOT_AUTHORIZE')
+  assert.equal(routeOf('ui.install.approve').route.operatorOnly, true)
 })
 
 test('L3 has no route; installation stays blocked until M2', async () => {

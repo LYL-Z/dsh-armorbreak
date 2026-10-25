@@ -4,19 +4,9 @@
  * that the runner never sets. The missing-tool test skips if the tool is installed.
  */
 import assert from 'node:assert/strict'
-import { execFileSync } from 'node:child_process'
 import test from 'node:test'
 
 import { parseSemgrepReport, parseTrivyReport, semgrepCapability, trivyCapability } from '../lib/analyzers/sast/external-adapters.js'
-
-function hasCommand(command) {
-  try {
-    execFileSync(command, ['--version'], { stdio: 'ignore', timeout: 20_000 })
-    return true
-  } catch {
-    return false
-  }
-}
 
 const SEMGREP_REPORT = {
   version: '1.99.0',
@@ -166,9 +156,13 @@ test('trivy capability builds offline-db args and reports normalized data', asyn
   assert.equal(result.meta.offlineDb, true)
 })
 
-test('missing external tool produces actionable guidance, not a silent downgrade', { skip: hasCommand('semgrep') }, async () => {
+test('missing external tool produces actionable guidance, not a silent downgrade', async () => {
   await assert.rejects(
-    () => semgrepCapability.run({ targetPath: 'D:\\repo', options: { config: 'rules.yml' }, env: {} }),
+    () => semgrepCapability.run({
+      targetPath: 'D:\\repo',
+      options: { config: 'rules.yml' },
+      env: { execExternal: async () => { const error = new Error('synthetic missing executable'); error.code = 'ENOENT'; throw error } },
+    }),
     /not installed|not on PATH|Semgrep/,
   )
 })

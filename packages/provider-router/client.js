@@ -1,4 +1,6 @@
 /** Provider HTTP client: OpenAI Chat/Responses, Anthropic, Gemini native, Ollama/local. */
+import { ProviderPolicy } from './policy.js'
+
 function fail(code, message) {
   const error = new Error(message)
   error.code = code
@@ -138,12 +140,40 @@ async function readSse(body, onData) {
 }
 
 export class ProviderClient {
-  constructor({ router, env = process.env, fetchImpl = globalThis.fetch } = {}) {
+  constructor({ router, env = process.env, fetchImpl = globalThis.fetch, policy = new ProviderPolicy() } = {}) {
     if (!router) throw fail('CLIENT_INVALID', 'router is required')
     if (typeof fetchImpl !== 'function') throw fail('CLIENT_INVALID', 'fetch is unavailable')
+    if (!policy || typeof policy.checkEgress !== 'function') throw fail('CLIENT_INVALID', 'policy.checkEgress is required')
     this.router = router
     this.env = env
     this.fetchImpl = fetchImpl
+    this.policy = policy
+  }
+
+  async fetchProvider(request, signal) {
+    let parsedUrl
+    try { parsedUrl = new URL(request.url) } catch { throw fail('EGRESS_INVALID', 'provider URL is invalid') }
+    if (parsedUrl.username || parsedUrl.password) throw fail('EGRESS_INVALID', 'provider URL must not contain user information')
+    this.policy.checkEgress(parsedUrl.href)
+    // ProviderPolicy currently approves hosts rather than full origins. Keep
+    // HTTPS egress on the standard port so an approved hostname cannot select
+    // a different service by changing only its port.
+    if (parsedUrl.protocol === 'https:' && parsedUrl.port) {
+      throw fail('EGRESS_DENIED', 'non-standard HTTPS provider ports are not permitted')
+    }
+    const response = await this.fetchImpl(request.url, {
+      method: 'POST',
+      headers: request.headers,
+      body: JSON.stringify(request.body),
+      signal,
+      // Provider endpoints must not forward credentials across redirects. A
+      // redirect is rejected below instead of following or replaying the POST.
+      redirect: 'manual',
+    })
+    if ((response.status >= 300 && response.status < 400) || response.redirected === true) {
+      throw fail('PROVIDER_REDIRECT_DENIED', 'provider redirects are not permitted')
+    }
+    return response
   }
 
   async chat({ model, messages, tools = [], maxTokens = 1024, signal } = {}) {
@@ -160,7 +190,7 @@ export class ProviderClient {
     }
     try {
       const request = this.buildRequest(route, { messages: msgs, tools, maxTokens, key, stream: false })
-      const response = await this.fetchImpl(request.url, { method: 'POST', headers: request.headers, body: JSON.stringify(request.body), signal: controller.signal })
+      const response = await this.fetchProvider(request, controller.signal)
       if (!response.ok) throw fail(`PROVIDER_HTTP_${response.status}`, `provider ${route.providerId} returned HTTP ${response.status}`)
       const payload = await response.json()
       return { providerId: route.providerId, model: route.model, ...this.parseResponse(route, payload) }
@@ -186,7 +216,7 @@ export class ProviderClient {
     }
     try {
       const request = this.buildRequest(route, { messages: msgs, tools, maxTokens, key, stream: true })
-      const response = await this.fetchImpl(request.url, { method: 'POST', headers: request.headers, body: JSON.stringify(request.body), signal: controller.signal })
+      const response = await this.fetchProvider(request, controller.signal)
       if (!response.ok) throw fail(`PROVIDER_HTTP_${response.status}`, `provider ${route.providerId} returned HTTP ${response.status}`)
       if (!response.body || typeof response.body.getReader !== 'function') throw fail('STREAM_UNAVAILABLE', 'provider response has no readable body')
       return { providerId: route.providerId, model: route.model, ...(await this.parseStream(route, response.body)) }

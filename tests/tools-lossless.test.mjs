@@ -65,8 +65,8 @@ function assertLossless(value, path = '$', seen = new Set()) {
 }
 
 test('armorbreak_health output is lossless JSON (no embedded capability functions)', async () => {
-  const { defs } = await loadToolsWith()
   const workspace = await mkdtemp(join(tmpdir(), 'abm-lossless-ws-'))
+  const { defs } = await loadToolsWith({ workingDirectory: { async ensure() { return workspace } } })
   const value = await defs.get('armorbreak_health').execute({ workspace }, mockExec())
   assertLossless(value)
   assert.equal(Object.prototype.hasOwnProperty.call(value.data, 'tools'), false, 'state must not carry raw capability objects')
@@ -83,8 +83,8 @@ test('armorbreak_health output is lossless JSON (no embedded capability function
 })
 
 test('every ArmorBreak tool returns lossless JSON data', async () => {
-  const { defs } = await loadToolsWith()
   const workspace = await mkdtemp(join(tmpdir(), 'abm-lossless-ws-'))
+  const { defs } = await loadToolsWith({ workingDirectory: { async ensure() { return workspace } } })
   const cases = [
     ['armorbreak_health', {}],
     ['armorbreak_capabilities', {}],
@@ -121,10 +121,24 @@ test('default workspace resolves to the session working directory', async () => 
   assert.ok(listed.data.tasks.some((task) => task.id === created.data.id))
 })
 
-test('explicit workspace still overrides the session working directory', async () => {
+test('model-supplied workspace cannot override the session working directory', async () => {
   const sessionDir = await mkdtemp(join(tmpdir(), 'abm-session-'))
   const explicitDir = await mkdtemp(join(tmpdir(), 'abm-explicit-'))
   const { defs } = await loadToolsWith({ workingDirectory: { async ensure() { return sessionDir } } })
-  const created = await defs.get('armorbreak_task').execute({ action: 'create', title: 'explicit ws', workspace: explicitDir }, mockExec())
-  assert.equal(created.data.workspace, explicitDir)
+  await assert.rejects(
+    () => defs.get('armorbreak_task').execute({ action: 'create', title: 'explicit ws', workspace: explicitDir }, mockExec()),
+    /workspace must match the calling session working directory/,
+  )
+})
+
+test('tasks created by one session are hidden from another session of the same agent', async () => {
+  const sessionDir = await mkdtemp(join(tmpdir(), 'abm-session-isolation-'))
+  const { defs } = await loadToolsWith({ workingDirectory: { async ensure() { return sessionDir } } })
+  const created = await defs.get('armorbreak_task').execute({ action: 'create', title: 'private session task' }, mockExec({ sessionId: 'session-one' }))
+  await assert.rejects(
+    () => defs.get('armorbreak_task').execute({ action: 'get', taskId: created.data.id }, mockExec({ sessionId: 'session-two' })),
+    /outside the authorized principal or session/,
+  )
+  const visible = await defs.get('armorbreak_task').execute({ action: 'list' }, mockExec({ sessionId: 'session-two' }))
+  assert.equal(visible.data.tasks.some((task) => task.id === created.data.id), false)
 })

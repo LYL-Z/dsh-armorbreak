@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 /** Ensure every GA acceptance blocker has a unique root cause and derived items are marked. */
-import { readFileSync } from 'node:fs'
+import { readSafeRepoFile } from '../../lib/release/safeEvidenceFile.js'
 
-const readiness = JSON.parse(readFileSync('docs/v2/acceptance/v2.2-readiness.json', 'utf8'))
-const map = JSON.parse(readFileSync('docs/v2/acceptance/blocker-map.json', 'utf8'))
+const root = process.cwd()
+const readJson = (path) => JSON.parse(readSafeRepoFile(root, path, { requiredPrefix: 'docs/v2/acceptance/' }).toString('utf8'))
+const readiness = readJson('docs/v2/acceptance/v2.2-readiness.json')
+const map = readJson('docs/v2/acceptance/blocker-map.json')
 const current = readiness.gaBlockers.map((blocker) => blocker.code)
 const mapped = new Map(map.blockers.map((blocker) => [blocker.code, blocker]))
 const missing = current.filter((code) => !mapped.has(code) || !mapped.get(code).rootCause)

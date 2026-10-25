@@ -1,7 +1,8 @@
 /**
  * MCP Streamable HTTP transport (P2).
  * - loopback-only by default; non-loopback binding is denied here
- * - optional bearer token(s); token can map to a trusted principal/workspace
+ * - bearer token(s) required by default; token can map to a trusted principal/workspace
+ * - unauthenticated loopback mode requires an explicit development opt-in
  * - recoverable sessions persisted in stateRoot
  * - POST /mcp, JSON or SSE response
  */
@@ -23,13 +24,37 @@ function bearerMatches(header, token) {
   return a.length === b.length && timingSafeEqual(a, b)
 }
 
-function identityKey(principalId, workspaceId) {
-  return `${principalId}\0${workspaceId}`
+function authorityUrl(scheme, host, port) {
+  const urlHost = host.includes(':') ? `[${host}]` : host
+  return new URL(`${scheme}//${urlHost}:${port}/`)
+}
+
+function parseAuthority(value, scheme) {
+  if (typeof value !== 'string' || value.length === 0) return null
+  try {
+    const url = new URL(`${scheme}//${value}/`)
+    if (url.origin === 'null' || url.username || url.password || url.pathname !== '/' || url.search || url.hash) return null
+    return url.host
+  } catch {
+    return null
+  }
+}
+
+function parseOrigin(value) {
+  if (typeof value !== 'string' || value.length === 0) return null
+  try {
+    const url = new URL(value)
+    if (url.origin === 'null' || url.username || url.password || url.pathname !== '/' || url.search || url.hash) return null
+    return url
+  } catch {
+    return null
+  }
 }
 
 export async function createMcpHttpServer({
   engine, principal, workspaceId, host = '127.0.0.1', port = 0,
   token = null, tokens = null, principals = null, tls = null,
+  allowUnauthenticatedLoopback = false,
   stateRoot = null, sessionTtlMs = DEFAULT_TTL_MS,
 } = {}) {
   if (!LOOPBACK.has(host)) throw new Error('HTTP MCP must bind loopback by default; remote binding is not enabled')
@@ -37,6 +62,7 @@ export async function createMcpHttpServer({
   if (!principal?.id || !principal?.kind) throw new Error('trusted principal is required')
   if (!workspaceId) throw new Error('workspaceId is required')
   if (tls && (!tls.key || !tls.cert)) throw new Error('tls requires key and cert')
+  if (typeof allowUnauthenticatedLoopback !== 'boolean') throw new Error('allowUnauthenticatedLoopback must be a boolean')
   if (!Number.isInteger(sessionTtlMs) || sessionTtlMs < 1000) throw new Error('sessionTtlMs must be >= 1000')
   const knownPrincipals = Array.isArray(principals) && principals.length > 0 ? principals : [principal]
   const defaultIdentity = { principal, workspaceId }
@@ -53,7 +79,6 @@ export async function createMcpHttpServer({
   }
   const sessions = new Map()
   const servers = new Map()
-  const defaultSessions = new Map()
   const sessionsFile = stateRoot ? resolve(join(stateRoot, 'mcp-http-sessions.json')) : null
   if (sessionsFile && existsSync(sessionsFile)) {
     try {
@@ -61,14 +86,13 @@ export async function createMcpHttpServer({
       for (const session of stored.sessions ?? []) {
         if (typeof session?.id === 'string' && typeof session.principalId === 'string' && typeof session.workspaceId === 'string') sessions.set(session.id, session)
       }
-      for (const [key, id] of Object.entries(stored.defaults ?? {})) defaultSessions.set(key, id)
     } catch { /* a corrupt session file starts clean */ }
   }
   const persist = () => {
     if (!sessionsFile) return
     try {
       mkdirSync(resolve(stateRoot), { recursive: true })
-      writeFileSync(sessionsFile, `${JSON.stringify({ schemaVersion: 'armorbreak.mcp-http-sessions/v1', sessions: [...sessions.values()], defaults: Object.fromEntries(defaultSessions) }, null, 2)}\n`)
+      writeFileSync(sessionsFile, `${JSON.stringify({ schemaVersion: 'armorbreak.mcp-http-sessions/v1', sessions: [...sessions.values()] }, null, 2)}\n`)
     } catch { /* persistence must never break the protocol */ }
   }
   const resolveIdentity = (req) => {
@@ -79,15 +103,14 @@ export async function createMcpHttpServer({
       return null
     }
     if (token) return bearerMatches(req.headers.authorization, token) ? defaultIdentity : null
-    return defaultIdentity
+    return allowUnauthenticatedLoopback ? defaultIdentity : null
   }
-  const sessionAlive = (session) => Boolean(session) && Date.now() - Date.parse(session.updatedAt) <= sessionTtlMs
+  const sessionAlive = (session) => Boolean(session) && Number.isFinite(Date.parse(session.updatedAt)) && Date.now() - Date.parse(session.updatedAt) <= sessionTtlMs
   const bindServer = (session) => {
-    const key = identityKey(session.principalId, session.workspaceId)
     if (servers.has(session.id)) return servers.get(session.id)
     const found = knownPrincipals.find((item) => item.id === session.principalId)
     if (!found) return null
-    const server = new McpServer({ engine, principal: found, workspaceId: session.workspaceId })
+    const server = new McpServer({ engine, principal: found, workspaceId: session.workspaceId, connectionId: session.id })
     server.initialized = Boolean(session.initialized)
     servers.set(session.id, server)
     return server
@@ -98,15 +121,8 @@ export async function createMcpHttpServer({
       initialized, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
     }
     sessions.set(session.id, session)
-    defaultSessions.set(identityKey(session.principalId, session.workspaceId), session.id)
     persist()
     return session
-  }
-  const defaultSession = (identity) => {
-    const key = identityKey(identity.principal.id, identity.workspaceId)
-    const existing = sessions.get(defaultSessions.get(key))
-    if (sessionAlive(existing) && existing.principalId === identity.principal.id) return existing
-    return createSession(identity)
   }
   const handler = async (req, res) => {
     const send = (status, value) => {
@@ -114,28 +130,21 @@ export async function createMcpHttpServer({
       res.setHeader('content-type', 'application/json; charset=utf-8')
       res.end(JSON.stringify(value))
     }
+    const scheme = tls ? 'https:' : 'http:'
+    const localPort = req.socket.localPort
+    const expectedOrigin = authorityUrl(scheme, host, localPort)
+    const requestAuthority = parseAuthority(req.headers.host, scheme)
+    if (!requestAuthority || requestAuthority !== expectedOrigin.host) return send(403, { error: 'host not allowed' })
+    const origin = req.headers.origin
+    if (origin !== undefined) {
+      const parsedOrigin = parseOrigin(origin)
+      if (!parsedOrigin || parsedOrigin.origin !== expectedOrigin.origin) return send(403, { error: 'origin not allowed' })
+    }
     if (req.method === 'GET' && req.url === '/health') return send(200, { ok: true })
     if (req.method !== 'POST' || req.url !== '/mcp') return send(404, { error: 'not found' })
-    const hostName = String(req.headers.host ?? '').replace(/^\[|\](?=:)|:\d+$/g, '')
-    if (!LOOPBACK.has(hostName)) return send(403, { error: 'host not allowed' })
-    const origin = req.headers.origin
-    if (origin) {
-      try { if (!LOOPBACK.has(new URL(String(origin)).hostname)) return send(403, { error: 'origin not allowed' }) } catch { return send(403, { error: 'origin not allowed' }) }
-    }
     const identity = resolveIdentity(req)
     if (!identity) return send(401, { error: 'unauthorized' })
     if (!String(req.headers['content-type'] ?? '').includes('application/json')) return send(415, { error: 'application/json required' })
-    let session
-    const requestedSession = req.headers['mcp-session-id']
-    if (requestedSession) {
-      session = sessions.get(String(requestedSession))
-      if (!sessionAlive(session)) return send(404, { error: 'session not found' })
-      if (session.principalId !== identity.principal.id || session.workspaceId !== identity.workspaceId) return send(403, { error: 'session identity mismatch' })
-    } else {
-      session = defaultSession(identity)
-    }
-    const server = bindServer(session)
-    if (!server) return send(403, { error: 'session principal is no longer trusted' })
     let body = ''
     for await (const chunk of req) {
       body += chunk
@@ -143,6 +152,19 @@ export async function createMcpHttpServer({
     }
     let message
     try { message = JSON.parse(body) } catch { return send(400, { error: 'parse error' }) }
+    let session
+    const requestedSession = req.headers['mcp-session-id']
+    if (requestedSession) {
+      session = sessions.get(String(requestedSession))
+      if (!sessionAlive(session)) return send(404, { error: 'session not found' })
+      if (session.principalId !== identity.principal.id || session.workspaceId !== identity.workspaceId) return send(403, { error: 'session identity mismatch' })
+    } else if (message?.method === 'initialize') {
+      session = createSession(identity)
+    } else {
+      return send(400, { error: 'mcp-session-id required; initialize a new session first' })
+    }
+    const server = bindServer(session)
+    if (!server) return send(403, { error: 'session principal is no longer trusted' })
     const response = await server.dispatch(message)
     session.initialized = server.initialized
     session.updatedAt = new Date().toISOString()

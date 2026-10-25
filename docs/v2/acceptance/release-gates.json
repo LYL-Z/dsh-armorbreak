@@ -1,19 +1,19 @@
 {
-  "schemaVersion": "armorbreak.release-gates/v2",
-  "generatedAt": "2026-10-22T16:27:46.787Z",
-  "commit": "e952e5de3f7b8ee63629f6566475936ba7bf5c14",
+  "schemaVersion": "armorbreak.release-gates/v3",
+  "generatedAt": "2026-10-25T14:29:02.486Z",
+  "commit": "7ea088034678642e85e067e9e7846ff032e40974",
   "evidenceManifest": {
-    "commit": "e952e5de3f7b8ee63629f6566475936ba7bf5c14",
-    "currentCommit": "e952e5de3f7b8ee63629f6566475936ba7bf5c14",
+    "commit": "7ea088034678642e85e067e9e7846ff032e40974",
+    "currentCommit": "7ea088034678642e85e067e9e7846ff032e40974",
     "valid": true,
     "ancestorEvidence": false,
     "reason": "evidence manifest matches current commit"
   },
   "testReport": {
-    "tests": 388,
-    "pass": 387,
+    "tests": 529,
+    "pass": 529,
     "fail": 0,
-    "skipped": 1,
+    "skipped": 0,
     "cancelled": 0,
     "todo": 0,
     "status": "PASS",
@@ -173,6 +173,15 @@
       "status": "DONE"
     }
   ],
-  "releasable": true,
-  "reason": "all gates are evidence-verified and mandatory M4 tasks are DONE"
+  "localChecksPass": true,
+  "evidenceProvenance": {
+    "status": "UNVERIFIED",
+    "reason": "local hashes and metadata are self-asserted; verify the exact commit and artifact with the trusted CI attestation before release"
+  },
+  "releaseAuthorization": {
+    "status": "BLOCKED",
+    "reason": "release-gates checks local evidence consistency only; it cannot authorize a release"
+  },
+  "releasable": false,
+  "reason": "local gates and mandatory M4 tasks pass; external exact-commit artifact provenance is still required"
 }

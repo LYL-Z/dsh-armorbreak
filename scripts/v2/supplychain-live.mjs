@@ -1,8 +1,12 @@
 #!/usr/bin/env node
 /** AB2-M2-09/10 live catalog + OSV/Scorecard evidence (read-only network run). */
-import { writeFile } from 'node:fs/promises'
+import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { collectCatalog } from '../../lib/catalog/collector.js'
 import { assessPlan } from '../../lib/catalog/licenseGate.js'
+import { writeSafeRepoFile } from '../../lib/release/safeEvidenceFile.js'
+
+const root = resolve(fileURLToPath(new URL('../..', import.meta.url)))
 
 async function get(url, init = {}) {
   const response = await fetch(url, { ...init, headers: { 'user-agent': 'ArmorBreak/2.0 read-only-research', accept: 'application/json', ...(init.headers ?? {}) } })
@@ -39,6 +43,6 @@ const report = {
   gate: { allowed: gate.allowed, denied: gate.denied, reasons: gate.reasons.map((reason) => reason.code) },
   result: repo.status === 200 && notFound.status === 404 && osv.status === 200 && scorecard.status === 200 ? 'PASS' : 'FAIL',
 }
-await writeFile('docs/v2/acceptance/supplychain-live.json', `${JSON.stringify(report, null, 2)}\n`)
+writeSafeRepoFile(root, 'docs/v2/acceptance/supplychain-live.json', `${JSON.stringify(report, null, 2)}\n`, { requiredPrefix: 'docs/v2/acceptance/' })
 console.log(JSON.stringify(report, null, 2))
 if (report.result !== 'PASS') process.exitCode = 1

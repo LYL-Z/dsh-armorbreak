@@ -1,24 +1,35 @@
 {
   "schemaVersion": "armorbreak.release-readiness/v1",
-  "generatedAt": "2026-10-22T16:27:46.527Z",
+  "generatedAt": "2026-10-25T08:10:20.859Z",
   "package": {
     "name": "dsh-armorbreak",
     "version": "2.2.0-rc.1"
   },
   "sbom": true,
-  "commit": "e952e5de3f7b8ee63629f6566475936ba7bf5c14",
+  "commit": "86ddb6b717ac309b51a89e98a5a6e241d747e7cf",
+  "evaluatedAtCommit": "86ddb6b717ac309b51a89e98a5a6e241d747e7cf",
   "evidence": {
-    "manifestCommit": "e952e5de3f7b8ee63629f6566475936ba7bf5c14",
-    "testReportCommit": "e952e5de3f7b8ee63629f6566475936ba7bf5c14",
+    "manifestCommit": "86ddb6b717ac309b51a89e98a5a6e241d747e7cf",
+    "testReportCommit": "86ddb6b717ac309b51a89e98a5a6e241d747e7cf",
     "testCounts": {
-      "tests": 388,
-      "pass": 387,
+      "tests": 510,
+      "pass": 510,
       "fail": 0,
-      "skipped": 1,
+      "skipped": 0,
       "cancelled": 0,
       "todo": 0
     },
-    "current": true
+    "current": true,
+    "checks": {
+      "manifestValid": true,
+      "evidenceLineage": true,
+      "testsPassed": true,
+      "gatesValid": true,
+      "gateResultsMatch": true,
+      "validatorOk": true,
+      "validatorIssues": [],
+      "sourceChanges": []
+    }
   },
   "gates": {
     "security": {
@@ -144,21 +155,24 @@
       ]
     }
   },
+  "artifactAttestation": {
+    "ok": false,
+    "code": "ARTIFACT_PATH_NOT_PROVIDED"
+  },
+  "releaseAuthorization": {
+    "status": "BLOCKED",
+    "reason": "release requires current local checks, complete tasks, SBOM, and trusted exact-commit artifact provenance"
+  },
   "m4": {
-    "AB2-M4-01.md": "DONE",
-    "AB2-M4-02.md": "DONE",
     "AB2-M4-03.md": "DONE",
     "AB2-M4-04.md": "DONE",
-    "AB2-M4-05.md": "DONE",
     "AB2-M4-06.md": "DONE",
     "AB2-M4-07.md": "DONE",
-    "AB2-M4-08.md": "DONE",
-    "AB2-M4-09.md": "DONE",
     "AB2-M4-10.md": "DONE",
     "AB2-M4-11.md": "DONE",
     "AB2-M4-12.md": "DONE"
   },
   "incomplete": [],
-  "ready": true,
-  "reason": "all required gates/tasks/evidence match the current commit"
+  "ready": false,
+  "reason": "release artifact provenance is not verified (ARTIFACT_PATH_NOT_PROVIDED)"
 }

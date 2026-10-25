@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdtemp } from 'node:fs/promises'
+import { mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { request as httpRequest } from 'node:http'
@@ -25,17 +25,20 @@ async function rpc(url, id, method, params, token, sessionId) {
   return { status: response.status, body: await response.json(), headers: response.headers }
 }
 
-test('MCP HTTP transport serves initialize and tools over loopback', async () => {
+test('MCP HTTP test mode serves initialize and tools over loopback with explicit opt-in', async () => {
   const f = await fixture()
-  const server = await createMcpHttpServer({ engine: f.engine, principal: f.principal, workspaceId: f.workspace })
+  const server = await createMcpHttpServer({ engine: f.engine, principal: f.principal, workspaceId: f.workspace, allowUnauthenticatedLoopback: true })
   try {
     const init = await rpc(server.url, 1, 'initialize')
     assert.equal(init.status, 200)
     assert.equal(init.body.result.protocolVersion, '2025-06-18')
-    assert.match(init.headers.get('mcp-session-id'), /^[a-f0-9-]{36}$/)
-    const list = await rpc(server.url, 2, 'tools/list')
+    const sessionId = init.headers.get('mcp-session-id')
+    assert.match(sessionId, /^[a-f0-9-]{36}$/)
+    const missingSession = await rpc(server.url, 2, 'tools/list')
+    assert.equal(missingSession.status, 400)
+    const list = await rpc(server.url, 3, 'tools/list', undefined, undefined, sessionId)
     assert.ok(list.body.result.tools.some((tool) => tool.name === 'armorbreak_analyze'))
-    const call = await rpc(server.url, 3, 'tools/call', { name: 'armorbreak_capabilities', arguments: {} })
+    const call = await rpc(server.url, 4, 'tools/call', { name: 'armorbreak_capabilities', arguments: {} }, undefined, sessionId)
     assert.equal(call.status, 200)
     assert.equal(JSON.parse(call.body.result.content[0].text).length, 46)
     const health = await fetch(`http://${server.host}:${server.port}/health`)
@@ -128,7 +131,7 @@ test('MCP HTTP rejects cross-site Origin and malicious Host', async () => {
 
 test('MCP HTTP supports SSE responses when requested', async () => {
   const f = await fixture()
-  const server = await createMcpHttpServer({ engine: f.engine, principal: f.principal, workspaceId: f.workspace })
+  const server = await createMcpHttpServer({ engine: f.engine, principal: f.principal, workspaceId: f.workspace, allowUnauthenticatedLoopback: true })
   try {
     const response = await fetch(server.url, {
       method: 'POST',
@@ -143,6 +146,72 @@ test('MCP HTTP supports SSE responses when requested', async () => {
     assert.equal(data.result.protocolVersion, '2025-06-18')
   } finally {
     await server.close()
+    await f.engine.close()
+  }
+})
+
+test('MCP HTTP session remains usable after a same-principal foreign-session resources/read', async () => {
+  const f = await fixture()
+  const server = await createMcpHttpServer({ engine: f.engine, principal: f.principal, workspaceId: f.workspace, allowUnauthenticatedLoopback: true })
+  try {
+    await writeFile(join(f.workspace, 'session-sample.txt'), 'session-bound MCP task\n')
+    const initialized = await rpc(server.url, 1, 'initialize')
+    const sessionId = initialized.headers.get('mcp-session-id')
+    assert.equal(initialized.status, 200)
+    const analyzed = await rpc(server.url, 2, 'tools/call', {
+      name: 'armorbreak_analyze',
+      arguments: { capability: 'forensics.hash', target: join(f.workspace, 'session-sample.txt') },
+    }, undefined, sessionId)
+    assert.equal(analyzed.body.result?.isError, false, analyzed.body.result?.content?.[0]?.text)
+    const taskId = JSON.parse(analyzed.body.result.content[0].text).taskId
+    const otherInitialized = await rpc(server.url, 3, 'initialize')
+    const otherSessionId = otherInitialized.headers.get('mcp-session-id')
+    assert.ok(otherSessionId)
+    assert.notEqual(otherSessionId, sessionId)
+
+    const denied = await rpc(server.url, 4, 'resources/read', { uri: `armorbreak://task/${taskId}` }, undefined, otherSessionId)
+    assert.equal(denied.status, 200)
+    assert.equal(denied.body.error?.code, -32603)
+    assert.equal(denied.body.error?.message, 'internal error')
+
+    const allowed = await rpc(server.url, 5, 'resources/read', { uri: `armorbreak://task/${taskId}` }, undefined, sessionId)
+    assert.equal(allowed.status, 200)
+    assert.equal(JSON.parse(allowed.body.result.contents[0].text).id, taskId)
+    const later = await rpc(server.url, 6, 'tools/list', undefined, undefined, sessionId)
+    assert.equal(later.status, 200)
+    assert.ok(later.body.result?.tools.some((tool) => tool.name === 'armorbreak_health'))
+  } finally {
+    await server.close()
+    await f.engine.close()
+  }
+})
+
+test('MCP HTTP restores the same engine connection identity for persisted sessions', async () => {
+  const f = await fixture()
+  const options = { engine: f.engine, principal: f.principal, workspaceId: f.workspace, stateRoot: f.stateRoot, allowUnauthenticatedLoopback: true }
+  const first = await createMcpHttpServer(options)
+  let second
+  try {
+    await writeFile(join(f.workspace, 'session-sample.txt'), 'session-bound MCP task\n')
+    const initialized = await rpc(first.url, 1, 'initialize')
+    const sessionId = initialized.headers.get('mcp-session-id')
+    const analyzed = await rpc(first.url, 2, 'tools/call', {
+      name: 'armorbreak_analyze',
+      arguments: { capability: 'forensics.hash', target: join(f.workspace, 'session-sample.txt') },
+    }, undefined, sessionId)
+    assert.equal(analyzed.body.result?.isError, false, analyzed.body.result?.content?.[0]?.text)
+    const taskId = JSON.parse(analyzed.body.result.content[0].text).taskId
+    const stored = await f.engine.runtime.workspace(f.workspace).taskStore.get(taskId)
+    assert.equal(stored.sessionId, sessionId)
+
+    await first.close()
+    second = await createMcpHttpServer(options)
+    const restored = await rpc(second.url, 3, 'resources/read', { uri: `armorbreak://task/${taskId}` }, undefined, sessionId)
+    assert.equal(restored.status, 200)
+    assert.equal(JSON.parse(restored.body.result.contents[0].text).id, taskId)
+  } finally {
+    await first.close().catch(() => {})
+    await second?.close()
     await f.engine.close()
   }
 })

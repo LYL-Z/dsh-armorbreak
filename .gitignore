@@ -1,6 +1,9 @@
 # dependencies are zero by design; keep stray installs and generated state out
 node_modules/
 .pnpm-store/
+.runtime/
+__pycache__/
+*.pyc
 
 # ArmorBreak runtime data (task workspaces are user assets, never committed)
 .armorbreak/

@@ -145,7 +145,16 @@ export class IsolationProviderManager {
       const daemon = await this.exec(command, provider.daemonArgs, 5000)
       const server = String(daemon.stdout ?? '').trim().split(/\r?\n/)[0] ?? ''
       const record = this.verified.get(provider.id)
-      const fresh = Boolean(record && (!record.server || !server || record.server === server))
+      // A persisted marker is usable only when it names the daemon that is
+      // currently responding. Unknown/empty identities cannot prove that the
+      // self-test was run against this daemon.
+      const fresh = Boolean(
+        record
+        && typeof record.server === 'string'
+        && record.server.trim()
+        && server.trim()
+        && record.server === server,
+      )
       const state = fresh ? 'IsolationVerified' : provider.id === 'wsl2' ? 'Installed' : 'DaemonReady'
       return {
         id: provider.id,

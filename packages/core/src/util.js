@@ -4,8 +4,8 @@
  * @module dsh-armorbreak/lib/core/util
  */
 import { createHash, randomBytes, randomUUID } from 'node:crypto'
-import { mkdir, readFile, rename, stat, writeFile } from 'node:fs/promises'
-import { openSync, closeSync, readSync } from 'node:fs'
+import { mkdir, lstat, open, readFile, realpath, rename, stat, writeFile } from 'node:fs/promises'
+import { constants } from 'node:fs'
 import { dirname, isAbsolute, join, normalize, relative, resolve, sep } from 'node:path'
 import { homedir } from 'node:os'
 
@@ -187,21 +187,62 @@ export async function readJsonl(file, opts = {}) {
  * Read at most maxBytes of a file (never loads larger than the cap).
  * @param {string} file
  * @param {number} maxBytes
+ * @param {{authorize?: (path: string) => Promise<{allowed: boolean, resolved?: string, code?: string, reason?: string}>}} [options]
  * @returns {Promise<{buffer: Buffer, truncated: boolean, size: number}>}
  */
-export async function readBounded(file, maxBytes) {
-  const info = await stat(file)
-  const size = info.size
-  if (size <= maxBytes) {
-    return { buffer: await readFile(file), truncated: false, size }
+export async function readBounded(file, maxBytes, options = {}) {
+  const targetPath = resolve(file)
+  const canonicalPath = await realpath(targetPath)
+  const authorize = async () => {
+    if (!options.authorize) return
+    const decision = await options.authorize(targetPath)
+    if (!decision?.allowed) {
+      const error = new Error(decision?.reason ?? 'file path is outside the authorized scope')
+      error.code = decision?.code ?? 'FILE_SCOPE_DENIED'
+      throw error
+    }
+    if (decision.resolved) {
+      const authorizedPath = resolve(decision.resolved)
+      const sameAuthorizedPath = process.platform === 'win32'
+        ? authorizedPath.toLowerCase() === canonicalPath.toLowerCase()
+        : authorizedPath === canonicalPath
+      if (!sameAuthorizedPath) {
+        const error = new Error('file resolved to a different path than the one authorized')
+        error.code = 'PATH_CHANGED'
+        throw error
+      }
+    }
   }
-  const buffer = Buffer.alloc(maxBytes)
-  const fd = openSync(file, 'r')
+  await authorize()
+  const flags = constants.O_RDONLY | (constants.O_NOFOLLOW ?? 0)
+  const handle = await open(canonicalPath, flags)
   try {
-    const read = readSync(fd, buffer, 0, maxBytes, 0)
-    return { buffer: buffer.subarray(0, read), truncated: true, size }
+    const opened = await handle.stat({ bigint: true })
+    if (!opened.isFile()) throw new Error('refusing to read a non-regular file')
+    if (opened.nlink > 1n) throw new Error('refusing to read a file with multiple hard links')
+
+    const pathEntry = await lstat(canonicalPath, { bigint: true })
+    if (pathEntry.isSymbolicLink() || pathEntry.dev !== opened.dev || pathEntry.ino === 0n || pathEntry.ino !== opened.ino) {
+      throw new Error('file identity changed while opening the path')
+    }
+    const currentCanonicalPath = await realpath(targetPath)
+    const sameCanonicalPath = process.platform === 'win32'
+      ? currentCanonicalPath.toLowerCase() === canonicalPath.toLowerCase()
+      : currentCanonicalPath === canonicalPath
+    if (!sameCanonicalPath) throw new Error('path resolved to a different file after opening')
+    const currentPathEntry = await stat(canonicalPath, { bigint: true })
+    if (currentPathEntry.dev !== opened.dev || currentPathEntry.ino !== opened.ino) {
+      throw new Error('opened file no longer matches the authorized path')
+    }
+    await authorize()
+
+    const limit = Number.isFinite(Number(maxBytes)) ? Math.max(0, Math.floor(Number(maxBytes))) : 0
+    const buffer = Buffer.alloc(limit + 1)
+    const { bytesRead } = await handle.read(buffer, 0, buffer.length, 0)
+    const truncated = opened.size > BigInt(bytesRead) || bytesRead > limit
+    return { buffer: buffer.subarray(0, Math.min(bytesRead, limit)), truncated, size: Number(opened.size) }
   } finally {
-    closeSync(fd)
+    await handle.close()
   }
 }
 

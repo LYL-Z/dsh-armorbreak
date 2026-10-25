@@ -20,12 +20,13 @@ function makeRepo({ commit = COMMIT, failTests = false } = {}) {
   const tasks = join(root, 'docs/v2/tasks')
   mkdirSync(evidence, { recursive: true })
   mkdirSync(tasks, { recursive: true })
-  const tap = `TAP version 13\nok 1 - policy gateway denies unknown actions\nok 2 - approval binding rejects model self-approval\n${failTests ? 'not ok 3 - deliberate failure\n' : ''}# tests 3\n# pass ${failTests ? 2 : 2}\n# fail ${failTests ? 1 : 0}\n# skipped 1\n`
+  const tap = `TAP version 13\nok 1 - policy gateway denies unknown actions\nok 2 - approval binding rejects model self-approval\n${failTests ? 'not ok 3 - deliberate failure\n' : 'ok 3 - evidence report metadata validates\n'}# tests 3\n# pass ${failTests ? 2 : 3}\n# fail ${failTests ? 1 : 0}\n# cancelled 0\n# skipped 0\n# todo 0\n`
   writeFileSync(join(evidence, 'test-report.tap'), tap)
-  const counts = { tests: 3, pass: 2, fail: failTests ? 1 : 0, skipped: 1, cancelled: 0, todo: 0 }
+  const counts = { tests: 3, pass: failTests ? 2 : 3, fail: failTests ? 1 : 0, skipped: 0, cancelled: 0, todo: 0 }
   writeJson(join(evidence, 'test-report.json'), {
     schemaVersion: 'armorbreak.test-report/v1', commit, node: process.version, generatedAt: new Date().toISOString(),
-    counts, tapPath: 'docs/v2/acceptance/test-report.tap', tapSha256: createHash('sha256').update(tap).digest('hex'),
+    counts, exitCode: failTests ? 1 : 0, command: 'node --test --test-reporter=tap --test-concurrency=1', processError: null, signal: null,
+    tapPath: 'docs/v2/acceptance/test-report.tap', tapSha256: createHash('sha256').update(tap).digest('hex'),
   })
   writeJson(join(evidence, 'airgap-container.json'), { result: 'PASS' })
   writeJson(join(evidence, 'offline-score.json'), { summary: { targetPass: 62 } })
@@ -64,10 +65,36 @@ function makeRepo({ commit = COMMIT, failTests = false } = {}) {
 test('evidence-driven gates PASS only with current commit, raw TAP and pinned evidence', () => {
   const repo = makeRepo()
   const report = computeReleaseGates({ repoRoot: repo.root, commit: COMMIT })
-  assert.equal(report.releasable, true)
+  assert.equal(report.localChecksPass, true)
+  assert.equal(report.evidenceProvenance.status, 'UNVERIFIED')
+  assert.equal(report.releaseAuthorization.status, 'BLOCKED')
+  assert.equal(report.releasable, false)
   assert.deepEqual(Object.fromEntries(Object.entries(report.gates).map(([name, gate]) => [name, gate.status])), {
     security: 'PASS', offline: 'PASS', supplyChain: 'PASS', aiEvaluation: 'PASS', compatibility: 'PASS', performance: 'PASS',
   })
+  rmSync(repo.root, { recursive: true, force: true })
+})
+
+test('self-consistent fabricated evidence cannot grant release authorization', () => {
+  const repo = makeRepo()
+  const tap = 'TAP version 13\n1..999\n' +
+    Array.from({ length: 999 }, (_, index) => `ok ${index + 1} - fabricated policy and approval check`).join('\n') +
+    '\n# tests 999\n# pass 999\n# fail 0\n# skipped 0\n# cancelled 0\n# todo 0\n'
+  const tapPath = join(repo.evidence, 'test-report.tap')
+  const reportPath = join(repo.evidence, 'test-report.json')
+  writeFileSync(tapPath, tap)
+  const report = JSON.parse(readFileSync(reportPath, 'utf8'))
+  report.counts = { tests: 999, pass: 999, fail: 0, skipped: 0, cancelled: 0, todo: 0 }
+  report.tapSha256 = createHash('sha256').update(tap).digest('hex')
+  writeJson(reportPath, report)
+  repo.writeManifest()
+
+  const gates = computeReleaseGates({ repoRoot: repo.root, commit: COMMIT })
+  assert.equal(gates.gates.security.status, 'PASS')
+  assert.equal(gates.localChecksPass, true)
+  assert.equal(gates.evidenceProvenance.status, 'UNVERIFIED')
+  assert.equal(gates.releaseAuthorization.status, 'BLOCKED')
+  assert.equal(gates.releasable, false)
   rmSync(repo.root, { recursive: true, force: true })
 })
 
@@ -76,6 +103,7 @@ test('tampered evidence is FAIL, missing report is REVIEW, stale commit is REVIE
   writeFileSync(join(repo.root, 'docs/v2/acceptance/offline-score.json'), '{"summary":{"targetPass":99}}\n')
   const tampered = computeReleaseGates({ repoRoot: repo.root, commit: COMMIT })
   assert.equal(tampered.gates.offline.status, 'FAIL')
+  assert.equal(tampered.localChecksPass, false)
   assert.equal(tampered.releasable, false)
 
   rmSync(join(repo.root, 'docs/v2/acceptance/test-report.json'))
@@ -85,6 +113,7 @@ test('tampered evidence is FAIL, missing report is REVIEW, stale commit is REVIE
   const fresh = makeRepo({ commit: 'b'.repeat(40) })
   const stale = computeReleaseGates({ repoRoot: fresh.root, commit: COMMIT })
   assert.equal(stale.gates.security.status, 'REVIEW')
+  assert.equal(stale.localChecksPass, false)
   assert.equal(stale.releasable, false)
   rmSync(repo.root, { recursive: true, force: true })
   rmSync(fresh.root, { recursive: true, force: true })
@@ -94,22 +123,66 @@ test('failed test run can never be releasable', () => {
   const repo = makeRepo({ failTests: true })
   const report = computeReleaseGates({ repoRoot: repo.root, commit: COMMIT })
   assert.equal(report.gates.security.status, 'FAIL')
+  assert.equal(report.localChecksPass, false)
   assert.equal(report.releasable, false)
   rmSync(repo.root, { recursive: true, force: true })
 })
 
-test('docs-only gate inherits the target base gates and never fabricates releasability', () => {
+test('failed process metadata and skipped tests cannot produce a PASS release gate', () => {
+  const failedProcess = makeRepo()
+  const failedReportPath = join(failedProcess.evidence, 'test-report.json')
+  const failedReport = JSON.parse(readFileSync(failedReportPath, 'utf8'))
+  failedReport.exitCode = 1
+  writeJson(failedReportPath, failedReport)
+  failedProcess.writeManifest()
+  const processGate = computeReleaseGates({ repoRoot: failedProcess.root, commit: COMMIT })
+  assert.equal(processGate.gates.security.status, 'FAIL')
+  assert.equal(processGate.releasable, false)
+
+  const processMetadata = makeRepo()
+  const metadataReportPath = join(processMetadata.evidence, 'test-report.json')
+  const metadataReport = JSON.parse(readFileSync(metadataReportPath, 'utf8'))
+  metadataReport.processError = 'spawn returned an error despite a forged zero exit code'
+  writeJson(metadataReportPath, metadataReport)
+  processMetadata.writeManifest()
+  const metadataGate = computeReleaseGates({ repoRoot: processMetadata.root, commit: COMMIT })
+  assert.equal(metadataGate.gates.security.status, 'FAIL')
+  assert.equal(metadataGate.releasable, false)
+
+  const skipped = makeRepo()
+  const tapPath = join(skipped.evidence, 'test-report.tap')
+  const tap = `TAP version 13\nok 1 - policy gateway denies unknown actions\nok 2 - approval binding rejects model self-approval\nok 3 - evidence report metadata validates\nok 4 - platform-specific boundary # SKIP not available\n# tests 4\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 1\n# todo 0\n`
+  writeFileSync(tapPath, tap)
+  const skippedReportPath = join(skipped.evidence, 'test-report.json')
+  const skippedReport = JSON.parse(readFileSync(skippedReportPath, 'utf8'))
+  skippedReport.counts = { tests: 4, pass: 3, fail: 0, skipped: 1, cancelled: 0, todo: 0 }
+  skippedReport.tapSha256 = createHash('sha256').update(tap).digest('hex')
+  writeJson(skippedReportPath, skippedReport)
+  skipped.writeManifest()
+  const skippedGate = computeReleaseGates({ repoRoot: skipped.root, commit: COMMIT })
+  assert.equal(skippedGate.gates.security.status, 'REVIEW')
+  assert.equal(skippedGate.releasable, false)
+  rmSync(failedProcess.root, { recursive: true, force: true })
+  rmSync(processMetadata.root, { recursive: true, force: true })
+  rmSync(skipped.root, { recursive: true, force: true })
+})
+
+test('docs-only gate inherits local check results but never grants release authorization', () => {
   const validation = { ok: true, mode: 'docs-only', checked: 113, issues: [] }
-  const baseReport = { releasable: true, gates: { security: { status: 'PASS' } }, testReport: { tests: 396 } }
+  const baseReport = { localChecksPass: true, releasable: false, gates: { security: { status: 'PASS' } }, testReport: { tests: 396 } }
   const report = docsOnlyGateReport({ commit: COMMIT, baseCommit: 'b'.repeat(40), baseReport, validation })
   assert.equal(report.mode, 'docs-only')
   assert.equal(report.applicability, 'DOCS_ONLY_BASE_GATES')
-  assert.equal(report.releasable, true)
+  assert.equal(report.localChecksPass, true)
+  assert.equal(report.evidenceProvenance.status, 'UNVERIFIED')
+  assert.equal(report.releaseAuthorization.status, 'BLOCKED')
+  assert.equal(report.releasable, false)
   assert.equal(report.gates.security.status, 'PASS')
   assert.equal(report.evidenceValidation.ok, true)
   assert.equal(report.evidenceValidation.checked, 113)
 
-  const blocked = docsOnlyGateReport({ commit: COMMIT, baseCommit: 'b'.repeat(40), baseReport: { releasable: false }, validation })
+  const blocked = docsOnlyGateReport({ commit: COMMIT, baseCommit: 'b'.repeat(40), baseReport: { localChecksPass: false, releasable: false }, validation })
+  assert.equal(blocked.localChecksPass, false)
   assert.equal(blocked.releasable, false)
   assert.match(blocked.reason, /cannot bypass/)
 })
@@ -138,7 +211,8 @@ test('docs ancestor gate accepts a base with a prior docs-only merge', () => {
     assert.equal(evidenceOnly.evidenceManifest.valid, false)
     const docsAware = computeReleaseGates({ repoRoot: repo.root, commit: head, allowEvidenceAncestor: true, allowDocsAncestor: true })
     assert.equal(docsAware.evidenceManifest.valid, true)
-    assert.equal(docsAware.releasable, true)
+    assert.equal(docsAware.localChecksPass, true)
+    assert.equal(docsAware.releasable, false)
   } finally {
     rmSync(repo.root, { recursive: true, force: true })
   }

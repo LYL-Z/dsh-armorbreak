@@ -24,9 +24,25 @@ jobs:
         os: [ubuntu-latest, windows-latest]
         node: [24]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - uses: actions/setup-node@v4
+      - name: Prepare workspace-local temporary directory (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $runtimeTemp = Join-Path $env:GITHUB_WORKSPACE '.runtime\tmp'
+          New-Item -ItemType Directory -Force -Path $runtimeTemp | Out-Null
+          [System.IO.File]::AppendAllText($env:GITHUB_ENV, "TEMP=$runtimeTemp`nTMP=$runtimeTemp`n")
+
+      - name: Prepare workspace-local temporary directory (Unix)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          runtime_temp="$GITHUB_WORKSPACE/.runtime/tmp"
+          mkdir -p "$runtime_temp"
+          printf 'TMPDIR=%s\nTEMP=%s\nTMP=%s\n' "$runtime_temp" "$runtime_temp" "$runtime_temp" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: ${{ matrix.node }}
 
@@ -58,12 +74,12 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 24
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v5
         with:
           python-version: '3.11'
       - name: Static L0 network-free gate
@@ -79,13 +95,13 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 24
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v5
         with:
           python-version: '3.11'
 
@@ -115,7 +131,7 @@ jobs:
 
       - name: Upload L1 verification evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: l1-docker-verification
           path: docs/acceptance/l1-docker-verification.json
@@ -127,11 +143,11 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 24
 
@@ -141,12 +157,21 @@ jobs:
       - name: Evidence hashes and references
         env:
           EVIDENCE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-        run: node scripts/v2/validate-evidence.mjs --allow-docs-only --allow-evidence-only --require-clean
+        run: node scripts/v2/validate-evidence.mjs --allow-docs-only --allow-evidence-only --allow-readiness --require-clean
 
       - name: Evidence-driven release gates
         env:
           EVIDENCE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-        run: node scripts/v2/release-gates.mjs --allow-docs-only --allow-evidence-only
+        run: node scripts/v2/release-gates.mjs --allow-docs-only --allow-evidence-only --allow-readiness
+
+      - name: Check release evidence readiness
+        run: node scripts/v2/check-release.mjs --check-only
+
+      - name: Live pre-release readiness
+        run: node scripts/v2/v2-readiness.mjs --require-ready --no-waivers
+
+      - name: Release evidence smoke
+        run: node scripts/v2/release-smoke.mjs
 
       - name: GA blocker root-cause map
         run: node scripts/v2/check-blocker-map.mjs

@@ -56,4 +56,21 @@ test('tool loop enforces max turns, budget, deadline and retries 429', async () 
   const result = await runToolLoop({ client: flaky, model: 'm', messages: message, tools: [], executeTool: async () => 'x', sleep: async () => {} })
   assert.equal(result.final, 'ok')
   assert.equal(attempts, 2)
+
+  for (const failure of [
+    Object.assign(new Error('rate limit'), { statusCode: 429 }),
+    Object.assign(new Error('rate limit'), { code: 'PROVIDER_HTTP_429' }),
+    Object.assign(new Error('upstream unavailable'), { code: 'PROVIDER_HTTP_503' }),
+  ]) {
+    let retries = 0
+    const retrying = { async chat() { retries += 1; if (retries === 1) throw failure; return { text: 'recovered', toolCalls: [] } } }
+    const retried = await runToolLoop({ client: retrying, model: 'm', messages: message, tools: [], executeTool: async () => 'x', sleep: async () => {} })
+    assert.equal(retried.final, 'recovered')
+    assert.equal(retries, 2)
+  }
+
+  let deniedRetries = 0
+  const denied = { async chat() { deniedRetries += 1; throw Object.assign(new Error('unauthorized'), { code: 'PROVIDER_HTTP_401' }) } }
+  await assert.rejects(() => runToolLoop({ client: denied, model: 'm', messages: message, tools: [], executeTool: async () => 'x', sleep: async () => {} }), /unauthorized/)
+  assert.equal(deniedRetries, 1, 'non-retryable provider errors must not be retried')
 })

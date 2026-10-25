@@ -40,6 +40,28 @@ const RATE = { capacity: 20, refillPerSec: 0.5, maxUsesPerApproval: 200 }
 
 /** Cloud metadata endpoints that are never a legitimate research target. */
 const DENIED_RESOLVED_IPS = new Set(['169.254.169.254', 'fd00:ec2::254', '100.100.100.200'])
+/** Address ranges that must never be reached through a DNS name in an L2 request. */
+const NON_PUBLIC_IPV4_RANGES = [
+  '0.0.0.0/8', '10.0.0.0/8', '100.64.0.0/10', '127.0.0.0/8', '169.254.0.0/16',
+  '172.16.0.0/12', '192.0.0.0/24', '192.0.2.0/24', '192.88.99.0/24', '192.168.0.0/16',
+  '198.18.0.0/15', '198.51.100.0/24', '203.0.113.0/24', '224.0.0.0/4', '240.0.0.0/4',
+]
+const NON_PUBLIC_IPV6_RANGES = ['2001::/23', '2001:db8::/32', '2002::/16', '3fff::/20']
+
+/**
+ * DNS names may resolve only to globally routable unicast addresses. Explicit
+ * IP/CIDR targets remain possible because their exact range is host-authorized.
+ * @param {string} address
+ */
+function isPublicUnicastIp(address) {
+  const family = isIP(address)
+  if (family === 4) return !NON_PUBLIC_IPV4_RANGES.some((range) => ipv4InCidr(address, range))
+  if (family === 6) {
+    return ipv6InCidr(address, '2000::/3')
+      && !NON_PUBLIC_IPV6_RANGES.some((range) => ipv6InCidr(address, range))
+  }
+  return false
+}
 
 /** @param {string} host */
 async function defaultResolveHost(host) {
@@ -90,7 +112,8 @@ export function parseNetworkTarget(raw) {
     const bits = text.slice(slash + 1)
     if (isIP(address) !== 0 && /^\d{1,3}$/.test(bits)) return { host: `${address}/${bits}`, port: null }
   }
-  text = text.replace(/[/?#].*$/, '')
+  const suffixStart = text.search(/[/?#]/)
+  if (suffixStart >= 0) text = text.slice(0, suffixStart)
   const ipv6Bracket = text.match(/^\[([0-9a-f:]+)\](?::(\d+))?$/)
   if (ipv6Bracket) return { host: ipv6Bracket[1], port: ipv6Bracket[2] ? Number(ipv6Bracket[2]) : null }
   const withPort = text.match(/^([^:]+):(\d+)$/)
@@ -282,54 +305,6 @@ export class ScopePolicy {
   }
 
   /**
-   * Create a durable authorization record.
-   * @param {{purpose: string, operator: string, paths?: string[], networkTargets?: NetworkTarget[]|string[], riskCeiling?: RiskLevel, expiresAt?: string, ttlMs?: number}} input
-   */
-  async authorize(input) {
-    await this.load()
-    const purpose = String(input.purpose ?? '').trim()
-    const operator = String(input.operator ?? '').trim()
-    if (purpose.length < 4) throw new Error('authorization needs a purpose of at least 4 characters (what is being researched and why)')
-    if (operator.length < 2) throw new Error('authorization needs an operator: the human or team granting it')
-    const paths = (Array.isArray(input.paths) ? input.paths : [])
-      .filter((item) => typeof item === 'string' && item.trim() !== '')
-      .map((item) => resolve(item))
-    /** @type {NetworkTarget[]} */
-    const networkTargets = (Array.isArray(input.networkTargets) ? input.networkTargets : [])
-      .filter(Boolean)
-      .map((item) => {
-        if (typeof item === 'string') {
-          const parsed = parseNetworkTarget(item)
-          return { host: parsed.host, ports: parsed.port !== null ? [parsed.port] : [] }
-        }
-        return { host: String(item.host ?? '').toLowerCase(), ports: Array.isArray(item.ports) ? item.ports : [] }
-      })
-      .filter((item) => item.host !== '')
-    if (paths.length === 0 && networkTargets.length === 0) {
-      throw new Error('authorization must cover at least one path or one network target; empty authorizations grant nothing')
-    }
-    const createdAt = new Date(this.clock()).toISOString()
-    const expiresAt = input.expiresAt && !Number.isNaN(Date.parse(input.expiresAt))
-      ? new Date(input.expiresAt).toISOString()
-      : new Date(this.clock() + (input.ttlMs ?? 24 * 60 * 60 * 1000)).toISOString()
-    const body = {
-      kind: 'authorization',
-      purpose,
-      operator,
-      paths,
-      networkTargets,
-      riskCeiling: input.riskCeiling ?? 'L2',
-      createdAt,
-      expiresAt,
-    }
-    const record = { id: newId('authz'), ...body }
-    record.signature = sha256(canonicalJson(record))
-    this.state.authorizations.push(record)
-    await this.save()
-    return record
-  }
-
-  /**
    * Model-facing part 1: record an authorization REQUEST. This does not grant
    * anything; activation requires a platform approval grant (see below).
    * @param {{purpose: string, operator: string, paths?: string[], networkTargets?: NetworkTarget[]|string[], riskCeiling?: RiskLevel, ttlMs?: number}} input
@@ -405,7 +380,7 @@ export class ScopePolicy {
    */
   async authorize(input) {
     await this.load()
-    const record = { id: newId('authz'), ...normalizeAuthorizationInput(input, this.clock()) }
+    const record = { id: newId('authz'), ...normalizeAuthorizationInput(input, this.clock()), kind: 'authorization' }
     record.signature = sha256(canonicalJson(record))
     this.state.authorizations.push(record)
     await this.save()
@@ -615,21 +590,47 @@ export class ScopePolicy {
     if (!rate.allowed) {
       return { allowed: false, code: 'NETWORK_RATE_LIMITED', reason: `rate limit for ${parsed.host}: retry in ${Math.ceil(rate.retryAfterMs / 1000)} s.` }
     }
-    // Resolve once at policy time; the capability pins the connection to these
-    // addresses so a later DNS answer cannot redirect the approved request.
+    // Resolve once at policy time. The authorization result records these
+    // addresses, but the caller must still bind the actual socket to one of
+    // them; this policy decision alone does not pin the connection.
     let resolvedIps = []
     if (isIP(parsed.host) !== 0) {
       resolvedIps = [parsed.host]
     } else {
       try {
-        resolvedIps = await this.dnsLookup(parsed.host)
+        const answer = await this.dnsLookup(parsed.host)
+        if (!Array.isArray(answer) || answer.length === 0 || answer.some((ip) => typeof ip !== 'string' || isIP(ip) === 0)) {
+          return {
+            allowed: false,
+            code: 'NETWORK_DNS_FAILED',
+            reason: `DNS resolution for ${parsed.host} returned no usable IP addresses; network access is denied.`,
+            resolvedIps: [],
+          }
+        }
+        resolvedIps = [...new Set(answer)]
       } catch {
-        resolvedIps = []
+        return {
+          allowed: false,
+          code: 'NETWORK_DNS_FAILED',
+          reason: `DNS resolution for ${parsed.host} failed; network access is denied.`,
+          resolvedIps: [],
+        }
       }
     }
     const deniedIps = resolvedIps.filter((ip) => DENIED_RESOLVED_IPS.has(ip))
     if (deniedIps.length > 0) {
       return { allowed: false, code: 'NETWORK_METADATA_ENDPOINT_DENIED', reason: `denied resolved address (cloud metadata endpoint): ${deniedIps.join(', ')}` }
+    }
+    if (isIP(parsed.host) === 0) {
+      const nonPublicIps = resolvedIps.filter((ip) => !isPublicUnicastIp(ip))
+      if (nonPublicIps.length > 0) {
+        return {
+          allowed: false,
+          code: 'NETWORK_NON_PUBLIC_ADDRESS_DENIED',
+          reason: `DNS resolution for ${parsed.host} included non-public address(es): ${nonPublicIps.join(', ')}; network access is denied.`,
+          resolvedIps,
+        }
+      }
     }
     return {
       allowed: true,
@@ -638,7 +639,7 @@ export class ScopePolicy {
       authorizationId: authorization.id,
       approvalId: approval.id,
       resolvedIps,
-      dnsWarning: resolvedIps.length === 0 ? 'DNS resolution failed at policy time; the request will fail if the host stays unresolvable.' : null,
+      dnsWarning: null,
     }
   }
 

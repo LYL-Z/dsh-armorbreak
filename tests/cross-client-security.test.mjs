@@ -27,14 +27,20 @@ test('multi-client cross-workspace task read/cancel/approval are denied', async 
   const token = authority.issue({ id: 'appr-x', riskLevel: 'L1', taskId: task.id, target: wsA, operator: 'alice' }).token
   await assert.rejects(() => engineB.verifyApproval(ctxB, { riskLevel: 'L1', taskId: task.id, target: wsA, approvalToken: token }), (error) => error.code === 'TOKEN_BINDING_MISMATCH')
 
-  const server = await createMcpHttpServer({ engine: engineA, principal: alice, workspaceId: wsA })
+  const server = await createMcpHttpServer({ engine: engineA, principal: alice, workspaceId: wsA, allowUnauthenticatedLoopback: true })
   try {
     const init = await fetch(server.url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize' }) })
     assert.equal(init.status, 200)
-    const call = await fetch(server.url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'armorbreak_task_get', arguments: { taskId: task.id } } }) })
+    const sessionA = init.headers.get('mcp-session-id')
+    const sessionTask = await engineA.createTask({ ...ctxA, connectionId: sessionA, requestId: 'mcp-session-task', traceId: 'mcp-session-task' }, { title: 'alice session task', targetKind: 'none' })
+    const sessionHeaders = { 'content-type': 'application/json', 'mcp-session-id': sessionA }
+    const call = await fetch(server.url, { method: 'POST', headers: sessionHeaders, body: JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'armorbreak_task_get', arguments: { taskId: sessionTask.id } } }) })
     const body = await call.json()
     assert.equal(body.result.isError, false)
-    const denied = await fetch(server.url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'armorbreak_task_get', arguments: { taskId: 'task_other' } } }) })
+    const secondInit = await fetch(server.url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'initialize' }) })
+    const sessionB = secondInit.headers.get('mcp-session-id')
+    assert.notEqual(sessionB, sessionA)
+    const denied = await fetch(server.url, { method: 'POST', headers: { 'content-type': 'application/json', 'mcp-session-id': sessionB }, body: JSON.stringify({ jsonrpc: '2.0', id: 4, method: 'tools/call', params: { name: 'armorbreak_task_get', arguments: { taskId: sessionTask.id } } }) })
     const deniedBody = await denied.json()
     assert.equal(deniedBody.result.isError, true)
   } finally {

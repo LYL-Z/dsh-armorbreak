@@ -4,7 +4,7 @@
  * / verified) is deterministic.
  */
 import assert from 'node:assert/strict'
-import { mkdtemp } from 'node:fs/promises'
+import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
@@ -136,4 +136,77 @@ test('successful self-test persists across manager instances and is invalidated 
   const stale = await third.diagnose({ fresh: true })
   assert.equal(stale.providers.find((p) => p.id === 'docker').state, 'DaemonReady')
   assert.equal(stale.l1.available, false)
+})
+
+test('persisted isolation markers fail closed when either daemon identity is missing or differs', async () => {
+  const markerRecords = [
+    ['missing server field', { verifiedAt: new Date().toISOString(), image: null }],
+    ['null server', { verifiedAt: new Date().toISOString(), server: null, image: null }],
+    ['empty server', { verifiedAt: new Date().toISOString(), server: '', image: null }],
+    ['whitespace server', { verifiedAt: new Date().toISOString(), server: '   ', image: null }],
+    ['mismatched server', { verifiedAt: new Date().toISOString(), server: '26.0.0', image: null }],
+  ]
+
+  for (const [label, record] of markerRecords) {
+    const stateRoot = await mkdtemp(join(tmpdir(), 'abm-isolation-marker-negative-'))
+    try {
+      await writeFile(join(stateRoot, 'isolation-verified.json'), JSON.stringify({
+        schemaVersion: 'armorbreak.isolation-verified/v1',
+        verified: { docker: record },
+      }))
+      const diagnosis = await new IsolationProviderManager({ exec: READY, stateRoot }).diagnose({ fresh: true })
+      assert.equal(diagnosis.providers.find((provider) => provider.id === 'docker').state, 'DaemonReady', label)
+      assert.equal(diagnosis.l1.available, false, label)
+      assert.equal(diagnosis.l1.verified, false, label)
+    } finally {
+      await rm(stateRoot, { recursive: true, force: true })
+    }
+  }
+
+  const stateRoot = await mkdtemp(join(tmpdir(), 'abm-isolation-unknown-daemon-'))
+  try {
+    await writeFile(join(stateRoot, 'isolation-verified.json'), JSON.stringify({
+      schemaVersion: 'armorbreak.isolation-verified/v1',
+      verified: { docker: { verifiedAt: new Date().toISOString(), server: '27.0.0', image: null } },
+    }))
+    const unknownDaemon = fakeExec({
+      'docker --version': 'Docker version 27.0.0',
+      'docker info --format {{.ServerVersion}}': '',
+    })
+    const diagnosis = await new IsolationProviderManager({ exec: unknownDaemon, stateRoot }).diagnose({ fresh: true })
+    assert.equal(diagnosis.providers.find((provider) => provider.id === 'docker').state, 'DaemonReady')
+    assert.equal(diagnosis.l1.available, false)
+  } finally {
+    await rm(stateRoot, { recursive: true, force: true })
+  }
+})
+
+test('successful self-test marker is reusable only for its recorded daemon', async () => {
+  const stateRoot = await mkdtemp(join(tmpdir(), 'abm-isolation-self-test-marker-'))
+  try {
+    let selfTestCalls = 0
+    const exec = async (command, args) => {
+      if (args[0] === '--version') return { stdout: `${command} version 27.0.0`, stderr: '' }
+      if (args[0] === 'info') return { stdout: '27.0.0', stderr: '' }
+      if (args[0] === 'run') {
+        selfTestCalls += 1
+        return { stdout: '', stderr: '' }
+      }
+      throw new Error(`unexpected ${command} ${args.join(' ')}`)
+    }
+
+    const first = new IsolationProviderManager({ exec, stateRoot })
+    const selfTest = await first.selfTest('docker')
+    assert.equal(selfTest.verified, true)
+    assert.equal(selfTestCalls, 1)
+
+    const second = new IsolationProviderManager({ exec: READY, stateRoot })
+    const persisted = await second.diagnose({ fresh: true })
+    assert.equal(persisted.providers.find((provider) => provider.id === 'docker').state, 'IsolationVerified')
+    assert.equal(persisted.l1.available, true)
+    assert.equal(persisted.l1.verified, true)
+    assert.equal(selfTestCalls, 1, 'loading a valid marker must not rerun the container self-test')
+  } finally {
+    await rm(stateRoot, { recursive: true, force: true })
+  }
 })

@@ -28,7 +28,7 @@ test('port-scoped network targets never match a portless host', () => {
 })
 
 test('checkNetwork applies the port restriction end to end', async () => {
-  const scope = new ScopePolicy({ stateRoot: await tempDir() })
+  const scope = new ScopePolicy({ stateRoot: await tempDir(), dnsLookup: async () => ['8.8.8.8'] })
   await scope.authorize({ purpose: 'port-scoped lab', operator: 'tester', networkTargets: ['lab.example.test:443'], riskCeiling: 'L2', ttlMs: 60_000 })
   const portless = await scope.checkNetwork({ taskId: 't1', target: 'lab.example.test' })
   assert.equal(portless.allowed, false)
@@ -60,9 +60,9 @@ test('all shipped text files are valid UTF-8', async () => {
   const walk = async (dir) => {
     for (const entry of await readdir(dir, { withFileTypes: true })) {
       if (entry.isDirectory()) {
-        if (['.git', 'node_modules', '.armorbreak'].includes(entry.name)) continue
+        if (['.git', 'node_modules', '.armorbreak', '.runtime'].includes(entry.name)) continue
         await walk(join(dir, entry.name))
-      } else if (/\.(js|mjs|json|md|yml|yaml)$/.test(entry.name)) {
+      } else if (entry.isFile() && /\.(js|mjs|json|md|yml|yaml)$/.test(entry.name)) {
         files.push(join(dir, entry.name))
       }
     }
