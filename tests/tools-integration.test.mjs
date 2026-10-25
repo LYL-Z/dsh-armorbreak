@@ -72,7 +72,7 @@ test('armorbreak_health reports environment, isolation denial and capability cou
   setWorkspace(workspace)
   const value = await defs.get('armorbreak_health').execute({ workspace }, mockExec())
   assert.match(value.text, /环境健康|ArmorBreak/)
-  assert.equal(value.data.version, '2.2.0-rc.1')
+  assert.equal(value.data.version, '2.2.0')
   assert.ok(value.data.registry.capabilities > 0)
   assert.equal(typeof value.data.isolation.available, 'boolean')
   assert.ok(Array.isArray(value.data.capabilities))
