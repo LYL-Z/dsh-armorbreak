@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.evidence-manifest/v1",
-  "commit": "906517eb0c0a1800497265987cf5c5d49b8ea43b",
-  "generatedAt": "2026-10-25T03:10:03.780Z",
+  "commit": "f9220991a83dc34bf437b8e61d73434e441471ef",
+  "generatedAt": "2026-10-25T03:59:54.564Z",
   "files": {
     "docs/v2/acceptance/airgap-container.json": {
       "sha256": "967dc9c1443f006ac5e6552b0b080c797ef7f906239d049b06e95f522ad24397",
@@ -360,7 +360,7 @@
       "size": 4182
     },
     "docs/v2/acceptance/portable-artifact.json": {
-      "sha256": "4574aad7104dd10b8076cd1e86dfcb24d7ced94c906ba31521f185bf6bbb23e0",
+      "sha256": "f2bbf01a9094eeb66bd134f80f56c7ebfcdb379ea3c9534f48cbaa4020d1c771",
       "size": 665
     },
     "docs/v2/acceptance/provider-live-ollama.json": {
@@ -372,7 +372,7 @@
       "size": 601
     },
     "docs/v2/acceptance/release-build.json": {
-      "sha256": "13e0b47a7bd8b6af8c8be0daf24549ecc8fd57267a9ae68cad2e3040f9fa2718",
+      "sha256": "f4c8a2cf76465cb37e1be5a195e233851a27f19fb5038dc834fcf39eabfab0e0",
       "size": 81609
     },
     "docs/v2/acceptance/release-scope.json": {
@@ -432,16 +432,16 @@
       "size": 1370
     },
     "docs/v2/acceptance/test-report.json": {
-      "sha256": "86a2d06bb1a4294b4ffdaf2d9d28c68617cc1ff75db5618b43bd1e97703ab88b",
+      "sha256": "190be3b0333129af3beedef35726af36bcd8a596f52e8129ec3562cf0a79d1bf",
       "size": 667
     },
     "docs/v2/acceptance/test-report.tap": {
-      "sha256": "ad21edad5d9bb30819bdc78d61448b4f075a2be168651b39ac192839e1a2ea40",
-      "size": 124031
+      "sha256": "1fc3d50adede2ef7fa262b672edaeec02da54ec6dbd4d8d250e76c2bd8778e5f",
+      "size": 124655
     },
     "docs/v2/acceptance/v2.2-readiness.json": {
-      "sha256": "e03b680c86daf85a0ef2721c69b322bab9e260f0c7b9e87168d95b89d6e8c272",
-      "size": 16465
+      "sha256": "2c734d2d2bc22e9228f0ecf31d1faf752c2ab88ed8b9efe4d0bcf60e4f3c99e0",
+      "size": 16626
     },
     "docs/v2/acceptance/workbench-rendered.html": {
       "sha256": "dde7bb89e017bba7de18201dac3e8caee9c3e0801fd245ec0eaf5690ad42acd3",

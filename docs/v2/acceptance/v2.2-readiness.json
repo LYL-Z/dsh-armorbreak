@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.v2-readiness/v1",
-  "commit": "906517eb0c0a1800497265987cf5c5d49b8ea43b",
+  "commit": "f9220991a83dc34bf437b8e61d73434e441471ef",
   "preReleaseReady": true,
   "gaReady": false,
   "ready": true,
@@ -256,7 +256,7 @@
     "code": "EXTERNAL_GA_EVIDENCE_NOT_VERIFIED",
     "bundleSource": "ARMORBREAK_EXTERNAL_GA_EVIDENCE_BUNDLE",
     "bundleSha256": null,
-    "sourceCommit": "906517eb0c0a1800497265987cf5c5d49b8ea43b",
+    "sourceCommit": "f9220991a83dc34bf437b8e61d73434e441471ef",
     "requiredClaims": 17,
     "verifiedClaims": [],
     "blockers": [
@@ -510,11 +510,17 @@
     }
   ],
   "waived": [],
-  "waiver": null,
+  "waiver": {
+    "approvedBy": "刘依林",
+    "approvedAt": "2026-10-22",
+    "independentReview": "NOT_SIGNED",
+    "count": 0,
+    "ref": "docs/v2/release/waivers.json"
+  },
   "artifact": {
     "version": "2.2.0-rc.1",
     "signed": false,
-    "sha256": "92dd5607ff91cd8473dc626eff87f0ee33b71d45b028666552997ab9662cae95",
+    "sha256": "a0387645a7ff357561fe4fb35d516ce40aef209a3b39d954753d9ce4442f01ce",
     "attestation": {
       "ok": false,
       "code": "ARTIFACT_PATH_NOT_PROVIDED"
