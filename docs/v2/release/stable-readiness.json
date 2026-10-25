@@ -1,0 +1,178 @@
+{
+  "schemaVersion": "armorbreak.release-readiness/v1",
+  "generatedAt": "2026-10-25T12:12:07.703Z",
+  "package": {
+    "name": "dsh-armorbreak",
+    "version": "2.2.0"
+  },
+  "sbom": true,
+  "commit": "15bab5873b69b0de135b716fd3693f57c78f4eb8",
+  "evaluatedAtCommit": "65521baf630737d9b37195c6ecba3ee99350558a",
+  "evidence": {
+    "manifestCommit": "15bab5873b69b0de135b716fd3693f57c78f4eb8",
+    "testReportCommit": "15bab5873b69b0de135b716fd3693f57c78f4eb8",
+    "testCounts": {
+      "tests": 525,
+      "pass": 525,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "todo": 0
+    },
+    "current": true,
+    "checks": {
+      "manifestValid": true,
+      "evidenceLineage": true,
+      "testsPassed": true,
+      "gatesValid": true,
+      "gateResultsMatch": true,
+      "validatorOk": true,
+      "validatorIssues": [],
+      "sourceChanges": []
+    }
+  },
+  "gates": {
+    "security": {
+      "status": "PASS",
+      "reason": "all evidence pinned"
+    },
+    "offline": {
+      "status": "PASS",
+      "reason": "airgap + 62/62 offline target",
+      "evidence": [
+        {
+          "available": true,
+          "status": "PASS",
+          "reason": "airgap-container.json pinned",
+          "path": "docs/v2/acceptance/airgap-container.json",
+          "sha256": "967dc9c1443f006ac5e6552b0b080c797ef7f906239d049b06e95f522ad24397",
+          "size": 905
+        },
+        {
+          "available": true,
+          "status": "PASS",
+          "reason": "offline-score.json pinned",
+          "path": "docs/v2/acceptance/offline-score.json",
+          "sha256": "16ef641c96eb0624bf206aa2b3627794cc5ffc68a25452191aa7ef203015b09d",
+          "size": 39351
+        }
+      ]
+    },
+    "supplyChain": {
+      "status": "PASS",
+      "reason": "signed index + installer rollback + live supply-chain",
+      "evidence": [
+        {
+          "available": true,
+          "status": "PASS",
+          "reason": "supplychain-e2e.json pinned",
+          "path": "docs/v2/acceptance/supplychain-e2e.json",
+          "sha256": "1b72126f3179dc4a89635508cd12f8ef1018f785b52692201430ada3985f0902",
+          "size": 1220
+        },
+        {
+          "available": true,
+          "status": "PASS",
+          "reason": "supplychain-live.json pinned",
+          "path": "docs/v2/acceptance/supplychain-live.json",
+          "sha256": "04952808f51abec3f94f9ef7ed8714a700e29f3b86a0dc2fd67d9a1e5e2df973",
+          "size": 1415
+        }
+      ]
+    },
+    "aiEvaluation": {
+      "status": "PASS",
+      "reason": "Garak/PyRIT/JailbreakBench evidence PASS; mock/local endpoint only",
+      "evidence": [
+        {
+          "available": true,
+          "status": "PASS",
+          "reason": "garak-live.json pinned",
+          "path": "docs/v2/acceptance/garak-live.json",
+          "sha256": "8725ef4495d7fd519b0c2b7b67cc2f004c965a21fc49a53376526e84c68af4c5",
+          "size": 32873
+        },
+        {
+          "available": true,
+          "status": "PASS",
+          "reason": "pyrit-live.json pinned",
+          "path": "docs/v2/acceptance/pyrit-live.json",
+          "sha256": "1743ebab23f1f0bea41a848f5af0809e7703a655a8f94b461acb9b5a9f3a709a",
+          "size": 601
+        },
+        {
+          "available": true,
+          "status": "PASS",
+          "reason": "jailbreak-live.json pinned",
+          "path": "docs/v2/acceptance/jailbreak-live.json",
+          "sha256": "5cb1f790be7204d8bc56cf86ef0c46f0ed05b4711714bab2fb80ed5a99c96f71",
+          "size": 1510
+        }
+      ]
+    },
+    "compatibility": {
+      "status": "PASS",
+      "reason": "real Desktop health + L0 report/screenshot hashes",
+      "evidence": [
+        {
+          "available": true,
+          "status": "PASS",
+          "reason": "desktop-e2e.json pinned",
+          "path": "docs/v2/acceptance/desktop-e2e.json",
+          "sha256": "46acc2468218588de4e28b902dd61a238b426ec7b10bf2175e4f469cf6a6f856",
+          "size": 2734
+        },
+        {
+          "available": true,
+          "status": "PASS",
+          "reason": "desktop-analysis.json pinned",
+          "path": "docs/v2/acceptance/desktop-analysis.json",
+          "sha256": "d96020879c4bf809d02a911c24c2e8cbf0c5e9c1c03c3abd767805cfc0d3636f",
+          "size": 1720
+        },
+        {
+          "available": true,
+          "status": "PASS",
+          "reason": "desktop-e2e.md pinned",
+          "path": "docs/v2/acceptance/desktop-e2e.md",
+          "sha256": "362dc2bf6b4b74a2c8c40284604d5d470dd718225a7c9703e732e171c5e75901",
+          "size": 1636
+        }
+      ]
+    },
+    "performance": {
+      "status": "PASS",
+      "reason": "no >10% regression",
+      "evidence": [
+        {
+          "available": true,
+          "status": "PASS",
+          "reason": "performance-compare.json pinned",
+          "path": "docs/v2/acceptance/performance-compare.json",
+          "sha256": "879a3291a580a981a9590ff1923c9e3a0a74555e1a1bc422fe7955aad30b997e",
+          "size": 729
+        }
+      ]
+    }
+  },
+  "artifactAttestation": {
+    "ok": false,
+    "code": "ARTIFACT_PATH_NOT_PROVIDED"
+  },
+  "releaseAuthorization": {
+    "status": "BLOCKED",
+    "reason": "release requires current local checks, complete tasks, SBOM, and trusted exact-commit artifact provenance"
+  },
+  "m4": {
+    "AB2-M4-03.md": "DONE",
+    "AB2-M4-04.md": "DONE",
+    "AB2-M4-06.md": "DONE",
+    "AB2-M4-07.md": "DONE",
+    "AB2-M4-10.md": "DONE",
+    "AB2-M4-11.md": "DONE",
+    "AB2-M4-12.md": "DONE"
+  },
+  "incomplete": [],
+  "ready": false,
+  "reason": "release artifact provenance is not verified (ARTIFACT_PATH_NOT_PROVIDED)"
+}
