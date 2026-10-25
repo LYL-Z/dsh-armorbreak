@@ -60,7 +60,6 @@ jobs:
           gh attestation verify dist/armorbreak-portable-*.tar.gz \
             --repo "$SOURCE_REPOSITORY" \
             --signer-workflow "$SOURCE_REPOSITORY/.github/workflows/attest.yml" \
-            --cert-identity "https://github.com/$SOURCE_REPOSITORY/.github/workflows/attest.yml@$SOURCE_REF" \
             --source-ref "$SOURCE_REF" \
             --source-digest "$SOURCE_COMMIT" \
             --format json > docs/v2/acceptance/github-attestation.json
