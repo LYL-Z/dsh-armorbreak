@@ -1,16 +1,16 @@
 {
   "schemaVersion": "armorbreak.release-build/v1",
-  "generatedAt": "2026-10-25T11:43:36.271Z",
-  "commit": "15bab5873b69b0de135b716fd3693f57c78f4eb8",
+  "generatedAt": "2026-10-25T13:07:12.232Z",
+  "commit": "8c1998a1ad9e5e9374cf83de6250812b93349e8f",
   "package": "dsh-armorbreak",
   "version": "2.2.0",
   "artifact": "armorbreak-portable-2.2.0.tar.gz",
-  "bytes": 5325740,
-  "sha256": "09867a9f57b1424563d3e73f77ae0ddf192379390a7be6769676f0023f1ab975",
+  "bytes": 5328300,
+  "sha256": "6ba188ffd198b2f4de71de04db22da2f580cb2fda01bec2ed95b4d0deff096a9",
   "reproducible": true,
   "sbom": "armorbreak-portable-2.2.0.tar.gz.sbom.cdx.json",
-  "sbomSha256": "26d789ccbd1d1e679c8ca4b2d67f83b6a982568a3175fc08685f7050031f2070",
-  "files": 503,
+  "sbomSha256": "3d5ae8228cfed749ea17e74bc94f972cf3cabf0a224755c0606f7db3eecc19a4",
+  "files": 504,
   "contentManifest": [
     {
       "path": ".gitattributes",
@@ -1648,6 +1648,11 @@
       "sha256": "970c0922ba76610885cff3ebecbfa253f39098b7f6980512c381931c952935b1"
     },
     {
+      "path": "lib/release/githubRulesets.js",
+      "size": 1057,
+      "sha256": "0fd34e354474981f883615113fb95732c4a78f966fedaab1a775f9a1979642cb"
+    },
+    {
       "path": "lib/release/gray.js",
       "size": 691,
       "sha256": "817505ddbd79c3f51443bd6cf952a24039888dcfd3f9667310f07eba98feb8b3"
@@ -2344,8 +2349,8 @@
     },
     {
       "path": "scripts/v2/stable-gate.mjs",
-      "size": 7032,
-      "sha256": "28f6bbf824fc11a4fd1fbd83d42555f1693e97f7959f5936b0a8660178e13f94"
+      "size": 7171,
+      "sha256": "7f827e8007e79bf906e87c44c83751272894e8331e5888a0cb5987b544d18230"
     },
     {
       "path": "scripts/v2/supplychain-e2e.mjs",
@@ -2528,7 +2533,7 @@
       "sha256": "dab0b44fff46b3c9dc279cf7b78831c3a0409fd2ed0c83fff14e256e4e848099"
     }
   ],
-  "contentManifestSha256": "23ad4976b2459ba26e2231f7095aa38aca35082384578765fdcde43729209a98",
+  "contentManifestSha256": "b17d423d111606e5ecd6095db04192223de4254ec1f989485f57742c4f50ac2c",
   "toolchain": {
     "node": "v24.16.0",
     "platform": "win32",
@@ -2545,8 +2550,8 @@
     "algorithm": "ed25519",
     "testKey": true,
     "valid": true,
-    "signature": "LuwnfUtUG2ir38QtKPe1OqP49zcEAmANAqtfzFRNiz9eCpVTfr+a9XM9qySxGwutAXwMc1cr0fC5N259GAF8Aw==",
-    "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA92MJ0bv798+HT4e7NmzT/UVoiuqLEacxo3OHc3Jildw=\n-----END PUBLIC KEY-----\n"
+    "signature": "/iyphYPp7thTT0v/hqythTLArXliZNtmB0iH2dERgHme1qiyEZKakkB2Z9AqrrrK9A4S4CpPThnRA5P6zrrhAA==",
+    "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAHIqeQGADqR99Jf7b718ZvQZUPs7VK8FrHxvsxH4hYzQ=\n-----END PUBLIC KEY-----\n"
   },
   "productionSigned": false,
   "limitations": [
