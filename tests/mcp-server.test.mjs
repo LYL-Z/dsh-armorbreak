@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict'
 import { spawn } from 'node:child_process'
-import { link, mkdir, mkdtemp, rm, symlink, writeFile } from 'node:fs/promises'
+import fsPromises from 'node:fs/promises'
+import { link, mkdir, mkdtemp, readFile, rename, rm, symlink, writeFile } from 'node:fs/promises'
+import { syncBuiltinESMExports } from 'node:module'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { join, resolve } from 'node:path'
 import { randomUUID } from 'node:crypto'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import test from 'node:test'
@@ -199,6 +201,54 @@ test('MCP skill reads reject junction escapes and hard links without listing the
   } finally {
     await rm(junctionPath, { recursive: true, force: true })
     await rm(hardlinkDirectory, { recursive: true, force: true })
+    await rm(outside, { recursive: true, force: true })
+    await engine.close()
+  }
+})
+
+if (process.platform === 'linux') test('MCP skill read rejects a parent symlink swap at the open boundary', async () => {
+  const { server, engine } = await fixture()
+  const skillsRoot = fileURLToPath(new URL('../skills/', import.meta.url))
+  const testId = randomUUID()
+  const skillName = `mcp-open-race-${testId}`
+  const skillDirectory = join(skillsRoot, skillName)
+  const retainedDirectory = `${skillDirectory}-retained`
+  const skillPath = join(skillDirectory, 'SKILL.md')
+  const outside = await mkdtemp(join(tmpdir(), 'abm-mcp-open-race-outside-'))
+  const externalSkill = join(outside, 'SKILL.md')
+  const originalOpen = fsPromises.open
+  let swapped = false
+
+  try {
+    await mkdir(skillDirectory)
+    await writeFile(skillPath, '---\nname: internal-race-fixture\ndescription: internal fixture\n---\nINTERNAL_SKILL_BYTES')
+    await writeFile(externalSkill, '---\nname: outside-race-fixture\ndescription: external fixture\n---\nOUTSIDE_SKILL_SECRET')
+    await server.dispatch({ jsonrpc: '2.0', id: 1, method: 'initialize', params: {} })
+    fsPromises.open = async (file, ...args) => {
+      const openedPath = resolve(String(file))
+      const targetPath = resolve(skillPath)
+      if (!swapped && openedPath === targetPath) {
+        swapped = true
+        await rename(skillDirectory, retainedDirectory)
+        await symlink(outside, skillDirectory, 'dir')
+      }
+      return originalOpen(file, ...args)
+    }
+    syncBuiltinESMExports()
+
+    const result = await server.dispatch({
+      jsonrpc: '2.0', id: 2, method: 'resources/read',
+      params: { uri: pathToFileURL(skillPath).href },
+    })
+    assert.equal(swapped, true, 'the parent symlink must be installed after pre-open checks and before open')
+    assert.equal(result.error?.code, -32602)
+    assert.doesNotMatch(JSON.stringify(result), /OUTSIDE_SKILL_SECRET/)
+    assert.match(await readFile(externalSkill, 'utf8'), /OUTSIDE_SKILL_SECRET/)
+  } finally {
+    fsPromises.open = originalOpen
+    syncBuiltinESMExports()
+    await rm(skillDirectory, { recursive: true, force: true })
+    await rm(retainedDirectory, { recursive: true, force: true })
     await rm(outside, { recursive: true, force: true })
     await engine.close()
   }

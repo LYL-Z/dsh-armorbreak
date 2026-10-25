@@ -148,6 +148,7 @@ test('migration rollback pins the opened task file across an ancestor junction s
   const outsideDir = join(root, 'outside-task-dir')
   const outsideTarget = join(outsideDir, 'task.json')
   const raceMarker = 'SYNTHETIC_EXTERNAL_RENAME_RACE'
+  const outsideTargetBeforeSha256 = createHash('sha256').update('SYNTHETIC-OUTSIDE-MIGRATION-TARGET').digest('hex')
   let moved = false
   let linked = false
   let swapError = null
@@ -187,7 +188,13 @@ test('migration rollback pins the opened task file across an ancestor junction s
       })
     } catch (error) { rollbackError = error }
 
-    if (swapError && ['EPERM', 'EACCES'].includes(swapError.code)) {
+    if (process.platform === 'linux') {
+      assert.equal(swapError, null, 'native Linux test must complete the deterministic rename and symlink injection')
+      assert.equal(moved, true, 'the parent-directory rename must reach the race window')
+      assert.equal(linked, true, 'the replacement symlink must be installed before the path identity check')
+      assert.ok(rollbackError, 'rollback must refuse a target whose parent changed')
+      assert.match(rollbackError.message, /migration target identity is unsafe or changed/)
+    } else if (swapError && ['EPERM', 'EACCES'].includes(swapError.code)) {
       // WSL DrvFS may preserve the Windows open-handle sharing rule and refuse
       // the injected directory rename before the post-open path check runs.
       assert.equal(moved, false)
@@ -201,7 +208,7 @@ test('migration rollback pins the opened task file across an ancestor junction s
     } else {
       assert.equal(await readFile(target, 'utf8'), 'SYNTHETIC-IN-ROOT-TASK')
     }
-    assert.equal(await readFile(outsideTarget, 'utf8'), 'SYNTHETIC-OUTSIDE-MIGRATION-TARGET')
+    assert.equal(createHash('sha256').update(await readFile(outsideTarget)).digest('hex'), outsideTargetBeforeSha256)
     assert.equal(JSON.parse(await readFile(manifestPath, 'utf8')).status, 'rolling-back')
 
     if (linked) {
@@ -215,7 +222,7 @@ test('migration rollback pins the opened task file across an ancestor junction s
     const recovered = await recoverInterruptedMigrations({ workspaceRoot })
     assert.equal(recovered.recovered, 1)
     assert.equal(await readFile(target, 'utf8'), backupBytes.toString())
-    assert.equal(await readFile(outsideTarget, 'utf8'), 'SYNTHETIC-OUTSIDE-MIGRATION-TARGET')
+    assert.equal(createHash('sha256').update(await readFile(outsideTarget)).digest('hex'), outsideTargetBeforeSha256)
     assert.equal(JSON.parse(await readFile(manifestPath, 'utf8')).status, 'rolled-back')
   } finally {
     if (linked) await rm(taskDir, { recursive: true, force: true }).catch(() => {})
