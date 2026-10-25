@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.bundle/v1",
   "name": "dsh-armorbreak",
-  "version": "2.2.0-rc.1",
+  "version": "2.2.0",
   "preset": {
     "id": "armorbreak",
     "preserved": true
@@ -9,8 +9,8 @@
   "entries": [
     {
       "path": "client.js",
-      "sha256": "d29ee6ae048f28243b9e0484446d40453c49862959d933dadcd22d52b67d922a",
-      "bytes": 51220
+      "sha256": "5baee87811bde6e1558702bef69ab55db29db38c029855eb52572ee7e7ad27f5",
+      "bytes": 51253
     },
     {
       "path": "cordis.patch.yml",
@@ -24,8 +24,8 @@
     },
     {
       "path": "index.js",
-      "sha256": "29998e8c4fa12bfa0d4a4bb887cf42bbb63d7d9f689f96442f4e25d84d29a984",
-      "bytes": 29214
+      "sha256": "b7e2087c0fa95200a6c4f012e11068e1bfdd0268bd2ed8d1e824bde8f5c46136",
+      "bytes": 28845
     },
     {
       "path": "lib/aisec/agentDojo.js",
@@ -359,8 +359,8 @@
     },
     {
       "path": "lib/analyzers/sast/external-adapters.js",
-      "sha256": "ace637c83ccc1ad810a07731fdef79eeed78d45a291d00b4e0c78c65cedb32f4",
-      "bytes": 17501
+      "sha256": "bd0dd930b065eaa43847a4d3d8dc8163ddb5a64ec9418a70c5ff8b8891a975fa",
+      "bytes": 17726
     },
     {
       "path": "lib/analyzers/sast/manifest.js",
@@ -389,8 +389,8 @@
     },
     {
       "path": "lib/analyzers/sast/secrets.js",
-      "sha256": "37a672067bfaf2213e06a51fb719522b9a8bea740d2718f0a5f3fda4f077377b",
-      "bytes": 12526
+      "sha256": "eb159fbb1c60206d22e5dc48bd292c05b7cbd37eba159f885238f255081c5472",
+      "bytes": 13419
     },
     {
       "path": "lib/analyzers/sast/syft.js",
@@ -479,13 +479,13 @@
     },
     {
       "path": "lib/control/approvalAuthority.js",
-      "sha256": "f469034224baf00bfd1e83700e2c9e9e9aa57af5671f7b10fdc7529a8e04f5cb",
-      "bytes": 6257
+      "sha256": "247504df9ad355dcea1784d14d565b3690297c074f58f4359f4b2e35b6f6b388",
+      "bytes": 9986
     },
     {
       "path": "lib/control/policyGateway.js",
-      "sha256": "1f42fd47ffa2c4ed9ebb4fad68fa399b3ba32c8208f31a0a353ca7682974d9ae",
-      "bytes": 8696
+      "sha256": "ef99942b9ebcc2ab10447a46ce565187b05fa0503bed8faaa9b7ae64edf38e99",
+      "bytes": 8862
     },
     {
       "path": "lib/core/audit.js",
@@ -579,8 +579,8 @@
     },
     {
       "path": "lib/install/installer.js",
-      "sha256": "6f0ed1561b84b32660da4fed524634eb2dfb299c357888407cbe7867432418d0",
-      "bytes": 9066
+      "sha256": "3edc12e3ff5bba62f7605ef7d99316921de0b449c2824b4b49c6bf95ce96a4ac",
+      "bytes": 12183
     },
     {
       "path": "lib/intel/normalize.js",
@@ -598,9 +598,14 @@
       "bytes": 4095
     },
     {
+      "path": "lib/migrations/safe-restore-windows.ps1",
+      "sha256": "cdb49a4da8492caa5c166baefb98166c41354e53f176176d3d3d0247a6dbd921",
+      "bytes": 12958
+    },
+    {
       "path": "lib/migrations/v1-to-v2.js",
-      "sha256": "3f4d9bdfca8dc07a5cc2ce1c17edfa37fd7d368434f08e0222a7dda096618cab",
-      "bytes": 5875
+      "sha256": "8545aaa5609ebb64622291921f08c53e624d70dc54f25a2d6d12041da79deba4",
+      "bytes": 22362
     },
     {
       "path": "lib/pack/bundleCompiler.js",
@@ -618,19 +623,29 @@
       "bytes": 3761
     },
     {
+      "path": "lib/release/artifactAttestation.js",
+      "sha256": "fdf6b167ceb0bea47fa7ae9e9d21ec6694149e710f21415c2776e5dc8cc23b45",
+      "bytes": 4699
+    },
+    {
       "path": "lib/release/docsConsistency.js",
-      "sha256": "a756c744f46437e54f43b62b16fc43b4a60eccdb96f99458822b4c42b5d7561a",
-      "bytes": 2307
+      "sha256": "ce0b424d9d78eb6646500f0b157396c53fcf56312340a0838f9679055ac0f9c8",
+      "bytes": 3830
     },
     {
       "path": "lib/release/evidenceValidator.js",
-      "sha256": "96a42acc4adc5c38142e8930a9123ae67e46ee4e79b2bd8fd24e6b01cc95a6a9",
-      "bytes": 3724
+      "sha256": "78473a77638ebf062bd1c09d4f1d96cdfbc643d8d4373880f066c6d1ea30e5d6",
+      "bytes": 24304
+    },
+    {
+      "path": "lib/release/externalGaEvidence.js",
+      "sha256": "5d5feeb4d52dc0ec666becb526b2e2e064bcdf5fcf681497e5c71bd1db7c143b",
+      "bytes": 15828
     },
     {
       "path": "lib/release/gates.js",
-      "sha256": "6970b7e57fbd5ac5fed82fb76e6fa7b654712773512ce01a1444294b4cfad5f2",
-      "bytes": 11088
+      "sha256": "970c0922ba76610885cff3ebecbfa253f39098b7f6980512c381931c952935b1",
+      "bytes": 14928
     },
     {
       "path": "lib/release/gray.js",
@@ -641,6 +656,21 @@
       "path": "lib/release/rollout.js",
       "sha256": "09cab8be9e36ae593717dd5418fc5e064aa9378f49c110e848364b129b5b62fa",
       "bytes": 2130
+    },
+    {
+      "path": "lib/release/safe-evidence-write-windows.ps1",
+      "sha256": "7ab6dde3be8b2dc4027073bff7d4f02ac15fdc7a9deeafe2b882a8192ae29ae6",
+      "bytes": 17379
+    },
+    {
+      "path": "lib/release/safeEvidenceFile.js",
+      "sha256": "edb508562017277cb5e60948dfe7707f9aff9c30b41a2421a5d5577266840008",
+      "bytes": 14496
+    },
+    {
+      "path": "lib/release/stableGate.js",
+      "sha256": "0aa4e2e27d5b229bfabba3e66aae2b1fe74d422733b5410de19ec5100afb4f99",
+      "bytes": 21770
     },
     {
       "path": "lib/schemas/v2/index.js",
@@ -664,8 +694,8 @@
     },
     {
       "path": "package.json",
-      "sha256": "8dcf686427fc375a190d10dfe29fb069197b1eb6043a0771a127b142d00588f6",
-      "bytes": 1919
+      "sha256": "8cfaee2ac0bc24d165262036cd28399f8adf88f507203a873ec6dc53f3294d01",
+      "bytes": 1914
     },
     {
       "path": "skills.js",
@@ -749,12 +779,12 @@
     },
     {
       "path": "tools.js",
-      "sha256": "a7821477d5c8c12172733722908c231822d30ba175bd1cf0ec2c0ec98f494777",
-      "bytes": 59871
+      "sha256": "8157f5883fb880560c630a38abd5fe2e776f712efbced282803270b17139bfb5",
+      "bytes": 61862
     }
   ],
-  "aggregateSha256": "8f4f5f835fcebba239ead66ecbc7b34084e89b61e793c22ff7c295e49257f009",
-  "fileCount": 149,
-  "totalBytes": 1371067,
+  "aggregateSha256": "2fbc24c3cfa73526bc818e17e46c292e97e02562da29a1e6bac4042fd8d67aae",
+  "fileCount": 155,
+  "totalBytes": 1510407,
   "executable": false
 }

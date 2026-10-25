@@ -6,14 +6,14 @@ ArmorBreak is an open-source toolkit for **authorized reverse engineering, stati
 
 破甲（ArmorBreak）为不同 AI Agent 提供**授权安全研究**能力：受控本地分析、权限边界、证据记录、MCP / Skills 接入，以及 DeepSeek Harness 原生模式。它面向已授权目标，不代替使用者获得授权。
 
-> **Current release scope:** `2.2.0-rc.1` is an engineering candidate, **not** full V2.2 GA. Offline Golden and the recorded local-model loop have passed. Official OpenAI / Anthropic / Gemini live certification is **not** complete. Independent security review is **not** fully signed, and no independent human security certification has been obtained.
+> **V2.2 Stable scope:** `2.2.0` is defined as **Verified Core / Experimental Provider Integrations**. Stable acceptance covers the Core, MCP, Skills, Offline Golden, local-model verification, and only the hosts and install/rollback paths supported by current evidence. OpenAI, Anthropic, and Gemini commercial endpoints remain `LIVE_UNVERIFIED`; live certification is not a Stable prerequisite. The project accepts AI-assisted security review as AI review, not as human certification. The separate historical Full GA contract and its blockers remain unchanged; `gaReady:false` still means Full GA has not passed.
 >
 > Documentation baseline: `9172f7b50352bbe152a0bd001678cfd271fd65bb`（2026-10-23）
 
 **Start here:** [Quick Start](#quick-start) · [Generic MCP integration](docs/v2/host-generic.md) · [Security Policy](SECURITY.md) · [Verification evidence](docs/v2/acceptance/golden-status.json)
 
 [![CI](https://github.com/LYL-Z/dsh-armorbreak/actions/workflows/ci.yml/badge.svg)](https://github.com/LYL-Z/dsh-armorbreak/actions/workflows/ci.yml)
-![Version](https://img.shields.io/badge/version-2.2.0--rc.1-blue)
+![Version](https://img.shields.io/badge/version-2.2.0-blue)
 ![Node](https://img.shields.io/badge/node-%3E%3D22-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
@@ -267,7 +267,8 @@ Read [security model](docs/security-model.md), [threat model](docs/v2/threat-mod
 | Security boundaries | [docs/security-model.md](docs/security-model.md) |
 | Benchmarks and reproducibility | [docs/benchmarks.md](docs/benchmarks.md) |
 | Upgrade / rollback | [docs/v2/release/upgrade-guide.md](docs/v2/release/upgrade-guide.md) |
-| Current release gate | [docs/v2/release/v2.2-ga-review.md](docs/v2/release/v2.2-ga-review.md) |
+| V2.2 Stable release policy | [docs/v2/release/v2.2-stable-policy-v1.md](docs/v2/release/v2.2-stable-policy-v1.md) |
+| Historical Full GA contract | [docs/v2/release/v2.2-ga-review.md](docs/v2/release/v2.2-ga-review.md) |
 | Known limitations | [docs/known-issues.md](docs/known-issues.md) |
 | Previous long-form README content | [docs/readme-archive-v2.2.md](docs/readme-archive-v2.2.md) |
 
@@ -281,15 +282,11 @@ Common failures:
 
 ## Limitations and release status
 
-- `2.2.0-rc.1` is an engineering candidate, not full V2.2 GA.
-- `gaReady:false`; six acceptance blockers remain:
-  - OpenAI Responses / Chat real endpoints;
-  - Anthropic Messages real endpoint;
-  - Gemini Native real endpoint;
-  - cross-protocol Live Golden aggregate;
-  - independent third-party security review.
-- GitHub OIDC/Sigstore attestation is build provenance, not traditional code signing or security certification.
-- A separate Core GA scope is proposed in [release scope](docs/v2/acceptance/release-scope.json), but it is not released and still requires independent review.
+- `2.2.0` uses the versioned **Verified Core / Experimental Provider Integrations** contract. The Stable release must pass `node scripts/v2/stable-gate.mjs` against the exact `main` source, CI run, artifact, SBOM, security review, and GitHub attestation before publication.
+- `gaReady:false` and the original Full GA blockers remain in [the historical readiness record](docs/v2/acceptance/v2.2-readiness.json). Stable is a separate, narrower release scope and does not mean Full GA passed.
+- OpenAI, Anthropic, and Gemini commercial endpoints are `LIVE_UNVERIFIED`. Offline Golden, mock, and local-model results do not establish official commercial endpoint compatibility.
+- AI-assisted review is disclosed as AI review; it is not a human audit or third-party certification. See the [Stable policy](docs/v2/release/v2.2-stable-policy-v1.md).
+- GitHub OIDC/Sigstore attestation proves build provenance for its exact source and artifact subject. It is not a security certification or production code signature.
 
 ## Contributing and support
 

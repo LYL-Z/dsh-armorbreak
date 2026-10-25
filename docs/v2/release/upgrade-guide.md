@@ -1,5 +1,7 @@
 # V2 Upgrade / Rollback Guide (M4-11)
 
+For the V2.2.0 Stable scope, obtain the portable archive and CycloneDX SBOM from the matching GitHub Release. Before extracting or installing, verify the published SHA-256 list and the GitHub attestation against the release's exact source commit and artifact digest. The release archive is not a substitute for a host-specific installation test; use only the hosts marked verified in the compatibility matrix.
+
 ## Before upgrade
 
 1. Backup the DSH profile (`profile.json` + bundle directories).
@@ -27,6 +29,8 @@
 - Profile: restore backup profile.json; rerun bundle adapter if needed.
 - Installer: `/armorbreak/actions` `install.rollback` or `TransactionalInstaller.rollback`.
 - Migration: manifest rollback; never delete evidence/report bytes.
+
+After updating, retain the previous package/archive and all profile, state, workspace, report, and migration backups until the new version completes the applicable host health check. If migration or install verification fails, use the matching installer rollback or migration manifest, then restore the backed-up profile/state only as documented by the host. Do not mix a backup with a different workspace or principal.
 
 ## Non-goals
 

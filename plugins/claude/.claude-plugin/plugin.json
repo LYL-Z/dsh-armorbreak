@@ -1,7 +1,7 @@
 {
   "name": "armorbreak",
   "description": "Authorized reverse-engineering and security-research tools over a trusted local Core. L0-first; L1/L2 require independent human approval.",
-  "version": "2.2.0-rc.1",
+  "version": "2.2.0",
   "author": {
     "name": "ArmorBreak Universal"
   },

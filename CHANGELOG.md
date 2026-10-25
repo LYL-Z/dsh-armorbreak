@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2.2.0 — V2.2 Stable: Verified Core / Experimental Provider Integrations
+
+- Define a narrower, versioned Stable release contract for the verified Universal Core, MCP, Skills, Offline Golden, local-model checks, and evidenced host/install paths.
+- Keep commercial OpenAI, Anthropic, and Gemini integrations available as experimental protocol adapters marked `LIVE_UNVERIFIED` until authorized live endpoint validation is recorded.
+- Accept and disclose AI-assisted security review and exact-SHA GitHub OIDC/Sigstore build provenance without representing either as human certification.
+- Add a separate Stable Gate that checks exact `main` CI, provenance, archive/SBOM content inventory, current-SHA security evidence, and preserves the legacy Full GA `gaReady:false` result.
+
 ## 2.2.0-rc.1 — 2026-10-22
 
 V2.2 GA engineering candidate: TypeScript SDK, OpenAI Responses/Anthropic/Gemini native protocols, Vault/Policy, Workbench, old-data migration/gray drills, deterministic artifact/SBOM/test-signature, Pi native extension and real host install/rollback. No formal GA tag; gaReady remains false.

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** ABU-007: reproducible 2.2.0-rc.1 release smoke over the evidence chain. */
+/** Stable-scope smoke over current package metadata and preserved historical Full GA evidence. */
 import { execFileSync } from 'node:child_process'
 import { checkDocs } from '../../lib/release/docsConsistency.js'
 import { validateEvidence } from '../../lib/release/evidenceValidator.js'
@@ -10,18 +10,26 @@ const root = process.cwd()
 const commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
 const json = (path) => JSON.parse(readSafeRepoFile(root, path).toString('utf8'))
 const pkg = json('package.json')
+const stablePolicy = json('docs/v2/release/v2.2-stable-scope-v1.json')
 const lock = json('docs/v2/bundle.lock.json')
 const sbom = json('docs/v2/release/sbom.spdx.json')
 const readiness = json('docs/v2/release/readiness.json')
+const legacyReadiness = json('docs/v2/acceptance/v2.2-readiness.json')
+const legacyScope = json('docs/v2/acceptance/release-scope.json')
 const testReport = json('docs/v2/acceptance/test-report.json')
 const manifest = json('docs/v2/acceptance/evidence-manifest.json')
 const counts = (value) => JSON.stringify(value ?? null)
 const checks = []
 const add = (id, ok, detail) => checks.push({ id, status: ok ? 'PASS' : 'FAIL', detail })
-add('package-version', pkg.version === '2.2.0-rc.1', pkg.version)
+add('package-version', pkg.version === stablePolicy.packageVersion && stablePolicy.channel === 'stable', pkg.version)
 add('bundle-version', lock.version === pkg.version, lock.version)
 add('sbom-version', String(sbom.name ?? '').includes(pkg.version), sbom.name)
-add('readiness-version', readiness.package?.version === pkg.version, readiness.package?.version)
+add('historical-readiness-preserved', readiness.package?.version === stablePolicy.legacyFullGa?.legacyReleaseSnapshot?.packageVersion &&
+  stablePolicy.legacyFullGa?.legacyReleaseSnapshot?.status === 'HISTORICAL_RC_EVIDENCE' &&
+  stablePolicy.legacyFullGa?.legacyReleaseSnapshot?.preserveOriginalEvidence === true, readiness.package?.version)
+add('legacy-full-ga-still-blocked', legacyReadiness.gaReady === false && Array.isArray(legacyReadiness.gaBlockers) &&
+  legacyReadiness.gaBlockers.length > 0 && legacyScope.v22FullGa?.status === 'BLOCKED_EXTERNAL',
+  `${legacyReadiness.gaBlockers?.length ?? 0} historical blockers; gaReady=${legacyReadiness.gaReady}`)
 add('readiness-evidence-current', Boolean(
   readiness.evidence?.manifestCommit === manifest.commit
   && readiness.evidence?.testReportCommit === testReport.commit

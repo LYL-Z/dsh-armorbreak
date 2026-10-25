@@ -1,4 +1,4 @@
-# 已知问题与限制（2.2.0-rc.1 + Universal Core 分支）
+# 已知问题与限制（ArmorBreak V2.2 Stable 范围）
 
 > 历史 v1.2.0 记录保留在 git 历史与 `docs/acceptance-v1.2.0.md`；本文件描述当前分支。
 

@@ -2,10 +2,10 @@
   "spdxVersion": "SPDX-2.3",
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
-  "name": "dsh-armorbreak-2.2.0-rc.1",
-  "documentNamespace": "https://github.com/LYL-Z/dsh-armorbreak/sbom/2.2.0-rc.1",
+  "name": "dsh-armorbreak-2.2.0",
+  "documentNamespace": "https://github.com/LYL-Z/dsh-armorbreak/sbom/2.2.0",
   "creationInfo": {
-    "created": "2026-10-25T02:42:35.594Z",
+    "created": "2026-10-25T09:24:18.368Z",
     "creators": [
       "Tool: scripts/v2/build-sbom.mjs"
     ]
@@ -13,7 +13,7 @@
   "packages": [
     {
       "name": "dsh-armorbreak",
-      "versionInfo": "2.2.0-rc.1",
+      "versionInfo": "2.2.0",
       "SPDXID": "SPDXRef-Package-dsh-armorbreak",
       "downloadLocation": "git+https://github.com/LYL-Z/dsh-armorbreak.git",
       "licenseConcluded": "MIT",
@@ -154,7 +154,7 @@
     },
     {
       "name": "@armorbreak/migration",
-      "versionInfo": "2.2.0-rc.1",
+      "versionInfo": "2.2.0",
       "SPDXID": "SPDXRef-Package-2aa1a191ec48da716865d8fa",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": true,
@@ -436,7 +436,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "0453ef73a35cfad0aa1d9a4097cb591020928c8369b74d7d3520e94131b1a485"
+          "checksumValue": "3794efc05d595d0e6eac93d416ec8f75890d63a524220ee7a1c6ae21cfc91816"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -676,7 +676,7 @@
       "checksums": [
         {
           "algorithm": "SHA256",
-          "checksumValue": "53814ae790119a429827b532b0e5598b944aa46bbe10fdb709e772cb0cb4e1ad"
+          "checksumValue": "cd9c3c7acb862642ed709f681b22e77a31b16c24f17de61ef19ef9834b5c4440"
         }
       ],
       "licenseConcluded": "NOASSERTION",
@@ -1637,7 +1637,7 @@
     {
       "annotationType": "OTHER",
       "annotator": "Tool: scripts/v2/build-sbom.mjs",
-      "annotationDate": "2026-10-25T02:42:35.594Z",
+      "annotationDate": "2026-10-25T09:24:18.368Z",
       "comment": "External tools are not bundled; their licenses must be reviewed separately before distribution."
     }
   ]

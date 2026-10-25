@@ -6,12 +6,14 @@ The model is never an approval principal.
 
 | Provider | Kind | Example model | Credential | Tools | Verification |
 |---|---|---|---|---|---|
-| OpenAI-compatible | `openai-compatible` | `gpt-4.1` | `OPENAI_API_KEY` | yes | Mock + local Ollama real; paid OpenAI endpoint `BLOCKED_EXTERNAL` |
-| OpenAI Responses | `openai-responses` | `gpt-5` | `OPENAI_API_KEY` | yes | Mock/golden text+tool+stream+error; real endpoint `BLOCKED_EXTERNAL` |
-| Anthropic | `anthropic` | `claude-sonnet-4-5` | `ANTHROPIC_API_KEY` | yes | Mock/golden + streaming/tool lifecycle; real endpoint `BLOCKED_EXTERNAL` |
-| Gemini native | `gemini` | `gemini-2.5-pro` | `GEMINI_API_KEY` | yes | Mock/golden text+tool+stream+error; real endpoint `BLOCKED_EXTERNAL` |
+| OpenAI-compatible | `openai-compatible` | `gpt-4.1` | `OPENAI_API_KEY` | yes | Mock + local Ollama real; commercial endpoint `LIVE_UNVERIFIED` |
+| OpenAI Responses | `openai-responses` | `gpt-5` | `OPENAI_API_KEY` | yes | Mock/golden text+tool+stream+error; commercial endpoint `LIVE_UNVERIFIED` |
+| Anthropic | `anthropic` | `claude-sonnet-4-5` | `ANTHROPIC_API_KEY` | yes | Mock/golden + streaming/tool lifecycle; commercial endpoint `LIVE_UNVERIFIED` |
+| Gemini native | `gemini` | `gemini-2.5-pro` | `GEMINI_API_KEY` | yes | Mock/golden text+tool+stream+error; commercial endpoint `LIVE_UNVERIFIED` |
 | Ollama | `ollama` | `qwen3.5:4b` | none | yes | **Live local**: chat, SSE, tool call and 3-turn loop; `provider-live-ollama.json` |
-| Local OpenAI-compatible | `local` | `local-model` | none | yes | Unit-tested router; no live call |
+| Local OpenAI-compatible | `local` | `local-model` | none | yes | Local protocol adapter; provider-specific live call `LIVE_UNVERIFIED` |
+
+Commercial provider adapters are experimental integrations. Their presence and mock/Golden coverage do not imply official live compatibility; each remains `LIVE_UNVERIFIED` until an authorized endpoint test is recorded.
 
 ## Router guarantees
 

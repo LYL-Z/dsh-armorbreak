@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "armorbreak.v2.2-stable-scope/v1",
+  "policyVersion": 1,
+  "releaseName": "ArmorBreak V2.2 Stable — Verified Core / Experimental Provider Integrations",
+  "packageVersion": "2.2.0",
+  "tag": "v2.2.0",
+  "channel": "stable",
+  "scope": {
+    "included": [
+      "Universal Core",
+      "MCP server",
+      "Skills",
+      "Offline Golden",
+      "local model verification",
+      "host integrations explicitly marked verified in the current compatibility matrix",
+      "Windows and Linux installer, migration, and rollback paths covered by exact-SHA CI"
+    ],
+    "supportRule": "A project-level Stable release does not upgrade an individually unverified host or provider to verified status."
+  },
+  "experimentalProviderIntegrations": {
+    "status": "EXPERIMENTAL",
+    "providers": {
+      "OpenAI-compatible": "LIVE_UNVERIFIED",
+      "OpenAI Responses": "LIVE_UNVERIFIED",
+      "Anthropic Messages": "LIVE_UNVERIFIED",
+      "Gemini Native": "LIVE_UNVERIFIED"
+    },
+    "liveCertificationRequiredForStable": false,
+    "disclosure": "Protocol adapters and offline/mock tests do not establish official commercial endpoint compatibility."
+  },
+  "assurance": {
+    "reviewType": "AI_ASSISTED_SECURITY_REVIEW",
+    "independentHumanSecurityAuditRequired": false,
+    "aiReviewIsHumanCertification": false,
+    "fullHistoricalFourReviewerRepeatRequired": false,
+    "focusedCurrentShaImpactReviewRequired": true,
+    "maintainerRiskAcceptanceAllowed": true,
+    "unhandledP0P1OrHighBlocksStable": true
+  },
+  "securityReviewEvidence": {
+    "exactSourceCommitRequired": true,
+    "toolRunsRequireSha256VerifiedEvidenceIds": true,
+    "raceTestsRequired": ["windows", "linux"],
+    "codeqlAlertsMustAllBeTriaged": true,
+    "severeFindingClosuresRequireEvidence": true,
+    "falsePositiveRequiresRationaleAndEvidence": true,
+    "maintainerRiskAcceptanceSeverities": ["LOW", "MEDIUM", "INFO"],
+    "riskAcceptanceOwner": {
+      "login": "LYL-Z",
+      "githubUserId": 250811935,
+      "minimumRationaleCharacters": 20
+    }
+  },
+  "provenance": {
+    "acceptedMechanism": "GitHub Actions OIDC/Sigstore build provenance",
+    "repository": "LYL-Z/dsh-armorbreak",
+    "workflow": ".github/workflows/attest.yml",
+    "sourceRef": "refs/heads/main",
+    "requiresExactSourceCommit": true,
+    "requiresExactArtifactSha256": true,
+    "isSecurityCertification": false,
+    "localEvidenceCanGrantPublishAuthority": false
+  },
+  "stableGate": {
+    "command": "node scripts/v2/stable-gate.mjs --release --artifact dist/armorbreak-portable-2.2.0.tar.gz --sbom dist/armorbreak-portable-2.2.0.tar.gz.sbom.cdx.json --build-manifest .runtime/stable-release/release-build.json --security-review .runtime/stable-release/security-review.json",
+    "requiresCleanMainAtExactOriginHead": true,
+    "requiredCiJobs": [
+      "Node 24 on ubuntu-latest",
+      "Node 24 on windows-latest",
+      "L0 offline boundary (static gate)",
+      "L1 Docker integration (real daemon)",
+      "Release evidence checks (commit-bound)"
+    ],
+    "requiredStatusChecksMustBeFromGitHubActionsAppId": 15368,
+    "requiresExactMainAttestation": true,
+    "checksFullArchiveAndSbomInventory": true,
+    "requiresCurrentShaSecurityReview": true,
+    "requiresLiveGitHubMainProtection": true,
+    "requiresReleaseTagRuleset": {
+      "name": "ArmorBreak V2.2 Stable release tag protection",
+      "tag": "refs/tags/v2.2.0",
+      "allowedPublisher": {
+        "login": "LYL-Z",
+        "githubUserId": 250811935
+      }
+    },
+    "createsRelease": false
+  },
+  "legacyFullGa": {
+    "readinessFile": "docs/v2/acceptance/v2.2-readiness.json",
+    "mustRemainGaReadyFalseWhenBlockersRemain": true,
+    "historicalContract": "docs/v2/release/v2.2-ga-review.md",
+    "legacyReleaseSnapshot": {
+      "file": "docs/v2/release/readiness.json",
+      "status": "HISTORICAL_RC_EVIDENCE",
+      "packageVersion": "2.2.0-rc.1",
+      "preserveOriginalEvidence": true
+    },
+    "gate": "node scripts/v2/v2-readiness.mjs --require-ga --no-waivers",
+    "stableDoesNotSatisfyFullGa": true
+  }
+}

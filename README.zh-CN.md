@@ -4,13 +4,13 @@
 
 ArmorBreak 是一个开源工具包，面向**授权逆向工程、静态分析、数字取证与安全研究**。它提供宿主中立的 Core、MCP 工具、Agent Skills，以及可选的 DeepSeek Harness 原生集成；所有分析都在权限边界内进行，并留下可复核的证据与报告。
 
-> **当前发布范围：** `2.2.0-rc.1` 是工程候选版本，**不是**完整 V2.2 GA。Offline Golden 与已记录的本地模型闭环已通过；OpenAI / Anthropic / Gemini 官方真实端点认证**尚未完成**；独立安全审查**尚未完整签署**，且尚未取得独立人类安全认证。
+> **V2.2 Stable 范围：** `2.2.0` 定义为 **Verified Core / Experimental Provider Integrations**。Stable 验收覆盖 Core、MCP、Skills、Offline Golden、本地模型验证，以及当前证据明确支持的宿主和安装/回滚路径。OpenAI、Anthropic、Gemini 商业端点仍标记为 `LIVE_UNVERIFIED`；真实商业端点认证不是 Stable 前置条件。项目接受 AI 辅助安全审查作为 AI 审查记录，不将其称为人类认证。原 Full GA 合同与阻断记录保持不变；`gaReady:false` 仍表示 Full GA 未通过。
 >
 > 文档基线：`9172f7b50352bbe152a0bd001678cfd271fd65bb`（2026-10-23）
 
 **快速入口：** [快速开始](#快速开始) · [通用 MCP 接入](docs/v2/host-generic.md) · [安全政策](SECURITY.md) · [验收状态](docs/v2/acceptance/golden-status.json)
 
-![版本](https://img.shields.io/badge/version-2.2.0--rc.1-blue)
+![版本](https://img.shields.io/badge/version-2.2.0-blue)
 ![Node](https://img.shields.io/badge/node-%3E%3D22-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
@@ -264,7 +264,8 @@ ArmorBreak 只用于**已授权**安全研究。扫描发现不等于已确认�
 | 安全边界 | [docs/security-model.md](docs/security-model.md) |
 | 基准与复现 | [docs/benchmarks.md](docs/benchmarks.md) |
 | 升级/回滚 | [docs/v2/release/upgrade-guide.md](docs/v2/release/upgrade-guide.md) |
-| 当前发布门禁 | [docs/v2/release/v2.2-ga-review.md](docs/v2/release/v2.2-ga-review.md) |
+| V2.2 Stable 发布政策 | [docs/v2/release/v2.2-stable-policy-v1.md](docs/v2/release/v2.2-stable-policy-v1.md) |
+| 历史 Full GA 合同 | [docs/v2/release/v2.2-ga-review.md](docs/v2/release/v2.2-ga-review.md) |
 | 已知限制 | [docs/known-issues.md](docs/known-issues.md) |
 | 旧版长 README 技术内容 | [docs/readme-archive-v2.2.md](docs/readme-archive-v2.2.md) |
 
@@ -278,15 +279,11 @@ ArmorBreak 只用于**已授权**安全研究。扫描发现不等于已确认�
 
 ## 限制与发布状态
 
-- `2.2.0-rc.1` 是工程候选版本，不是完整 V2.2 GA。
-- `gaReady:false`；仍有六个验收阻塞项：
-  - OpenAI Responses / Chat 真实端点；
-  - Anthropic Messages 真实端点；
-  - Gemini Native 真实端点；
-  - 跨协议 Live Golden 聚合；
-  - 独立第三方安全审查。
-- GitHub OIDC/Sigstore attestation 是构建来源证明，不是传统代码签名或安全认证。
-- 独立 Core GA 范围已在 [release scope](docs/v2/acceptance/release-scope.json) 中提出，但尚未发布，且仍需独立审查。
+- `2.2.0` 使用版本化的 **Verified Core / Experimental Provider Integrations** 契约。正式发布前，必须针对精确 `main` 源码、CI、制品、SBOM、安全审查和 GitHub attestation 运行 `node scripts/v2/stable-gate.mjs` 并通过。
+- `gaReady:false` 与原 Full GA 阻断保留在[历史 readiness 记录](docs/v2/acceptance/v2.2-readiness.json)中。Stable 是范围更窄的独立发布契约，不代表 Full GA 已通过。
+- OpenAI、Anthropic、Gemini 商业端点均为 `LIVE_UNVERIFIED`。Offline Golden、mock 和本地模型结果不代表官方商业端点兼容认证。
+- AI 辅助审查按 AI 审查披露，不是人类审计或第三方认证。详见 [Stable 政策](docs/v2/release/v2.2-stable-policy-v1.md)。
+- GitHub OIDC/Sigstore attestation 证明精确源码与制品的构建来源，不是安全认证或生产代码签名。
 
 ## 贡献与支持
 
