@@ -41,7 +41,7 @@ Recorded task values:
 
 ## What this proves
 
-- The README’s shortest offline L0 path executes against the current main tree.
+The shortest offline L0 path executed against the recorded baseline tree.
 - The task is workspace-scoped and is not a public-network test.
 - The report and evidence are real output from this run; hashes are not hard-coded into the README.
 
@@ -50,3 +50,7 @@ Recorded task values:
 - This is a Windows run; macOS/Linux were not exercised.
 - It proves `forensics.hash` only, not every capability or external analyzer.
 - The original Desktop screenshot has local account/workspace labels and was not embedded in README; evidence is linked textually.
+
+
+
+- This smoke is historical evidence for the baseline SHA above; it does not certify the later 82a77b8 main commit or the final edited README text.
