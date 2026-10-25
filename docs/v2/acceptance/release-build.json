@@ -1,15 +1,15 @@
 {
   "schemaVersion": "armorbreak.release-build/v1",
-  "generatedAt": "2026-10-25T13:29:04.894Z",
-  "commit": "954c9391721268284f0cdb6b002ada95f7a0ab01",
+  "generatedAt": "2026-10-25T14:25:52.862Z",
+  "commit": "7ea088034678642e85e067e9e7846ff032e40974",
   "package": "dsh-armorbreak",
   "version": "2.2.0",
   "artifact": "armorbreak-portable-2.2.0.tar.gz",
   "bytes": 5332908,
-  "sha256": "ad88e6b4e4c961c90b7843da1e0556a62efd3d4dc2c5c21d8ef83bbbad03e51c",
+  "sha256": "31b61ec646f661b6fd4cfa0ebdcbf7149dea3697383536e033f3d63953deb55f",
   "reproducible": true,
   "sbom": "armorbreak-portable-2.2.0.tar.gz.sbom.cdx.json",
-  "sbomSha256": "67ff43a6f8a2c08ff95d4a3f8cb603808ba30e9a9753408d032e4d2b7fb7e65b",
+  "sbomSha256": "0b2191bb5b8f48701fdd28a89057695de4c5a3ee7b84a66c9239772e76d3e1db",
   "files": 504,
   "contentManifest": [
     {
@@ -1864,8 +1864,8 @@
     },
     {
       "path": "packages/core/src/runtime.js",
-      "size": 11094,
-      "sha256": "18995cd27bb805cca1b2169f0adf64c3082d211be70881c465205d176cd880f8"
+      "size": 11089,
+      "sha256": "4b9f89302654da78a8503d4a46791ff481a598aab8d2323dd543633ebcc4ee21"
     },
     {
       "path": "packages/core/src/scope.js",
@@ -2533,7 +2533,7 @@
       "sha256": "dab0b44fff46b3c9dc279cf7b78831c3a0409fd2ed0c83fff14e256e4e848099"
     }
   ],
-  "contentManifestSha256": "25dd80ee5f405192fe8b6e8c336b05c762ea4de1fc0542fc7158894155876173",
+  "contentManifestSha256": "84a763ba62fce640dbdfc5766fd0e00287c4641f444162acf69a7794b890b418",
   "toolchain": {
     "node": "v24.16.0",
     "platform": "win32",
@@ -2550,8 +2550,8 @@
     "algorithm": "ed25519",
     "testKey": true,
     "valid": true,
-    "signature": "MHy4yMZy8iURcgJTUtReqiLp4KIo3wn2/7PNHSWJmjuWC5IHlhq4d8Rk10AkQXPf3/gv173goh+B8YeEQssvCQ==",
-    "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAsINYDDxeRb2FODGsb1nuAsZYKvO+FXF6ZE+uIfCONKc=\n-----END PUBLIC KEY-----\n"
+    "signature": "Cjq5noUcRFH3UH9GKB84XB7Q6sF3tUY8SrXSRZRGAQ5WrqEJY1waINB2A1cPemmkFptradiso2IUcfxsCuMUAg==",
+    "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAjcVn1evKGtrXfI6ljQuSuqxH84b3SLQtwkiXWDyOJCM=\n-----END PUBLIC KEY-----\n"
   },
   "productionSigned": false,
   "limitations": [
