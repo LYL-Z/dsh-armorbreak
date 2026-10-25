@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
-import { mkdtemp, readFile, readdir, rm } from 'node:fs/promises'
+import { createHash } from 'node:crypto'
+import { mkdir, mkdtemp, readFile, readdir, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { spawnSync } from 'node:child_process'
@@ -27,19 +28,66 @@ test('release build is reproducible, hashed, SBOM-backed and test-signature veri
     assert.ok(!manifest.contentManifest.some((file) => file.path.startsWith('fixtures/') || file.path.startsWith('tests/')))
     assert.ok(!manifest.contentManifest.some((file) => file.path === 'FOUR_REVIEW_UNIFIED_FINDINGS.json' || file.path.endsWith('.pyc') || file.path.startsWith('.runtime/')))
     assert.equal(typeof manifest.toolchain.zlib, 'string')
-    const artifact = await readFile(join(out, manifest.artifact))
-    assert.equal((await import('node:crypto')).createHash('sha256').update(artifact).digest('hex'), manifest.sha256)
-    const valid = await verifyArtifactSignature(join(out, manifest.artifact), manifest.signature.signature, manifest.signature.publicKey)
+    const artifactPath = join(out, manifest.artifact)
+    const artifact = await readFile(artifactPath)
+    assert.equal(createHash('sha256').update(artifact).digest('hex'), manifest.sha256)
+    const valid = await verifyArtifactSignature(artifactPath, manifest.signature.signature, manifest.signature.publicKey)
     assert.equal(valid, true)
     const sbom = JSON.parse(await readFile(join(out, manifest.sbom), 'utf8'))
     assert.equal(sbom.bomFormat, 'CycloneDX')
-    const expectedPackages = (await readdir(join(process.cwd(), 'packages'), { withFileTypes: true }))
-      .filter((entry) => entry.isDirectory()).map((entry) => `@armorbreak/${entry.name}`).sort()
-    assert.deepEqual(sbom.components.map((component) => component.name).sort(), expectedPackages)
-    assert.ok(sbom.components.every((component) => component.hashes?.some((hash) => hash.alg === 'SHA-256' && /^[a-f0-9]{64}$/.test(hash.content))))
+    assert.ok(sbom.components.every((component) => {
+      const inventoryHash = component.properties?.find((property) => property.name === 'armorbreak:included-file-inventory-sha256')?.value
+      return /^[a-f0-9]{64}$/.test(inventoryHash ?? '')
+    }))
+
+    const extracted = join(root, 'extracted')
+    await mkdir(extracted, { recursive: true })
+    const unpack = spawnSync('tar', ['-xzf', artifactPath, '-C', extracted], { encoding: 'utf8', timeout: 120_000 })
+    assert.equal(unpack.status, 0, unpack.stderr)
+    async function walk(directory, prefix = '') {
+      const files = []
+      for (const entry of await readdir(join(directory, prefix), { withFileTypes: true })) {
+        const relativePath = prefix ? `${prefix}/${entry.name}` : entry.name
+        if (entry.isDirectory()) files.push(...await walk(directory, relativePath))
+        else if (entry.isFile()) {
+          const bytes = await readFile(join(directory, ...relativePath.split('/')))
+          files.push({ path: relativePath, size: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') })
+        } else assert.fail(`unexpected non-regular artifact entry: ${relativePath}`)
+      }
+      return files
+    }
+    const extractedInventory = (await walk(extracted)).sort((left, right) => left.path.localeCompare(right.path))
+    assert.deepEqual(extractedInventory, manifest.contentManifest)
+    assert.ok(!extractedInventory.some((file) => file.path.startsWith('fixtures/') || file.path.startsWith('tests/')))
+    const rootInventoryProperty = sbom.metadata.component.properties?.find((property) => property.name === 'armorbreak:included-file-inventory')
+    assert.ok(rootInventoryProperty, 'root SBOM component must enumerate every file extracted from the artifact')
+    assert.deepEqual(JSON.parse(rootInventoryProperty.value), extractedInventory)
+
+    const packageManifestPaths = extractedInventory
+      .filter((file) => file.path === 'package.json' || file.path.endsWith('/package.json'))
+      .map((file) => file.path).sort()
+    assert.ok(packageManifestPaths.includes('plugins/pi/package.json'))
+    assert.ok(!packageManifestPaths.includes('fixtures/gate-b-sample/package.json'))
+    const componentManifestPaths = sbom.components.map((component) =>
+      component.properties?.find((property) => property.name === 'armorbreak:package-manifest-path')?.value).sort()
+    assert.deepEqual(componentManifestPaths, packageManifestPaths.filter((file) => file !== 'package.json'))
+    for (const component of sbom.components) {
+      const manifestPath = component.properties.find((property) => property.name === 'armorbreak:package-manifest-path').value
+      const packageJson = JSON.parse(await readFile(join(extracted, ...manifestPath.split('/')), 'utf8'))
+      assert.equal(component.name, packageJson.name)
+      assert.equal(component.version, packageJson.version)
+      const componentRoot = manifestPath.slice(0, -'/package.json'.length)
+      const expectedInventory = extractedInventory.filter((file) => file.path.startsWith(`${componentRoot}/`))
+      const inventoryProperty = component.properties.find((property) => property.name === 'armorbreak:included-file-inventory')
+      assert.deepEqual(JSON.parse(inventoryProperty.value), expectedInventory)
+      assert.equal(component.properties.find((property) => property.name === 'armorbreak:included-file-inventory-sha256').value,
+        createHash('sha256').update(JSON.stringify(expectedInventory)).digest('hex'))
+    }
+    assert.ok(!sbom.components.some((component) => component.name === '@armorbreak/migration'))
 
     const spdx = JSON.parse(await readFile(join(process.cwd(), 'docs/v2/release/sbom.spdx.json'), 'utf8'))
-    const expectedSpdxPackages = expectedPackages.map((name) => name).sort()
+    const expectedSpdxPackages = (await readdir(join(process.cwd(), 'packages'), { withFileTypes: true }))
+      .filter((entry) => entry.isDirectory()).map((entry) => `@armorbreak/${entry.name}`).sort()
     assert.deepEqual(spdx.packages.filter((component) => component.primaryPackagePurpose === 'LIBRARY').map((component) => component.name).sort(), expectedSpdxPackages)
     assert.ok(spdx.files.length > 0)
     assert.ok(spdx.files.every((file) => file.checksums?.some((checksum) => checksum.algorithm === 'SHA256' && /^[a-f0-9]{64}$/.test(checksum.checksumValue))))

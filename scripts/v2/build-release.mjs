@@ -111,17 +111,51 @@ const second = buildOnce(`${name}.reproduce`, sourceEntries)
 const reproducible = first.sha256 === second.sha256
 if (!reproducible) console.error(`reproducibility mismatch: ${first.sha256} != ${second.sha256}`)
 const sbomPath = join(outDir, `${name}.sbom.cdx.json`)
+const inventoryFor = (componentRoot) => sourceEntries
+  .filter((entry) => componentRoot === '' || entry.path.startsWith(`${componentRoot}/`))
+  .map(({ path, size, sha256 }) => ({ path, size, sha256 }))
+const inventoryHash = (inventory) => createHash('sha256').update(JSON.stringify(inventory)).digest('hex')
+const packageManifests = sourceEntries.filter((entry) => entry.path === 'package.json' || entry.path.endsWith('/package.json'))
+const parsedPackages = packageManifests.map((entry) => {
+  let manifest
+  try { manifest = JSON.parse(entry.bytes.toString('utf8')) }
+  catch (error) { throw new Error(`included package manifest is invalid JSON: ${entry.path}: ${error.message}`) }
+  if (typeof manifest.name !== 'string' || !manifest.name || typeof manifest.version !== 'string' || !manifest.version) {
+    throw new Error(`included package manifest must declare name and version: ${entry.path}`)
+  }
+  return { entry, manifest, componentRoot: entry.path === 'package.json' ? '' : entry.path.slice(0, -'/package.json'.length) }
+})
+const rootPackage = parsedPackages.find(({ entry }) => entry.path === 'package.json')
+if (!rootPackage || rootPackage.manifest.name !== pkg.name || rootPackage.manifest.version !== pkg.version) {
+  throw new Error('artifact root package manifest does not match package metadata')
+}
+const packageKeys = parsedPackages.map(({ manifest }) => `${manifest.name}@${manifest.version}`)
+if (new Set(packageKeys).size !== packageKeys.length) throw new Error('included package manifests contain duplicate name/version pairs')
+const includedInventoryProperty = (inventory) => ({ name: 'armorbreak:included-file-inventory', value: JSON.stringify(inventory) })
+const rootInventory = inventoryFor('')
 const sbom = {
   bomFormat: 'CycloneDX', specVersion: '1.5', version: 1,
-  metadata: { component: { type: 'application', name: pkg.name, version: pkg.version, hashes: [{ alg: 'SHA-256', content: first.sha256 }] } },
-  components: [...new Set(sourceEntries.map((entry) => entry.path.startsWith('packages/') ? entry.path.split('/')[1] : null).filter(Boolean))]
-    .sort()
-    .map((name) => {
-      const componentFiles = sourceEntries.filter((entry) => entry.path.startsWith(`packages/${name}/`))
-        .map(({ path, size, sha256 }) => ({ path, size, sha256 }))
+  metadata: {
+    component: {
+      type: 'application', name: pkg.name, version: pkg.version,
+      'bom-ref': `urn:armorbreak:application:${encodeURIComponent(pkg.name)}:${encodeURIComponent(pkg.version)}`,
+      hashes: [{ alg: 'SHA-256', content: first.sha256 }],
+      properties: [includedInventoryProperty(rootInventory)],
+    },
+  },
+  components: parsedPackages
+    .filter(({ entry }) => entry.path !== 'package.json')
+    .sort((left, right) => left.manifest.name.localeCompare(right.manifest.name))
+    .map(({ entry, manifest, componentRoot }) => {
+      const componentInventory = inventoryFor(componentRoot)
       return {
-        type: 'library', name: `@armorbreak/${name}`, version: pkg.version,
-        hashes: [{ alg: 'SHA-256', content: createHash('sha256').update(JSON.stringify(componentFiles)).digest('hex') }],
+        type: 'library', name: manifest.name, version: manifest.version,
+        'bom-ref': `urn:armorbreak:package:${encodeURIComponent(manifest.name)}:${encodeURIComponent(manifest.version)}`,
+        properties: [
+          { name: 'armorbreak:package-manifest-path', value: entry.path },
+          includedInventoryProperty(componentInventory),
+          { name: 'armorbreak:included-file-inventory-sha256', value: inventoryHash(componentInventory) },
+        ],
       }
     }),
 }
