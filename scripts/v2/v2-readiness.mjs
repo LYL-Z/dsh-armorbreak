@@ -122,6 +122,8 @@ const report = {
   taskHostInstall,
   taskProductionSignature,
   externalAcceptanceEvidence,
+  gaEvidenceStatus: gaReady ? 'EVIDENCE_COMPLETE' : 'BLOCKED',
+  releaseAuthorization: externalAcceptanceEvidence.releaseAuthorization,
   blockers: activeBlockers,
   gaBlockers: uniqueGaBlockers,
   waived,

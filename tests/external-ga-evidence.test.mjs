@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict'
 import { createHash, generateKeyPairSync, sign } from 'node:crypto'
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import fsSync from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs'
+import { syncBuiltinESMExports } from 'node:module'
 import path from 'node:path'
 import test from 'node:test'
 import {
@@ -105,6 +107,12 @@ function trustedSignersJson(signers) {
   return JSON.stringify([...signers.values()].map(({ id, role, publicKeyPem }) => ({ id, roles: [role], publicKeyPem })))
 }
 
+function trustOptions(signers) {
+  const trustedSignersRaw = trustedSignersJson(signers)
+  const trustedSignersSha256 = createHash('sha256').update(trustedSignersRaw).digest('hex')
+  return { trustedSignersRaw, trustedSignersSha256 }
+}
+
 test('missing external receipts block every Full GA external claim', (t) => {
   const root = makeRoot(t)
   const result = verifyExternalGaEvidence({ repoRoot: root.repoRoot, sourceCommit, artifactEvidence, trustedSignersRaw: '[]', bundlePath: '' })
@@ -122,13 +130,96 @@ test('valid role-authorized signed evidence verifies and binds the production ar
     repoRoot: root.repoRoot,
     sourceCommit,
     artifactEvidence,
-    trustedSignersRaw: trustedSignersJson(signers),
+    ...trustOptions(signers),
     bundlePath: root.bundlePath,
   })
   assert.equal(result.ok, true, JSON.stringify(result.blockers))
   assert.equal(result.verifiedClaims.length, REQUIRED_EXTERNAL_GA_CLAIMS.length)
   assert.equal(result.blockers.length, 0)
   assert.match(result.bundleSha256, /^[a-f0-9]{64}$/)
+  assert.equal(result.trustConfiguration.status, 'PIN_MATCHED')
+  assert.equal(result.releaseAuthorization.status, 'REVIEW')
+})
+
+test('self-consistent signed claims without an externally supplied trust pin remain UNVERIFIED', (t) => {
+  const root = makeRoot(t)
+  const attackerSigners = makeSigners()
+  makeBundle(root, attackerSigners)
+  const result = verifyExternalGaEvidence({
+    repoRoot: root.repoRoot,
+    sourceCommit,
+    artifactEvidence,
+    trustedSignersRaw: trustedSignersJson(attackerSigners),
+    bundlePath: root.bundlePath,
+  })
+  assert.equal(result.ok, false)
+  assert.equal(result.trustConfiguration.status, 'UNVERIFIED')
+  assert.equal(result.blockers.length, REQUIRED_EXTERNAL_GA_CLAIMS.length)
+  assert.ok(result.blockers.every((blocker) => blocker.detail.includes('SHA-256 pin is missing')))
+  assert.equal(result.releaseAuthorization.status, 'REVIEW')
+})
+
+test('replacing trusted signer keys and re-signing every claim fails the externally pinned signer hash', (t) => {
+  const root = makeRoot(t)
+  const trustedSigners = makeSigners()
+  const trustPin = trustOptions(trustedSigners).trustedSignersSha256
+  const attackerSigners = makeSigners()
+  makeBundle(root, attackerSigners)
+  const attackerConfig = trustedSignersJson(attackerSigners)
+  const result = verifyExternalGaEvidence({
+    repoRoot: root.repoRoot,
+    sourceCommit,
+    artifactEvidence,
+    trustedSignersRaw: attackerConfig,
+    trustedSignersSha256: trustPin,
+    bundlePath: root.bundlePath,
+  })
+  assert.equal(result.ok, false)
+  assert.equal(result.trustConfiguration.status, 'UNVERIFIED')
+  assert.equal(result.trustConfiguration.sha256, createHash('sha256').update(attackerConfig).digest('hex'))
+  assert.equal(result.blockers.length, REQUIRED_EXTERNAL_GA_CLAIMS.length)
+  assert.ok(result.blockers.every((blocker) => blocker.detail.includes('does not match the protected pin')))
+})
+
+test('receipt bundle replacement between metadata check and open is rejected', (t) => {
+  const root = makeRoot(t)
+  const signers = makeSigners()
+  makeBundle(root, signers)
+  const preservedBundlePath = `${root.bundlePath}.preserved`
+  const replacementBytes = Buffer.from('{"schemaVersion":"forged-after-path-check"}\n')
+  const originalOpen = fsSync.openSync
+  const observedOpenPaths = []
+  let swapped = false
+  fsSync.openSync = (file, ...args) => {
+    observedOpenPaths.push(String(file))
+    if (!swapped) {
+      assert.equal(path.basename(String(file)).toLowerCase(), 'signed-receipts.json', `first opened file must be the external receipt bundle: ${String(file)}`)
+      swapped = true
+      renameSync(root.bundlePath, preservedBundlePath)
+      writeFileSync(root.bundlePath, replacementBytes)
+    }
+    return originalOpen(file, ...args)
+  }
+  syncBuiltinESMExports()
+  try {
+    const result = verifyExternalGaEvidence({
+      repoRoot: root.repoRoot,
+      sourceCommit,
+      artifactEvidence,
+      ...trustOptions(signers),
+      bundlePath: root.bundlePath,
+    })
+    assert.equal(swapped, true, `the fixture must replace the external bundle after lstat and before open; opened paths: ${observedOpenPaths.join(', ')}`)
+    assert.equal(result.ok, false)
+    assert.equal(result.bundleSha256, null)
+    assert.equal(result.blockers.length, REQUIRED_EXTERNAL_GA_CLAIMS.length)
+    assert.ok(result.blockers.every((blocker) => blocker.detail.includes('bundle is missing or unsafe')))
+    assert.deepEqual(readFileSync(root.bundlePath), replacementBytes)
+    assert.ok(readFileSync(preservedBundlePath).length > 0)
+  } finally {
+    fsSync.openSync = originalOpen
+    syncBuiltinESMExports()
+  }
 })
 
 test('receipt bundle inside the candidate repository is rejected to prevent commit-hash self-reference', (t) => {
@@ -142,7 +233,7 @@ test('receipt bundle inside the candidate repository is rejected to prevent comm
     repoRoot: root.repoRoot,
     sourceCommit,
     artifactEvidence,
-    trustedSignersRaw: trustedSignersJson(signers),
+    ...trustOptions(signers),
     bundlePath: insideRepoPath,
   })
   assert.equal(result.ok, false)
@@ -156,7 +247,7 @@ test('evidence hash tampering blocks only the affected signed claim', (t) => {
   const bundle = makeBundle(root, signers)
   const claim = bundle.claims.find((item) => item.claimId === 'realEndpoint:ABU-311')
   writeFileSync(path.join(root.repoRoot, ...claim.evidencePath.split('/')), 'tampered evidence\n')
-  const result = verifyExternalGaEvidence({ repoRoot: root.repoRoot, sourceCommit, artifactEvidence, trustedSignersRaw: trustedSignersJson(signers), bundlePath: root.bundlePath })
+  const result = verifyExternalGaEvidence({ repoRoot: root.repoRoot, sourceCommit, artifactEvidence, ...trustOptions(signers), bundlePath: root.bundlePath })
   assert.equal(result.ok, false)
   assert.equal(result.blockers.length, 1)
   assert.equal(result.blockers[0].code, 'ABU-311_REAL_ENDPOINT_BLOCKED')
@@ -167,17 +258,17 @@ test('wrong signer role, wrong commit, and invalid production signature fail clo
   const root = makeRoot(t)
   const signers = makeSigners()
   makeBundle(root, signers, { wrongRoleClaimId: 'independentReview:ABU-409' })
-  let result = verifyExternalGaEvidence({ repoRoot: root.repoRoot, sourceCommit, artifactEvidence, trustedSignersRaw: trustedSignersJson(signers), bundlePath: root.bundlePath })
+  let result = verifyExternalGaEvidence({ repoRoot: root.repoRoot, sourceCommit, artifactEvidence, ...trustOptions(signers), bundlePath: root.bundlePath })
   let reviewBlocker = result.blockers.find((blocker) => blocker.code === 'ABU-409_INDEPENDENT_REVIEW_BLOCKED')
   assert.match(reviewBlocker.detail, /lacks the independent-reviewer role/)
 
   makeBundle(root, signers, { bundleCommit: 'f'.repeat(40) })
-  result = verifyExternalGaEvidence({ repoRoot: root.repoRoot, sourceCommit, artifactEvidence, trustedSignersRaw: trustedSignersJson(signers), bundlePath: root.bundlePath })
+  result = verifyExternalGaEvidence({ repoRoot: root.repoRoot, sourceCommit, artifactEvidence, ...trustOptions(signers), bundlePath: root.bundlePath })
   assert.equal(result.blockers.length, REQUIRED_EXTERNAL_GA_CLAIMS.length)
   assert.ok(result.blockers.every((blocker) => blocker.detail.includes('not bound to the current commit')))
 
   makeBundle(root, signers, { badProductionSignatureClaimId: 'productionSignature:ABU-408' })
-  result = verifyExternalGaEvidence({ repoRoot: root.repoRoot, sourceCommit, artifactEvidence, trustedSignersRaw: trustedSignersJson(signers), bundlePath: root.bundlePath })
+  result = verifyExternalGaEvidence({ repoRoot: root.repoRoot, sourceCommit, artifactEvidence, ...trustOptions(signers), bundlePath: root.bundlePath })
   const productionBlocker = result.blockers.find((blocker) => blocker.code === 'ABU-408_PRODUCTION_SIGNATURE_BLOCKED')
   assert.match(productionBlocker.detail, /subject does not match/)
 })
