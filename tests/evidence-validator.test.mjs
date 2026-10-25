@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
+import { execFileSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
@@ -110,6 +111,66 @@ test('evidence validator resolves references relative to their nested JSON docum
   try {
     const result = validateEvidence({ repoRoot: root, commit: 'a'.repeat(40) })
     assert.equal(result.ok, true, result.issues.join('\n'))
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('evidence validator checks source hashes against the pinned Git blob across line endings', () => {
+  const root = mkdtempSync(join(tmpdir(), 'abm-evidence-source-'))
+  const git = (...args) => execFileSync('git', args, { cwd: root, stdio: 'ignore' })
+  const source = 'src/release.js'
+  const sourceBytes = Buffer.from('export const release = true\n')
+  const acceptance = 'docs/v2/acceptance'
+  const tapPath = `${acceptance}/test-report.tap`
+  const reportPath = `${acceptance}/test-report.json`
+  const manifestPath = `${acceptance}/evidence-manifest.json`
+  const releasePath = `${acceptance}/release-build.json`
+  const tap = Buffer.from('TAP version 13\nok 1 - pinned source evidence\n# tests 1\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n')
+  try {
+    git('init')
+    git('config', 'user.email', 'qa@example.test')
+    git('config', 'user.name', 'QA')
+    git('config', 'core.autocrlf', 'true')
+    writeFileSync(join(root, '.gitattributes'), '*.js text eol=lf\n')
+    mkdirSync(dirname(join(root, source)), { recursive: true })
+    mkdirSync(join(root, acceptance), { recursive: true })
+    writeFileSync(join(root, source), sourceBytes)
+    const report = {
+      schemaVersion: 'armorbreak.test-report/v1', commit: '', exitCode: 0,
+      command: 'node --test --test-reporter=tap --test-concurrency=1', processError: null, signal: null,
+      counts: { tests: 1, pass: 1, fail: 0, skipped: 0, cancelled: 0, todo: 0 },
+      tapPath, tapSha256: hash(tap),
+    }
+    writeFileSync(join(root, tapPath), tap)
+    writeFileSync(join(root, releasePath), JSON.stringify({ contentManifest: [{ path: source, size: sourceBytes.length, sha256: hash(sourceBytes) }] }))
+    writeFileSync(join(root, reportPath), JSON.stringify(report))
+    git('add', '-A')
+    git('commit', '-m', 'pin release evidence')
+    const commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
+    report.commit = commit
+    writeFileSync(join(root, reportPath), JSON.stringify(report))
+    const sourceHash = execFileSync('git', ['hash-object', source], { cwd: root, encoding: 'utf8' }).trim()
+    const rawBlob = execFileSync('git', ['cat-file', 'blob', sourceHash], { cwd: root })
+    const release = { contentManifest: [{ path: source, size: rawBlob.length, sha256: hash(rawBlob) }] }
+    writeFileSync(join(root, releasePath), JSON.stringify(release))
+    const records = Object.fromEntries([tapPath, reportPath, releasePath].map((path) => {
+      const bytes = readFileSync(join(root, path))
+      return [path, { size: bytes.length, sha256: hash(bytes) }]
+    }))
+    writeFileSync(join(root, manifestPath), JSON.stringify({ schemaVersion: 'armorbreak.evidence-manifest/v1', commit, files: records }))
+    git('add', '-A')
+    git('commit', '-m', 'bind release evidence')
+    const evidenceCommit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
+
+    writeFileSync(join(root, source), Buffer.from(sourceBytes.toString('utf8').replaceAll('\n', '\r\n')))
+    const accepted = validateEvidence({ repoRoot: root, commit: evidenceCommit, allowEvidenceAncestor: true })
+    assert.equal(accepted.ok, true, accepted.issues.join('\n'))
+
+    writeFileSync(join(root, source), 'export const release = false\r\n')
+    const changed = validateEvidence({ repoRoot: root, commit: evidenceCommit, allowEvidenceAncestor: true })
+    assert.equal(changed.ok, false)
+    assert.ok(changed.issues.some((issue) => /referenced evidence path is missing or unsafe.*differs from its pinned commit/.test(issue)))
   } finally {
     rmSync(root, { recursive: true, force: true })
   }
