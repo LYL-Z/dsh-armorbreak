@@ -113,12 +113,7 @@ test('migration rollback rejects a backup-root junction or symlink', async (t) =
   assert.equal(await readFile(target, 'utf8'), 'SYNTHETIC-TASK-ORIGINAL')
 })
 
-test('Linux migration rollback refuses task paths whose parent another principal can rename', async (t) => {
-  if (process.platform !== 'linux') {
-    t.skip('Linux directory rename semantics only')
-    return
-  }
-
+if (process.platform === 'linux') test('Linux migration rollback refuses task paths whose parent another principal can rename', async () => {
   const root = await mkdtemp(join(tmpdir(), 'abm-migration-writable-parent-'))
   const workspaceRoot = join(root, 'workspace')
   const tasksRoot = join(workspaceRoot, '.armorbreak', 'tasks')
