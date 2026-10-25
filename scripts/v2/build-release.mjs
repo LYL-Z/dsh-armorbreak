@@ -25,6 +25,52 @@ const commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding:
 function gitPaths(args) {
   return execFileSync('git', args, { cwd: root }).toString('utf8').split('\0').filter(Boolean).map((path) => path.replaceAll('\\', '/'))
 }
+function compareText(left, right) { return left < right ? -1 : left > right ? 1 : 0 }
+
+function committedBlobs(paths) {
+  const tree = execFileSync('git', ['ls-tree', '-rz', '-r', '--full-tree', commit], {
+    cwd: root,
+    maxBuffer: 256 * 1024 * 1024,
+  }).toString('utf8')
+  const entries = new Map()
+  for (const record of tree.split('\0')) {
+    if (!record) continue
+    const separator = record.indexOf('\t')
+    if (separator < 0) throw new Error('Git tree contains an invalid entry')
+    const [mode, type, oid] = record.slice(0, separator).split(' ')
+    entries.set(record.slice(separator + 1), { mode, type, oid })
+  }
+
+  const selected = paths.map((path) => {
+    const entry = entries.get(path)
+    if (!entry || entry.type !== 'blob' || !['100644', '100755'].includes(entry.mode) || !/^[a-f0-9]{40}$/i.test(entry.oid)) {
+      throw new Error(`release source is not a regular committed file: ${path}`)
+    }
+    return { path, oid: entry.oid }
+  })
+  const output = execFileSync('git', ['cat-file', '--batch'], {
+    cwd: root,
+    input: `${selected.map(({ oid }) => oid).join('\n')}\n`,
+    maxBuffer: 256 * 1024 * 1024,
+  })
+  let offset = 0
+  const blobs = selected.map(({ path, oid }) => {
+    const headerEnd = output.indexOf(0x0a, offset)
+    if (headerEnd < 0) throw new Error(`Git blob response header is incomplete: ${path}`)
+    const [actualOid, type, sizeText] = output.subarray(offset, headerEnd).toString('ascii').split(' ')
+    const size = Number(sizeText)
+    if (actualOid !== oid || type !== 'blob' || !Number.isSafeInteger(size) || size < 0) {
+      throw new Error(`Git blob response metadata is invalid: ${path}`)
+    }
+    const start = headerEnd + 1
+    const end = start + size
+    if (end >= output.length || output[end] !== 0x0a) throw new Error(`Git blob response is truncated: ${path}`)
+    offset = end + 1
+    return { path, bytes: output.subarray(start, end) }
+  })
+  if (offset !== output.length) throw new Error('Git blob response contains trailing bytes')
+  return blobs
+}
 
 const dirtyPaths = [...new Set([
   ...gitPaths(['diff', '--name-only', '-z', 'HEAD', '--']),
@@ -43,14 +89,18 @@ const EXCLUDE_PATHS = new Set([
 ])
 const EXCLUDE_PATH_PREFIXES = ['fixtures/', 'tests/']
 function files() {
-  return gitPaths(['ls-files', '-z']).filter((rel) => {
+  const paths = gitPaths(['ls-files', '-z']).filter((rel) => {
     if (EXCLUDE_PATHS.has(rel) || rel.startsWith('docs/v2/acceptance/') || rel.endsWith('.pyc')) return false
     if (EXCLUDE_PATH_PREFIXES.some((prefix) => rel.startsWith(prefix))) return false
     return ![...EXCLUDE].some((directory) => rel === directory || rel.startsWith(`${directory}/`))
-  }).map((path) => {
-    const bytes = readSafeRepoFile(root, path)
+  }).sort(compareText)
+  return committedBlobs(paths).map(({ path, bytes }) => {
+    // Check the checked-out path for links or unsafe parents, but package the
+    // immutable committed blob so autocrlf and platform filters cannot change
+    // artifact bytes for the same source commit.
+    readSafeRepoFile(root, path)
     return { path, bytes, size: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') }
-  }).sort((left, right) => left.path.localeCompare(right.path))
+  }).sort((left, right) => compareText(left.path, right.path))
 }
 
 function octal(value, length) { return `${value.toString(8).padStart(length - 1, '0')}\0` }
@@ -146,7 +196,7 @@ const sbom = {
   },
   components: parsedPackages
     .filter(({ entry }) => entry.path !== 'package.json')
-    .sort((left, right) => left.manifest.name.localeCompare(right.manifest.name))
+    .sort((left, right) => compareText(left.manifest.name, right.manifest.name))
     .map(({ entry, manifest, componentRoot }) => {
       const componentInventory = inventoryFor(componentRoot)
       return {

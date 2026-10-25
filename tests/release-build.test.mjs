@@ -27,6 +27,14 @@ test('release build is reproducible, hashed, SBOM-backed and test-signature veri
     assert.ok(manifest.contentManifest.every((file) => /^[a-f0-9]{64}$/.test(file.sha256) && Number.isSafeInteger(file.size)))
     assert.ok(!manifest.contentManifest.some((file) => file.path.startsWith('fixtures/') || file.path.startsWith('tests/')))
     assert.ok(!manifest.contentManifest.some((file) => file.path === 'FOUR_REVIEW_UNIFIED_FINDINGS.json' || file.path.endsWith('.pyc') || file.path.startsWith('.runtime/')))
+    for (const path of ['lib/release/githubRulesets.js', 'scripts/v2/stable-gate.mjs', 'scripts/v2/build-release.mjs']) {
+      const committed = spawnSync('git', ['show', `${manifest.commit}:${path}`], { cwd: process.cwd(), maxBuffer: 16 * 1024 * 1024 })
+      assert.equal(committed.status, 0, `read committed Git blob for ${path}: ${committed.stderr}`)
+      const file = manifest.contentManifest.find((entry) => entry.path === path)
+      assert.ok(file, `release inventory includes ${path}`)
+      assert.equal(file.size, committed.stdout.length, `${path} size must match the Git blob, independent of checkout line endings`)
+      assert.equal(file.sha256, createHash('sha256').update(committed.stdout).digest('hex'), `${path} digest must match the Git blob`)
+    }
     assert.equal(typeof manifest.toolchain.zlib, 'string')
     const artifactPath = join(out, manifest.artifact)
     const artifact = await readFile(artifactPath)
@@ -56,7 +64,7 @@ test('release build is reproducible, hashed, SBOM-backed and test-signature veri
       }
       return files
     }
-    const extractedInventory = (await walk(extracted)).sort((left, right) => left.path.localeCompare(right.path))
+    const extractedInventory = (await walk(extracted)).sort((left, right) => left.path < right.path ? -1 : left.path > right.path ? 1 : 0)
     assert.deepEqual(extractedInventory, manifest.contentManifest)
     assert.ok(!extractedInventory.some((file) => file.path.startsWith('fixtures/') || file.path.startsWith('tests/')))
     const rootInventoryProperty = sbom.metadata.component.properties?.find((property) => property.name === 'armorbreak:included-file-inventory')
