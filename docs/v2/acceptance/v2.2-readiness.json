@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.v2-readiness/v1",
-  "commit": "ac148d1a6bda2f43666aae04e0697af6198edd7f",
+  "commit": "86ddb6b717ac309b51a89e98a5a6e241d747e7cf",
   "preReleaseReady": true,
   "gaReady": false,
   "ready": true,
@@ -256,7 +256,16 @@
     "code": "EXTERNAL_GA_EVIDENCE_NOT_VERIFIED",
     "bundleSource": "ARMORBREAK_EXTERNAL_GA_EVIDENCE_BUNDLE",
     "bundleSha256": null,
-    "sourceCommit": "ac148d1a6bda2f43666aae04e0697af6198edd7f",
+    "trustConfiguration": {
+      "status": "UNVERIFIED",
+      "source": "ARMORBREAK_EXTERNAL_GA_TRUSTED_SIGNERS_SHA256",
+      "sha256": null
+    },
+    "releaseAuthorization": {
+      "status": "REVIEW",
+      "reason": "Evidence validation does not grant release authority; formal publication requires a protected external approval path."
+    },
+    "sourceCommit": "86ddb6b717ac309b51a89e98a5a6e241d747e7cf",
     "requiredClaims": 17,
     "verifiedClaims": [],
     "blockers": [
@@ -434,6 +443,11 @@
       }
     ]
   },
+  "gaEvidenceStatus": "BLOCKED",
+  "releaseAuthorization": {
+    "status": "REVIEW",
+    "reason": "Evidence validation does not grant release authority; formal publication requires a protected external approval path."
+  },
   "blockers": [],
   "gaBlockers": [
     {
@@ -520,7 +534,7 @@
   "artifact": {
     "version": "2.2.0-rc.1",
     "signed": false,
-    "sha256": "27c533ecde28c96e5f86ef97ff7bea5532a793aa0ab17112d6e14e7984049a5e",
+    "sha256": "b227e13fd44da9ecb89512e30caf6f5ffe2b31684ba16033c105ce8ffb9bb880",
     "attestation": {
       "ok": false,
       "code": "ARTIFACT_PATH_NOT_PROVIDED"

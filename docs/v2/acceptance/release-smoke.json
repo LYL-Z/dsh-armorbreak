@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.release-smoke/v1",
-  "generatedAt": "2026-10-25T05:34:51.460Z",
-  "commit": "ac148d1a6bda2f43666aae04e0697af6198edd7f",
+  "generatedAt": "2026-10-25T08:10:26.003Z",
+  "commit": "86ddb6b717ac309b51a89e98a5a6e241d747e7cf",
   "version": "2.2.0-rc.1",
   "checks": [
     {
@@ -27,7 +27,7 @@
     {
       "id": "readiness-evidence-current",
       "status": "PASS",
-      "detail": "readiness=ac148d1a6bda2f43666aae04e0697af6198edd7f manifest=ac148d1a6bda2f43666aae04e0697af6198edd7f tests=ac148d1a6bda2f43666aae04e0697af6198edd7f"
+      "detail": "readiness=86ddb6b717ac309b51a89e98a5a6e241d747e7cf manifest=86ddb6b717ac309b51a89e98a5a6e241d747e7cf tests=86ddb6b717ac309b51a89e98a5a6e241d747e7cf"
     },
     {
       "id": "docs-consistency",
