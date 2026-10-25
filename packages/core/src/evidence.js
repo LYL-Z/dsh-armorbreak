@@ -5,7 +5,7 @@
  * @module dsh-armorbreak/lib/core/evidence
  */
 import { lstat, realpath } from 'node:fs/promises'
-import { relative, resolve, sep, isAbsolute } from 'node:path'
+import { isAbsolute, parse, relative, resolve, sep } from 'node:path'
 import { appendJsonl, chainHash, newId, nowIso, readBounded, readJson, readJsonl, redactDeep, redactText, sanitizeText, sha256, withFileMutex, writeJsonAtomic } from './util.js'
 import { withAppendFileLock } from './append-lock.js'
 
@@ -19,6 +19,20 @@ function samePath(left, right) {
 function pathIsWithin(root, target) {
   const rel = relative(root, target)
   return rel === '' || (rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel))
+}
+
+async function hasLinkComponent(path) {
+  // realpath expands valid Windows 8.3 names; inspect the supplied path itself
+  // for links, then compare the resolved head under the resolved task root.
+  const absolute = resolve(path)
+  const root = parse(absolute).root
+  let current = root
+  for (const part of relative(root, absolute).split(sep).filter(Boolean)) {
+    current = resolve(current, part)
+    const info = await lstat(current, { bigint: true })
+    if (info.isSymbolicLink()) return true
+  }
+  return false
 }
 
 function stableValue(value) {
@@ -77,20 +91,22 @@ export class EvidenceStore {
       const { buffer, truncated } = await readBounded(this.headFile, 4096, {
         authorize: async (candidate) => {
           try {
-            const [rootReal, rootInfo, headInfo] = await Promise.all([
+            const [rootReal, rootInfo, headInfo, rootHasLink, headHasLink] = await Promise.all([
               realpath(taskRoot),
               lstat(taskRoot, { bigint: true }),
               lstat(candidate, { bigint: true }),
+              hasLinkComponent(taskRoot),
+              hasLinkComponent(candidate),
             ])
             const target = resolve(candidate)
-            if (!samePath(rootReal, taskRoot) || rootInfo.isSymbolicLink() || !rootInfo.isDirectory() ||
+            if (rootHasLink || headHasLink || rootInfo.isSymbolicLink() || !rootInfo.isDirectory() ||
                 !pathIsWithin(taskRoot, target) || !samePath(target, this.headFile) ||
                 headInfo.isSymbolicLink() || !headInfo.isFile()) {
               return { allowed: false, code: 'EVIDENCE_HEAD_UNSAFE', reason: 'evidence head path is not a regular file inside the task directory' }
             }
             const canonical = await realpath(target)
-            if (!samePath(canonical, target)) {
-              return { allowed: false, code: 'EVIDENCE_HEAD_UNSAFE', reason: 'evidence head path resolves through a link' }
+            if (!pathIsWithin(rootReal, canonical)) {
+              return { allowed: false, code: 'EVIDENCE_HEAD_UNSAFE', reason: 'evidence head path resolves outside the task directory' }
             }
             return { allowed: true, resolved: canonical }
           } catch (error) {
