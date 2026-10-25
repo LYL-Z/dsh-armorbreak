@@ -1,7 +1,7 @@
 # README V3 — fact matrix
 
 - Snapshot date: 2026-10-25
-- Main baseline after PR #18: `82a77b8ceb60d7c10a2d0ff92f7faaea45298e68`
+- Main baseline after PR #19 evidence refresh: `a866597134e11c830420099ab5bbb0e9fe368975`
 - README PR source branch: `docs/readme-v3-editorial` (latest main baseline included by a merge commit)
 - Package version: `2.2.0`
 - Core internal contract: `0.1.0-p1`
@@ -26,7 +26,7 @@
 | Local Ollama loop | `LOCAL_MODEL_PASS` | `docs/v2/acceptance/provider-live-ollama.json` |
 | Official commercial Provider Live | `LIVE_UNVERIFIED` | `docs/v2/release/v2.2-stable-scope-v1.json` |
 | PR #18 CI | Run `40203187699`, PR HEAD `6ad35b0121b546edc6d71efe6691b67eba7505d8`, 5/5 jobs success; Windows 529/529 and Ubuntu 531/531, 0 fail/skip | GitHub Actions run; PR HEAD only, not exact-main release authorization |
-| Current main Stable release | PR #19 is refreshing evidence after the squash merge; its exact-HEAD CI and the resulting main attestation must pass before Stable Gate evaluation | PR #19 / `docs/v2/release/v2.2-stable-policy-v1.md` |
+| Current main Stable release | PR #19 evidence refresh is merged; exact-main CI run `40204887757` and Release Attestation run `40204887726` are still running and must pass before Stable Gate evaluation | GitHub Actions / `docs/v2/release/v2.2-stable-policy-v1.md` |
 | Historical Full V2.2 GA | `gaReady: false`; 18 blockers | `docs/v2/acceptance/v2.2-readiness.json` |
 | AI-assisted review | Accepted by policy; evidence remains SHA-specific; not human certification | `docs/v2/release/v2.2-stable-policy-v1.md` |
 | Independent human security certification | Not obtained and not a V2.2 Stable prerequisite | Stable policy / release records |

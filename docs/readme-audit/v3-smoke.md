@@ -53,4 +53,4 @@ The shortest offline L0 path executed against the recorded baseline tree.
 
 
 
-- This smoke is historical evidence for the baseline SHA above; it does not certify the later 82a77b8 main commit or the final edited README text.
+- This smoke is historical evidence for the baseline SHA above; it does not certify the later a866597 main commit or the final edited README text.
