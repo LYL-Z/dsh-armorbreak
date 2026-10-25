@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { mkdir, mkdtemp, readFile, rename, rm, symlink, writeFile } from 'node:fs/promises'
+import { chmod, mkdir, mkdtemp, readFile, rename, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
@@ -111,6 +111,33 @@ test('migration rollback rejects a backup-root junction or symlink', async (t) =
 
   await assert.rejects(() => rollbackMigration({ manifestPath }), /symlink or junction/)
   assert.equal(await readFile(target, 'utf8'), 'SYNTHETIC-TASK-ORIGINAL')
+})
+
+test('Linux migration rollback refuses task paths whose parent another principal can rename', async (t) => {
+  if (process.platform !== 'linux') {
+    t.skip('Linux directory rename semantics only')
+    return
+  }
+
+  const root = await mkdtemp(join(tmpdir(), 'abm-migration-writable-parent-'))
+  const workspaceRoot = join(root, 'workspace')
+  const tasksRoot = join(workspaceRoot, '.armorbreak', 'tasks')
+  const target = join(tasksRoot, 'task_synthetic', 'task.json')
+  await mkdir(join(tasksRoot, 'task_synthetic'), { recursive: true })
+  await writeFile(target, 'SYNTHETIC-TASK-ORIGINAL')
+  const fixture = await maliciousManifest({ root, mode: 'writable-parent', file: target })
+  await chmod(tasksRoot, 0o777)
+
+  let targetWriteHookReached = false
+  await assert.rejects(() => rollbackMigration({
+    manifestPath: fixture.manifestPath,
+    onBeforeTargetWrite() { targetWriteHookReached = true },
+  }), /untrusted writable parent/)
+
+  assert.equal(targetWriteHookReached, false)
+  assert.equal(await readFile(target, 'utf8'), 'SYNTHETIC-TASK-ORIGINAL')
+  assert.equal(JSON.parse(await readFile(fixture.manifestPath, 'utf8')).status, 'completed')
+  await rm(root, { recursive: true, force: true })
 })
 
 test('migration rollback pins the opened task file across an ancestor junction swap', async (t) => {

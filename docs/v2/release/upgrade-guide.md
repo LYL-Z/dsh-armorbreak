@@ -20,6 +20,7 @@
 - `--apply` writes backups and a `prepared` manifest before replacing task JSON.
 - Crash/ENOSPC/EACCES/SIGKILL recovery: `recoverInterruptedMigrations`.
 - `--rollback <manifest>` restores exact original bytes.
+- On Linux, rollback fails closed if a migration path has a group/other-writable ancestor that another UID could rename, or a path component is owned by an unrelated non-root UID. WSL DrvFS mounts commonly report mode `0777`; move the workspace to a protected Linux filesystem before rollback if the command rejects that path. Keep the migration manifest and backups for recovery; do not manually delete them.
 
 ## Rollback
 
