@@ -18,8 +18,10 @@ The validator supports three explicit modes:
 - **docs-only:** `--allow-docs-only`, validated against a trusted target-branch
   base SHA (`EVIDENCE_BASE_SHA` from the pull-request event);
 - **evidence-only:** `--allow-evidence-only`, validated against the manifest's
-  source commit; only `docs/v2/acceptance/**` may differ; `readiness.json` is
-  not accepted as an evidence-only path;
+  source commit; `docs/v2/acceptance/**` may differ, and generated readiness
+  metadata is accepted only with the explicit `--allow-readiness` option.
+  V2.2 Stable writes `stable-readiness.json`; the historical Full GA
+  `readiness.json` snapshot remains unchanged;
 - **code/security change:** neither mode applies; evidence must match the code
   commit or be regenerated for it.
 

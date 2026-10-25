@@ -78,6 +78,8 @@ function fixture() {
     },
     provenance: { localEvidenceCanGrantPublishAuthority: false, acceptedMechanism: 'GitHub Actions OIDC/Sigstore build provenance', isSecurityCertification: false },
     legacyFullGa: {
+      readinessFileSha256: digest(Buffer.from('legacy-full-ga-readiness')),
+      legacyReleaseSnapshot: { sha256: digest(Buffer.from('historical-rc-readiness')) },
       stableDoesNotSatisfyFullGa: true, mustRemainGaReadyFalseWhenBlockersRemain: true,
       gate: 'node scripts/v2/v2-readiness.mjs --require-ga --no-waivers',
     },
@@ -145,7 +147,10 @@ function fixture() {
   }
   const input = {
     policy, packageManifest: { version: '2.2.0' }, packageLock: { version: '2.2.0', packages: { '': { version: '2.2.0' } } },
-    legacyReadiness: { gaReady: false, gaBlockers: [{ code: 'legacy' }] }, legacyScope: { v22FullGa: { status: 'BLOCKED_EXTERNAL' } },
+    legacyReadiness: { gaReady: false, gaBlockers: [{ code: 'legacy' }] },
+    legacyReadinessBytes: Buffer.from('legacy-full-ga-readiness'),
+    legacyReleaseReadinessBytes: Buffer.from('historical-rc-readiness'),
+    legacyScope: { v22FullGa: { status: 'BLOCKED_EXTERNAL' } },
     sourceCommit: commit, branchName: 'main', remoteMainCommit: commit, trackedWorktreeClean: true, pr18Merged: true, pr17Merged: true,
     ciRun, attestationRun, repositoryProtection,
     publisherIdentity: { ...stableGateRequiredPublisher, repositoryAdmin: true },
@@ -214,6 +219,15 @@ test('Stable Gate rejects omitted, forged, or incomplete SBOM package components
 test('Stable Gate refuses to rewrite legacy Full GA as passed', () => {
   const input = fixture()
   input.legacyReadiness.gaReady = true
+  const report = evaluateStableGate(input)
+  assert.equal(report.releasable, false)
+  assert.ok(report.blockers.some((item) => item.id === 'LEGACY_FULL_GA_PRESERVED'))
+})
+
+test('Stable Gate verifies historical Full GA and RC readiness bytes remain unchanged', () => {
+  const input = fixture()
+  input.legacyReadinessBytes = Buffer.from('forged-full-ga-readiness')
+  input.legacyReleaseReadinessBytes = Buffer.from('rewritten-rc-readiness')
   const report = evaluateStableGate(input)
   assert.equal(report.releasable, false)
   assert.ok(report.blockers.some((item) => item.id === 'LEGACY_FULL_GA_PRESERVED'))

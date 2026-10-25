@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /** Stable-scope smoke over current package metadata and preserved historical Full GA evidence. */
 import { execFileSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import { checkDocs } from '../../lib/release/docsConsistency.js'
 import { validateEvidence } from '../../lib/release/evidenceValidator.js'
 import { computeReleaseGates } from '../../lib/release/gates.js'
@@ -13,29 +14,36 @@ const pkg = json('package.json')
 const stablePolicy = json('docs/v2/release/v2.2-stable-scope-v1.json')
 const lock = json('docs/v2/bundle.lock.json')
 const sbom = json('docs/v2/release/sbom.spdx.json')
-const readiness = json('docs/v2/release/readiness.json')
+const historicalReadinessBytes = readSafeRepoFile(root, 'docs/v2/release/readiness.json', { requiredPrefix: 'docs/v2/release/' })
+const historicalReadiness = JSON.parse(historicalReadinessBytes.toString('utf8'))
+const stableReadiness = json('docs/v2/release/stable-readiness.json')
+const legacyReadinessBytes = readSafeRepoFile(root, 'docs/v2/acceptance/v2.2-readiness.json', { requiredPrefix: 'docs/v2/acceptance/' })
 const legacyReadiness = json('docs/v2/acceptance/v2.2-readiness.json')
 const legacyScope = json('docs/v2/acceptance/release-scope.json')
 const testReport = json('docs/v2/acceptance/test-report.json')
 const manifest = json('docs/v2/acceptance/evidence-manifest.json')
 const counts = (value) => JSON.stringify(value ?? null)
+const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex')
 const checks = []
 const add = (id, ok, detail) => checks.push({ id, status: ok ? 'PASS' : 'FAIL', detail })
 add('package-version', pkg.version === stablePolicy.packageVersion && stablePolicy.channel === 'stable', pkg.version)
 add('bundle-version', lock.version === pkg.version, lock.version)
 add('sbom-version', String(sbom.name ?? '').includes(pkg.version), sbom.name)
-add('historical-readiness-preserved', readiness.package?.version === stablePolicy.legacyFullGa?.legacyReleaseSnapshot?.packageVersion &&
+add('historical-readiness-preserved', historicalReadiness.package?.version === stablePolicy.legacyFullGa?.legacyReleaseSnapshot?.packageVersion &&
+  sha256(historicalReadinessBytes) === stablePolicy.legacyFullGa?.legacyReleaseSnapshot?.sha256 &&
   stablePolicy.legacyFullGa?.legacyReleaseSnapshot?.status === 'HISTORICAL_RC_EVIDENCE' &&
-  stablePolicy.legacyFullGa?.legacyReleaseSnapshot?.preserveOriginalEvidence === true, readiness.package?.version)
+  stablePolicy.legacyFullGa?.legacyReleaseSnapshot?.preserveOriginalEvidence === true, historicalReadiness.package?.version)
 add('legacy-full-ga-still-blocked', legacyReadiness.gaReady === false && Array.isArray(legacyReadiness.gaBlockers) &&
-  legacyReadiness.gaBlockers.length > 0 && legacyScope.v22FullGa?.status === 'BLOCKED_EXTERNAL',
+  legacyReadiness.gaBlockers.length > 0 &&
+  sha256(legacyReadinessBytes) === stablePolicy.legacyFullGa?.readinessFileSha256 &&
+  legacyScope.v22FullGa?.status === 'BLOCKED_EXTERNAL',
   `${legacyReadiness.gaBlockers?.length ?? 0} historical blockers; gaReady=${legacyReadiness.gaReady}`)
 add('readiness-evidence-current', Boolean(
-  readiness.evidence?.manifestCommit === manifest.commit
-  && readiness.evidence?.testReportCommit === testReport.commit
-  && counts(readiness.evidence?.testCounts) === counts(testReport.counts)
+  stableReadiness.evidence?.manifestCommit === manifest.commit
+  && stableReadiness.evidence?.testReportCommit === testReport.commit
+  && counts(stableReadiness.evidence?.testCounts) === counts(testReport.counts)
   && testReport.commit === manifest.commit
-), `readiness=${readiness.evidence?.manifestCommit ?? 'missing'} manifest=${manifest.commit ?? 'missing'} tests=${testReport.commit ?? 'missing'}`)
+), `readiness=${stableReadiness.evidence?.manifestCommit ?? 'missing'} manifest=${manifest.commit ?? 'missing'} tests=${testReport.commit ?? 'missing'}`)
 const docIssues = checkDocs(process.cwd())
 add('docs-consistency', docIssues.length === 0, docIssues.join('; ') || 'no issues')
 const evidence = validateEvidence({ repoRoot: root, commit, allowEvidenceAncestor: true, allowReadiness: true })

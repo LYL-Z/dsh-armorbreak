@@ -211,6 +211,50 @@ test('validator accepts a path-verified docs-only baseline and still rejects a p
   }
 })
 
+test('stable readiness can be appended as generated evidence without replacing the historical Full GA snapshot', () => {
+  const { root, base } = fixture()
+  try {
+    const report = testReport(base)
+    write(root, 'docs/v2/acceptance/test-report.json', report)
+    write(root, 'docs/v2/acceptance/evidence-manifest.json', JSON.stringify({
+      schemaVersion: 'armorbreak.evidence-manifest/v1',
+      commit: base,
+      files: {
+        'docs/v2/acceptance/test-report.json': { sha256: hash(report), size: Buffer.byteLength(report) },
+        'docs/v2/acceptance/test-report.tap': { sha256: hash(TEST_TAP), size: Buffer.byteLength(TEST_TAP) },
+      },
+    }))
+    git(root, 'add', 'docs/v2/acceptance')
+    git(root, 'commit', '-m', 'evidence: bind source tests')
+    const stableReadiness = JSON.stringify({
+      schemaVersion: 'armorbreak.release-readiness/v1',
+      commit: base,
+      evaluatedAtCommit: base,
+      evidence: {
+        manifestCommit: base,
+        testReportCommit: base,
+        testCounts: { tests: 1, pass: 1, fail: 0, skipped: 0, cancelled: 0, todo: 0 },
+        current: true,
+        checks: { manifestValid: true, evidenceLineage: true, testsPassed: true, gatesValid: true },
+      },
+      ready: false,
+      incomplete: [],
+      sbom: false,
+    }) + '\n'
+    const head = commitChange(root, 'docs/v2/release/stable-readiness.json', stableReadiness)
+    assert.equal(validateEvidence({ repoRoot: root, commit: head, allowEvidenceAncestor: true }).ok, false)
+    const accepted = validateEvidence({ repoRoot: root, commit: head, allowEvidenceAncestor: true, allowReadiness: true })
+    assert.equal(accepted.ok, true, accepted.issues.join('; '))
+
+    const forged = commitChange(root, 'docs/v2/release/stable-readiness.json', '{"gaReady":true}\n')
+    const rejected = validateEvidence({ repoRoot: root, commit: forged, allowEvidenceAncestor: true, allowReadiness: true })
+    assert.equal(rejected.ok, false)
+    assert.ok(rejected.issues.some((issue) => /readiness metadata|readiness schema/.test(issue)))
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
 test('docs baseline accepts prior evidence and prior docs-only merges', () => {
   const { root, base } = fixture()
   try {

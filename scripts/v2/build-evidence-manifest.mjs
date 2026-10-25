@@ -10,7 +10,8 @@ const root = process.cwd()
 const dir = 'docs/v2/acceptance'
 const commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
 const dirtyPaths = execFileSync('git', ['diff', '--name-only', 'HEAD'], { cwd: root, encoding: 'utf8' }).split(/\r?\n/).filter(Boolean)
-const dirtySourcePaths = dirtyPaths.filter((path) => !path.startsWith(`${dir}/`) && path !== 'docs/v2/release/readiness.json')
+const dirtySourcePaths = dirtyPaths.filter((path) => !path.startsWith(`${dir}/`) &&
+  path !== 'docs/v2/release/readiness.json' && path !== 'docs/v2/release/stable-readiness.json')
 if (dirtySourcePaths.length) throw new Error(`evidence manifest must bind committed source; dirty paths: ${dirtySourcePaths.join(', ')}`)
 const files = {}
 const INCLUDED_LOG_PATHS = new Set(['docs/v2/acceptance/host-model/pi/install-uninstall.log'])

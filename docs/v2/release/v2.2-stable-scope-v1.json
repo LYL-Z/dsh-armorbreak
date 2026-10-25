@@ -88,10 +88,12 @@
   },
   "legacyFullGa": {
     "readinessFile": "docs/v2/acceptance/v2.2-readiness.json",
+    "readinessFileSha256": "13a077f050305813cc603cc083c256777eb61224619d05caf8d1928e0dfd859b",
     "mustRemainGaReadyFalseWhenBlockersRemain": true,
     "historicalContract": "docs/v2/release/v2.2-ga-review.md",
     "legacyReleaseSnapshot": {
       "file": "docs/v2/release/readiness.json",
+      "sha256": "5bce14341b8e215d339c385455ae39a683c842a4e40d6319987ede375e3cff53",
       "status": "HISTORICAL_RC_EVIDENCE",
       "packageVersion": "2.2.0-rc.1",
       "preserveOriginalEvidence": true

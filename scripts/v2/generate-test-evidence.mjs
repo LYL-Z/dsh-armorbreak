@@ -12,7 +12,8 @@ const tapPath = 'docs/v2/acceptance/test-report.tap'
 const reportPath = 'docs/v2/acceptance/test-report.json'
 const commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim()
 const dirtyPaths = execFileSync('git', ['diff', '--name-only', 'HEAD'], { cwd: root, encoding: 'utf8' }).split(/\r?\n/).filter(Boolean)
-const dirtySourcePaths = dirtyPaths.filter((path) => !path.startsWith('docs/v2/acceptance/') && path !== 'docs/v2/release/readiness.json')
+const dirtySourcePaths = dirtyPaths.filter((path) => !path.startsWith('docs/v2/acceptance/') &&
+  path !== 'docs/v2/release/readiness.json' && path !== 'docs/v2/release/stable-readiness.json')
 if (dirtySourcePaths.length) throw new Error(`test evidence must be generated from committed source; dirty paths: ${dirtySourcePaths.join(', ')}`)
 const startedAt = new Date().toISOString()
 const run = spawnSync(process.execPath, ['--test', '--test-reporter=tap', '--test-concurrency=1'], { cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })

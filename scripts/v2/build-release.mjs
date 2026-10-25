@@ -31,13 +31,14 @@ const dirtyPaths = [...new Set([
   ...gitPaths(['ls-files', '--others', '--exclude-standard', '-z']),
 ])]
 const reviewEvidence = (path) => path === 'FOUR_REVIEW_UNIFIED_FINDINGS.json' || path === 'FOUR_REVIEW_RECONCILIATION.md'
-const evidenceOnly = (path) => path.startsWith('docs/v2/acceptance/') || path === 'docs/v2/release/readiness.json' || reviewEvidence(path)
+const evidenceOnly = (path) => path.startsWith('docs/v2/acceptance/') ||
+  path === 'docs/v2/release/readiness.json' || path === 'docs/v2/release/stable-readiness.json' || reviewEvidence(path)
 const dirtySourcePaths = dirtyPaths.filter((path) => !evidenceOnly(path))
 if (dirtySourcePaths.length) throw new Error(`release build requires committed source; dirty source paths: ${dirtySourcePaths.join(', ')}`)
 
 const EXCLUDE = new Set(['.git', 'node_modules', 'dist', '.armorbreak', '.github'])
 const EXCLUDE_PATHS = new Set([
-  'docs/v2/release/readiness.json', 'docs/v2/release/sbom.spdx.json',
+  'docs/v2/release/readiness.json', 'docs/v2/release/stable-readiness.json', 'docs/v2/release/sbom.spdx.json',
   'FOUR_REVIEW_UNIFIED_FINDINGS.json', 'FOUR_REVIEW_RECONCILIATION.md',
 ])
 const EXCLUDE_PATH_PREFIXES = ['fixtures/', 'tests/']

@@ -6,6 +6,7 @@ import { classifyEvidenceOnly, validateEvidence } from '../../lib/release/eviden
 import { computeReleaseGates } from '../../lib/release/gates.js'
 import { readSafeRepoFile, writeSafeRepoFile } from '../../lib/release/safeEvidenceFile.js'
 import { verifyPortableArtifactAttestation } from '../../lib/release/artifactAttestation.js'
+import { readinessOutputPath } from '../../lib/release/readinessPath.js'
 
 const root = process.cwd()
 const shaPattern = /^[a-f0-9]{40}$/i
@@ -26,6 +27,7 @@ function recordMatches(manifest, path, bytes) {
 }
 
 const pkg = readJson('package.json')
+const stablePolicy = readJson('docs/v2/release/v2.2-stable-scope-v1.json')
 const gates = readJson('docs/v2/acceptance/release-gates.json')
 const sbom = readJson('docs/v2/release/sbom.spdx.json')
 const artifact = readJson('docs/v2/acceptance/portable-artifact.json')
@@ -58,7 +60,8 @@ const testsPassed = Boolean(testReport?.schemaVersion === 'armorbreak.test-repor
 const trackedChanges = execFileSync('git', ['diff', '--name-only', 'HEAD'], { cwd: root, encoding: 'utf8' })
   .split(/\r?\n/).filter(Boolean)
 const sourceChanges = trackedChanges.filter((path) =>
-  !path.startsWith('docs/v2/acceptance/') && path !== 'docs/v2/release/readiness.json')
+  !path.startsWith('docs/v2/acceptance/') && path !== 'docs/v2/release/readiness.json' &&
+  path !== 'docs/v2/release/stable-readiness.json')
 const gateResultsMatch = Boolean(gates?.gates && recomputedGates.gates &&
   gates.localChecksPass === recomputedGates.localChecksPass &&
   gates.releasable === false && recomputedGates.releasable === false &&
@@ -117,7 +120,7 @@ const result = {
         'release blocked by incomplete gates/tasks or missing SBOM; this is not a test-pass claim',
 }
 if (!process.argv.includes('--check-only')) {
-  writeSafeRepoFile(root, 'docs/v2/release/readiness.json', `${JSON.stringify(result, null, 2)}\n`, { requiredPrefix: 'docs/v2/release/' })
+  writeSafeRepoFile(root, readinessOutputPath({ packageVersion: pkg?.version, stablePolicy }), `${JSON.stringify(result, null, 2)}\n`, { requiredPrefix: 'docs/v2/release/' })
 }
 console.log(JSON.stringify({ ready: result.ready, candidateCommit: sourceCommit, evaluatedAtCommit: head, evidence: result.evidence.checks, incomplete, gates: Object.fromEntries(Object.entries(result.gates ?? {}).map(([key, value]) => [key, value.status])) }, null, 2))
 if (!evidenceOk || (process.argv.includes('--require-ready') && !ready)) process.exitCode = 1

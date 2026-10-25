@@ -68,7 +68,9 @@ function main() {
   const policy = readJson('docs/v2/release/v2.2-stable-scope-v1.json', 'docs/v2/release/')
   const packageManifest = readJson('package.json', undefined)
   const packageLock = readJson('package-lock.json', undefined)
-  const legacyReadiness = readJson('docs/v2/acceptance/v2.2-readiness.json', 'docs/v2/acceptance/')
+  const legacyReadinessBytes = readSafeRepoFile(root, 'docs/v2/acceptance/v2.2-readiness.json', { requiredPrefix: 'docs/v2/acceptance/' })
+  const legacyReadiness = JSON.parse(legacyReadinessBytes.toString('utf8'))
+  const legacyReleaseReadinessBytes = readSafeRepoFile(root, 'docs/v2/release/readiness.json', { requiredPrefix: 'docs/v2/release/' })
   const legacyScope = readJson('docs/v2/acceptance/release-scope.json', 'docs/v2/acceptance/')
   const artifactBytes = readSafeRepoFile(root, artifactPath, { requiredPrefix: 'dist/' })
   const sbomBytes = readSafeRepoFile(root, sbomPath, { requiredPrefix: 'dist/' })
@@ -91,7 +93,7 @@ function main() {
   const identity = ghJson(['api', 'user'])
   const repositoryInfo = ghJson(['api', `repos/${repository}`])
   const report = evaluateStableGate({
-    policy, packageManifest, packageLock, legacyReadiness, legacyScope,
+    policy, packageManifest, packageLock, legacyReadiness, legacyReadinessBytes, legacyReleaseReadinessBytes, legacyScope,
     sourceCommit, branchName, remoteMainCommit, trackedWorktreeClean: cleanTrackedWorktree(),
     pr18Merged: prMerged(18), pr17Merged: prMerged(17),
     ciRun, attestationRun,
