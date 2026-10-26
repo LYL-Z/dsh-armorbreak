@@ -4,8 +4,18 @@
 
 | Version | Supported |
 |---|---|
-| 1.0.x | ✅ security fixes |
+| 2.2.x (Stable) | Security fixes or mitigations for confirmed vulnerabilities, subject to maintainer capacity; no fixed support end date |
+| 1.0.x | ✅ security fixes (existing commitment unchanged) |
 | < 1.0.0 | ❌ (not published) |
+
+### Support lifecycle
+
+- `2.2.x` is the current Stable maintenance line.
+- No fixed support end date is promised; this is not a permanent-maintenance commitment.
+- Confirmed security issues are handled according to severity, impact, technical feasibility and maintainer capacity.
+- The existing `1.0.x` security-fix commitment remains in force.
+- Lifecycle status for other historical versions is not decided by this revision; no EOL or unsupported status is asserted for them.
+- Any future change to support scope or EOL requires a new explicit policy revision.
 
 ## Reporting a vulnerability
 
