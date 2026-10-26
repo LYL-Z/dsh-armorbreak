@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.evidence-manifest/v1",
   "commit": "d8f412c94ecaeec21125c710f3928f5ec8ceb6fa",
-  "generatedAt": "2026-10-26T12:58:29.616Z",
+  "generatedAt": "2026-10-26T12:59:29.480Z",
   "files": {
     "docs/v2/acceptance/airgap-container.json": {
       "sha256": "967dc9c1443f006ac5e6552b0b080c797ef7f906239d049b06e95f522ad24397",
@@ -360,7 +360,7 @@
       "size": 4182
     },
     "docs/v2/acceptance/portable-artifact.json": {
-      "sha256": "1cd8ccbb3cabc9c9930f14a2ec87a87cc5fa77a3b764a018485c2eda94443ca9",
+      "sha256": "9250a2f5eb172c2dfb7d9a346ee7c2f4dc43d0f4e34900e130fc974a9e0f83e9",
       "size": 650
     },
     "docs/v2/acceptance/provider-live-ollama.json": {
@@ -372,8 +372,8 @@
       "size": 601
     },
     "docs/v2/acceptance/release-build.json": {
-      "sha256": "ecec19821281dc0da1ddbe21df0d42b7d5ddadf3bad8986bd25df8c6c301aafd",
-      "size": 83423
+      "sha256": "9f950565abc29070e39c2eb0376eac444c3743830abfd963c25199131b5a657f",
+      "size": 83769
     },
     "docs/v2/acceptance/release-scope.json": {
       "sha256": "ad6df3b7d03b8b9096c66ed5fdf34db69f5c96fb6b30f0eb849356fbd5eb0dff",
