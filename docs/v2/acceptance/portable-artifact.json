@@ -1,11 +1,11 @@
 {
   "schemaVersion": "armorbreak.portable-artifact/v1",
-  "generatedAt": "2026-10-25T14:55:23.253Z",
-  "sourceCommit": "82a77b8ceb60d7c10a2d0ff92f7faaea45298e68",
+  "generatedAt": "2026-10-26T11:41:43.004Z",
+  "sourceCommit": "a2bca08ea5ea06e3afc9e19dacea33164d540fec",
   "version": "2.2.0",
   "artifact": "armorbreak-portable-2.2.0.tar.gz",
-  "bytes": 5332908,
-  "sha256": "31b61ec646f661b6fd4cfa0ebdcbf7149dea3697383536e033f3d63953deb55f",
+  "bytes": 5332396,
+  "sha256": "29eb54605550a9a236e3119f61993e4f3ddde3e64d9dfa653cc0e493f1afe795",
   "sbom": "armorbreak-portable-2.2.0.tar.gz.sbom.cdx.json",
   "cleanRoom": {
     "extracted": true,

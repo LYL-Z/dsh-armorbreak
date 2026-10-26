@@ -1,16 +1,16 @@
 {
   "schemaVersion": "armorbreak.release-build/v1",
-  "generatedAt": "2026-10-25T14:55:23.253Z",
-  "commit": "82a77b8ceb60d7c10a2d0ff92f7faaea45298e68",
+  "generatedAt": "2026-10-26T11:41:43.004Z",
+  "commit": "a2bca08ea5ea06e3afc9e19dacea33164d540fec",
   "package": "dsh-armorbreak",
   "version": "2.2.0",
   "artifact": "armorbreak-portable-2.2.0.tar.gz",
-  "bytes": 5332908,
-  "sha256": "31b61ec646f661b6fd4cfa0ebdcbf7149dea3697383536e033f3d63953deb55f",
+  "bytes": 5332396,
+  "sha256": "29eb54605550a9a236e3119f61993e4f3ddde3e64d9dfa653cc0e493f1afe795",
   "reproducible": true,
   "sbom": "armorbreak-portable-2.2.0.tar.gz.sbom.cdx.json",
-  "sbomSha256": "0b2191bb5b8f48701fdd28a89057695de4c5a3ee7b84a66c9239772e76d3e1db",
-  "files": 504,
+  "sbomSha256": "010b61160dea1d50871099390d98b268825371dd65b2a1a4c38ee9518225b12c",
+  "files": 506,
   "contentManifest": [
     {
       "path": ".gitattributes",
@@ -49,13 +49,13 @@
     },
     {
       "path": "README.md",
-      "size": 16378,
-      "sha256": "f07599b6822464a79dc755569fbdcac7211d4c721c554d69a4be6c8571f2a9fd"
+      "size": 11385,
+      "sha256": "0359d16bac413f5d9efb20dba2569c3d19f38dba83026f9511a041982d21ec85"
     },
     {
       "path": "README.zh-CN.md",
-      "size": 14725,
-      "sha256": "b55aaa56b18eb55e660404c1cc44310468d37ba2d302aeda31ea69ff158c2dcd"
+      "size": 11228,
+      "sha256": "7c603e21facbc06508b4e816c314954097eff61b7d3fee25824d3a4fa57ef2d9"
     },
     {
       "path": "SECURITY.md",
@@ -276,6 +276,16 @@
       "path": "docs/readme-audit/modification-summary.md",
       "size": 2147,
       "sha256": "7accf60659cb7be301fa19ad4afdc8cb11533e9d90df5685fae0c461ef58df11"
+    },
+    {
+      "path": "docs/readme-audit/v3-fact-matrix.md",
+      "size": 3900,
+      "sha256": "c111dcfd287749add2038ef0cc50bf211eaa322894cc4fd5d7afd19e62878d72"
+    },
+    {
+      "path": "docs/readme-audit/v3-smoke.md",
+      "size": 2274,
+      "sha256": "8dea88fe4dbec694122be591d2cbf7b34d83ff869fccfcf6c6176e0535697050"
     },
     {
       "path": "docs/releases/v1.0.0.md",
@@ -1649,8 +1659,8 @@
     },
     {
       "path": "lib/release/artifactAttestation.js",
-      "size": 4699,
-      "sha256": "fdf6b167ceb0bea47fa7ae9e9d21ec6694149e710f21415c2776e5dc8cc23b45"
+      "size": 4879,
+      "sha256": "98995cec75471b02260df456ce0a1d4645acf5038bec7b05abb08af4c9422270"
     },
     {
       "path": "lib/release/docsConsistency.js",
@@ -2533,7 +2543,7 @@
       "sha256": "dab0b44fff46b3c9dc279cf7b78831c3a0409fd2ed0c83fff14e256e4e848099"
     }
   ],
-  "contentManifestSha256": "84a763ba62fce640dbdfc5766fd0e00287c4641f444162acf69a7794b890b418",
+  "contentManifestSha256": "3b508085b6645e98560c14ffcfdc51507bc4709ef0b6a1841258545bfeafae3a",
   "toolchain": {
     "node": "v24.16.0",
     "platform": "win32",
@@ -2550,8 +2560,8 @@
     "algorithm": "ed25519",
     "testKey": true,
     "valid": true,
-    "signature": "ZaSFSA2IImMQCPWuVAM/2U1uFZAKXvS+Clxuj34/Eb04XRxua1r2aiandhx+LZfWj3N4V/YWR2vvIGmGRm+3BA==",
-    "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA7++OBxI++xnieBfBvN3eD6jDvSBaNQcrEVAY6GeHhkw=\n-----END PUBLIC KEY-----\n"
+    "signature": "ZmB/Rhcv1zHbe7du1dUIGNwW41TrDIzzvqvwKyJEJgx0hYOeWpun9P+/7zYDSZKau222Ps/asiT+8faY+EcACQ==",
+    "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAi/t9+067VYJorcwP1x6g/7DU31ozQVROV6okJCLUC98=\n-----END PUBLIC KEY-----\n"
   },
   "productionSigned": false,
   "limitations": [
