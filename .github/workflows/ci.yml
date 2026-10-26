@@ -142,6 +142,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      actions: read
+      attestations: read
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -152,28 +154,41 @@ jobs:
           node-version: 24
 
       - name: Docs consistency
+        if: github.ref != 'refs/tags/v2.2.0'
         run: node scripts/v2/check-docs-consistency.mjs
 
       - name: Evidence hashes and references
+        if: github.ref != 'refs/tags/v2.2.0'
         env:
           EVIDENCE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: node scripts/v2/validate-evidence.mjs --allow-docs-only --allow-evidence-only --allow-readiness --require-clean
 
       - name: Evidence-driven release gates
+        if: github.ref != 'refs/tags/v2.2.0'
         env:
           EVIDENCE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: node scripts/v2/release-gates.mjs --allow-docs-only --allow-evidence-only --allow-readiness
 
       - name: Check release evidence readiness
+        if: github.ref != 'refs/tags/v2.2.0'
         run: node scripts/v2/check-release.mjs --check-only
 
       - name: Live pre-release readiness
+        if: github.ref != 'refs/tags/v2.2.0'
         run: node scripts/v2/v2-readiness.mjs --require-ready --no-waivers
 
       - name: Release evidence smoke
+        if: github.ref != 'refs/tags/v2.2.0'
         run: node scripts/v2/release-smoke.mjs
 
       - name: GA blocker root-cause map
+        if: github.ref != 'refs/tags/v2.2.0'
         run: node scripts/v2/check-blocker-map.mjs
+
+      - name: Verify owner-published Stable tag and exact-main provenance
+        if: github.ref == 'refs/tags/v2.2.0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/v2/verify-published-stable.mjs
 
 
