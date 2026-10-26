@@ -7,7 +7,7 @@
   },
   "sbom": true,
   "commit": "d8f412c94ecaeec21125c710f3928f5ec8ceb6fa",
-  "evaluatedAtCommit": "1466a68851a63c2f36070f5b84e80d60adfa4fda",
+  "evaluatedAtCommit": "d8f412c94ecaeec21125c710f3928f5ec8ceb6fa",
   "evidence": {
     "manifestCommit": "d8f412c94ecaeec21125c710f3928f5ec8ceb6fa",
     "testReportCommit": "d8f412c94ecaeec21125c710f3928f5ec8ceb6fa",
