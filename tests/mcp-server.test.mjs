@@ -34,7 +34,7 @@ test('MCP initialize, tools/list and tools/call capabilities', async () => {
   const call = JSON.parse(await server.handleLine(JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'armorbreak_capabilities', arguments: {} } })))
   assert.equal(call.result.isError, false)
   const payload = JSON.parse(call.result.content[0].text)
-  assert.equal(payload.length, 46)
+  assert.equal(payload.length, 48)
   await engine.close()
 })
 

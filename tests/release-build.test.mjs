@@ -26,6 +26,8 @@ test('release build is reproducible, hashed, SBOM-backed and test-signature veri
     assert.match(manifest.contentManifestSha256, /^[a-f0-9]{64}$/)
     assert.ok(manifest.contentManifest.every((file) => /^[a-f0-9]{64}$/.test(file.sha256) && Number.isSafeInteger(file.size)))
     assert.ok(!manifest.contentManifest.some((file) => file.path.startsWith('fixtures/') || file.path.startsWith('tests/')))
+    assert.ok(manifest.contentManifest.some((file) => file.path === 'docs/v2.3/m1-artifact-intake.md'))
+    assert.ok(!manifest.contentManifest.some((file) => file.path.startsWith('docs/v2.3/evidence/')))
     assert.ok(!manifest.contentManifest.some((file) => file.path === 'FOUR_REVIEW_UNIFIED_FINDINGS.json' || file.path.endsWith('.pyc') || file.path.startsWith('.runtime/')))
     for (const path of ['lib/release/githubRulesets.js', 'scripts/v2/stable-gate.mjs', 'scripts/v2/build-release.mjs']) {
       const committed = spawnSync('git', ['show', `${manifest.commit}:${path}`], { cwd: process.cwd(), maxBuffer: 16 * 1024 * 1024 })

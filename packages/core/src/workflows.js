@@ -12,6 +12,15 @@
 
 /** @type {Record<string, WorkflowDefinition>} */
 export const WORKFLOWS = {
+  UniversalArtifactTriage: {
+    id: 'UniversalArtifactTriage',
+    title: '通用产物清点与归档索引',
+    description: '对授权的本地项目目录做有界文件清单、格式候选识别与 ZIP/TAR/GZIP 内嵌关系索引；成员只在内存中读取，不执行或写出样本。',
+    targetKind: 'directory',
+    steps: [
+      { id: 'inventory', title: '产物识别与递归清单', capabilityId: 'artifact.inventory' },
+    ],
+  },
   BinaryStaticAnalysis: {
     id: 'BinaryStaticAnalysis',
     title: '二进制静态分析',
