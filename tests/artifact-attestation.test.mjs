@@ -71,7 +71,10 @@ test('accepts only GitHub-verified provenance for the exact artifact, current co
     assert.equal(result.sha256, fixture.evidence.sha256)
     assert.ok(seenArgs.includes('--cert-identity'))
     assert.ok(seenArgs.includes(workflowIdentity))
-    assert.ok(seenArgs.includes('--signer-workflow'))
+    assert.equal(seenArgs.includes('--signer-workflow'), false, 'gh rejects combining signer-workflow with cert-identity')
+    assert.equal(seenArgs[seenArgs.indexOf('--cert-identity') + 1], workflowIdentity)
+    assert.equal(seenArgs[seenArgs.indexOf('--source-ref') + 1], 'refs/heads/main')
+    assert.equal(seenArgs[seenArgs.indexOf('--source-digest') + 1], commit)
   } finally { rmSync(fixture.root, { recursive: true, force: true }) }
 })
 
@@ -82,12 +85,36 @@ test('rejects provenance for a different branch, artifact digest, or source comm
       verifiedCliResult(fixture.artifact, 'b'.repeat(64)),
       verifiedCliResult(fixture.artifact, fixture.evidence.sha256, { certificate: { sourceRepositoryRef: 'refs/heads/feature/other' } }),
       verifiedCliResult(fixture.artifact, fixture.evidence.sha256, { certificate: { sourceRepositoryDigest: 'c'.repeat(40) } }),
+      verifiedCliResult(fixture.artifact, fixture.evidence.sha256, { certificate: { sourceRepositoryURI: 'https://github.com/other/repo' } }),
+      verifiedCliResult(fixture.artifact, fixture.evidence.sha256, { certificate: { subjectAlternativeName: `${sourceUri}/.github/workflows/other.yml@refs/heads/main` } }),
+      verifiedCliResult('other-artifact.tar.gz', fixture.evidence.sha256),
+      verifiedCliResult(fixture.artifact, fixture.evidence.sha256, { statement: { predicateType: 'https://example.test/other-predicate' } }),
     ]) {
       const result = verifyPortableArtifactAttestation({ ...fixture, repoRoot: fixture.root, artifactPath: fixture.path, sourceCommit: commit, runGh: () => output })
       assert.equal(result.ok, false)
       assert.equal(result.code, 'ATTESTATION_IDENTITY_OR_SUBJECT_MISMATCH')
     }
     assert.equal(verifyPortableArtifactAttestation({ ...fixture, repoRoot: fixture.root, artifactPath: fixture.path, sourceCommit: 'c'.repeat(40) }).code, 'ARTIFACT_SOURCE_COMMIT_MISMATCH')
+  } finally { rmSync(fixture.root, { recursive: true, force: true }) }
+})
+
+test('rejects changed workflow repository, path, ref, and resolved source dependency', () => {
+  const fixture = setup()
+  try {
+    for (const mutate of [
+      (build) => { build.externalParameters.workflow.repository = 'https://github.com/other/repo' },
+      (build) => { build.externalParameters.workflow.path = '.github/workflows/other.yml' },
+      (build) => { build.externalParameters.workflow.ref = 'refs/heads/other' },
+      (build) => { build.resolvedDependencies = [{ digest: { gitCommit: 'c'.repeat(40) } }] },
+      (build) => { delete build.resolvedDependencies },
+    ]) {
+      const entries = JSON.parse(verifiedCliResult(fixture.artifact, fixture.evidence.sha256))
+      mutate(entries[0].verificationResult.statement.predicate.buildDefinition)
+      const result = verifyPortableArtifactAttestation({ ...fixture, repoRoot: fixture.root, artifactPath: fixture.path, sourceCommit: commit, runGh: () => JSON.stringify(entries) })
+      assert.equal(result.code, 'ATTESTATION_IDENTITY_OR_SUBJECT_MISMATCH')
+    }
+    const result = verifyPortableArtifactAttestation({ ...fixture, repoRoot: fixture.root, artifactPath: fixture.path, sourceCommit: commit, runGh: () => { throw new Error('cryptographic verification failed') } })
+    assert.equal(result.code, 'ATTESTATION_VERIFICATION_FAILED')
   } finally { rmSync(fixture.root, { recursive: true, force: true }) }
 })
 

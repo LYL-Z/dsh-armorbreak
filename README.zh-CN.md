@@ -1,293 +1,160 @@
+<p align="center">
+  <img src="./icon.svg" alt="ArmorBreak 破甲盾牌图标" width="76" />
+</p>
+
 # ArmorBreak · 破甲
 
-**面向 AI Agent 的证据优先安全研究工具包。**
+**让 AI Agent 的安全分析有边界、有证据、可复核。**<br>
+*工具负责观察，代码负责授权，证据负责说话。*
 
-ArmorBreak 是一个开源工具包，面向**授权逆向工程、静态分析、数字取证与安全研究**。它提供宿主中立的 Core、MCP 工具、Agent Skills，以及可选的 DeepSeek Harness 原生集成；所有分析都在权限边界内进行，并留下可复核的证据与报告。
+ArmorBreak 是面向**已授权逆向工程、源码安全审查、网络流量分析、数字取证与安全研究**的开源工具包。它以**宿主无关的 Universal Core** 为核心，通过 **DeepSeek Harness 原生模式**、**MCP** 和**独立 Node.js 接口**接入不同 AI Agent。模型可以协助规划和解读，但不能凭自身回复创建执行授权。
 
-> **V2.2 Stable 范围：** `2.2.0` 定义为 **Verified Core / Experimental Provider Integrations**。Stable 验收覆盖 Core、MCP、Skills、Offline Golden、本地模型验证，以及当前证据明确支持的宿主和安装/回滚路径。OpenAI、Anthropic、Gemini 商业端点仍标记为 `LIVE_UNVERIFIED`；真实商业端点认证不是 Stable 前置条件。项目接受 AI 辅助安全审查作为 AI 审查记录，不将其称为人类认证。原 Full GA 合同与阻断记录保持不变；`gaReady:false` 仍表示 Full GA 未通过。
->
-> 文档基线：`9172f7b50352bbe152a0bd001678cfd271fd65bb`（2026-10-23）
+**[快速开始](#本地快速体验)** · **[选择接入方式](#选择接入方式)** · **[真实分析](#真实分析不是概念演示)** · **[文档导航](#文档导航)** · **[English](README.md)**
 
-**快速入口：** [快速开始](#快速开始) · [通用 MCP 接入](docs/v2/host-generic.md) · [安全政策](SECURITY.md) · [验收状态](docs/v2/acceptance/golden-status.json)
+[![CI](https://github.com/LYL-Z/dsh-armorbreak/actions/workflows/ci.yml/badge.svg)](https://github.com/LYL-Z/dsh-armorbreak/actions/workflows/ci.yml)
+![Stable 范围政策](https://img.shields.io/badge/release-scope%20defined-blue)
+![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22-43853d)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-![版本](https://img.shields.io/badge/version-2.2.0-blue)
-![Node](https://img.shields.io/badge/node-%3E%3D22-brightgreen)
-![License](https://img.shields.io/badge/license-MIT-green)
+> [!IMPORTANT]
+> **V2.2 Stable 范围：** `2.2.0` 定义为 **Verified Core / Experimental Provider Integrations**。发布必须通过绑定到精确合并后 `main` 提交的版本化 Stable Gate；当前发布状态以 GitHub Releases 页面为准。OpenAI、Anthropic、Gemini 商业端点仍为 `LIVE_UNVERIFIED`。AI 辅助审查按 AI 审查记录披露，不称为人类认证。原 Full GA 记录仍保持 `gaReady:false`，目前列有 18 项阻断。详见 [Stable 政策](docs/v2/release/v2.2-stable-policy-v1.md) 与[验证状态](#验证状态)。
 
-**语言：** [English](README.md) · 中文
+## 为什么选择 ArmorBreak？
 
----
+| 常见问题 | ArmorBreak 的设计 |
+| --- | --- |
+| 不同 Agent 重复实现安全分析入口 | **同一个 Core** 服务于 DSH、MCP、CLI 和应用接口 |
+| 容易误把模型文本当成操作许可 | **策略与操作者审批**独立于模型 |
+| 发现难以定位、重复验证 | **按任务留存证据、哈希、发现和报告** |
+| 入门依赖商业模型或公网服务 | **优先使用离线 L0 分析**，按需接入模型和外部工具 |
 
-## 目录
+ArmorBreak 是**安全研究工具包**，不是漏洞真实性担保，也不能代替独立安全评估。
 
-- [为什么选择 ArmorBreak](#为什么选择-armorbreak)
-- [核心能力](#核心能力)
-- [选择接入方式](#选择接入方式)
-- [快速开始](#快速开始)
-- [工作方式](#工作方式)
-- [验证等级与兼容性](#验证等级与兼容性)
-- [安全边界与合规使用](#安全边界与合规使用)
-- [文档导航与故障排查](#文档导航与故障排查)
-- [限制与发布状态](#限制与发布状态)
-- [贡献与支持](#贡献与支持)
+## 本地快速体验
 
----
+**第一个目标：**查看能力列表，并对隔离工作区内的 README 副本执行一次无害的 L0 文件哈希分析。无需商业模型 Key，也不访问公网测试目标。以下命令使用 **PowerShell 7+**，需安装 **Node.js 22+**，并从仓库根目录执行。相同语法已在 Windows PowerShell 5.1 的文档 QA 中实测；哈希以本次运行结果为准。
 
-## 为什么选择 ArmorBreak
+```powershell
+git clone https://github.com/LYL-Z/dsh-armorbreak.git
+cd dsh-armorbreak
 
-- **宿主中立的 Core。** Core 独立于 DeepSeek Harness、MCP 与 Provider Router，负责策略、范围校验、任务状态、证据与报告。
-- **模型永远不是审批主体。** 工具输出与模型文本不能授权 L1/L2、安装、网络目标或破坏性动作；审批必须来自平台/操作者令牌。
-- **证据优先。** 每个任务写入结构化 task JSON、追加式 JSONL 证据链、findings、artifacts 与带时间戳报告；区分 `observed` 事实与 `hypothesis`/`unverified` 线索。
-- **离线优先。** 运行时包没有第三方运行时依赖；Ghidra、Docker、LibreOffice 等外部工具是可选的，缺失时会明确提示，不会静默破坏内置能力。
+$demo = Join-Path $env:TEMP 'armorbreak-first-run'
+New-Item -ItemType Directory -Force -Path "$demo/state", "$demo/workspace" | Out-Null
+Copy-Item ./README.md "$demo/workspace/README.md"
 
-## 核心能力
+$env:ARMORBREAK_STATE_ROOT = "$demo/state"
+$env:ARMORBREAK_WORKSPACE = "$demo/workspace"
+$env:ARMORBREAK_PRINCIPAL_ID = 'first-run-user'
 
-当前基线事实：
+node packages/cli/index.js capabilities --json
+node packages/cli/index.js analyze --capability forensics.hash `
+  --target "$demo/workspace/README.md" --json
+```
 
-- **46 个能力**，覆盖 **8 个域**
-- **9 个工作流**
-- **7 个 DSH 内置 Skills**
-- **10 个 DSH 模型工具**与 **7 个 MCP Server 工具**——这是两个不同接口，不能混写成一个数字
+**预期结果：**输出能力列表（已记录的 V2.2 基线为 46 项）并生成一个 L0 分析任务。任务 ID、文件哈希以本次运行结果为准。使用 `node packages/cli/index.js task list --json` 查看任务，用 `node packages/cli/index.js report <task-id> --json` 读取报告。若因策略拒绝而失败，应当排查，**不得将拒绝计为成功**。如果已有 clone，可跳过前两条命令。
 
-| 域 | 能力数 | 典型用途 |
-|---|---:|---|
-| `binary` | 7 | PE/ELF/Mach-O 结构、字符串、熵、IOC |
-| `forensics` | 6 | 哈希、文件类型、元数据、时间线、IOC |
-| `network` | 8 | PCAP/PCAPng 会话、DNS/TLS/HTTP、流、异常 |
-| `sast` | 8 | 危险调用、密钥、依赖、SBOM |
-| `android` | 6 | APK 结构、Manifest/AXML、DEX、签名 |
-| `web` | 4 | HAR/OpenAPI/Header/HTTP 报文审查 |
-| `ctf` | 5 | 编码/古典密码、flag 扫描 |
-| `live` | 2 | 授权 L1/L2 主动检查，默认拒绝 |
-
-当前风险分布：44 个 L0、1 个 L1、1 个 L2；L3 永远拒绝。
-
-参见 [Core API 契约](docs/v2/core/public-api.md)、[生成的 API 矩阵](docs/v2/generated/api-matrix.md) 与 [生成的 Skill 列表](docs/v2/generated/skill-list.md)。
+本次 README 的 smoke run 已对 README 副本完成 `forensics.hash`，产生两条证据和 Markdown 报告。任务 ID 与哈希记录在 [DX smoke 记录](docs/readme-audit/v3-smoke.md)，仅代表该隔离环境的一次运行，不是固定预期输出。
 
 ## 选择接入方式
 
-| 路径 | 适合谁 | 安装内容 | 第一个安全任务 |
-|---|---|---|---|
-| **A. DeepSeek Harness 原生** | 已有 DSH Desktop/Web | ArmorBreak bundle + `armorbreak` 模式 | `armorbreak_health`，然后 L0 `armorbreak_analyze` |
-| **B. 通用 MCP Agent** | Claude/Cursor 风格 JSON、Codex TOML、Hermes YAML 宿主 | 通过 CLI dry-run/apply 写入 MCP 条目 | `agent doctor`，然后 L0 `forensics.hash` |
-| **C. 独立 Core / 本地模型** | 自定义 Node 服务、本地 Ollama 实验 | 在应用中导入 `packages/core` | `createCore()` + `capabilities()` |
+| 你的环境 | 接入方式 | 入门入口 | 实测口径 |
+| --- | --- | --- | --- |
+| **DeepSeek Harness** | Cordis Bundle + `armorbreak` 原生模式 | [DSH 安装](docs/installation.md) | 已有真实 Desktop L0；上轮 docs QA 未重测 |
+| **支持 MCP 的 Agent** | MCP Server + 宿主专用配置 | [MCP 接入](docs/v2/host-generic.md) | 各宿主验证等级不同：[宿主矩阵](docs/v2/generated/host-matrix.md) |
+| **自定义 Node.js 程序** | `createCore({ stateRoot })` | [Core API](docs/v2/core/public-api.md) | Core 不依赖 DSH |
+| **本地模型实验** | Core + Provider Router + 本地模型 | [Ollama 证据](docs/v2/acceptance/provider-live-ollama.json) | 本地闭环≠官方商业 Provider 认证 |
 
-三条路径共享同一个 Core、同一套权限边界与同一种证据格式；区别只在传输与安装方式。
+这些路径共用 Core，但**安装格式和实测强度并不相同**。Codex 使用 TOML，部分 MCP Agent 使用 JSON，Hermes 使用 YAML，Pi 还有原生扩展。不能将同一套 JSON 配置当成所有 Agent 的通用方案。
 
-## 快速开始
+## 真实分析，不是概念演示
 
-默认使用**离线 L0**，不需要商业模型 API Key，也不会访问公共网络目标。
+项目仓库保存了一次真实 **DeepSeek Harness Desktop L0** 会话：执行 `forensics.hash`，任务完成，形成两条证据记录和 Markdown 报告。这是 **2026 年 10 月记录的真实测试**，不是实时仪表盘，也不证明所有环境都已安全认证。
 
-### A. DeepSeek Harness 原生
+| 记录字段 | 值 |
+| --- | --- |
+| 任务 | `task_mvi33mq6_00e28f71` |
+| 能力 | `forensics.hash` |
+| 状态 | `COMPLETED` |
+| 证据记录 | 2 |
+| 输入 SHA-256 | `50eea274f68780a501df2f79aea32fd6785dcc2a2f87a1e198e6f5b7c79e1fc8` |
+| 报告 SHA-256 | `bb07c8acb8fb8f247ef936fd4a9588daa49a41dcfc68af9040f4483298365296` |
 
-适用于已经运行 DeepSeek Harness 的用户。
+原始截图包含本机账号/工作区标识，因此不直接嵌入 README。请通过[实测步骤及证据哈希](docs/v2/acceptance/desktop-e2e.md)、[原始报告](docs/v2/acceptance/desktop-l0-report.md)、[本地模型测试](docs/v2/acceptance/provider-live-ollama.json)复核证据。
 
-1. 克隆或下载 bundle，将 `<BUNDLE_PATH>` 替换为本地仓库路径。
-2. 在 DSH 会话中安装：
-   ```text
-   plugin_manager action=install_bundle target="<BUNDLE_PATH>"
-   ```
-   或者使用 GUI：**设置 → 插件 → 添加插件 → 选择 bundle 目录**。
-3. 查看返回的 `application` 与 `warnings`；如果需要重启，请完全退出并重新打开 DSH。
-4. 新建会话，选择 **破甲模式 / ArmorBreak**。
-5. 验证：
-   - 模式列表出现 ArmorBreak；
-   - `armorbreak_health` 返回能力清单；
-   - 在隔离或授权缺失时，L1/L2 被拒绝是预期行为。
+### 支持哪些分析？
 
-第一个 L0 任务，使用工作区内无害文件：
+V2.2 基线注册表包含 **8 个领域的 46 项能力**，风险分布为 **44 项 L0、1 项 L1、1 项 L2**，**L3 拒绝**。能力注册成功不意味着所有可选外部分析器均已安装，也不意味着所有平台经过相同强度的验证。
 
-```text
-armorbreak_analyze capability=forensics.hash target="<WORKSPACE>\README.md" workspace="<WORKSPACE>"
-armorbreak_report taskId=<returned-task-id> format=markdown
-```
+| 领域 | 典型用途 |
+| --- | --- |
+| 二进制 · 7 | PE/ELF/Mach-O 结构、字符串、元数据与指标 |
+| 取证 · 6 | 文件哈希和类型、元数据、时间线 |
+| 网络 · 8 | 离线 PCAP、DNS/TLS/HTTP 观察 |
+| 源码与供应链 · 8 | 静态发现、依赖审查、供应链分析输入 |
+| Android · 6 | APK/DEX 结构、Manifest 与签名 |
+| Web · 4 | HAR、OpenAPI、HTTP 报文及 Header 审查 |
+| CTF/实验室 · 5 | 授权实验室中的编码与基础密码练习 |
+| 主动检查 · 2 | L1/L2 额外审批，默认拒绝 |
 
-真实 Desktop L0 证据见 [desktop E2E](docs/v2/acceptance/desktop-e2e.md)。
+另有 **9 个工作流、7 个 DSH Skills、10 个 DSH 模型工具、7 个 MCP Server 工具**。这些是不同层面的统计，**不能简单加总**。参见 [API 矩阵](docs/v2/generated/api-matrix.md)、[Skills 列表](docs/v2/generated/skill-list.md)、[使用指南](docs/usage.md)。
 
-### B. 通用 MCP Agent
-
-适用于支持 MCP 的宿主。CLI 不会猜测宿主配置路径，必须显式传入 `--config`。
-
-当前 CLI 的前提：运行前设置 `ARMORBREAK_STATE_ROOT` 与 `ARMORBREAK_WORKSPACE`，并使用隔离的非生产目录。
-
-```powershell
-$dir = Join-Path $env:TEMP 'armorbreak-docs'
-New-Item -ItemType Directory -Force -Path "$dir\state", "$dir\workspace" | Out-Null
-[System.IO.File]::WriteAllText("$dir\mcp.json", '{}')
-
-$env:ARMORBREAK_STATE_ROOT = "$dir\state"
-$env:ARMORBREAK_WORKSPACE  = "$dir\workspace"
-$env:ARMORBREAK_PRINCIPAL_ID = 'docs-l0-test'
-
-# 1. 只做 dry-run，不写入宿主配置。
-node packages/cli/index.js agent install `
-  --target generic `
-  --config "$dir\mcp.json" `
-  --scope project `
-  --state-root $env:ARMORBREAK_STATE_ROOT `
-  --workspace $env:ARMORBREAK_WORKSPACE `
-  --principal docs-l0-test `
-  --json
-
-# 2. 检查 before/after diff 后再应用。
-node packages/cli/index.js agent install `
-  --target generic `
-  --config "$dir\mcp.json" `
-  --scope project `
-  --state-root $env:ARMORBREAK_STATE_ROOT `
-  --workspace $env:ARMORBREAK_WORKSPACE `
-  --principal docs-l0-test `
-  --apply --json
-
-# 3. 诊断条目。
-node packages/cli/index.js agent doctor --config "$dir\mcp.json" --json
-```
-
-PowerShell 注意：JSON 必须无 BOM。Windows PowerShell 5 的 `Set-Content -Encoding utf8` 可能写入 BOM，导致 CLI 报 “existing config is not valid JSON”。
-
-不同宿主的配置格式不同：
-
-- `generic` / `claude`：JSON `mcpServers`
-- `codex`：带 managed 标记的 TOML
-- `hermes`：YAML managed block
-
-不要把一种 JSON 形状复制到所有宿主并称为通用。参见 [通用 MCP 适配器](docs/v2/host-generic.md) 与 [宿主矩阵](docs/v2/generated/host-matrix.md)。
-
-卸载不会删除证据：
-
-```powershell
-node packages/cli/index.js agent install `
-  --target generic --config "$dir\mcp.json" --scope project --uninstall --json
-```
-
-卸载只移除 ArmorBreak MCP 条目，保留工作区内的 `.armorbreak/` 任务证据。
-
-### C. 独立 Core / 本地模型
-
-Core 是执行内核，MCP 是工具访问协议，Provider Router 是模型服务层；三者不是同一个二进制。
-
-```js
-import { createCore } from './packages/core/index.js'
-
-const stateRoot = process.env.ARMORBREAK_STATE_ROOT
-const workspace = process.env.ARMORBREAK_WORKSPACE
-const core = await createCore({ stateRoot })
-
-const ctx = {
-  principal: { id: 'local-researcher', kind: 'local-user', workspaces: [workspace] },
-  workspaceId: workspace,
-  requestId: 'docs-l0',
-  traceId: 'docs-l0',
-}
-
-const capabilities = await core.capabilities(ctx)
-console.log(capabilities.length)
-await core.close()
-```
-
-使用同样的两个环境变量运行。本次文档 QA 中返回 `version: 0.1.0-p1`、`capabilities: 46`。
-
-已记录的本地 Ollama 场景使用 `qwen3.5:4b`，覆盖 chat、SSE、工具调用和多轮工具循环。见 [Ollama 实测证据](docs/v2/acceptance/provider-live-ollama.json)。该结果**不是** OpenAI、Anthropic 或 Gemini 官方认证。
-
-## 工作方式
+## 工作原理
 
 ```mermaid
 flowchart LR
-  Host["AI 宿主 / Agent<br/>DSH · Codex · Cursor · Claude · ZCode · Pi · TRAE"] -->|MCP stdio/HTTP| MCP["MCP Server<br/>7 个 armorbreak_* 工具"]
-  Host -->|原生 Cordis preset| DSH["DSH Adapter<br/>10 个模型工具 + 7 个 Skills"]
-  MCP --> Core["Universal Core<br/>策略 · 范围 · 审批"]
-  DSH --> Core
-  Core --> Analyzers["分析器<br/>46 个 L0 优先能力"]
-  Analyzers --> Evidence["证据存储<br/>JSONL 哈希链"]
-  Evidence --> Report["报告<br/>Markdown / HTML / JSON / SARIF / PDF"]
+  A["AI 宿主 / 开发者"] -->|原生模式| B["DSH 适配器"]
+  A -->|MCP| C["MCP Server"]
+  A -->|CLI / API| D["宿主无关 Core"]
+  B --> D
+  C --> D
+  D --> E["策略 · 范围 · 审批"]
+  E --> F["受限分析器"]
+  F --> G["任务证据 · 报告"]
 ```
 
-Core 校验调用、解析工作区范围、记录任务状态、运行分析器、追加证据并生成报告。只有使用模型服务时才经过 Provider Router；它不会成为审批主体。
+三个区别必须明确：
 
-## 验证等级与兼容性
+1. **Agent 不等于审批方。** 运行时策略检查风险等级、工作区范围与操作者/平台审批。
+2. **扫描发现不等于漏洞已证实。** 观察事实、假设、待验证线索不能混淆。
+3. **协议 Mock 通过不等于真实 Provider 通过。** 模型路由与安全分析授权属于不同边界。
 
-ArmorBreak 将“实现存在”与“已验证”分开。
+详见[历史架构设计](docs/readme-archive-v2.2.md)、[Core API](docs/v2/core/public-api.md)、[安全模型](docs/security-model.md)、[威胁模型](docs/v2/threat-model.md)。
 
-| 等级 | 含义 | 当前状态 |
-|---|---|---|
-| `SOURCE_CONFIRMED` | 代码与契约存在 | Core、MCP、DSH adapter、Provider Router、SDK |
-| `MOCK_GOLDEN_PASS` | 四类协议通过本地 mock/golden 测试 | **PASS** |
-| `LOCAL_MODEL_PASS` | 已记录的本地 Ollama 工具循环与受控 Core L0 | **PASS** |
-| `LIVE_GOLDEN_PASS` | 官方付费端点真实调用 | **EXTERNAL_UNVERIFIED** |
-| `EXTERNAL_UNVERIFIED` | 受凭据、余额或独立审查阻塞 | OpenAI / Anthropic / Gemini / 独立审查 |
+## 验证状态
 
-本基线记录的测试结果：**400 tests / 399 pass / 0 fail / 1 skipped**。这是基线记录，不是实时徽章。
+| 项目 | 有证据支持的状态 | 不代表什么 |
+| --- | --- | --- |
+| Core 与协议实现 | 代码和接口契约存在 | 不代表没有安全漏洞 |
+| 四类模型 API 协议 | `MOCK_GOLDEN_PASS` | 不代表官方端点已通过 |
+| 本地 Ollama 工具闭环 | `LOCAL_MODEL_PASS` | 不代表 OpenAI/Anthropic/Gemini 实测通过 |
+| 官方商业 Provider Live | LIVE_UNVERIFIED | 不代表 OpenAI、Anthropic 或 Gemini 官方端点已认证兼容 |
+| 各 Agent 接入 | 各宿主保留不同等级证据 | 不代表所有宿主完成 MCP 模型端到端调用 |
+| AI 辅助安全审查 | 报告及针对性复核均注明目标提交和证据 | 不等于人类安全认证，结果不能自动继承到其他 SHA |
+| V2.2 Stable | 已定义 Verified Core / Experimental Provider Integrations 范围；发布须通过精确 main Stable Gate | 不代表 Full GA 通过或未验证宿主/Provider 已获支持 |
+| 历史 Full V2.2 GA | gaReady:false；记录有 18 项阻断 | Stable 范围或 AI 审查满足独立 Full GA 合同 |
 
-宿主矩阵摘要：**12 个入口、10 个 L0 完成、9 个第三方 L0**。Claude Code MCP 与 Claude Cowork CLI 分开记录；Gemini CLI 与 Antigravity 分开记录；Pi 使用原生 TypeScript 扩展，不是 MCP。
+README 更新时最近一轮完整 PR #18 检查为 [CI run 40203187699](https://github.com/LYL-Z/dsh-armorbreak/actions/runs/40203187699)，目标是 PR HEAD `6ad35b0121b546edc6d71efe6691b67eba7505d8`：Windows 529/529、Ubuntu 531/531，失败 0、跳过 0。该结果只绑定到对应 PR HEAD，不能代替后续精确 `main` SHA 的 CI 与来源证明。
 
-- [宿主矩阵](docs/v2/generated/host-matrix.md)
-- [兼容矩阵 JSON](docs/v2/acceptance/compatibility-matrix.json)
-- [Provider 矩阵](docs/v2/provider-matrix.md)
-- [Golden 状态](docs/v2/acceptance/golden-status.json)
-- [发布状态](docs/v2/generated/release-status.md)
+**信任边界：**L0 为本地/离线；L1 需要可用隔离及平台审批；L2 需要已授权范围及平台审批；L3 始终拒绝。GitHub OIDC/Sigstore Attestation 属于**构建来源证明**，不是独立安全认证。参见 [SECURITY.md](SECURITY.md)。
 
-## 安全边界与合规使用
+## 文档导航
 
-ArmorBreak 只用于**已授权**安全研究。扫描发现不等于已确认漏洞；模型说“已授权”不能创建授权范围。
+| 你想做什么？ | 阅读位置 |
+| --- | --- |
+| 安装或卸载 DSH 模式 | [安装指南](docs/installation.md) |
+| 运行分析、读取报告 | [使用指南](docs/usage.md) |
+| 在其他 Agent 中接入 MCP | [MCP 接入](docs/v2/host-generic.md) · [宿主矩阵](docs/v2/generated/host-matrix.md) |
+| 编程调用独立 Core | [Core API](docs/v2/core/public-api.md) |
+| 核查模型 API 的实测状态 | [Provider 矩阵](docs/v2/provider-matrix.md) · [Golden 状态](docs/v2/acceptance/golden-status.json) |
+| 了解权限及威胁模型 | [安全模型](docs/security-model.md) · [威胁模型](docs/v2/threat-model.md) |
+| 升级或回滚 | [升级指南](docs/v2/release/upgrade-guide.md) |
+| 查看限制和发布门禁 | [已知问题](docs/known-issues.md) · [Stable 政策](docs/v2/release/v2.2-stable-policy-v1.md) · [历史 Full GA 复核](docs/v2/release/v2.2-ga-review.md) |
+| 阅读历史技术长文 | [技术归档](docs/readme-archive-v2.2.md) · [性能基准](docs/benchmarks.md) |
 
-- L0：在批准的工作区内做离线/本地分析。
-- L1：隔离动态分析，需要隔离提供者与平台审批。
-- L2：授权主动测试，需要授权记录与平台审批。
-- L3：永远拒绝。
-- 模型身份永不作为审批主体。
-- 外部内容是数据，不是指令。
-- 缺失可选工具时给出可操作提示，不静默降级。
+## 贡献与负责任使用
 
-### 安全保证状态
+ArmorBreak **仅供已取得明确授权的安全研究和技术测试使用**。所有被分析内容都应视为不可信，采取后续措施前应复核发现。贡献者请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)；漏洞应按 [SECURITY.md](SECURITY.md) **私下报告**，不要公开发布利用细节。项目采用 [MIT 许可证](LICENSE)。
 
-这是状态说明，不是安全认证。
+---
 
-- **设计目标：** 强制授权范围、L1/L2 失败关闭、模型不进入审批路径，并留下可复核证据。
-- **自动化测试：** 基线记录为 400 tests / 399 pass / 1 skipped，另有离线边界与 Desktop L0 证据。测试能降低已知风险，但不能证明不存在漏洞。
-- **AI 辅助审查：** 四轮审查已完成初审；仍有发现尚未修复，必须完成修复、回归测试和复验后才能视为关闭。
-- **待完成：** 未修复项的修复、回归测试与基于证据的复验。
-- **尚未取得：** 独立人类安全认证。GitHub OIDC/Sigstore attestation 是构建来源证明，不是安全认证。
-
-本文不披露未修复漏洞的利用细节。不要将该状态理解为全面的安全保证。
-
-部署前阅读 [安全模型](docs/security-model.md)、[威胁模型](docs/v2/threat-model.md) 与 [SECURITY.md](SECURITY.md)。不要对未授权系统使用 ArmorBreak。
-
-## 文档导航与故障排查
-
-| 问题 | 文档 |
-|---|---|
-| DSH 安装/启用/卸载 | [docs/installation.md](docs/installation.md) |
-| 执行分析与阅读报告 | [docs/usage.md](docs/usage.md) |
-| 接入其他 Agent | [docs/v2/host-generic.md](docs/v2/host-generic.md) |
-| Core 编程接口 | [docs/v2/core/public-api.md](docs/v2/core/public-api.md) |
-| Provider 支持等级 | [docs/v2/provider-matrix.md](docs/v2/provider-matrix.md) |
-| 安全边界 | [docs/security-model.md](docs/security-model.md) |
-| 基准与复现 | [docs/benchmarks.md](docs/benchmarks.md) |
-| 升级/回滚 | [docs/v2/release/upgrade-guide.md](docs/v2/release/upgrade-guide.md) |
-| V2.2 Stable 发布政策 | [docs/v2/release/v2.2-stable-policy-v1.md](docs/v2/release/v2.2-stable-policy-v1.md) |
-| 历史 Full GA 合同 | [docs/v2/release/v2.2-ga-review.md](docs/v2/release/v2.2-ga-review.md) |
-| 已知限制 | [docs/known-issues.md](docs/known-issues.md) |
-| 旧版长 README 技术内容 | [docs/readme-archive-v2.2.md](docs/readme-archive-v2.2.md) |
-
-常见错误：
-
-- `KEY_MISSING`：Provider 凭据环境变量缺失。
-- `MODEL_NOT_FOUND`：请求模型未被已配置 Provider 声明。
-- `ISOLATION_UNAVAILABLE`：L1 保持拒绝，L0 仍可用。
-- 没有授权的 L2 拒绝：预期行为，不是 bug。
-- PDF 导出失败：安装 LibreOffice，或改用 `format=html`/`markdown`。
-
-## 限制与发布状态
-
-- `2.2.0` 使用版本化的 **Verified Core / Experimental Provider Integrations** 契约。正式发布前，必须针对精确 `main` 源码、CI、制品、SBOM、安全审查和 GitHub attestation 运行 `node scripts/v2/stable-gate.mjs` 并通过。
-- `gaReady:false` 与原 Full GA 阻断保留在[历史 readiness 记录](docs/v2/acceptance/v2.2-readiness.json)中。Stable 是范围更窄的独立发布契约，不代表 Full GA 已通过。
-- OpenAI、Anthropic、Gemini 商业端点均为 `LIVE_UNVERIFIED`。Offline Golden、mock 和本地模型结果不代表官方商业端点兼容认证。
-- AI 辅助审查按 AI 审查披露，不是人类审计或第三方认证。详见 [Stable 政策](docs/v2/release/v2.2-stable-policy-v1.md)。
-- GitHub OIDC/Sigstore attestation 证明精确源码与制品的构建来源，不是安全认证或生产代码签名。
-
-## 贡献与支持
-
-- 提交 PR 前阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。
-- 安全问题请通过 [SECURITY.md](SECURITY.md) 报告，不要开公开 Issue。
-- 文档修复欢迎提交；所有结论必须能回到源码或证据文件。
-- 许可证：[MIT](LICENSE)。
+*ArmorBreak · 破甲 —— 证据优先，操作者授权，结果可复核。*
