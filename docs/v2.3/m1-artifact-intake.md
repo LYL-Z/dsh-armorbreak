@@ -44,7 +44,8 @@ Core 的目录枚举合同排除隐藏项（`.env` 除外）、符号链接及 `
 
 - `tests/program-intelligence-artifact.test.mjs` 调用生产检测器与索引器：40 组本地生成的正常/未知格式样本、22 组路径/链接/碰撞/压缩比/损坏/预算对抗样本，以及超大结果预算测试，共 70 个 Node 测试项（含父测试与集成测试）。这些是确定性结构夹具，不是 40 个真实第三方应用或完整可运行二进制。
 - 真实集成测试经 `ArmorBreakRuntime` 注册表和 `ExecutionRunner` 的 L0 PolicyGateway 路径读取目录中的 ZIP；输出嵌套成员、证据 ID 与危险路径状态，并确认遍历成员没有被写到工作目录之外。
-- 原始定向测试输出与退出码记录在 `evidence/m1/artifact-tests.log`（本地忽略的原始日志）和 `evidence/m1/test-results.json`（可提交的摘要）。全量套件还要在源码提交、发布构建门禁可以读取到提交源代码后复跑。
+- 原始定向测试输出与退出码记录在 `evidence/m1/artifact-tests.log`（本地忽略的原始日志）和 `evidence/m1/test-results.json`（可提交的摘要）；提交态全量测试也保存在相同目录。
+- 候选提交 `3135688b3a5cbea89798bc0c61a2a45abfa38312` 的全量 `npm test` 为 600/600、0 跳过、退出码 0；`npm run typecheck` 退出码 0。CI/PR 尚未运行，结果分别记录在 `evidence/m1/test-results.json` 与 `evidence/m1/current-registry.json`。
 
 ## 尚未实现或未验证
 

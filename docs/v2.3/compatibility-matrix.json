@@ -665,14 +665,20 @@
     {
       "id": "artifact.identify",
       "priority": "P0",
-      "status": "NOT_IMPLEMENTED",
-      "verified": false
+      "status": "IMPLEMENTED_LOCAL_TESTED",
+      "verified": true,
+      "supportLevel": "S1",
+      "ci": "NOT_RUN",
+      "evidence": "docs/v2.3/evidence/m1/test-results.json"
     },
     {
       "id": "artifact.inventory",
       "priority": "P0",
-      "status": "NOT_IMPLEMENTED",
-      "verified": false
+      "status": "IMPLEMENTED_LOCAL_TESTED",
+      "verified": true,
+      "supportLevel": "S1",
+      "ci": "NOT_RUN",
+      "evidence": "docs/v2.3/evidence/m1/test-results.json"
     },
     {
       "id": "source.symbols",
@@ -747,5 +753,111 @@
       "sampleProgramExecuted": false,
       "note": "The harmless pinned-container self-test ran against an ignored task-local state root. This records current infrastructure evidence; it does not run an analyzed sample or change the frozen M0 baseline snapshot."
     }
-  }
+  },
+  "postImplementationCurrentRuntime": {
+    "sourceCommit": "3135688b3a5cbea89798bc0c61a2a45abfa38312",
+    "capturedOn": "2026-10-26",
+    "capabilityCount": 48,
+    "domainCount": 9,
+    "capabilitiesByRisk": {
+      "L0": 46,
+      "L1": 1,
+      "L2": 1
+    },
+    "capabilitiesByDomain": {
+      "android": 6,
+      "artifact": 2,
+      "binary": 7,
+      "ctf": 5,
+      "forensics": 6,
+      "live": 2,
+      "network": 8,
+      "sast": 8,
+      "web": 4
+    },
+    "workflowCount": 10,
+    "dshModelToolCount": 10,
+    "mcpToolCount": 7,
+    "skillCount": 7,
+    "registryDiagnostics": [],
+    "newArtifactCapabilities": [
+      {
+        "id": "artifact.identify",
+        "riskLevel": "L0",
+        "targetKind": "file",
+        "supportLevel": "S1",
+        "status": "IMPLEMENTED_LOCAL_TESTED"
+      },
+      {
+        "id": "artifact.inventory",
+        "riskLevel": "L0",
+        "targetKind": "directory",
+        "supportLevel": "S1",
+        "status": "IMPLEMENTED_LOCAL_TESTED"
+      }
+    ],
+    "l1IsolationDiagnostic": {
+      "state": "DaemonReady",
+      "available": false,
+      "provider": "docker",
+      "reason": "守护进程可用，但尚未执行隔离自检；L1 仍需通过 runner 的隔离门与平台审批",
+      "verified": false
+    }
+  },
+  "v23Workflows": [
+    {
+      "id": "UniversalArtifactTriage",
+      "priority": "P0",
+      "status": "IMPLEMENTED_LOCAL_TESTED",
+      "verified": true,
+      "targetKind": "directory",
+      "evidence": "docs/v2.3/evidence/m1/test-results.json",
+      "ci": "NOT_RUN"
+    }
+  ],
+  "milestones": [
+    {
+      "id": "M0",
+      "status": "BASELINE_FROZEN",
+      "sourceCommit": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
+      "evidence": "docs/v2.3/evidence/m0/test-results.json"
+    },
+    {
+      "id": "M1",
+      "status": "IMPLEMENTED_LOCAL_TESTED",
+      "sourceCommit": "3135688b3a5cbea89798bc0c61a2a45abfa38312",
+      "evidence": "docs/v2.3/evidence/m1/test-results.json",
+      "ci": "NOT_RUN"
+    },
+    {
+      "id": "M2",
+      "status": "NOT_IMPLEMENTED",
+      "ci": "NOT_RUN"
+    },
+    {
+      "id": "M3",
+      "status": "NOT_IMPLEMENTED",
+      "ci": "NOT_RUN"
+    },
+    {
+      "id": "M4",
+      "status": "NOT_IMPLEMENTED",
+      "ci": "NOT_RUN"
+    },
+    {
+      "id": "M5",
+      "status": "NOT_IMPLEMENTED",
+      "ci": "NOT_RUN"
+    },
+    {
+      "id": "M6",
+      "status": "NOT_IMPLEMENTED",
+      "ci": "NOT_RUN"
+    },
+    {
+      "id": "P0-H",
+      "status": "NOT_IMPLEMENTED",
+      "ci": "NOT_RUN"
+    }
+  ]
 }
