@@ -1,0 +1,751 @@
+{
+  "schemaVersion": "armorbreak.v2.3.compatibility-matrix/v1",
+  "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
+  "capturedOn": "2026-10-26",
+  "supportLevels": {
+    "S0": "safe intake or explicit refusal of unknown input",
+    "S1": "identification or inventory with evidence",
+    "S2": "format/AST structure with source locations",
+    "S3": "semantic navigation such as calls/data-flow with bounded scope",
+    "S4": "security evidence corroboration and controlled validation",
+    "S5": "bounded behavior-contract comparison against an explicit case set"
+  },
+  "runtimeBaseline": {
+    "capabilityCount": 46,
+    "domainCount": 8,
+    "capabilitiesByRisk": {
+      "L0": 44,
+      "L1": 1,
+      "L2": 1
+    },
+    "capabilitiesByDomain": {
+      "android": 6,
+      "binary": 7,
+      "ctf": 5,
+      "forensics": 6,
+      "live": 2,
+      "network": 8,
+      "sast": 8,
+      "web": 4
+    },
+    "workflowCount": 9,
+    "dshModelToolCount": 10,
+    "mcpToolCount": 7,
+    "skillCount": 7,
+    "registryDiagnostics": []
+  },
+  "legacyCapabilities": [
+    {
+      "id": "android.apk_structure",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "android.dex",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "android.findings",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "android.jadx",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "android.manifest",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "android.signing",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "binary.behavior",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "binary.entropy",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "binary.ghidra",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "binary.headers",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "binary.identify",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "binary.strings",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "binary.structure",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.classify",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.crypto_basics",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.decode",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.flag_scan",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.hash_id",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.filetype",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.hash",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.ioc",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.metadata",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.timeline",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.yara_lite",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "live.container_exec",
+      "domain": "live",
+      "riskLevel": "L1",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": [
+        "docker"
+      ]
+    },
+    {
+      "id": "live.http_probe",
+      "domain": "live",
+      "riskLevel": "L2",
+      "targetKind": "network",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "network.anomalies",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "network.dns",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "network.flows",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "network.http",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "network.iocs",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "network.pcap_overview",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "network.tls",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "network.tshark",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "sast.deps",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "sast.patch_suggestion",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "sast.sbom",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "sast.scan",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "sast.secrets",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "sast.semgrep",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": [
+        "semgrep"
+      ]
+    },
+    {
+      "id": "sast.syft",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "sast.trivy",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": [
+        "trivy"
+      ]
+    },
+    {
+      "id": "web.har",
+      "domain": "web",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "web.headers",
+      "domain": "web",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "web.http_message",
+      "domain": "web",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "web.openapi",
+      "domain": "web",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    }
+  ],
+  "existingArtifactSupport": [
+    {
+      "artifact": "PE",
+      "detectionLevel": "S2",
+      "parsingLevel": "S2",
+      "semanticLevel": "S1",
+      "securityLevel": "S1",
+      "reconstructionLevel": "S0",
+      "evidence": [
+        "binary.identify",
+        "binary.headers",
+        "binary.structure"
+      ],
+      "limitations": [
+        "No normalized instruction-level IR or validated complete call graph at baseline."
+      ]
+    },
+    {
+      "artifact": "ELF",
+      "detectionLevel": "S2",
+      "parsingLevel": "S2",
+      "semanticLevel": "S1",
+      "securityLevel": "S1",
+      "reconstructionLevel": "S0",
+      "evidence": [
+        "binary.identify",
+        "binary.headers",
+        "binary.structure"
+      ],
+      "limitations": [
+        "Function-count estimates and heuristics are not complete disassembly."
+      ]
+    },
+    {
+      "artifact": "Mach-O",
+      "detectionLevel": "S2",
+      "parsingLevel": "S2",
+      "semanticLevel": "S1",
+      "securityLevel": "S1",
+      "reconstructionLevel": "S0",
+      "evidence": [
+        "binary.identify",
+        "binary.headers",
+        "binary.structure"
+      ],
+      "limitations": [
+        "Function-count estimates and heuristics are not complete disassembly."
+      ]
+    },
+    {
+      "artifact": "Android APK/DEX",
+      "detectionLevel": "S2",
+      "parsingLevel": "S2",
+      "semanticLevel": "S1",
+      "securityLevel": "S1",
+      "reconstructionLevel": "S0",
+      "evidence": [
+        "android.apk_structure",
+        "android.manifest",
+        "android.dex",
+        "android.jadx"
+      ],
+      "limitations": [
+        "JADX was detected but no real target-analysis E2E was run at baseline."
+      ]
+    },
+    {
+      "artifact": "ZIP/archives",
+      "detectionLevel": "S1",
+      "parsingLevel": "S1",
+      "semanticLevel": "S0",
+      "securityLevel": "S0",
+      "reconstructionLevel": "S0",
+      "evidence": [
+        "forensics.metadata"
+      ],
+      "limitations": [
+        "No safe recursive artifact graph or universal intake pipeline at baseline."
+      ]
+    }
+  ],
+  "sourceSupport": [
+    {
+      "languages": [
+        "JavaScript",
+        "TypeScript",
+        "Python",
+        "Java",
+        "Go",
+        "C",
+        "C++",
+        "PHP"
+      ],
+      "detectionLevel": "S1",
+      "parsingLevel": "S0",
+      "semanticLevel": "S0",
+      "securityLevel": "S1",
+      "reconstructionLevel": "S0",
+      "evidence": [
+        "sast.scan"
+      ],
+      "limitations": [
+        "Existing scanner is bounded line-oriented pattern matching; no AST, symbol graph, or cross-file taint claim."
+      ]
+    },
+    {
+      "languages": [
+        "Rust",
+        "C#",
+        "Kotlin",
+        "Swift",
+        "Ruby",
+        "Lua",
+        "Shell",
+        "Dart",
+        "ArkTS",
+        "SQL",
+        "HTML",
+        "CSS",
+        "GraphQL",
+        "HCL",
+        "Nix",
+        "HDL",
+        "Shader",
+        "Solidity",
+        "Move"
+      ],
+      "detectionLevel": "S0",
+      "parsingLevel": "S0",
+      "semanticLevel": "S0",
+      "securityLevel": "S0",
+      "reconstructionLevel": "S0",
+      "evidence": [],
+      "limitations": [
+        "No language-specific v2.3 parser or semantic backend was verified at baseline; file-extension recognition alone is not claimed."
+      ]
+    }
+  ],
+  "externalTools": [
+    {
+      "id": "ghidra",
+      "name": "Ghidra",
+      "status": "DETECTED",
+      "version": "12.1.4 (install directory)",
+      "versionEvidence": "analyzeHeadless -help returned usage; version not independently printed",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "jadx",
+      "name": "JADX",
+      "status": "DETECTED",
+      "version": "1.5.6",
+      "versionEvidence": "PowerShell jadx --version exited 0; Core Health execFile probe returned spawn EINVAL",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "semgrep",
+      "name": "Semgrep",
+      "status": "DETECTED",
+      "version": "1.181.0",
+      "versionEvidence": "PowerShell semgrep --version exited 0; Core Health execFile probe failed; no sample scan run",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "trivy",
+      "name": "Trivy",
+      "status": "DETECTED",
+      "version": "0.76.0",
+      "versionEvidence": "PowerShell trivy --version exited 0; local vulnerability DB reported present",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "syft",
+      "name": "Syft",
+      "status": "DETECTED",
+      "version": "1.54.1",
+      "versionEvidence": "PowerShell syft version exited 0",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "tshark",
+      "name": "TShark",
+      "status": "DETECTED",
+      "version": "4.6.9",
+      "versionEvidence": "PowerShell tshark -v exited 0",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    }
+  ],
+  "dependencyDeclarationGaps": [
+    "binary.ghidra",
+    "android.jadx",
+    "sast.syft",
+    "network.tshark"
+  ],
+  "isolation": {
+    "status": "BLOCKED",
+    "dockerVersion": "29.8.1",
+    "reason": "Docker CLI exists; Docker Linux engine pipe is unavailable; HealthService isolation.available=false"
+  },
+  "v23Features": [
+    {
+      "id": "artifact.identify",
+      "priority": "P0",
+      "status": "NOT_IMPLEMENTED",
+      "verified": false
+    },
+    {
+      "id": "artifact.inventory",
+      "priority": "P0",
+      "status": "NOT_IMPLEMENTED",
+      "verified": false
+    },
+    {
+      "id": "source.symbols",
+      "priority": "P0",
+      "status": "NOT_IMPLEMENTED",
+      "verified": false
+    },
+    {
+      "id": "source.flows",
+      "priority": "P0",
+      "status": "NOT_IMPLEMENTED",
+      "verified": false
+    },
+    {
+      "id": "bytecode.inspect",
+      "priority": "P0",
+      "status": "NOT_IMPLEMENTED",
+      "verified": false
+    },
+    {
+      "id": "binary.program_ir",
+      "priority": "P0",
+      "status": "NOT_IMPLEMENTED",
+      "verified": false
+    },
+    {
+      "id": "security.correlate",
+      "priority": "P0",
+      "status": "NOT_IMPLEMENTED",
+      "verified": false
+    },
+    {
+      "id": "rebuild.contract",
+      "priority": "P0",
+      "status": "NOT_IMPLEMENTED",
+      "verified": false
+    },
+    {
+      "id": "rebuild.compare",
+      "priority": "P0",
+      "status": "NOT_IMPLEMENTED",
+      "verified": false
+    }
+  ],
+  "postBaselineEnvironment": {
+    "observedOn": "2026-10-26",
+    "docker": {
+      "cliVersion": "29.8.1",
+      "serverVersion": "29.8.1",
+      "operatingSystem": "linux",
+      "architecture": "x86_64",
+      "daemon": "CONNECTED"
+    },
+    "armorbreakIsolation": {
+      "probeCommand": "IsolationProviderManager.diagnose({fresh:true})",
+      "beforeSelfTest": "DaemonReady",
+      "selfTestCommand": "IsolationProviderManager.selfTest('docker')",
+      "selfTestResult": "PASS",
+      "image": "busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662",
+      "constraints": [
+        "--pull=never",
+        "--network=none",
+        "--read-only",
+        "--cap-drop=ALL",
+        "--security-opt=no-new-privileges",
+        "--user=65534:65534",
+        "--pids-limit=64",
+        "--memory=128m",
+        "--cpus=1"
+      ],
+      "afterSelfTest": "IsolationVerified",
+      "sampleProgramExecuted": false,
+      "note": "The harmless pinned-container self-test ran against an ignored task-local state root. This records current infrastructure evidence; it does not run an analyzed sample or change the frozen M0 baseline snapshot."
+    }
+  }
+}
