@@ -7,7 +7,7 @@ import { deflateRawSync, gzipSync } from 'node:zlib'
 import test from 'node:test'
 
 import { ArmorBreakRuntime } from '../lib/core/runtime.js'
-import { listWorkflows } from '../lib/core/workflows.js'
+import { getWorkflow, listWorkflows } from '../lib/core/workflows.js'
 import { boundedOptions, fitArtifactGraphToResultBudget, identifyArtifact, inventoryFiles, readZipIndex } from '../lib/analyzers/artifact/intake.js'
 
 function crc32(buffer) {
@@ -295,6 +295,19 @@ test('M1 integrates through the live registry, PolicyGateway runner and Universa
   assert.equal(runtime.registry.get('artifact.identify').riskLevel, 'L0')
   assert.equal(runtime.registry.get('artifact.inventory').targetKind, 'directory')
   assert.ok(listWorkflows().some((workflow) => workflow.id === 'UniversalArtifactTriage'))
+  const workflow = getWorkflow('UniversalArtifactTriage')
+  const workflowTask = await runtime.workspace(workspace).taskStore.create({
+    title: 'authorized artifact triage workflow fixture',
+    targetPath: workspace,
+    targetKind: 'directory',
+    workflowId: workflow.id,
+    steps: workflow.steps,
+  })
+  await runtime.runner.prepareTask(workflowTask)
+  const workflowResult = await runtime.runner.runWorkflow(workflowTask, { generateReport: false })
+  assert.equal(workflowResult.state, 'COMPLETED')
+  assert.equal(workflowResult.steps[0].status, 'DONE')
+  assert.ok(workflowResult.steps[0].evidenceIds.length >= 1)
   const task = await runtime.workspace(workspace).taskStore.create({
     title: 'authorized artifact inventory fixture',
     targetPath: workspace,
@@ -310,6 +323,16 @@ test('M1 integrates through the live registry, PolicyGateway runner and Universa
   assert.equal(result.data.analysis.status, 'PARTIAL')
   await assert.rejects(() => access(escapePath), /ENOENT/, 'archive inventory must not materialize traversal members')
   assert.ok(result.evidenceIds.length >= 1)
+
+  const identifyTask = await runtime.workspace(workspace).taskStore.create({
+    title: 'authorized artifact identify fixture',
+    targetPath: join(workspace, 'packages', 'nested.zip'),
+    targetKind: 'file',
+    steps: [{ id: 'identify', capabilityId: 'artifact.identify' }],
+  })
+  const identified = await runtime.runner.runCapability({ task: identifyTask, capabilityId: 'artifact.identify' })
+  assert.equal(identified.data.format, 'zip')
+  assert.equal(identified.data.sha256, createHash('sha256').update(packageFixtures.zip).digest('hex'))
 })
 
 test('M1 preserves the explicit partial-hash boundary at a directory read cap', () => {
