@@ -1,4 +1,10 @@
-# README V3 — fact matrix
+# README V3 — historical fact matrix (PR #17)
+
+> **Historical pre-release snapshot:** this file preserves the PR #17 V3
+> development state observed on 2026-10-25. Its publication/CI statements were
+> true for that snapshot only and are **not** current V2.2.0 Stable facts.
+> The 2026-10-26 release record is separate in
+> `docs/readme-audit/v2.2.0-release-facts.md`.
 
 - Snapshot date: 2026-10-25
 - Main baseline after PR #19 evidence refresh: `a866597134e11c830420099ab5bbb0e9fe368975`
