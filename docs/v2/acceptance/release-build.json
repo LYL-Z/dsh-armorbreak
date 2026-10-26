@@ -1,16 +1,16 @@
 {
   "schemaVersion": "armorbreak.release-build/v1",
-  "generatedAt": "2026-10-26T12:25:56.305Z",
-  "commit": "8a19033116e66ada7f12ad3d4248c8fb9768fbef",
+  "generatedAt": "2026-10-26T13:07:35.843Z",
+  "commit": "fe92fe19558a5beab5fe2f435e03bcabf51b6003",
   "package": "dsh-armorbreak",
   "version": "2.2.0",
   "artifact": "armorbreak-portable-2.2.0.tar.gz",
-  "bytes": 5338540,
-  "sha256": "5e5aca98da18d4f0cb17db71cf57c5577f8f8f64810a30844bd5237b4ed7b630",
+  "bytes": 5342636,
+  "sha256": "ac23bff3db14d6c38d64a419e6cae2f15effeff357abc5234ff9d0193ebeffef",
   "reproducible": true,
   "sbom": "armorbreak-portable-2.2.0.tar.gz.sbom.cdx.json",
-  "sbomSha256": "2fd47a2b3970c563a747dffb093a33c042de2488b832604dbcce65ec374755a4",
-  "files": 507,
+  "sbomSha256": "49b0b34d025b89226f1b41c275ec3e065a86eec67cb758f1f2bdab9593c5691a",
+  "files": 508,
   "contentManifest": [
     {
       "path": ".gitattributes",
@@ -356,6 +356,11 @@
       "path": "docs/security-model.md",
       "size": 5950,
       "sha256": "7d38f119f1d79108ba9e82660a41d47655e8152eccc122068d301292a6e2ed25"
+    },
+    {
+      "path": "docs/security-support-policy-proposal.md",
+      "size": 3139,
+      "sha256": "6756917a2346b809d0d3b0d318b9f5d63a38bb6e63b491164557f01b2da43211"
     },
     {
       "path": "docs/usage.md",
@@ -2548,7 +2553,7 @@
       "sha256": "dab0b44fff46b3c9dc279cf7b78831c3a0409fd2ed0c83fff14e256e4e848099"
     }
   ],
-  "contentManifestSha256": "07be7c79cbb8ce1f8f14d19904f12bd8ab119f8c983bcda08a53a0d5d11bcc01",
+  "contentManifestSha256": "8fdc3de6fe6ea872867611d66287c55c0fc8fca122facaccf273ebccc5b6ac58",
   "toolchain": {
     "node": "v24.16.0",
     "platform": "win32",
@@ -2565,8 +2570,8 @@
     "algorithm": "ed25519",
     "testKey": true,
     "valid": true,
-    "signature": "+1XPdsLTVIWIWBSM/rKduwhyYhuBnOEgkwBn8Lu91c8levrWVEDnmaMMOBu6qniVDckQvH/Mcp9jS669AIwgCA==",
-    "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAuXwXsFKziyOhROOHBLCjiPXoChQ/46g6HMlE2bUGlWE=\n-----END PUBLIC KEY-----\n"
+    "signature": "z3743IYPNdh7wl/B7fS6ScALzLVkJByS4+OElWQrUYlOH39p+SeE97in7Ss4ORjmKAGdLCsdYc0viKoi074qDg==",
+    "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARHxGE/espyE5Zu9h0ExypAPQ+2gZgT9jj9T8GppireI=\n-----END PUBLIC KEY-----\n"
   },
   "productionSigned": false,
   "limitations": [
