@@ -1,15 +1,15 @@
 {
   "schemaVersion": "armorbreak.release-build/v1",
-  "generatedAt": "2026-10-26T13:29:29.380Z",
-  "commit": "a15e71692220d1e5846a33293a6ae2a40c084db1",
+  "generatedAt": "2026-10-26T13:37:12.908Z",
+  "commit": "c1ce751b965c76ae134dd67501d07ae7f02c0a96",
   "package": "dsh-armorbreak",
   "version": "2.2.0",
   "artifact": "armorbreak-portable-2.2.0.tar.gz",
-  "bytes": 5347756,
-  "sha256": "71c0fc330083f0768058648b84011770276f5104f1fc36f97f779657ba1914e8",
+  "bytes": 5348268,
+  "sha256": "b6ae695cb64a22f1dcd98f0bd9cdffccd211e4538ce6d475fa97fbb19766d780",
   "reproducible": true,
   "sbom": "armorbreak-portable-2.2.0.tar.gz.sbom.cdx.json",
-  "sbomSha256": "0af69ad1bde68e4f18477e499196d185d45fc30acc54f7b4f42137aea29e449d",
+  "sbomSha256": "3cfb2ec5c5f3746ffeeb8b412a14a5c0abb2a0316eca3d283d65fbaad7696a1f",
   "files": 509,
   "contentManifest": [
     {
@@ -59,8 +59,8 @@
     },
     {
       "path": "SECURITY.md",
-      "size": 2049,
-      "sha256": "57fde2d815e9bf3a8a72948c0d1d43e76fdc14a5b8a4880bf34e2c7e733848dd"
+      "size": 2785,
+      "sha256": "5557fcc9b6964b074738708373785ffe1caf8d2cb40aa5372fa49aa2cb0067b6"
     },
     {
       "path": "benchmarks/bench.mjs",
@@ -279,8 +279,8 @@
     },
     {
       "path": "docs/readme-audit/v2.2.0-release-facts.md",
-      "size": 4307,
-      "sha256": "88d25d4a58f0e872b6738533a0a81962255118bd50b70335fce6c3115c38d188"
+      "size": 4414,
+      "sha256": "35d5032f1942a3faaeff185a689f21c636f4db6ae39ff6a49b2446d835610bc5"
     },
     {
       "path": "docs/readme-audit/v3-fact-matrix.md",
@@ -2558,7 +2558,7 @@
       "sha256": "dab0b44fff46b3c9dc279cf7b78831c3a0409fd2ed0c83fff14e256e4e848099"
     }
   ],
-  "contentManifestSha256": "127926b1470b9c210f597b60bc96e4b69c204c6102278db1467a5d6003b8f865",
+  "contentManifestSha256": "ac54ddda64a1730bbbad55424c456efa4cdd5b2c40842d035ccedf25f4347aa6",
   "toolchain": {
     "node": "v24.16.0",
     "platform": "win32",
@@ -2575,8 +2575,8 @@
     "algorithm": "ed25519",
     "testKey": true,
     "valid": true,
-    "signature": "i7jXlpyQ/AkhthHA5ZdRmp4mUDI8gsVAObljoZMBtTq0MMkbQaSexEDt+uI20pGMJaGvTOdEUWPFE/rNBiw9Cw==",
-    "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAYiQBXWkqGQUGDZAEj2aAkQ0/mkXYCUq1KRIe0cWeb2I=\n-----END PUBLIC KEY-----\n"
+    "signature": "p0maCGu2+QB5uhmLiQRxIB2HqI5T2odqVk/TrwTosD8I6bQ9P26cs0ew0qbhoY8UmM7tcRSO40TjnOxM3lGvBg==",
+    "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAZfzRZYEmye+NtuTG8FYYfyucqWnqiL3mSDL+5J2XQGY=\n-----END PUBLIC KEY-----\n"
   },
   "productionSigned": false,
   "limitations": [
