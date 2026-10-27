@@ -30,6 +30,18 @@ export const WORKFLOWS = {
       { id: 'symbols', title: 'JS/TS 符号与引用索引', capabilityId: 'source.symbols' },
     ],
   },
+  NativeProgramIRReview: {
+    id: 'NativeProgramIRReview',
+    title: '原生二进制 Program IR 审查',
+    description: '对授权的 PE、ELF、Mach-O 文件汇总结构证据，并请求锁定版本的 Ghidra 静态函数、基本块与调用边。字节码与行为执行分析仍按实际后端能力降级。',
+    targetKind: 'file',
+    steps: [
+      { id: 'identify', title: '文件识别与哈希', capabilityId: 'binary.identify' },
+      { id: 'headers', title: '加载布局与区段', capabilityId: 'binary.headers' },
+      { id: 'symbols', title: '符号与函数线索', capabilityId: 'binary.structure' },
+      { id: 'program-ir', title: '归一化 Program IR 与 Ghidra 调用图', capabilityId: 'binary.program_ir' },
+    ],
+  },
   BinaryStaticAnalysis: {
     id: 'BinaryStaticAnalysis',
     title: '二进制静态分析',

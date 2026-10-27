@@ -5,7 +5,12 @@
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { mkdtemp, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
+import { ArmorBreakRuntime } from '../lib/core/runtime.js';
+import { getWorkflow, listWorkflows } from '../lib/core/workflows.js';
 import manifest from '../lib/analyzers/binary/manifest.js';
 import { entropyOf } from '../lib/analyzers/binary/util.js';
 import { parsePe } from '../lib/analyzers/binary/pe.js';
@@ -418,6 +423,41 @@ function buildMachO() {
   return buf;
 }
 
+function stripPeSymbols(buffer) {
+  const copy = Buffer.from(buffer);
+  copy.writeUInt32LE(0, 0x8c); // COFF PointerToSymbolTable
+  copy.writeUInt32LE(0, 0x90); // COFF NumberOfSymbols
+  copy.writeUInt32LE(0, 0x108); // export directory RVA
+  copy.writeUInt32LE(0, 0x10c); // export directory size
+  return copy;
+}
+
+function stripElfSymbols(buffer) {
+  const copy = Buffer.from(buffer);
+  const sectionOffset = Number(copy.readBigUInt64LE(40));
+  const entrySize = copy.readUInt16LE(58);
+  const sectionCount = copy.readUInt16LE(60);
+  for (let index = 0; index < sectionCount; index += 1) {
+    const header = sectionOffset + index * entrySize;
+    const type = copy.readUInt32LE(header + 4);
+    if (type === 2 || type === 11) copy.writeUInt32LE(0, header + 4); // SHT_SYMTAB / SHT_DYNSYM
+  }
+  return copy;
+}
+
+function stripMachOSymbols(buffer) {
+  const copy = Buffer.from(buffer);
+  const commandCount = copy.readUInt32LE(16);
+  let offset = 32;
+  for (let index = 0; index < commandCount; index += 1) {
+    const command = copy.readUInt32LE(offset);
+    const size = copy.readUInt32LE(offset + 4);
+    if (command === 0x2) copy.writeUInt32LE(0x7ffffffe, offset); // opaque load command in place of LC_SYMTAB
+    offset += size;
+  }
+  return copy;
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -427,10 +467,10 @@ test('binary manifest: shape, ids, risk levels and params schema follow CONTRACT
   assert.ok(Array.isArray(manifest.capabilities));
   const ids = manifest.capabilities.map((c) => c.id);
   assert.deepEqual(ids.sort(), [
-    'binary.behavior', 'binary.entropy', 'binary.ghidra', 'binary.headers', 'binary.identify', 'binary.strings', 'binary.structure',
+    'binary.behavior', 'binary.entropy', 'binary.ghidra', 'binary.headers', 'binary.identify', 'binary.program_ir', 'binary.strings', 'binary.structure',
   ]);
   for (const cap of manifest.capabilities) {
-    assert.match(cap.id, /^binary\.[a-z0-9-]+$/);
+    assert.match(cap.id, /^binary\.[a-z0-9_-]+$/);
     assert.ok(typeof cap.title === 'string' && cap.title.length > 0);
     assert.ok(typeof cap.description === 'string' && cap.description.length > 20);
     assert.equal(cap.riskLevel, 'L0');
@@ -530,6 +570,16 @@ test('binary.identify: malformed/truncated PE and ELF return structured results 
   const peResult = await runCap('binary.identify', inputFor(truncatedPe));
   assert.equal(peResult.data.format, 'unknown');
   assert.equal(peResult.data.container, 'mz-dos');
+
+  const partialPe = buildPe().subarray(0, 0x98); // MZ, PE signature and COFF header; no optional header
+  const partialPeIdentify = await runCap('binary.identify', inputFor(partialPe));
+  assert.equal(partialPeIdentify.data.format, 'pe');
+  assert.equal(partialPeIdentify.data.parseStatus, 'PARTIAL');
+  const partialPeStructure = await runCap('binary.structure', inputFor(partialPe));
+  assert.equal(partialPeStructure.data.partial, true);
+  const partialPeProgramIr = await runCap('binary.program_ir', inputFor(partialPe, { includeGhidra: false }));
+  assert.equal(partialPeProgramIr.data.analysis.status, 'PARTIAL');
+  assert.equal(partialPeProgramIr.data.program.debugInfo.status, 'UNAVAILABLE');
 
   const corruptPe = buildPe();
   corruptPe.writeUInt16LE(0xffff, 0x86); // absurd section count
@@ -744,6 +794,86 @@ test('binary.structure: PE exception directory is summarized when present', asyn
   assert.equal(result.data.exceptionDirectory.recordSize, 12);
   assert.equal(result.data.exceptionDirectory.approxCount, 3);
   assert.ok(result.findings.some((f) => f.title.includes('RUNTIME_FUNCTION')));
+});
+
+test('M3 binary.program_ir normalizes PE, ELF and Mach-O symbol and stripped fixtures and rejects corruption', async () => {
+  const fixtures = [
+    ['pe', buildPe(), stripPeSymbols(buildPe())],
+    ['elf', buildElf(), stripElfSymbols(buildElf())],
+    ['macho', buildMachO(), stripMachOSymbols(buildMachO())],
+  ];
+  for (const [format, withSymbols, withoutSymbols] of fixtures) {
+    const parsed = await runCap('binary.program_ir', inputFor(withSymbols, { includeGhidra: false }));
+    assert.equal(parsed.data.schemaVersion, 'armorbreak.native-program-ir/v1');
+    assert.equal(parsed.data.program.architecture !== null, true, `${format} architecture should be normalized`);
+    assert.equal(parsed.data.artifact.format, format);
+    assert.equal(parsed.data.analysis.level, 'S2');
+    assert.equal(parsed.data.analysis.status, 'PARTIAL');
+    assert.equal(parsed.data.analysis.inputExecuted, false);
+    assert.equal(parsed.data.ghidra.status, 'DISABLED');
+    assert.ok(Array.isArray(parsed.data.program.sections));
+
+    const stripped = await runCap('binary.program_ir', inputFor(withoutSymbols, { includeGhidra: false }));
+    assert.equal(stripped.data.artifact.format, format);
+    assert.equal(stripped.data.analysis.status, 'PARTIAL');
+    assert.equal(stripped.data.ghidra.status, 'DISABLED');
+    if (format === 'elf') {
+      assert.equal(stripped.data.program.sourceSymbolSummary.counts.symtabPresent, false);
+      assert.equal(stripped.data.program.sourceSymbolSummary.counts.dynsymPresent, false);
+    } else if (format === 'macho') {
+      assert.equal(stripped.data.program.sourceSymbolSummary.slices[0].counts.symbolCount, 0);
+    } else {
+      assert.equal(stripped.data.program.sourceSymbolSummary.counts.exportFunctions, 0);
+    }
+  }
+
+  const corrupt = await runCap('binary.program_ir', inputFor(Buffer.from('not a valid executable', 'latin1'), { includeGhidra: false }));
+  assert.equal(corrupt.data.analysis.level, 'S0');
+  assert.equal(corrupt.data.analysis.status, 'UNSUPPORTED');
+  assert.equal(corrupt.data.analysis.inputExecuted, false);
+
+  const truncated = await runCap('binary.program_ir', inputFor(
+    buildPe(),
+    { includeGhidra: true },
+    {},
+    { targetSize: buildPe().length + 1, targetTruncated: true, execExternal: async () => { throw new Error('should not launch Ghidra') } },
+  ));
+  assert.equal(truncated.data.ghidra.status, 'INPUT_TRUNCATED');
+  assert.equal(truncated.data.analysis.truncated, true);
+  assert.match(truncated.data.analysis.reason, /输入不完整/);
+});
+
+test('M3 NativeProgramIRReview is registered and binary.program_ir runs through Runner and PolicyGateway', async () => {
+  const stateRoot = await mkdtemp(join(tmpdir(), 'abm-native-state-'));
+  const workspace = await mkdtemp(join(tmpdir(), 'abm-native-workspace-'));
+  const sample = join(workspace, 'sample.exe');
+  await writeFile(sample, buildPe());
+
+  const runtime = new ArmorBreakRuntime({ stateRoot });
+  await runtime.init();
+  assert.equal(runtime.registry.diagnostics.length, 0);
+  assert.equal(runtime.registry.get('binary.program_ir')?.riskLevel, 'L0');
+  const workflow = getWorkflow('NativeProgramIRReview');
+  assert.ok(listWorkflows().some((entry) => entry.id === workflow.id));
+  assert.equal(workflow.steps.at(-1).capabilityId, 'binary.program_ir');
+
+  const task = await runtime.workspace(workspace).taskStore.create({
+    title: 'authorized native Program IR fixture',
+    targetPath: sample,
+    targetKind: 'file',
+    steps: [{ id: 'program-ir', capabilityId: 'binary.program_ir', options: { includeGhidra: false } }],
+  });
+  const result = await runtime.runner.runCapability({
+    task,
+    capabilityId: 'binary.program_ir',
+    options: { includeGhidra: false },
+  });
+  assert.equal(result.capability, 'binary.program_ir');
+  assert.equal(result.data.schemaVersion, 'armorbreak.native-program-ir/v1');
+  assert.equal(result.data.artifact.format, 'pe');
+  assert.equal(result.data.ghidra.status, 'DISABLED');
+  assert.equal(result.data.analysis.inputExecuted, false);
+  assert.ok(result.evidenceIds.length > 0);
 });
 
 test('binary: long loops cooperate with AbortSignal', async () => {

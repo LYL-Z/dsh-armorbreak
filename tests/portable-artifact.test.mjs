@@ -46,7 +46,7 @@ test('portable artifact builds and runs capabilities after clean-room extraction
       cwd: extract, encoding: 'utf8',
       env: { ...process.env, ARMORBREAK_STATE_ROOT: state, ARMORBREAK_WORKSPACE: workspace },
     })
-    assert.equal(JSON.parse(capsRaw).length, 49)
+    assert.equal(JSON.parse(capsRaw).length, 50)
   } finally {
     await rm(out, { recursive: true, force: true })
   }

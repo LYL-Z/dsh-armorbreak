@@ -4,7 +4,7 @@
  */
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
@@ -137,32 +137,86 @@ test('jadx: indexes sources/APIs without returning source, and seam writes temp 
 test('ghidra: parses bounded function summary and flags sensitive names as hypothesis', async () => {
   const raw = JSON.stringify({
     program: 'sample.exe',
+    executableFormat: 'Portable Executable (PE)',
+    processor: 'x86',
     language: 'x86:LE:64:default',
     imageBase: '140000000',
     functionCount: 2,
+    internalFunctionCount: 2,
+    externalFunctionCount: 0,
     functions: [
-      { name: 'VirtualAllocEx', entry: '140001000', size: 32, external: true, thunk: false, callingConvention: 'unknown', callers: 2 },
-      { name: 'main', entry: '140002000', size: 64, external: false, thunk: false, callingConvention: '__stdcall', callers: 0 },
+      { name: 'VirtualAllocEx', entry: '140001000', size: 32, external: true, thunk: false, callingConvention: 'unknown', callers: 2, byteHashStatus: 'UNAVAILABLE' },
+      { name: 'main', entry: '140002000', fileOffset: '0x400', size: 64, external: false, thunk: false, callingConvention: '__stdcall', callers: 0, byteHashSha256: 'a'.repeat(64), byteHashBytes: 64, byteHashStatus: 'COMPLETE' },
     ],
+    callEdgeCount: 2,
+    callEdges: [
+      { caller: 'main', callerEntry: '140002000', callSite: '140002010', callee: 'VirtualAllocEx', calleeEntry: '140001000', referenceType: 'UNCONDITIONAL_CALL' },
+      { caller: 'main', callerEntry: '140002000', callSite: '140002020', callee: 'VirtualAllocEx', calleeEntry: '140001000', referenceType: 'UNCONDITIONAL_CALL' },
+    ],
+    callEdgeCountComplete: true,
+    basicBlockCount: 2,
+    basicBlocks: [
+      { functionEntry: '140002000', start: '140002000', end: '140002020', size: 32, flowType: 'TERMINAL' },
+      { functionEntry: '140002000', start: '140002021', end: '140002040', size: 31, flowType: 'TERMINAL' },
+    ],
+    basicBlockCountComplete: true,
+    segments: [
+      { name: '.text', start: '140001000', end: '140002000', fileOffset: '0x400', size: 4096, initialized: true, read: true, execute: true },
+      { name: '.data', start: '140002000', end: '140003000', fileOffset: '0x1400', size: 4096, initialized: true, read: true, write: true },
+    ],
+    symbols: [
+      { name: 'main', address: '140002000', fileOffset: '0x400', type: 'FUNCTION', source: 'ANALYSIS', external: false },
+      { name: 'VirtualAllocEx', address: '140001000', fileOffset: '0x300', type: 'FUNCTION', source: 'IMPORTED', external: true },
+    ],
+    symbolCount: 2,
   })
   const parsed = parseGhidraSummary(raw, { maxFunctions: 10 })
   assert.equal(parsed.data.functionCount, 2)
   assert.equal(parsed.data.emitted, 2)
+  assert.equal(parsed.data.processor, 'x86')
+  assert.equal(parsed.data.functions[1].fileOffset, '0x400')
+  assert.equal(parsed.data.functions[1].byteHashStatus, 'COMPLETE')
+  assert.equal(parsed.data.callEdges[0].callSite, '140002010')
+  assert.equal(parsed.data.basicBlocks.length, 2)
+  assert.equal(parsed.data.symbols[0].name, 'main')
   assert.ok(parsed.data.suspiciousNames['process-injection'])
   assert.ok(parsed.findings.some((finding) => finding.verification === 'hypothesis'))
   assert.ok(parsed.findings.some((finding) => finding.verification === 'observed'))
   assert.throws(() => parseGhidraSummary('{"functions": "nope"}'), /missing functions array/)
 
+  const bounded = parseGhidraSummary(raw, { maxFunctions: 1, maxBasicBlocks: 1, maxCallEdges: 1, maxSegments: 1, maxSymbols: 1 })
+  assert.equal(bounded.data.truncated, true)
+  assert.equal(bounded.data.functionScopeTruncated, true)
+  assert.equal(bounded.data.callEdgesTruncated, true)
+  assert.equal(bounded.data.basicBlocksTruncated, true)
+  assert.equal(bounded.data.segmentsTruncated, true)
+  assert.equal(bounded.data.symbolsTruncated, true)
+  assert.equal(bounded.data.callEdgeCountComplete, false)
+  assert.equal(bounded.data.basicBlockCountComplete, false)
+
+  const exactInput = Buffer.from('authorized exact Ghidra fixture bytes', 'utf8')
+  let importedTempPath = null
   const result = await ghidraCapability.run({
     targetPath: process.execPath,
+    buffer: exactInput,
     options: { maxFunctions: 10 },
     limits: { timeoutMs: 5000 },
     env: envWith(async (command, args) => {
-      const output = args[args.length - 1]
+      importedTempPath = args[args.indexOf('-import') + 1]
+      assert.notEqual(importedTempPath, process.execPath)
+      assert.deepEqual(readFileSync(importedTempPath), exactInput)
+      const output = args[args.indexOf('ExportSummary.java') + 1]
       writeFileSync(output, raw)
       return { stdout: 'ok', stderr: '', exitCode: 0 }
     }),
   })
   assert.equal(result.meta.tool, 'ghidra')
   assert.equal(result.data.emitted, 2)
+  assert.equal(result.meta.inputBytes, exactInput.length)
+  assert.equal(existsSync(importedTempPath), false, 'temporary sample copy is removed after analysis')
+  await assert.rejects(() => ghidraCapability.run({
+    targetPath: process.execPath,
+    buffer: exactInput,
+    env: { targetSize: exactInput.length + 1 },
+  }), /refuses truncated or size-mismatched/)
 })

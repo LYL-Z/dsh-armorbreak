@@ -2,7 +2,7 @@
   "name": "dsh-armorbreak",
   "version": "2.2.0",
   "type": "module",
-  "description": "ArmorBreak (破甲模式): an authorized reverse-engineering and security-research agent preset for DeepSeek Harness — 49 offline capabilities, L0–L3 policy engine, evidence-chain reports",
+  "description": "ArmorBreak (破甲模式): an authorized reverse-engineering and security-research agent preset for DeepSeek Harness — 50 offline capabilities, L0–L3 policy engine, evidence-chain reports",
   "icon": "./icon.svg",
   "author": {
     "name": "LYL-Z",
