@@ -541,7 +541,22 @@
     {
       "languages": [
         "JavaScript",
-        "TypeScript",
+        "TypeScript"
+      ],
+      "detectionLevel": "S1",
+      "parsingLevel": "S2",
+      "semanticLevel": "S1",
+      "securityLevel": "S1",
+      "reconstructionLevel": "S0",
+      "evidence": [
+        "source.symbols"
+      ],
+      "limitations": [
+        "Same-file symbol references only; no inter-file linking, type-aware navigation, call graph, or data flow."
+      ]
+    },
+    {
+      "languages": [
         "Python",
         "Java",
         "Go",
@@ -558,7 +573,7 @@
         "sast.scan"
       ],
       "limitations": [
-        "Existing scanner is bounded line-oriented pattern matching; no AST, symbol graph, or cross-file taint claim."
+        "Existing bounded pattern scanner only; no AST or source-symbol backend verified in M2."
       ]
     },
     {
@@ -590,7 +605,7 @@
       "reconstructionLevel": "S0",
       "evidence": [],
       "limitations": [
-        "No language-specific v2.3 parser or semantic backend was verified at baseline; file-extension recognition alone is not claimed."
+        "No language-specific M2 parser or semantic backend was verified; file-extension candidates are not semantic support."
       ]
     }
   ],
@@ -683,8 +698,18 @@
     {
       "id": "source.symbols",
       "priority": "P0",
-      "status": "NOT_IMPLEMENTED",
-      "verified": false
+      "status": "PARTIAL_LOCAL_TESTED",
+      "verified": true,
+      "supportLevel": "S2",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "ci": "NOT_RUN",
+      "evidence": "docs/v2.3/evidence/m2/test-results.json",
+      "limitations": [
+        "Python, Java, C/C++, Go, Rust, C# S2 and four-language S3 remain unimplemented."
+      ]
     },
     {
       "id": "source.flows",
@@ -755,12 +780,12 @@
     }
   },
   "postImplementationCurrentRuntime": {
-    "sourceCommit": "3135688b3a5cbea89798bc0c61a2a45abfa38312",
-    "capturedOn": "2026-10-26",
-    "capabilityCount": 48,
-    "domainCount": 9,
+    "sourceCommit": "47b5869a7d18e32c057aa6d2083693f920a21340",
+    "capturedOn": "2026-10-27",
+    "capabilityCount": 49,
+    "domainCount": 10,
     "capabilitiesByRisk": {
-      "L0": 46,
+      "L0": 47,
       "L1": 1,
       "L2": 1
     },
@@ -773,9 +798,10 @@
       "live": 2,
       "network": 8,
       "sast": 8,
+      "source": 1,
       "web": 4
     },
-    "workflowCount": 10,
+    "workflowCount": 11,
     "dshModelToolCount": 10,
     "mcpToolCount": 7,
     "skillCount": 7,
@@ -796,12 +822,30 @@
         "status": "IMPLEMENTED_LOCAL_TESTED"
       }
     ],
+    "newSourceCapability": {
+      "id": "source.symbols",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "supportLevel": "S2",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "status": "PARTIAL_LOCAL_TESTED",
+      "evidence": "docs/v2.3/evidence/m2/test-results.json"
+    },
     "l1IsolationDiagnostic": {
-      "state": "DaemonReady",
       "available": false,
-      "provider": "docker",
-      "reason": "守护进程可用，但尚未执行隔离自检；L1 仍需通过 runner 的隔离门与平台审批",
-      "verified": false
+      "verified": false,
+      "provider": null,
+      "state": "Unavailable",
+      "reason": "没有可用的隔离提供者",
+      "dockerState": "Installed",
+      "dockerVersion": "Docker version 29.8.1, build 4a63305",
+      "dockerReason": "CLI 已安装，但守护进程不可用：docker info --format {{.ServerVersion}} failed: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.\n",
+      "podmanState": "Unavailable",
+      "wsl2State": "Installed",
+      "wsl2TrustedAsL1": false
     }
   },
   "v23Workflows": [
@@ -812,6 +856,19 @@
       "verified": true,
       "targetKind": "directory",
       "evidence": "docs/v2.3/evidence/m1/test-results.json",
+      "ci": "NOT_RUN"
+    },
+    {
+      "id": "CrossLanguageSourceReview",
+      "priority": "P0",
+      "status": "PARTIAL_LOCAL_TESTED",
+      "verified": true,
+      "targetKind": "directory",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "evidence": "docs/v2.3/evidence/m2/test-results.json",
       "ci": "NOT_RUN"
     }
   ],
@@ -831,8 +888,11 @@
     },
     {
       "id": "M2",
-      "status": "NOT_IMPLEMENTED",
-      "ci": "NOT_RUN"
+      "status": "PARTIAL_LOCAL_TESTED",
+      "sourceCommit": "47b5869a7d18e32c057aa6d2083693f920a21340",
+      "evidence": "docs/v2.3/evidence/m2/test-results.json",
+      "ci": "NOT_RUN",
+      "limitation": "Only JS/TS S2 is implemented; taskbook core-language S1-S2 breadth and four-language S3 are incomplete."
     },
     {
       "id": "M3",
@@ -858,6 +918,63 @@
       "id": "P0-H",
       "status": "NOT_IMPLEMENTED",
       "ci": "NOT_RUN"
+    }
+  ],
+  "sourceSupportBaseline": [
+    {
+      "languages": [
+        "JavaScript",
+        "TypeScript",
+        "Python",
+        "Java",
+        "Go",
+        "C",
+        "C++",
+        "PHP"
+      ],
+      "detectionLevel": "S1",
+      "parsingLevel": "S0",
+      "semanticLevel": "S0",
+      "securityLevel": "S1",
+      "reconstructionLevel": "S0",
+      "evidence": [
+        "sast.scan"
+      ],
+      "limitations": [
+        "Existing scanner is bounded line-oriented pattern matching; no AST, symbol graph, or cross-file taint claim."
+      ]
+    },
+    {
+      "languages": [
+        "Rust",
+        "C#",
+        "Kotlin",
+        "Swift",
+        "Ruby",
+        "Lua",
+        "Shell",
+        "Dart",
+        "ArkTS",
+        "SQL",
+        "HTML",
+        "CSS",
+        "GraphQL",
+        "HCL",
+        "Nix",
+        "HDL",
+        "Shader",
+        "Solidity",
+        "Move"
+      ],
+      "detectionLevel": "S0",
+      "parsingLevel": "S0",
+      "semanticLevel": "S0",
+      "securityLevel": "S0",
+      "reconstructionLevel": "S0",
+      "evidence": [],
+      "limitations": [
+        "No language-specific v2.3 parser or semantic backend was verified at baseline; file-extension recognition alone is not claimed."
+      ]
     }
   ]
 }
