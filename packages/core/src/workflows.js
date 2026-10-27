@@ -21,6 +21,15 @@ export const WORKFLOWS = {
       { id: 'inventory', title: '产物识别与递归清单', capabilityId: 'artifact.inventory' },
     ],
   },
+  CrossLanguageSourceReview: {
+    id: 'CrossLanguageSourceReview',
+    title: '跨语言源码符号审查',
+    description: '从授权本地目录中为 JS/TS 文件生成 S2 语法、符号、导入导出与同文件引用；其他语言、跨文件解析、类型语义和数据流会明确报告为覆盖限制。',
+    targetKind: 'directory',
+    steps: [
+      { id: 'symbols', title: 'JS/TS 符号与引用索引', capabilityId: 'source.symbols' },
+    ],
+  },
   BinaryStaticAnalysis: {
     id: 'BinaryStaticAnalysis',
     title: '二进制静态分析',

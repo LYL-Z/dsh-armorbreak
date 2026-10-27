@@ -20,6 +20,8 @@ test('release build is reproducible, hashed, SBOM-backed and test-signature veri
     assert.equal(manifest.signature.valid, true)
     assert.equal(manifest.signature.testKey, true)
     assert.equal(manifest.productionSigned, false)
+    assert.equal(manifest.cleanRoom.cliCapabilities, 49)
+    assert.equal(manifest.cleanRoom.result, 'PASS')
     assert.match(manifest.sha256, /^[a-f0-9]{64}$/)
     assert.ok(manifest.files > 100)
     assert.equal(manifest.contentManifest.length, manifest.files)

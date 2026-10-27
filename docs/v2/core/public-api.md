@@ -28,7 +28,8 @@ await core.close()
 
 - capabilities: at least `id`, `title`, `riskLevel`, `domain`; the v2.2 stable
   baseline had 46 entries. The v2.3 development branch adds two P0 artifact
-  intake capabilities, bringing the current development registry to 48.
+  intake capabilities and one bounded JS/TS syntax capability, bringing the
+  current development registry to 49.
 - health: includes the resolved workspace, tasks and policy state.
 - task: includes task id, workspace, state, operator and timestamps.
 - L3 remains always denied; model identity is never an authorization principal.

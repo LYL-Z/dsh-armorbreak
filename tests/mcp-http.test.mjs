@@ -40,7 +40,7 @@ test('MCP HTTP test mode serves initialize and tools over loopback with explicit
     assert.ok(list.body.result.tools.some((tool) => tool.name === 'armorbreak_analyze'))
     const call = await rpc(server.url, 4, 'tools/call', { name: 'armorbreak_capabilities', arguments: {} }, undefined, sessionId)
     assert.equal(call.status, 200)
-    assert.equal(JSON.parse(call.body.result.content[0].text).length, 48)
+    assert.equal(JSON.parse(call.body.result.content[0].text).length, 49)
     const health = await fetch(`http://${server.host}:${server.port}/health`)
     assert.equal(health.status, 200)
   } finally {

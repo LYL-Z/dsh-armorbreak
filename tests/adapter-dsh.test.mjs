@@ -20,5 +20,5 @@ test('adapter-dsh still registers the legacy ArmorBreak tools and L0 health', as
   }
   const value = await defs.get('armorbreak_health').execute({ workspace })
   assert.match(value.text, /ArmorBreak 环境健康/)
-  assert.equal(value.data.capabilities.length, 48)
+  assert.equal(value.data.capabilities.length, 49)
 })

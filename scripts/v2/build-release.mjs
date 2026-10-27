@@ -224,7 +224,7 @@ try {
     encoding: 'utf8', timeout: 120_000,
   })
   const capabilities = cli.status === 0 ? JSON.parse(cli.stdout).length : 0
-  cleanRoom = { extracted: true, cliCapabilities: capabilities, result: capabilities === 46 ? 'PASS' : 'FAIL', stderr: String(cli.stderr ?? '').slice(0, 1000) }
+  cleanRoom = { extracted: true, cliCapabilities: capabilities, result: capabilities === 49 ? 'PASS' : 'FAIL', stderr: String(cli.stderr ?? '').slice(0, 1000) }
 } catch (error) {
   cleanRoom = { extracted: false, cliCapabilities: 0, result: 'FAIL', error: String(error.message) }
 } finally {

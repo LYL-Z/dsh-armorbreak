@@ -24,7 +24,7 @@ test('Core public API contract, dependency graph and result shapes are frozen', 
   for (const method of contract.coreMethods) assert.equal(typeof core[method], 'function')
   const ctx = { principal: { id: 'contract-tester', kind: 'local-user' }, workspaceId: stateRoot, requestId: 'req-contract', traceId: 'trace-contract' }
   const capabilities = await core.capabilities(ctx)
-  assert.equal(capabilities.length, 48)
+  assert.equal(capabilities.length, 49)
   for (const field of contract.invocationResultFields.capability) assert.ok(field in capabilities[0], `capability missing ${field}`)
   const health = await core.health(ctx)
   for (const field of contract.invocationResultFields.health) assert.ok(field in health, `health missing ${field}`)

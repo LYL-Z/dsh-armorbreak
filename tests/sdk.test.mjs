@@ -20,7 +20,7 @@ async function fixture() {
 test('typed SDK works over direct Engine transport', async () => {
   const f = await fixture()
   const client = new ArmorBreakClient({ engine: f.engine, principal: f.principal, workspaceId: f.workspace })
-  assert.equal((await client.capabilities()).length, 48)
+  assert.equal((await client.capabilities()).length, 49)
   const result = await client.analyze({ capability: 'forensics.hash', target: join(f.workspace, 'sample.txt') })
   assert.equal(result.state, 'COMPLETED')
   assert.match(result.targetSha256, /^[a-f0-9]{64}$/)
@@ -40,7 +40,7 @@ test('typed SDK works over MCP HTTP transport', async () => {
   const server = await createMcpHttpServer({ engine: f.engine, principal: f.principal, workspaceId: f.workspace, token })
   try {
     const client = new ArmorBreakClient({ baseUrl: server.url, token, principal: f.principal, workspaceId: f.workspace })
-    assert.equal((await client.capabilities()).length, 48)
+    assert.equal((await client.capabilities()).length, 49)
     const result = await client.analyze({ capability: 'forensics.hash', target: join(f.workspace, 'sample.txt') })
     assert.equal(result.state, 'COMPLETED')
     const report = await client.report(result.taskId)
