@@ -18,6 +18,16 @@
     "exitCode": 1,
     "error": "failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; the system cannot find the file specified"
   },
+  "armorbreakIsolationProbe": {
+    "probe": "ArmorBreakRuntime.health.isolation() with a temporary state root",
+    "available": false,
+    "provider": "docker",
+    "dockerCliFound": true,
+    "dockerCliVersion": "29.8.1",
+    "reason": "Docker CLI found but daemon is not usable; dockerDesktopLinuxEngine named pipe is missing",
+    "targetProgramExecuted": false,
+    "l1Disposition": "L1 remains denied without verified isolation"
+  },
   "historicalDockerEvidence": {
     "checkedOn": "2026-10-26",
     "evidence": "docs/v2.3/evidence/m0/post-baseline-environment.json",

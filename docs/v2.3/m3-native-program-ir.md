@@ -2,7 +2,7 @@
 
 ## Status
 
-**Native P0: `LOCAL_REAL_TOOL_E2E_VERIFIED`; M3 overall: `PARTIAL`.** On this Windows host, six self-authored PE, ELF, and Mach-O fixtures passed the real `ArmorBreakRuntime.runner.runCapability` → PolicyGateway → `binary.program_ir` → Ghidra 12.1.4 path. The full code SHA, fixture hashes, captured functions/call edges, bounds, and per-sample `inputExecuted: false` are in [`native-ghidra-runner-e2e.json`](evidence/m3/native-ghidra-runner-e2e.json).
+**Native P0: `LOCAL_REAL_TOOL_E2E_VERIFIED`; M3 overall: `PARTIAL`.** At exact source SHA `e57287f5abc9fb9ba86cb686736f67f3ab030357`, focused tests passed 28/28, the full suite passed 635/635, and typecheck exited 0. On this Windows host, six self-authored PE, ELF, and Mach-O fixtures passed the real `ArmorBreakRuntime.runner.runCapability` → PolicyGateway → `binary.program_ir` → Ghidra 12.1.4 path. The fixture hashes, captured functions/call edges, bounds, and per-sample `inputExecuted: false` are in [`native-ghidra-runner-e2e.json`](evidence/m3/native-ghidra-runner-e2e.json); exact commands and log hashes are in [`m3-validation.json`](evidence/m3/m3-validation.json).
 
 This closes the local native P0-D static-analysis evidence gap, including Mach-O and two Ghidra ISAs. It does not close the release gate: output is bounded and heuristic, no macOS runtime was used, Ghidra was run on the host rather than in the currently available container isolation, and P1 bytecode coverage remains open.
 

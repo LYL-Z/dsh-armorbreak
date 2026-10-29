@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "armorbreak.v2.3.m3-validation/v1",
+  "checkedOn": "2026-10-29",
+  "sourceCommit": "e57287f5abc9fb9ba86cb686736f67f3ab030357",
+  "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
+  "focusedTests": {
+    "command": "node --test tests/binary.test.mjs tests/native-program-ir-fixtures.test.mjs tests/external-adapters-v2.test.mjs",
+    "exitCode": 0,
+    "tests": 28,
+    "passed": 28,
+    "failed": 0,
+    "log": "docs/v2.3/evidence/m3/focused-tests-final.log",
+    "logSha256": "2a644e53717fb73fc5c95fc20ede07f9f0c29991f0ae1440ffd09dfb25b9d5a9"
+  },
+  "fullSuite": {
+    "command": "npm test",
+    "exitCode": 0,
+    "tests": 635,
+    "passed": 635,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 129689.0498,
+    "temporaryDirectoryOverride": false,
+    "log": "docs/v2.3/evidence/m3/full-test-default-final.log",
+    "logSha256": "517da67e32e0a5be4ed29cf2e3a9d96977f44c2f410b77b88ff706ab6aa4f25e"
+  },
+  "typecheck": {
+    "command": "npm run typecheck",
+    "exitCode": 0,
+    "log": "docs/v2.3/evidence/m3/typecheck-final.log",
+    "logSha256": "408d700a2eeaec3bed1c65fe30ef76692fa357dc6c25b492e4adfcf2ba21a957"
+  },
+  "ghidraRunnerE2E": {
+    "runner": "ArmorBreakRuntime.runner.runCapability + PolicyGateway",
+    "capability": "binary.program_ir",
+    "tool": "Ghidra 12.1.4",
+    "sourceCommit": "e57287f5abc9fb9ba86cb686736f67f3ab030357",
+    "fixtures": 6,
+    "inputExecuted": false,
+    "log": "docs/v2.3/evidence/m3/native-ghidra-runner-e2e.json",
+    "logSha256": "d667fd9256d96651c9de54ec36d5f533313c25429d76751d3d3b3ad435fdd663"
+  },
+  "fixtureCatalogCheck": {
+    "catalog": "docs/v2.3/fixture-catalog.json",
+    "fixtures": 10,
+    "sha256Matches": 10,
+    "sizeMatches": 10,
+    "result": "PASS"
+  },
+  "runtimeRegistry": {
+    "capabilityCount": 50,
+    "domainCount": 10,
+    "capabilitiesByRisk": {
+      "L0": 48,
+      "L1": 1,
+      "L2": 1
+    },
+    "workflowCount": 12,
+    "dshModelToolCount": 10,
+    "mcpToolCount": 7,
+    "skillCount": 7,
+    "registryDiagnostics": 0
+  },
+  "environmentalTestIssue": {
+    "initialSourceCommit": "ba3c5ea4134f138bca22d1a6aa597f1e7f2b0cc4",
+    "initialDefaultRun": {
+      "tests": 635,
+      "passed": 629,
+      "failed": 6,
+      "rawLocalLogSha256": "729a4c47a62cf83b5477e32e2fa3cefbef27e7a9aa616a5089e089ddbbce23f2",
+      "sanitizedEvidence": "docs/v2.3/evidence/m3/windows-temp-volume-diagnostic.md"
+    },
+    "observedCause": [
+      "Windows temporary fixtures were created on C: while the checkout was on D:.",
+      "The safe-evidence helper could not traverse the host-protected C:\\Users path in this environment, and a hard-link fixture failed with EXDEV across volumes.",
+      "With TEMP/TMP pointed to D:, the same 635-test suite passed; the remaining rename-race assertion also passed once the temporary root was accessible."
+    ],
+    "resolution": "Committed a test-only helper that keeps filesystem-security and hard-link fixtures on the workspace volume/device when the system temp differs. The 14 affected tests and the final default npm test then passed without environment overrides.",
+    "sameVolumeFullSuite": {
+      "tests": 635,
+      "passed": 635,
+      "failed": 0
+    }
+  },
+  "currentL1Isolation": {
+    "probe": "ArmorBreakRuntime.health.isolation()",
+    "available": false,
+    "provider": "docker",
+    "dockerCliVersion": "29.8.1",
+    "daemon": "UNAVAILABLE",
+    "targetProgramExecuted": false,
+    "disposition": "L1 remains denied without verified isolation"
+  },
+  "ci": "NOT_RUN"
+}

@@ -726,8 +726,22 @@
     {
       "id": "binary.program_ir",
       "priority": "P0",
-      "status": "NOT_IMPLEMENTED",
-      "verified": false
+      "status": "PARTIAL_LOCAL_REAL_TOOL_E2E",
+      "verified": true,
+      "supportLevel": "S2",
+      "formats": [
+        "PE",
+        "ELF",
+        "Mach-O"
+      ],
+      "ghidraVersion": "12.1.4",
+      "ci": "NOT_RUN",
+      "evidence": "docs/v2.3/evidence/m3/native-ghidra-runner-e2e.json",
+      "limitations": [
+        "Static function/basic-block/call-edge evidence only; bounded output is partial and not recovered source or proof of behavior.",
+        "PE base relocations are not decoded; ELF and Mach-O relocation entries are not decoded.",
+        "No hostile input, OS-level sandbox, macOS runtime, Linux CI, or P1 bytecode E2E was verified."
+      ]
     },
     {
       "id": "security.correlate",
@@ -780,19 +794,19 @@
     }
   },
   "postImplementationCurrentRuntime": {
-    "sourceCommit": "47b5869a7d18e32c057aa6d2083693f920a21340",
-    "capturedOn": "2026-10-27",
-    "capabilityCount": 49,
+    "sourceCommit": "e57287f5abc9fb9ba86cb686736f67f3ab030357",
+    "capturedOn": "2026-10-29",
+    "capabilityCount": 50,
     "domainCount": 10,
     "capabilitiesByRisk": {
-      "L0": 47,
+      "L0": 48,
       "L1": 1,
       "L2": 1
     },
     "capabilitiesByDomain": {
       "android": 6,
       "artifact": 2,
-      "binary": 7,
+      "binary": 8,
       "ctf": 5,
       "forensics": 6,
       "live": 2,
@@ -801,7 +815,7 @@
       "source": 1,
       "web": 4
     },
-    "workflowCount": 11,
+    "workflowCount": 12,
     "dshModelToolCount": 10,
     "mcpToolCount": 7,
     "skillCount": 7,
@@ -834,16 +848,30 @@
       "status": "PARTIAL_LOCAL_TESTED",
       "evidence": "docs/v2.3/evidence/m2/test-results.json"
     },
+    "newNativeCapability": {
+      "id": "binary.program_ir",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "supportLevel": "S2",
+      "formats": [
+        "PE",
+        "ELF",
+        "Mach-O"
+      ],
+      "status": "PARTIAL_LOCAL_REAL_TOOL_E2E",
+      "evidence": "docs/v2.3/evidence/m3/native-ghidra-runner-e2e.json"
+    },
     "l1IsolationDiagnostic": {
+      "observedOn": "2026-10-29",
       "available": false,
       "verified": false,
-      "provider": null,
-      "state": "Unavailable",
-      "reason": "没有可用的隔离提供者",
-      "dockerState": "Installed",
+      "provider": "docker",
+      "state": "DaemonUnavailable",
+      "reason": "Docker CLI found but daemon is not usable; dockerDesktopLinuxEngine named pipe is missing",
+      "dockerState": "DaemonUnavailable",
       "dockerVersion": "Docker version 29.8.1, build 4a63305",
       "dockerReason": "CLI 已安装，但守护进程不可用：docker info --format {{.ServerVersion}} failed: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.\n",
-      "podmanState": "Unavailable",
+      "podmanState": "NotFound",
       "wsl2State": "Installed",
       "wsl2TrustedAsL1": false
     }
@@ -869,6 +897,18 @@
         "TypeScript"
       ],
       "evidence": "docs/v2.3/evidence/m2/test-results.json",
+      "ci": "NOT_RUN"
+    },
+    {
+      "id": "NativeProgramIRReview",
+      "priority": "P0",
+      "status": "PARTIAL_LOCAL_REAL_TOOL_E2E",
+      "verified": true,
+      "targetKind": "file",
+      "evidence": "docs/v2.3/evidence/m3/native-ghidra-runner-e2e.json",
+      "limitations": [
+        "Only the native binary Program IR path was run through the real Ghidra backend; bytecode and package adapters were not included."
+      ],
       "ci": "NOT_RUN"
     }
   ],
@@ -896,8 +936,12 @@
     },
     {
       "id": "M3",
-      "status": "NOT_IMPLEMENTED",
-      "ci": "NOT_RUN"
+      "status": "PARTIAL_LOCAL_TESTED",
+      "sourceCommit": "e57287f5abc9fb9ba86cb686736f67f3ab030357",
+      "nativeP0Gate": "LOCAL_REAL_GHIDRA_E2E_PASS",
+      "evidence": "docs/v2.3/evidence/m3/m3-validation.json",
+      "ci": "NOT_RUN",
+      "limitation": "P1 APK/DEX/AAB and JVM/.NET/WASM/Python/Lua/HAP bytecode coverage remains deferred or unverified; no hostile-input isolation or macOS runtime was tested."
     },
     {
       "id": "M4",
