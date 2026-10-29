@@ -1,0 +1,7 @@
+
+> dsh-armorbreak@2.2.0 typecheck
+> tsc -p tsconfig.json
+
+
+sourceCommit=f52f9f87ba8f9b308b86c58b74c60160843391b6
+exitCode=0
