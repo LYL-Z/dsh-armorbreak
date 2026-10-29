@@ -1,0 +1,122 @@
+{
+  "schemaVersion": "armorbreak.v2.3.fixture-catalog/v1",
+  "scope": "M3 native Program IR fixtures",
+  "allSamplesExecuted": false,
+  "fixtures": [
+    {
+      "id": "m3-pe-x64-symbols",
+      "path": "docs/v2.3/evidence/m3/fixtures/native_fixture_x64.exe",
+      "sha256": "917d56c8bd8c542094018fa2c091205652bcd7918b9bf7fae3399ffa9ea8c7b3",
+      "bytes": 54360,
+      "format": "pe",
+      "architecture": "x86-64",
+      "symbols": "present",
+      "provenance": "project-authored compiled native fixture",
+      "validation": ["native fixture tests", "real Runner/Ghidra 12.1.4 E2E"]
+    },
+    {
+      "id": "m3-pe-x64-stripped",
+      "path": "docs/v2.3/evidence/m3/fixtures/native_fixture_x64_stripped.exe",
+      "sha256": "2e6796990252f35235fda836bf9420571b8735b0963a4276de9d75e839d54e9f",
+      "bytes": 18958,
+      "format": "pe",
+      "architecture": "x86-64",
+      "symbols": "stripped",
+      "provenance": "project-authored compiled native fixture",
+      "validation": ["native fixture tests", "real Runner/Ghidra 12.1.4 E2E"]
+    },
+    {
+      "id": "m3-elf-i386-symbols",
+      "path": "docs/v2.3/evidence/m3/fixtures/native_fixture_i386.elf",
+      "sha256": "e3cbff8a06da61abdabd33cd7ad006493012257656f07737af687687bb546275",
+      "bytes": 12988,
+      "format": "elf",
+      "architecture": "x86",
+      "symbols": "present",
+      "provenance": "project-authored compiled native fixture",
+      "validation": ["native fixture tests", "real Runner/Ghidra 12.1.4 E2E"]
+    },
+    {
+      "id": "m3-elf-i386-stripped",
+      "path": "docs/v2.3/evidence/m3/fixtures/native_fixture_i386_stripped.elf",
+      "sha256": "794c04178d7040da2c5f2cb13788077fa3ad42b273197854b4b5feed2867b721",
+      "bytes": 12672,
+      "format": "elf",
+      "architecture": "x86",
+      "symbols": "stripped",
+      "provenance": "project-authored compiled native fixture",
+      "validation": ["native fixture tests", "real Runner/Ghidra 12.1.4 E2E"]
+    },
+    {
+      "id": "m3-macho-x64-symbols",
+      "path": "docs/v2.3/evidence/m3/fixtures/native_fixture_x86_64_macho.macho",
+      "sha256": "02edb976b622c349337f53429a424ae853f0b0a86d0fa73a80a709571ed302de",
+      "bytes": 17222,
+      "format": "macho",
+      "architecture": "x86-64",
+      "symbols": "present",
+      "provenance": "self-authored C fixture, cross-compiled with Zig 0.17.0 from Windows",
+      "validation": ["native fixture tests", "real Runner/Ghidra 12.1.4 E2E"],
+      "execution": "not executed; no macOS runtime test"
+    },
+    {
+      "id": "m3-macho-x64-stripped",
+      "path": "docs/v2.3/evidence/m3/fixtures/native_fixture_x86_64_macho_stripped.macho",
+      "sha256": "78255a8f267a4ba7ea62ff2d5f75528c24fc062c2dd8954cc9f3ea8ab866e38b",
+      "bytes": 16572,
+      "format": "macho",
+      "architecture": "x86-64",
+      "symbols": "LC_SYMTAB and LC_DYSYMTAB removed from a compiled hidden/local-symbol variant",
+      "provenance": "derived by scripts/v2/derive-m3-macho-fixtures.mjs",
+      "validation": ["native fixture tests", "real Runner/Ghidra 12.1.4 E2E"],
+      "execution": "not executed; no macOS runtime test"
+    },
+    {
+      "id": "m3-macho-x64-truncated",
+      "path": "docs/v2.3/evidence/m3/fixtures/native_fixture_x86_64_macho_truncated.macho",
+      "sha256": "b92165f70fa9aa4503f1e42d25603ecfb1efbe15f809afd9d167658896e31195",
+      "bytes": 512,
+      "format": "macho",
+      "architecture": "x86-64 magic retained; load commands truncated",
+      "symbols": "not applicable",
+      "provenance": "first 512 bytes of the catalogued symbol-bearing Mach-O fixture",
+      "validation": ["bounded parser negative test"],
+      "execution": "not executed; not sent to Ghidra"
+    },
+    {
+      "id": "m3-malformed-pe",
+      "path": "docs/v2.3/evidence/m3/fixtures/malformed_pe.bin",
+      "sha256": "cc0bf0e0d268d42e726bec5233c94644343486ef22394fc12539a89590ecc7db",
+      "bytes": 152,
+      "format": "pe-like malformed fixture",
+      "provenance": "synthetic parser negative fixture",
+      "validation": ["bounded parser negative test"]
+    },
+    {
+      "id": "m3-malformed-elf",
+      "path": "docs/v2.3/evidence/m3/fixtures/malformed_elf.bin",
+      "sha256": "d3ca3eba3e339c880980803fbfe417a10a82480be5876bb0d63b0f0663688f6a",
+      "bytes": 20,
+      "format": "elf-like malformed fixture",
+      "provenance": "synthetic parser negative fixture",
+      "validation": ["bounded parser negative test"]
+    },
+    {
+      "id": "m3-malformed-macho",
+      "path": "docs/v2.3/evidence/m3/fixtures/malformed_macho.bin",
+      "sha256": "d2238b6d7c34ad608a5f6caddf95928d741307fea41f0336302e390109311d72",
+      "bytes": 4,
+      "format": "unknown; insufficient bytes for Mach-O header",
+      "provenance": "synthetic parser negative fixture",
+      "validation": ["bounded parser negative test"]
+    }
+  ],
+  "deferredFixtureClasses": [
+    "APK/DEX/AAB real tool fixture",
+    "JVM .class/.jar semantic fixture",
+    ".NET CIL",
+    "WebAssembly",
+    "Python/Lua bytecode",
+    "HarmonyOS HAP"
+  ]
+}

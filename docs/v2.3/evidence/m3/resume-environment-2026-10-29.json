@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "armorbreak.v2.3.environment-check/v1",
+  "checkedOn": "2026-10-29",
+  "host": "Windows x64",
+  "node": "24.16.0",
+  "java": "Temurin 21.0.12.1",
+  "ghidra": "12.1.4",
+  "jadx": {
+    "version": "1.5.6",
+    "availability": "CLI version command succeeded; real target E2E not run in this check"
+  },
+  "docker": {
+    "context": "desktop-linux",
+    "clientVersion": "29.8.1",
+    "serverVersion": null,
+    "daemon": "UNAVAILABLE",
+    "command": "docker version",
+    "exitCode": 1,
+    "error": "failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; the system cannot find the file specified"
+  },
+  "historicalDockerEvidence": {
+    "checkedOn": "2026-10-26",
+    "evidence": "docs/v2.3/evidence/m0/post-baseline-environment.json",
+    "result": "Docker 29.8.1 connected and the harmless pinned BusyBox isolation self-test passed; no target program was executed"
+  },
+  "interpretation": "The Oct 26 isolation result is historical; this Oct 29 fresh probe does not establish current L1 availability. The M3 Ghidra E2E was static L0 analysis of self-authored fixtures on the host."
+}

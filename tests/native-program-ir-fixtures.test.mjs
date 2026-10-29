@@ -54,11 +54,42 @@ test('M3 compiled PE/ELF fixtures preserve identity, symbol presence, and strip 
   assert.equal(new Set(digests).size, 4)
 })
 
+test('M3 compiled Mach-O fixture preserves native identity, stripped-symbol state, and truncation evidence', async () => {
+  const compiledBytes = fixture('native_fixture_x86_64_macho.macho')
+  const compiled = await inspect(compiledBytes)
+  assert.equal(compiled.data.artifact.format, 'macho')
+  assert.equal(compiled.data.program.architecture, 'x86-64')
+  assert.equal(compiled.data.program.bitness, 64)
+  assert.equal(compiled.data.program.type, 'execute')
+  assert.ok(compiled.data.program.entryPoint)
+  assert.ok(compiled.data.program.sections.some((section) => section.name.endsWith('.__text')))
+  const symbols = compiled.data.program.sourceSymbolSummary.slices[0].symbols.exports.map((symbol) => symbol.name)
+  assert.ok(symbols.includes('_helper'))
+  assert.ok(symbols.includes('_caller'))
+  assert.ok(symbols.includes('_main'))
+  assert.equal(compiled.data.analysis.inputExecuted, false)
+
+  const strippedBytes = fixture('native_fixture_x86_64_macho_stripped.macho')
+  const stripped = await inspect(strippedBytes)
+  assert.equal(stripped.data.artifact.format, 'macho')
+  assert.equal(stripped.data.program.architecture, 'x86-64')
+  assert.equal(stripped.data.program.sourceSymbolSummary.slices[0].counts.symbolCount, 0)
+  assert.equal(stripped.data.program.sourceSymbolSummary.slices[0].symbols.exports.length, 0)
+  assert.ok(stripped.data.program.sections.some((section) => section.name.endsWith('.__text')))
+  assert.ok(stripped.data.program.entryPoint)
+  assert.equal(stripped.data.analysis.inputExecuted, false)
+
+  const digests = [compiledBytes, strippedBytes]
+    .map((bytes) => createHash('sha256').update(bytes).digest('hex'))
+  assert.equal(new Set(digests).size, 2)
+})
+
 test('M3 corrupted PE/ELF/Mach-O fixtures return bounded structured partial or unsupported results', async () => {
   const cases = [
     ['malformed_pe.bin', 'pe', 'PARTIAL'],
     ['malformed_elf.bin', 'elf', 'PARTIAL'],
     ['malformed_macho.bin', 'unknown', 'UNSUPPORTED'],
+    ['native_fixture_x86_64_macho_truncated.macho', 'macho', 'PARTIAL'],
   ]
   for (const [name, expectedFormat, expectedStatus] of cases) {
     const result = await inspect(fixture(name))
