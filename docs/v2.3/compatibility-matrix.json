@@ -746,8 +746,20 @@
     {
       "id": "security.correlate",
       "priority": "P0",
-      "status": "NOT_IMPLEMENTED",
-      "verified": false
+      "status": "PARTIAL_LOCAL_TESTED",
+      "verified": true,
+      "supportLevel": "S3",
+      "riskLevel": "L0",
+      "evidence": [
+        "docs/v2.3/evidence/m4/focused-tests.log",
+        "docs/v2.3/evidence/m4/vulnerability-corpus-metrics.json"
+      ],
+      "ci": "NOT_RUN",
+      "limitations": [
+        "Consumes a prepared offline evidence bundle and does not invoke scanners.",
+        "No advisory fetching or OSV version-range matching; imported claims remain not_tested.",
+        "Metrics apply only to the authored 60-snippet corpus; CI and cross-platform tests are not run."
+      ]
     },
     {
       "id": "rebuild.contract",
@@ -910,6 +922,20 @@
         "Only the native binary Program IR path was run through the real Ghidra backend; bytecode and package adapters were not included."
       ],
       "ci": "NOT_RUN"
+    },
+    {
+      "id": "UniversalSecurityReview",
+      "priority": "P0",
+      "status": "PARTIAL_LOCAL_TESTED",
+      "verified": true,
+      "targetKind": "file",
+      "evidence": [
+        "docs/v2.3/evidence/m4/focused-tests.log"
+      ],
+      "ci": "NOT_RUN",
+      "limitations": [
+        "Consumes an explicitly prepared local bundle; does not invoke upstream scanners."
+      ]
     }
   ],
   "milestones": [
@@ -945,8 +971,14 @@
     },
     {
       "id": "M4",
-      "status": "NOT_IMPLEMENTED",
-      "ci": "NOT_RUN"
+      "status": "PARTIAL_LOCAL_TESTED",
+      "ci": "NOT_RUN",
+      "sourceCommit": "f52f9f87ba8f9b308b86c58b74c60160843391b6",
+      "evidence": [
+        "docs/v2.3/evidence/m4/focused-tests.log",
+        "docs/v2.3/evidence/m4/vulnerability-corpus-metrics.json"
+      ],
+      "limitation": "Offline bundle correlation is locally tested; full suite rerun and P0-H cross-platform/CI evidence remain pending."
     },
     {
       "id": "M5",
@@ -1020,5 +1052,60 @@
         "No language-specific v2.3 parser or semantic backend was verified at baseline; file-extension recognition alone is not claimed."
       ]
     }
-  ]
+  ],
+  "postM4ImplementationRuntime": {
+    "sourceCommit": "f52f9f87ba8f9b308b86c58b74c60160843391b6",
+    "capturedOn": "2026-10-29",
+    "capabilityCount": 51,
+    "domainCount": 11,
+    "capabilitiesByRisk": {
+      "L0": 49,
+      "L1": 1,
+      "L2": 1
+    },
+    "capabilitiesByDomain": {
+      "android": 6,
+      "artifact": 2,
+      "binary": 8,
+      "ctf": 5,
+      "forensics": 6,
+      "live": 2,
+      "network": 8,
+      "sast": 8,
+      "security": 1,
+      "source": 1,
+      "web": 4
+    },
+    "workflowCount": 13,
+    "dshModelToolCount": 10,
+    "mcpToolCount": 7,
+    "skillCount": 7,
+    "registryDiagnostics": [],
+    "newSecurityCapability": {
+      "id": "security.correlate",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "supportLevel": "S3",
+      "status": "PARTIAL_LOCAL_TESTED",
+      "evidence": [
+        "docs/v2.3/evidence/m4/focused-tests.log",
+        "docs/v2.3/evidence/m4/vulnerability-corpus-metrics.json"
+      ]
+    },
+    "environmentObservations": {
+      "docker": {
+        "cliVersion": "29.8.1",
+        "serverVersion": "29.8.1",
+        "desktopVersion": "4.93.0",
+        "daemon": "CONNECTED"
+      },
+      "l1Isolation": {
+        "status": "REAL_LOCAL_VERIFIED",
+        "evidence": "docs/acceptance/l1-docker-verification.json",
+        "taskId": "task_mvtp9hb3_fa92f1dc",
+        "sampleProgramExecuted": false,
+        "scope": "benign temporary fixture only; Windows host and Docker Linux container"
+      }
+    }
+  }
 }
