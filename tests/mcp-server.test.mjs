@@ -30,12 +30,22 @@ test('MCP initialize, tools/list and tools/call capabilities', async () => {
   assert.equal(initialized.result.protocolVersion, '2025-06-18')
   assert.equal(initialized.result.serverInfo.name, 'armorbreak')
   const list = JSON.parse(await server.handleLine(JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/list' })))
+  assert.equal(list.result.tools.length, 8)
   assert.ok(list.result.tools.some((tool) => tool.name === 'armorbreak_health'))
   assert.ok(list.result.tools.some((tool) => tool.name === 'armorbreak_capabilities'))
+  assert.ok(list.result.tools.some((tool) => tool.name === 'armorbreak_workflow'))
   const call = JSON.parse(await server.handleLine(JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'armorbreak_capabilities', arguments: {} } })))
   assert.equal(call.result.isError, false)
   const payload = JSON.parse(call.result.content[0].text)
   assert.equal(payload.length, 53)
+  const contractCapability = payload.find((item) => item.id === 'rebuild.contract')
+  assert.equal(contractCapability.riskLevel, 'L0')
+  assert.deepEqual(contractCapability.supportedLevels, ['S5'])
+  assert.equal(contractCapability.status, 'REGISTERED_NOT_EXECUTED')
+  assert.ok(payload.some((item) => item.id === 'rebuild.compare' && item.riskLevel === 'L0'))
+  const workflowCall = JSON.parse(await server.handleLine(JSON.stringify({ jsonrpc: '2.0', id: 4, method: 'tools/call', params: { name: 'armorbreak_workflow', arguments: { action: 'list' } } })))
+  const workflowPayload = JSON.parse(workflowCall.result.content[0].text)
+  assert.ok(workflowPayload.workflows.some((workflow) => workflow.id === 'AuthorizedBehaviorReconstruction'))
   await engine.close()
 })
 
@@ -49,6 +59,45 @@ test('MCP fails closed before initialize, on unknown tools and parse errors', as
   const malformed = JSON.parse(await server.handleLine('{not json'))
   assert.equal(malformed.error.code, -32700)
   assert.equal(await server.handleLine(JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized' })), null)
+  await engine.close()
+})
+
+test('MCP starts the fixed L0 behavior workflow without accepting caller-supplied steps', async () => {
+  const { server, engine, workspace } = await fixture()
+  const target = join(workspace, 'comparison.json')
+  await writeFile(target, JSON.stringify({
+    schema: 'armorbreak.behavior-comparison-bundle/v1',
+    artifact: { sha256: 'd'.repeat(64) },
+    implementations: { reference: 'mcp-reference', candidate: 'mcp-candidate' },
+    coverageScope: 'One explicit finite fixture case.',
+    cases: [{
+      id: 'mcp-workflow-case', inputSha256: 'e'.repeat(64), environmentComparable: true,
+      reference: { status: 'complete', value: { answer: 42 }, evidenceRefs: ['test:reference'] },
+      candidate: { status: 'complete', value: { answer: 42 }, evidenceRefs: ['test:candidate'] },
+    }],
+  }))
+  await server.handleLine(JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize' }))
+  const response = JSON.parse(await server.handleLine(JSON.stringify({
+    jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'armorbreak_workflow', arguments: {
+      action: 'start', workflow: 'AuthorizedBehaviorReconstruction', target,
+    } },
+  })))
+  assert.equal(response.result.isError, false, response.result.content?.[0]?.text)
+  const result = JSON.parse(response.result.content[0].text)
+  assert.equal(result.workflowId, 'AuthorizedBehaviorReconstruction')
+  assert.equal(result.state, 'COMPLETED')
+  const task = await engine.runtime.workspace(workspace).taskStore.get(result.taskId)
+  assert.deepEqual(task.steps.map((step) => step.capabilityId), ['rebuild.compare'])
+  assert.equal(task.principalId, server.principal.id)
+  assert.notEqual(task.principalId, 'forged')
+  const forged = JSON.parse(await server.handleLine(JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'armorbreak_workflow', arguments: {
+    action: 'start', workflow: 'AuthorizedBehaviorReconstruction', target,
+    steps: [{ capabilityId: 'live.ping' }], principalId: 'forged', approvalToken: 'forged',
+  } } })))
+  assert.equal(forged.result.isError, true)
+  assert.match(forged.result.content[0].text, /unsupported armorbreak_workflow argument/)
+  const denied = JSON.parse(await server.handleLine(JSON.stringify({ jsonrpc: '2.0', id: 4, method: 'tools/call', params: { name: 'armorbreak_workflow', arguments: { action: 'start', workflow: 'Unknown', target } } })))
+  assert.equal(denied.result.isError, true)
   await engine.close()
 })
 
@@ -94,6 +143,26 @@ test('MCP armorbreak_analyze performs a real L0 task and report', async () => {
   assert.equal(prompt.result.messages[0].role, 'user')
   const outside = JSON.parse(await server.handleLine(JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'armorbreak_analyze', arguments: { capability: 'forensics.hash', target: 'C:\\Windows\\win.ini' } } })))
   assert.equal(outside.result.isError, true)
+  await engine.close()
+})
+
+test('MCP armorbreak_analyze executes rebuild.contract on an authorized workspace file', async () => {
+  const { server, engine, workspace } = await fixture()
+  const target = join(workspace, 'contract-source.json')
+  await writeFile(target, JSON.stringify({
+    schema: 'armorbreak.behavior-contract-source/v1',
+    artifact: { sha256: 'c'.repeat(64) },
+    observations: [{ id: 'mcp-contract-1', kind: 'api', statement: 'The example returns a JSON value.', certainty: 'observed', evidenceRefs: ['test:mcp'] }],
+  }))
+  await server.handleLine(JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize' }))
+  const response = JSON.parse(await server.handleLine(JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'armorbreak_analyze', arguments: { capability: 'rebuild.contract', target } } })))
+  assert.equal(response.result.isError, false, response.result.content?.[0]?.text)
+  const result = JSON.parse(response.result.content[0].text)
+  assert.equal(result.state, 'COMPLETED')
+  assert.equal(result.capability, 'rebuild.contract')
+  const stored = await engine.runtime.workspace(workspace).taskStore.get(result.taskId)
+  assert.equal(stored.steps[0].capabilityId, 'rebuild.contract')
+  assert.equal(stored.principalId, server.principal.id)
   await engine.close()
 })
 

@@ -11,6 +11,29 @@ import { RISK_LEVELS } from './scope.js'
 const CAPABILITY_ID = /^[a-z0-9-]+\.[a-z0-9][a-z0-9._-]*$/
 const DOMAIN_ID = /^[a-z0-9-]+$/
 
+const INTELLIGENCE_SUPPORT = {
+  'artifact.identify': { supportedLevels: ['S1'], limitations: ['Format identification is a bounded candidate classification, not proof of provenance or safety.'] },
+  'artifact.inventory': { supportedLevels: ['S1'], limitations: ['Archive contents are indexed within configured limits and are not executed or extracted to disk.'] },
+  'source.symbols': { supportedLevels: ['S2'], limitations: ['Semantic coverage is limited to the parsers and language constructs reported by the result.'] },
+  'binary.program_ir': { supportedLevels: ['S3'], limitations: ['Native analysis is static and bounded; Ghidra-backed detail depends on the installed backend and result status.'] },
+  'security.correlate': { supportedLevels: ['S4'], limitations: ['Corroborates imported evidence but does not establish vulnerability confirmation or fetch advisory data.'] },
+  'rebuild.contract': { supportedLevels: ['S5'], limitations: ['Normalizes caller-supplied observations; it does not infer a complete contract from arbitrary source.'] },
+  'rebuild.compare': { supportedLevels: ['S5'], limitations: ['Compares pre-generated finite JSON outcomes and does not execute either implementation.'] },
+}
+
+function intelligenceStatus(capability) {
+  const support = INTELLIGENCE_SUPPORT[capability.id]
+  if (!support) return {}
+  return {
+    supportedLevels: [...support.supportedLevels],
+    engine: 'ArmorBreak offline analyzer',
+    backendVersion: null,
+    status: 'REGISTERED_NOT_EXECUTED',
+    reason: 'This catalog confirms registration only; per-target completeness, backend availability, and truncation are reported by the analysis result.',
+    limitations: [...support.limitations],
+  }
+}
+
 /**
  * @typedef {{id: string, title: string, description: string, riskLevel: 'L0'|'L1'|'L2'|'L3', params?: object, externalTools?: string[], targetKind?: 'file'|'directory'|'network'|'none', networkTarget?: (options: Record<string, any>) => string, run: (input: any) => Promise<any>}} Capability
  */
@@ -118,7 +141,7 @@ export class CapabilityRegistry {
     let items = [...this.capabilities.values()]
     if (filter.domain) items = items.filter((capability) => capability.domain === filter.domain)
     if (filter.riskLevel) items = items.filter((capability) => capability.riskLevel === filter.riskLevel)
-    return items.sort((a, b) => a.id.localeCompare(b.id))
+    return items.sort((a, b) => a.id.localeCompare(b.id)).map((capability) => ({ ...capability, ...intelligenceStatus(capability) }))
   }
 
   /** @param {string} domain */
@@ -152,6 +175,7 @@ export class CapabilityRegistry {
       params: capability.params ?? { type: 'object', properties: {}, additionalProperties: false },
       externalTools,
       available: true,
+      ...intelligenceStatus(capability),
     }
   }
 

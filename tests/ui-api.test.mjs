@@ -146,9 +146,15 @@ test('task and tool presentations expose bounded, secret-free metadata', () => {
   assert.equal(rows[0].target, 'b.exe')
   assert.equal(rows[0].report.sha256.length, 64)
   assert.deepEqual(findingRows([{ id: 'f', title: 't'.repeat(300), severity: 'critical', verification: 'corroborated', target: 'x'.repeat(300) }])[0].title.length, 200)
-  const tools = toolsPresentation([{ domain: 'sast', id: 'sast.semgrep', title: 'semgrep', riskLevel: 'L0', targetKind: 'directory', externalTools: ['semgrep'] }], { available: false, reason: 'absent' })
+  const tools = toolsPresentation([
+    { domain: 'rebuild', id: 'rebuild.compare', title: 'behavior compare', riskLevel: 'L0', targetKind: 'file', externalTools: [], supportedLevels: ['S5'], engine: 'ArmorBreak offline analyzer', backendVersion: null, status: 'REGISTERED_NOT_EXECUTED', reason: 'Registration only', limitations: ['Finite cases only'] },
+    { domain: 'sast', id: 'sast.semgrep', title: 'semgrep', riskLevel: 'L0', targetKind: 'directory', externalTools: ['semgrep'] },
+  ], { available: false, reason: 'absent' })
   assert.equal(tools.domains[0].capabilityCount, 1)
-  assert.deepEqual(tools.domains[0].externalTools, [{ name: 'semgrep', availability: 'not-probed' }])
+  assert.deepEqual(tools.domains[0].capabilities[0].supportedLevels, ['S5'])
+  assert.equal(tools.domains[0].capabilities[0].status, 'REGISTERED_NOT_EXECUTED')
+  assert.equal(tools.domains[0].capabilities[0].backendVersion, null)
+  assert.deepEqual(tools.domains.find((item) => item.domain === 'sast').externalTools, [{ name: 'semgrep', availability: 'not-probed' }])
   assert.equal(queueRows([{ taskId: 't', state: 'RUNNING', queued: false }])[0].state, 'RUNNING')
 })
 
@@ -179,6 +185,21 @@ test('task and tool routes return read-only JSON for loopback callers', async ()
   assert.equal(environmentRes.captured.json.providers[0].state, 'DaemonReady')
   assert.equal(environmentRes.captured.json.l1.available, false, 'daemon-ready is not verified isolation')
   assert.equal(environmentRes.captured.json.route, '/armorbreak/environment')
+})
+
+test('live tool status exposes supported levels without implying execution or backend verification', async () => {
+  const { runtime } = await realWorkspaceRuntime()
+  const response = fakeResponse()
+  await createToolsHandler(runtime)(req('/armorbreak/tools'), response)
+  assert.equal(response.captured.status, 200)
+  const capability = response.captured.json.domains.flatMap((domain) => domain.capabilities).find((item) => item.id === 'rebuild.compare')
+  assert.ok(capability)
+  assert.deepEqual(capability.supportedLevels, ['S5'])
+  assert.equal(capability.status, 'REGISTERED_NOT_EXECUTED')
+  assert.equal(capability.engine, 'ArmorBreak offline analyzer')
+  assert.equal(capability.backendVersion, null)
+  assert.match(capability.reason, /per-target completeness/i)
+  assert.ok(capability.limitations.some((item) => /pre-generated/i.test(item)))
 })
 
 test('all workbench routes enforce loopback, GET/HEAD and reject workspace enumeration', async () => {

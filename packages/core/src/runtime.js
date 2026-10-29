@@ -198,6 +198,14 @@ export class ArmorBreakRuntime {
       riskLevel: capability.riskLevel,
       targetKind: capability.targetKind ?? 'file',
       externalTools: capability.externalTools ?? [],
+      ...(capability.supportedLevels ? {
+        supportedLevels: capability.supportedLevels,
+        engine: capability.engine,
+        backendVersion: capability.backendVersion,
+        status: capability.status,
+        reason: capability.reason,
+        limitations: capability.limitations,
+      } : {}),
     }))
     return {
       version: '2.2.0',

@@ -13,6 +13,7 @@ import { constants as fsConstants, appendFileSync, mkdirSync } from 'node:fs'
 import { lstat, open, readdir, realpath, stat } from 'node:fs/promises'
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path'
 import { createEngine } from '../engine-node/index.js'
+import { getWorkflow } from '../../lib/core/workflows.js'
 
 const PROTOCOL_VERSION = '2025-06-18'
 const SERVER_VERSION = '0.1.0-p2'
@@ -136,6 +137,20 @@ const TOOLS = [
     name: 'armorbreak_analyze',
     description: 'Run one L0 capability on a target inside the configured workspace and produce a report.',
     inputSchema: { type: 'object', required: ['capability', 'target'], properties: { capability: { type: 'string' }, target: { type: 'string' }, options: { type: 'object' } }, additionalProperties: false },
+  },
+  {
+    name: 'armorbreak_workflow',
+    description: 'List supported workflows or run one whose registered steps are all L0 inside the configured trusted workspace. No principal, approval token, executable command, or custom step can be supplied.',
+    inputSchema: {
+      type: 'object',
+      required: ['action'],
+      properties: {
+        action: { type: 'string', enum: ['list', 'start'] },
+        workflow: { type: 'string' },
+        target: { type: 'string' },
+      },
+      additionalProperties: false,
+    },
   },
   {
     name: 'armorbreak_task_get',
@@ -290,6 +305,31 @@ export class McpServer {
         if (name === 'armorbreak_health') value = await this.engine.health(ctx)
         else if (name === 'armorbreak_capabilities') value = await this.engine.capabilities(ctx)
         else if (name === 'armorbreak_analyze') value = await this.engine.analyze(ctx, { capability: args.capability, target: args.target, options: args.options })
+        else if (name === 'armorbreak_workflow') {
+          if (!['list', 'start'].includes(args.action)) throw new Error('armorbreak_workflow action must be list or start')
+          const allowed = args.action === 'list' ? ['action'] : ['action', 'workflow', 'target']
+          const unexpected = Object.keys(args).find((key) => !allowed.includes(key))
+          if (unexpected) throw new Error(`unsupported armorbreak_workflow argument: ${unexpected}`)
+          if (args.action === 'list') value = { workflows: await this.engine.listWorkflows(ctx) }
+          else if (args.action === 'start') {
+            if (typeof args.workflow !== 'string' || args.workflow.length > 120) throw new Error('workflow must be a registered workflow id')
+            const workflow = getWorkflow(String(args.workflow ?? ''))
+            const capabilities = await this.engine.capabilities(ctx)
+            const risks = workflow.steps.map((step) => capabilities.find((capability) => capability.id === step.capabilityId)?.riskLevel ?? 'UNKNOWN')
+            if (risks.some((risk) => risk !== 'L0')) throw new Error('MCP workflow start supports only workflows whose every step is registered L0')
+            if (workflow.targetKind !== 'none' && typeof args.target !== 'string') throw new Error(`workflow ${workflow.id} requires a target path`)
+            const task = await this.engine.createTask(ctx, {
+              title: workflow.title,
+              objective: workflow.description,
+              workflowId: workflow.id,
+              targetPath: args.target,
+              targetKind: workflow.targetKind,
+              steps: workflow.steps,
+            })
+            const completed = await this.engine.runtime.runner.runWorkflow(task)
+            value = { taskId: task.id, workflowId: workflow.id, state: completed.state, stats: completed.stats, report: completed.report ?? null }
+          }
+        }
         else if (name === 'armorbreak_task_get') value = await this.engine.getTask(ctx, args.taskId)
         else if (name === 'armorbreak_evidence') value = await this.engine.getEvidence(ctx, args.taskId)
         else if (name === 'armorbreak_report') value = await this.engine.getReport(ctx, args.taskId)
