@@ -23,7 +23,7 @@ async function cliFixture() {
 test('CLI capabilities, analyze and task status work without DSH', async () => {
   const f = await cliFixture()
   const caps = JSON.parse((await f.run('capabilities', '--json')).stdout)
-  assert.equal(caps.length, 51)
+  assert.equal(caps.length, 53)
   const analyzed = JSON.parse((await f.run('analyze', '--capability', 'forensics.hash', '--target', join(f.workspace, 'sample.txt'), '--json')).stdout)
   assert.equal(analyzed.state, 'COMPLETED')
   assert.match(analyzed.targetSha256, /^[a-f0-9]{64}$/)
@@ -61,6 +61,6 @@ test('MCP server process emits only JSON-RPC frames on stdout', async () => {
   for (const line of lines) assert.doesNotThrow(() => JSON.parse(line))
   const second = JSON.parse(lines[1])
   const payload = JSON.parse(second.result.content[0].text)
-  assert.equal(payload.length, 51)
+  assert.equal(payload.length, 53)
   assert.equal(err.trim(), '')
 })

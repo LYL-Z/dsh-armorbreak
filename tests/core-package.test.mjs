@@ -21,7 +21,7 @@ test('Universal Core imports and lists capabilities without DSH/Cordis', async (
   const stateRoot = await mkdtemp(join(tmpdir(), 'abm-core-'))
   const core = await createCore({ stateRoot })
   const capabilities = await core.capabilities(ctx)
-  assert.equal(capabilities.length, 51)
+  assert.equal(capabilities.length, 53)
   assert.equal(core.protocolVersion, '1.0.0')
   await core.close?.()
 })
@@ -36,7 +36,7 @@ test('Core can be imported in a fresh Node process with no @deepseek-ai package'
     console.log(core.version, (await core.capabilities({ principal: { id: 'u', kind: 'local-user' }, workspaceId: 'w', requestId: 'r', traceId: 't' })).length)
   `
   const out = execFileSync(process.execPath, ['--input-type=module', '-e', script], { cwd: process.cwd(), encoding: 'utf8' })
-  assert.match(out, /0\.1\.0-p1 51/)
+  assert.match(out, /0\.1\.0-p1 53/)
 })
 
 test('Core package source has no DSH/Cordis/DOM/Electron imports', async () => {

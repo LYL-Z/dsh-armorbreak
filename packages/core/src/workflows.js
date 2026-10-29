@@ -51,6 +51,15 @@ export const WORKFLOWS = {
       { id: 'correlate', title: '关联本地安全证据包', capabilityId: 'security.correlate' },
     ],
   },
+  AuthorizedBehaviorReconstruction: {
+    id: 'AuthorizedBehaviorReconstruction',
+    title: '授权行为规格与有限差异比较',
+    description: '读取带 artifact 哈希、有限测试用例、参考/候选预生成结果和证据引用的本地行为对照包。只比较已经产生的结果，不编译或启动程序；超时、随机/不确定输出和环境不匹配返回 INCONCLUSIVE。',
+    targetKind: 'file',
+    steps: [
+      { id: 'compare', title: '比较已生成的离线行为结果', capabilityId: 'rebuild.compare' },
+    ],
+  },
   BinaryStaticAnalysis: {
     id: 'BinaryStaticAnalysis',
     title: '二进制静态分析',
