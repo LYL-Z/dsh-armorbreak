@@ -1,6 +1,6 @@
 # M4 — Offline security evidence correlation
 
-Status: `IN_PROGRESS` until the complete exact-SHA local validation and the remaining P0 gates are recorded. This document describes the bounded local implementation; it is not a claim that the M4 release gate or V2.3.0 is complete.
+Status: `PARTIAL_LOCAL_TESTED`. The exact-SHA local suite and corpus evidence are recorded in `evidence/m4/m4-validation.json`. CI, cross-platform validation, independent vulnerability confirmation, and the remaining P0 stages are not complete. This is not a claim that M4's broader release gate or V2.3.0 is complete.
 
 ## Input contract
 
@@ -27,6 +27,6 @@ Bounds: 8 MiB input, 50 sources, 200 findings in total, 2 KiB per retained sourc
 
 ## Validation evidence and limits
 
-The authored M4 contrast corpus covers 20 groups and 60 single-line snippets over CWE-78, CWE-89, CWE-22, CWE-918, and CWE-95. Its scanner metrics are reported separately in `evidence/m4/vulnerability-corpus-metrics.json` after exact-SHA execution. These metrics characterize only this authored corpus; they do not estimate real-world prevalence, precision, or recall. No sample execution or network access is part of the corpus run.
+The authored M4 contrast corpus covers 20 groups and 60 single-line snippets over CWE-78, CWE-89, CWE-22, CWE-918, and CWE-95. The exact-SHA scanner metrics are in `evidence/m4/vulnerability-corpus-metrics.json`: TP=20, FP=20, FN=0, TN=20, precision=0.50, recall=1.00, and FPR=0.50. These metrics characterize only this authored corpus; they do not estimate real-world prevalence, precision, or recall. No sample execution or network access is part of the corpus run.
 
-M4 remains incomplete until evidence records exact source SHA, focused tests, typecheck, the full suite, registry/compatibility counts, and corpus hashes/metrics. CI, cross-platform behavior, independent validation, advisory synchronization, and automated scanner invocation are not established by this local capability.
+CI, cross-platform behavior, independent vulnerability validation, advisory synchronization, and automated scanner invocation are not established by this local capability.

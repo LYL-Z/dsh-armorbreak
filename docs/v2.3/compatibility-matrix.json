@@ -751,14 +751,18 @@
       "supportLevel": "S3",
       "riskLevel": "L0",
       "evidence": [
+        "docs/v2.3/evidence/m4/m4-validation.json",
         "docs/v2.3/evidence/m4/focused-tests.log",
+        "docs/v2.3/evidence/m4/typecheck.log",
+        "docs/v2.3/evidence/m4/full-test.log",
         "docs/v2.3/evidence/m4/vulnerability-corpus-metrics.json"
       ],
       "ci": "NOT_RUN",
       "limitations": [
         "Consumes a prepared offline evidence bundle and does not invoke scanners.",
         "No advisory fetching or OSV version-range matching; imported claims remain not_tested.",
-        "Metrics apply only to the authored 60-snippet corpus; CI and cross-platform tests are not run."
+        "Corpus metrics are limited to 60 authored snippets; no real-world detection rate is claimed.",
+        "GitHub CI and cross-platform runs were not performed."
       ]
     },
     {
@@ -930,11 +934,13 @@
       "verified": true,
       "targetKind": "file",
       "evidence": [
+        "docs/v2.3/evidence/m4/m4-validation.json",
         "docs/v2.3/evidence/m4/focused-tests.log"
       ],
       "ci": "NOT_RUN",
       "limitations": [
-        "Consumes an explicitly prepared local bundle; does not invoke upstream scanners."
+        "Consumes an explicitly prepared local bundle; does not invoke upstream scanners.",
+        "CI and cross-platform workflow runs were not performed."
       ]
     }
   ],
@@ -973,12 +979,15 @@
       "id": "M4",
       "status": "PARTIAL_LOCAL_TESTED",
       "ci": "NOT_RUN",
-      "sourceCommit": "f52f9f87ba8f9b308b86c58b74c60160843391b6",
+      "sourceCommit": "23af85c900e54a2ac0f6bdf93ce2aad34b65d263",
       "evidence": [
+        "docs/v2.3/evidence/m4/m4-validation.json",
         "docs/v2.3/evidence/m4/focused-tests.log",
+        "docs/v2.3/evidence/m4/typecheck.log",
+        "docs/v2.3/evidence/m4/full-test.log",
         "docs/v2.3/evidence/m4/vulnerability-corpus-metrics.json"
       ],
-      "limitation": "Offline bundle correlation is locally tested; full suite rerun and P0-H cross-platform/CI evidence remain pending."
+      "limitation": "Focused tests, typecheck, corpus metrics, and the 642-test Windows full suite passed locally. CI/cross-platform evidence and independent vulnerability validation remain outstanding."
     },
     {
       "id": "M5",
@@ -1054,7 +1063,7 @@
     }
   ],
   "postM4ImplementationRuntime": {
-    "sourceCommit": "f52f9f87ba8f9b308b86c58b74c60160843391b6",
+    "sourceCommit": "23af85c900e54a2ac0f6bdf93ce2aad34b65d263",
     "capturedOn": "2026-10-29",
     "capabilityCount": 51,
     "domainCount": 11,
@@ -1088,7 +1097,10 @@
       "supportLevel": "S3",
       "status": "PARTIAL_LOCAL_TESTED",
       "evidence": [
+        "docs/v2.3/evidence/m4/m4-validation.json",
         "docs/v2.3/evidence/m4/focused-tests.log",
+        "docs/v2.3/evidence/m4/typecheck.log",
+        "docs/v2.3/evidence/m4/full-test.log",
         "docs/v2.3/evidence/m4/vulnerability-corpus-metrics.json"
       ]
     },
@@ -1106,6 +1118,7 @@
         "sampleProgramExecuted": false,
         "scope": "benign temporary fixture only; Windows host and Docker Linux container"
       }
-    }
+    },
+    "testEvidence": "docs/v2.3/evidence/m4/m4-validation.json"
   }
 }
