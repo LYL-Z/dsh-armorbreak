@@ -1,4 +1,4 @@
-﻿import assert from 'node:assert/strict'
+import assert from 'node:assert/strict'
 import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
 import { createHash } from 'node:crypto'
 import { tmpdir } from 'node:os'
@@ -35,7 +35,7 @@ test('trusted principal creates tasks and idempotent replay returns the same tas
   const replay = await engine.createTask(alice, { title: 'L0 task', objective: 'hash a file', targetKind: 'file', targetPath: join(workspace, 'sample.txt') })
   assert.equal(replay.id, first.id)
   const caps = await engine.capabilities(ctx({ id: 'alice', kind: 'local-user' }, workspace, 'caps-1'))
-  assert.equal(caps.length, 50)
+  assert.equal(caps.length, 51)
   await engine.close()
 })
 

@@ -51,3 +51,48 @@ Status: the original pause was explicitly lifted; implementation resumed at M3. 
 - M3 implementation/evidence commits are `ba3c5ea4134f138bca22d1a6aa597f1e7f2b0cc4` and `e57287f5abc9fb9ba86cb686736f67f3ab030357`. On the latter exact SHA, focused tests passed 28/28, the default full suite passed 635/635, typecheck exited 0, and six real Runner/PolicyGateway/Ghidra 12.1.4 cases passed across PE/ELF/Mach-O with symbols and stripped symbols; every case recorded `inputExecuted:false`. Evidence is indexed in `docs/v2.3/evidence/m3/m3-validation.json`.
 - Fresh Docker CLI check on Oct 29 finds client 29.8.1 but no server at `dockerDesktopLinuxEngine`; the Oct 26 harmless isolation self-test remains historical evidence only.
 - Native M3 P0 local gate is satisfied; M3 overall remains partial because P1 bytecode E2Es and isolation/macOS/CI coverage are missing. M4–M6 and P0-H have not started. No push, PR, merge, tag, or release has been performed.
+
+## Resume verification on 2026-10-29 — M4 in progress, paused again
+
+- The user explicitly resumed work, so M4 implementation began after the M3 P0 local gate. This pause was explicitly requested after the latest targeted M4 test run.
+- Worktree: `D:\dsh-ABM\armorbreak-v2.3-worktree`
+- Branch: `feature/v2.3-universal-program-intelligence` (10 commits ahead of `origin/main` at pause)
+- HEAD at pause: `4906162a6c3b23ed8cbca94ccbb41920f5e0cd63` (`docs: record exact-SHA M3 verification evidence`)
+- No M4 implementation commit exists. All changes below are uncommitted and must be preserved on resume:
+  - Modified: `packages/core/src/evidence.js`, `packages/core/src/reports.js`, `packages/core/src/workflows.js`
+  - New: `lib/analyzers/security/correlator.js`, `lib/analyzers/security/manifest.js`
+  - New: `tests/security-correlator.test.mjs`, `tests/fixtures/m4/vulnerability-contrast-corpus.mjs`, `tests/fixtures/m4/evaluate-corpus.mjs`
+  - New: `scripts/v2/verify-m4-vulnerability-corpus.mjs`
+- The existing `git diff --stat` at pause covers only the three modified tracked files; it excludes all new files. No unrelated edits were observed.
+
+### M4 implementation present in the dirty worktree
+
+- Added an L0 `security.correlate` capability and a `UniversalSecurityReview` workflow. The input contract is a local `armorbreak.security-evidence-bundle/v1` JSON file. It currently accepts ArmorBreak findings, SARIF 2.1.0, Semgrep JSON, Trivy JSON, explicit OSV match records, and declared CycloneDX/SPDX documents.
+- The correlator groups only records with artifact SHA-256, normalized file/line, CWE/rule, and evidence-context hash. Incomplete keys remain separate. It retains a sanitized source record per finding and source references, marks cross-family matching as evidence corroboration, and always emits vulnerability status `not_tested`; imported `confirmed` claims remain visible only as source claims.
+- Added JSON and SARIF artifacts, SARIF `relatedLocations` for imported evidence, separate vulnerability status in persisted finding/report output, and a 20-group/60-snippet authored contrast corpus across CWE-78/89/22/918/95.
+- The targeted test command `node --test --test-concurrency=1 tests/security-correlator.test.mjs` passed 6/6 on the dirty worktree after fixing two implementation bugs (location normalization and severity normalization) plus the snapshot parser call. The suite exercised actual `scanSource`, a local Runner `UniversalSecurityReview` execution, generated JSON/SARIF artifacts, provenance metadata, and the rule that source claims cannot set `confirmed`.
+- The same focused test measured this authored corpus at TP=20, FP=20, FN=0, TN=20; precision=0.50, recall=1.00, false-positive rate=0.50. This is corpus-only line-regex evidence, not a real-world detection estimate. The separate metrics evidence script has **not** been run, and no M4 test log/evidence artifact has been saved yet.
+
+### M4 gate state at pause
+
+- M4: `IN_PROGRESS_UNCOMMITTED`; P0 gate is not yet accepted. No full `npm test`, `npm run typecheck`, M4 evidence script, or compatibility matrix refresh has been run on the current changes.
+- No M4 documentation/schema guide or compatibility-matrix entry update has been added yet. Existing tests with hard-coded live capability counts still expect 50 and will need review/update if the new capability remains registered.
+- Known boundary: correlation imports already-produced JSON evidence; the DAG does not pass previous step output into a later step. The new workflow therefore consumes a prepared offline evidence bundle rather than automatically invoking every analyzer. Native Trivy/Semgrep adapters cover the implemented report fields only; OSV records are not fetched or version-range matched. No network, exploit, or sample execution occurred.
+- No push, PR, merge, tag, or formal release has been performed.
+
+### Resume order
+
+1. Inspect this checkpoint and `git status` before editing; preserve the uncommitted M4 changes.
+2. Review the correlator for redaction of derived title/message/context strings, path privacy, evidence limits, output truncation, and precise claims about SBOM/source retention. Add/adjust tests before describing M4 as accepted.
+3. Run the corpus evidence script and save its output with fixture hash and the exact M4 source commit; record the applicability limits and FP/FN counts.
+4. Update M4 implementation documentation, compatibility matrix, live capability/workflow count expectations, and any product description that still says 50 capabilities. Keep historical M2/M3 evidence unchanged.
+5. Run focused M4 tests, `npm run typecheck`, and full `npm test`; commit the M4 source/test stage, rerun and save evidence against that exact SHA, then update the M4 matrix to the observed status.
+6. Only after M4's P0 evidence gate, proceed sequentially to M5, M6, and P0-H. Create a PR only after the complete authorized work is reviewable. Formal release remains unauthorized.
+
+## Resume progress on 2026-10-29 — M4 hardening and Docker refresh
+
+- The worktree and HEAD were rechecked on resume; HEAD was unchanged at `4906162a6c3b23ed8cbca94ccbb41920f5e0cd63`, and the initial dirty M4 file set matched the prior checkpoint. The Docker refresh below added one tracked host-verification report update.
+- Hardened M4 report redaction after adding a regression test: derived messages now redact credential-shaped values and absolute path fragments; source finding path/URI fields are replaced with stable opaque identifiers; source and SBOM digests cover bounded redacted representations. Corrected the report language to state SBOM documents are summarized and hashed, not copied or converted. Targeted suite now passes 7/7.
+- `npm run typecheck` exited 0 on the working tree. A full `npm test` run before commit completed 642 tests: 639 passed and 3 failed. One failure was the stale 50-capability Core assertion and has been updated to 51; two release-build tests correctly rejected dirty source inputs. The full suite must be rerun after the M4 sources are committed and the tree is clean.
+- The user reported Docker Desktop open. Fresh CLI verification now connects to Docker Desktop 4.93.0 / Engine 29.8.1 (linux/amd64); the pinned BusyBox digest was already present. `node scripts/verify-l1.mjs` then passed against a benign temporary fixture: task `task_mvtp9hb3_fa92f1dc`, `COMPLETED`, exit 0, uid 65534, sample mount read-only. The refreshed report is `docs/acceptance/l1-docker-verification.json`; no analyzed program was executed. This is a current host L1 gate observation, not cross-platform isolation proof.
+- M4 remains uncommitted and unaccepted. Next: finalize compatibility/runtime counts and M4 evidence docs, commit the implementation and tests, run the focused suite/typecheck/full suite on the committed tree, then save corpus/test logs with the exact source SHA. M5 has not started. No push, PR, merge, tag, or formal release has occurred.

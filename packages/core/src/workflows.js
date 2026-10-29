@@ -42,6 +42,15 @@ export const WORKFLOWS = {
       { id: 'program-ir', title: '归一化 Program IR 与 Ghidra 调用图', capabilityId: 'binary.program_ir' },
     ],
   },
+  UniversalSecurityReview: {
+    id: 'UniversalSecurityReview',
+    title: '通用安全证据关联审查',
+    description: '读取本地 armorbreak.security-evidence-bundle/v1 文件，离线归并既有扫描结果、SARIF 和供应链来源；保留来源、脱敏并输出 JSON/SARIF。它不替代各扫描器，也不执行样本或将来源关联提升为漏洞确认。',
+    targetKind: 'file',
+    steps: [
+      { id: 'correlate', title: '关联本地安全证据包', capabilityId: 'security.correlate' },
+    ],
+  },
   BinaryStaticAnalysis: {
     id: 'BinaryStaticAnalysis',
     title: '二进制静态分析',
