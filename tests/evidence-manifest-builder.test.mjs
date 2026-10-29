@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { spawnSync } from 'node:child_process'
-import { copyFileSync, linkSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
-import { tmpdir } from 'node:os'
+import { copyFileSync, linkSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import test from 'node:test'
+import { makeTestTempDirectorySync } from './helpers/temporary.js'
 
 const repoRoot = fileURLToPath(new URL('..', import.meta.url))
 const sourceManifestBuilder = join(repoRoot, 'scripts/v2/build-evidence-manifest.mjs')
@@ -14,7 +14,7 @@ const sourceSafeWindowsWriter = join(repoRoot, 'lib/release/safe-evidence-write-
 const sha256 = (value) => createHash('sha256').update(value).digest('hex')
 
 function fixture(t) {
-  const root = mkdtempSync(join(tmpdir(), 'abm-manifest-builder-'))
+  const root = makeTestTempDirectorySync('abm-manifest-builder-')
   t.after(() => rmSync(root, { recursive: true, force: true }))
   mkdirSync(join(root, 'scripts/v2'), { recursive: true })
   mkdirSync(join(root, 'lib/release'), { recursive: true })

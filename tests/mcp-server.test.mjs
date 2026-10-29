@@ -8,6 +8,7 @@ import { join, resolve } from 'node:path'
 import { randomUUID } from 'node:crypto'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import test from 'node:test'
+import { makeTestTempDirectory } from './helpers/temporary.js'
 
 import { createEngine } from '../packages/engine-node/index.js'
 import { createMcpServer } from '../packages/mcp-server/index.js'
@@ -177,7 +178,7 @@ test('MCP skill reads reject junction escapes and hard links without listing the
   const hardlinkName = `mcp-hardlink-${testId}`
   const junctionPath = join(skillsRoot, junctionName)
   const hardlinkDirectory = join(skillsRoot, hardlinkName)
-  const outside = await mkdtemp(join(tmpdir(), 'abm-mcp-skill-outside-'))
+  const outside = await makeTestTempDirectory('abm-mcp-skill-outside-')
   const externalSkill = join(outside, 'SKILL.md')
 
   try {

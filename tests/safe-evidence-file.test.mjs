@@ -1,16 +1,16 @@
 import assert from 'node:assert/strict'
 import childProcess from 'node:child_process'
-import fs, { linkSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import fs, { linkSync, lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { syncBuiltinESMExports } from 'node:module'
-import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
 import { Worker } from 'node:worker_threads'
+import { makeTestTempDirectorySync } from './helpers/temporary.js'
 
 import { readSafeRepoFile, writeSafeRepoFile } from '../lib/release/safeEvidenceFile.js'
 
 function fixture() {
-  const root = mkdtempSync(join(tmpdir(), 'abm-safe-evidence-'))
+  const root = makeTestTempDirectorySync('abm-safe-evidence-')
   mkdirSync(join(root, 'docs/v2/acceptance'), { recursive: true })
   return root
 }
