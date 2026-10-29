@@ -1169,5 +1169,42 @@
       }
     ],
     "testEvidence": "docs/v2.3/evidence/m5/m5-validation.json"
+  },
+  "postM6IntegrationRuntime": {
+    "sourceCommit": "965fbe4fa9abd2af73644865a56d8db64c8a6089",
+    "capturedOn": "2026-10-29",
+    "capabilityCount": 53,
+    "domainCount": 12,
+    "capabilitiesByRisk": { "L0": 51, "L1": 1, "L2": 1 },
+    "capabilitiesByDomain": {
+      "android": 6,
+      "artifact": 2,
+      "binary": 8,
+      "ctf": 5,
+      "forensics": 6,
+      "live": 2,
+      "network": 8,
+      "rebuild": 2,
+      "sast": 8,
+      "security": 1,
+      "source": 1,
+      "web": 4
+    },
+    "workflowCount": 14,
+    "dshModelToolCount": 10,
+    "mcpToolCount": 8,
+    "skillCount": 7,
+    "registryDiagnostics": [],
+    "mcpWorkflowTool": {
+      "id": "armorbreak_workflow",
+      "status": "LOCAL_TESTED",
+      "actions": ["list", "start"],
+      "startRiskCeiling": "L0",
+      "customStepsAccepted": false,
+      "modelPrincipalOrApprovalAccepted": false
+    },
+    "capabilityStatusFields": ["supportedLevels", "engine", "backendVersion", "status", "reason", "limitations"],
+    "catalogStatusMeaning": "REGISTERED_NOT_EXECUTED",
+    "testEvidence": "docs/v2.3/evidence/m6/m6-validation.json"
   }
 }

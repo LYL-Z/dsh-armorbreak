@@ -117,11 +117,14 @@ Status: the original pause was explicitly lifted; implementation resumed at M3. 
 - M5 status: `PARTIAL_LOCAL_TESTED`; CI and Ubuntu/macOS coverage, general source-to-contract inference, authenticated evidence references, and arbitrary project execution remain unverified/unsupported. M6/P0-G and P0-H have not been completed. No push, PR, merge, tag, or formal release has occurred.
 - Current continuation point: commit the M5 evidence/compatibility/checkpoint-only changes, then test the actual new CLI/MCP/workflow discovery and execution paths for M6. Preserve all exact-SHA evidence; continue to P0-H only after M6.
 
-## M6 implementation in progress on 2026-10-29
+## M6 local verification completed on 2026-10-29
 
 - M5 evidence was committed as `9f8a538d818c4a018a7450e4040687b258f37e0f`; worktree was clean before M6 edits.
-- M6 currently modifies capability registry discovery/status metadata, Core runtime/presentation, stdio MCP workflow routing, and focused CLI/MCP/UI tests. A new `capability-status-contract.md` documents the fields and guardrails.
+- M6 modifies capability registry discovery/status metadata, Core runtime/presentation, stdio MCP workflow routing, and CLI/MCP/UI tests. `capability-status-contract.md` documents the fields and guardrails.
 - Added status fields for the seven implemented Universal Program Intelligence capabilities: support level, engine, backendVersion, registry status, reason, and limitations. Catalog state is explicitly `REGISTERED_NOT_EXECUTED`, never runtime success.
 - Added fixed MCP `armorbreak_workflow` list/start route. It only starts shipped registered workflows whose every step is L0; caller-supplied steps/principal/approval/command are ignored or unavailable. Target execution remains on the trusted Engine/Core path.
-- Focused command `node --test --test-concurrency=1 tests/mcp-server.test.mjs tests/cli-mcp-process.test.mjs tests/ui-api.test.mjs tests/mcp-audit.test.mjs` passed 24/24 after the final L0/unknown-input hardening; `npm run typecheck` exited 0.
-- M6 full suite, final typecheck, compatibility snapshot, and exact-SHA evidence have not yet been run. P0-G remains in progress; P0-H remains outstanding. No push, PR, merge, tag, or release has occurred.
+- M6 source commit: `965fbe4fa9abd2af73644865a56d8db64c8a6089` (`feat: expose program intelligence workflows in MCP`).
+- On exact source SHA `965fbe4...`, focused CLI/MCP/API suite passed 24/24, `npm run typecheck` exited 0, and full `npm test` passed 647/647 with zero failures/skips (363637.4342 ms). Evidence logs/hashes and environment are recorded in `docs/v2.3/evidence/m6/m6-validation.json`.
+- Registry snapshot: 53 capabilities / 12 domains (51 L0, 1 L1, 1 L2), 14 workflows, 10 DSH tools, 8 MCP tools, 7 skills, 0 registry diagnostics. P0-G local integration gate is satisfied; status remains local-only pending CI/cross-platform evidence.
+- P0-H is now the continuation point: inspect exact-SHA CI/release automation and remaining gates, save evidence, and create the requested PR only when the branch is reviewable. GitHub CI, Ubuntu/macOS, full P0-H acceptance, and any formal release remain unverified/not done.
+- No push, PR, merge, tag, or formal release has occurred yet.

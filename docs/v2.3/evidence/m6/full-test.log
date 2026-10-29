@@ -1,0 +1,809 @@
+
+> dsh-armorbreak@2.2.0 test
+> node --test --test-concurrency=1
+
+✔ real BinaryStaticAnalysis workflow runs through the tool layer and produces evidence + report (5418.9109ms)
+✔ partial success keeps successful-step evidence when a later step fails (2182.9161ms)
+✔ running a workflow with an aborted signal cancels it durably (5234.0033ms)
+✔ audit log redacts credentials and cannot be forgotten on capability failures (603.5606ms)
+✔ unsupported report format and missing task produce actionable errors (1608.4382ms)
+✔ adapter-dsh still registers the legacy ArmorBreak tools and L0 health (1899.1207ms)
+✔ agent install dry-run/apply/uninstall JSON preserves other servers and backup (1527.9145ms)
+✔ agent install applies Codex TOML and Hermes YAML (980.538ms)
+✔ agent install rejects conflicts without force (457.3955ms)
+✔ Garak plan rejects unauthorized targets and non-allowlisted probes (1.8725ms)
+✔ Garak report maps only allowlisted attempts and never stores raw payload (0.5767ms)
+✔ Inspect-style mock plan produces a complete trace and aggregate counts (3.4925ms)
+✔ Garak eval summaries use passed/fails counts, not boolean (0.2786ms)
+✔ AgentDojo tool output cannot invoke a denied tool and memory resets per case (1.3025ms)
+✔ RAG context is untrusted and cannot authorize execution (2.5739ms)
+✔ campaign orders DAG, retries, dedupes evidence and persists resume state (19.2261ms)
+✔ campaign cancellation leaves CANCELLED and resume completes remaining work (17.6577ms)
+✔ LLM report computes AVR/FRR/TCR/cost with model and dataset fingerprints (2.402ms)
+✔ AISEC schemas require authorization and reject model-supplied authorization (2.1444ms)
+✔ mock scenario carries one traceId through scenario/target/result (6.9708ms)
+✔ unauthorized target produces no invocation and is rejected (0.9916ms)
+✔ jailbreak dataset is aggregate-only and requires authorization/license (2.9718ms)
+✔ multimodal missing runtime is SKIPPED, never PASS (1.7639ms)
+✔ composite report keeps NOT_RUN domains separate (4.7062ms)
+✔ confusion metrics compute TP/FP/TN/FN and Wilson intervals (1.1122ms)
+✔ model-assisted judge is not truth without human review (0.5677ms)
+✔ PyRIT adapter requires authorized target, explicit outcomes and never stores raw prompts (2.1624ms)
+✔ worker speaks JSONL, uses env allowlist and returns protocol (195.437ms)
+✔ crash rejects the request and a later request restarts the worker (300.2486ms)
+✔ timeout kills the worker, rejects pending work and the Host recovers (1273.974ms)
+✔ cancelAll rejects a pending request and leaves no running child (126.246ms)
+✔ android: capability 清单符合契约（id/riskLevel/params schema） (2.741ms)
+✔ android.apk_structure: 解析 ZIP 中央目录与 APK 分类 (24.7273ms)
+✔ android.apk_structure: includeEntries + maxEntries 截断 (3.8369ms)
+✔ android.apk_structure: ZIP64 EOCD locator 定位与后续解析 (8.9325ms)
+✔ android.manifest: 解码二进制 AXML 的包名/权限/组件/安全开关 (4.7863ms)
+✔ android.manifest: parseAxml 直接校验字符串池/资源映射/类型化解码 (2.1969ms)
+✔ android.manifest: 文本 XML 清单回退解析 (1.9953ms)
+✔ android.manifest: 畸形/缺失清单抛出可操作错误 (1.476ms)
+✔ android.dex: 解析 DEX 头/字符串/类描述符并命中库特征 (5.9496ms)
+✔ android.dex: 非法输入与空输入报可操作错误 (0.9481ms)
+✔ android.signing: v2+v3 签名块与证书 SHA-256/主体/调试证书提示 (7.3601ms)
+✔ android.signing: v1 META-INF 证书提取与未签名检测 (4.2146ms)
+✔ android.dex: 截断 DEX 标记 truncated，大端 DEX 报可操作错误 (0.8119ms)
+✔ android.signing: 损坏的 APK Signing Block 只告警不崩溃 (1.469ms)
+✔ android.findings: 从清单/结构/签名推导诚实 findings（含验证等级） (8.6516ms)
+✔ android: Result 契约（summary/data 体积/meta 与全部 capability 可执行） (5.119ms)
+✔ android: data 超过 256KiB 时按预算裁剪并标记 (16.8424ms)
+✔ android: 畸形/截断输入不崩溃且错误可操作 (2.1929ms)
+✔ approval tokens are signed and bound to task/target/risk/operator (26.8991ms)
+✔ tampering, expiry, revocation and replay are rejected (25.408ms)
+✔ consumption is single-use and a second consume is replay (29.471ms)
+✔ separate stale instances reload approval state and preserve revocations (79.1426ms)
+✔ approval key refuses a hard-linked invalid file without overwriting its other name (20.3229ms)
+✔ concurrent approval authority initialization preserves one stable signing key (298.9334ms)
+✔ two processes cannot consume the same approval nonce (286.269ms)
+✔ approval ids are unique (0.896ms)
+✔ platform approvals require a bound token when the authority is enabled (338.0396ms)
+✔ approval token cannot be replayed against another target or task (12.1965ms)
+✔ authorization activation requires a bound Host token and consumes it once (29.4768ms)
+✔ standalone approval CLI cannot mint a token from caller-controlled terminal input or flags (1346.2713ms)
+✔ approval CLI still rejects invalid risk and incomplete scope before requesting host approval (914.0799ms)
+✔ trusted host approval issues a scoped, session-bound token (266.3993ms)
+✔ trusted approval cannot issue a token without a host session identity (23.3017ms)
+✔ installer approval fails closed without a host and succeeds after host approval (762.7337ms)
+✔ a caller-controlled terminal cannot prove human approval even when it echoes the exact phrase (1.8564ms)
+✔ trusted approval provider receives host context and one-shot approval is required (1.0635ms)
+✔ missing, unavailable, denied, and incomplete host approval fail closed (1.4197ms)
+✔ signed metadata alone cannot satisfy the release artifact attestation gate (13.5922ms)
+✔ accepts only GitHub-verified provenance for the exact artifact, current commit, and main workflow (10.417ms)
+✔ rejects provenance for a different branch, artifact digest, or source commit (61.0656ms)
+✔ rejects changed workflow repository, path, ref, and resolved source dependency (55.7929ms)
+✔ rejects artifact digest mismatch before calling GitHub CLI (14.5244ms)
+✔ rejects hard-linked and path-escaped artifacts (9.3701ms)
+✔ every GitHub Actions dependency is pinned to a full commit SHA (4.7666ms)
+✔ Ed25519 artifact signatures detect tampering and wrong keys (28.3242ms)
+✔ local overhead benchmark emits p50/p95 for CLI, Core and MCP HTTP (1495.8545ms)
+✔ binary manifest: shape, ids, risk levels and params schema follow CONTRACT (2.2691ms)
+✔ binary.identify: PE32+ fields, imports, exports, overlay, hashes (13.6607ms)
+✔ binary.identify: ELF fields, build-id, dynamic imports (5.8248ms)
+✔ binary.identify: thin Mach-O, fat/java detection and unknown input (4.2713ms)
+✔ binary.identify: malformed/truncated PE and ELF return structured results without crashing (6.6295ms)
+✔ binary.identify: empty inputs throw actionable Errors (1.1935ms)
+✔ binary.identify: deterministic output (same input -> identical JSON) (1.9593ms)
+✔ binary.strings: ASCII/UTF-16 extraction and categorization (8.9978ms)
+✔ binary.strings: shell command and persistence strings produce hypothesis findings (0.58ms)
+✔ binary.entropy: zero buffer, high-entropy buffer and bounded block map (6.856ms)
+✔ binary.headers: PE optional header, directories, hardening flags (1.9241ms)
+✔ binary.headers: ELF program headers and Mach-O load commands (2.1884ms)
+✔ binary.structure: ELF symbols, PE exports and Mach-O function starts (3.7366ms)
+✔ binary.structure: PE exception directory is summarized when present (0.9734ms)
+✔ M3 binary.program_ir normalizes PE, ELF and Mach-O symbol and stripped fixtures and rejects corruption (11.0509ms)
+✔ M3 NativeProgramIRReview is registered and binary.program_ir runs through Runner and PolicyGateway (571.2467ms)
+✔ binary: long loops cooperate with AbortSignal (1.6413ms)
+✔ binary: helper parsers agree with container detection and never throw on garbage (1.98ms)
+✔ binary.behavior: aggregates suspicious API categories and stays hypothesis-level (2.3578ms)
+✔ SBOM source collection rejects a hard link without changing its external name (56.8684ms)
+✔ bundle compiler hashes real files and preserves preset armorbreak (82.4643ms)
+✔ isolated profile upgrade preserves other bundles/preset and rolls back exact bytes (63.1106ms)
+✔ catalog canonicalizes repos, dedupes same repo+commit and separates commits (1.6196ms)
+✔ license gate fails closed for unknown/copyleft licenses and dangerous scripts (0.8057ms)
+✔ OSV known vulnerability and low/missing Scorecard block automatic assembly (1.2466ms)
+✔ CLI capabilities, analyze and task status work without DSH (7400.4782ms)
+✔ MCP server process emits only JSON-RPC frames on stdout (240.2289ms)
+✔ compatibility matrix has twelve host entries and makes no unverified claims (6.0756ms)
+✔ 12-class network/connector fault matrix (2.6117ms)
+✔ NetworkState hysteresis: healthy -> degraded -> offline -> recovering -> healthy (1.7565ms)
+✔ staging preserves previous state and failed staging goes offline (0.1397ms)
+✔ invalid transitions are rejected and history is bounded (0.7862ms)
+✔ ConnectorHealth isolates a 429 source and honors Retry-After (0.2437ms)
+✔ ConnectorHealth exponential backoff is bounded and no busy loop (0.3825ms)
+✔ streaming hash matches a one-shot hash and returns byte count (17.588ms)
+✔ CAS import deduplicates by hash and rejects a mismatched expected hash (20.4638ms)
+✔ concurrent audit appends produce one continuous hash chain (877.3373ms)
+✔ concurrent evidence appends produce one continuous evidence chain (1354.1102ms)
+✔ concurrent finding writes preserve every distinct finding (220.1477ms)
+✔ Core public API contract, dependency graph and result shapes are frozen (1995.4233ms)
+✔ Core daemon supports three clients and survives restart (3115.7073ms)
+✔ concurrent Core daemon startup atomically grants one lock owner (194.9493ms)
+✔ Core daemon refuses a hard-linked stale lock instead of reusing it (55.4877ms)
+✔ Core daemon leaves stale locks untouched when the stateRoot could be swapped before stale recovery (77.1278ms)
+✔ Core daemon fails closed when its lock disappears during a stateRoot swap (65.5555ms)
+✔ Core daemon refuses a symlinked or junction state root before writing outside it (34.3534ms)
+✔ Core daemon rejects a stateRoot junction swapped at lock creation before writing state outside it (83.8876ms)
+✔ Core daemon cleanup preserves an outside lock when stateRoot swap is attempted before rename (221.5435ms)
+✔ runner rechecks scope and refuses a directory junction swap before L0 file read (356.4783ms)
+✔ bounded core reader rejects a hard link to a file with an external name (10.5567ms)
+✔ core pack is deterministic, hashes files and excludes workspace state/tests (37.7352ms)
+✔ credential redaction uses syntax supported by host Node 22 (1.6532ms)
+✔ Universal Core imports and lists capabilities without DSH/Cordis (207.1515ms)
+✔ Core can be imported in a fresh Node process with no @deepseek-ai package (398.1083ms)
+✔ Core package source has no DSH/Cordis/DOM/Electron imports (4.3886ms)
+✔ protocol validates invocation and evidence envelopes (0.5764ms)
+✔ versioned JSON Schema files are present and parseable (13.6698ms)
+✔ authorize creates a signed durable record and list shows it active (23.024ms)
+✔ authorize rejects empty authorization and short purpose (2.8442ms)
+✔ file check allows workspace targets and denies outside/sensitive targets (14.4733ms)
+✔ sensitive host paths are denied even inside an authorized tree (6.0095ms)
+✔ network target parsing and matching (exact, wildcard, CIDR, ports) (7.6874ms)
+✔ L2 network execution requires authorization and an active approval (9.988ms)
+✔ checkNetwork fails closed when hostname DNS fails or returns no usable addresses (29.8191ms)
+✔ checkNetwork rejects DNS answers containing private, reserved, or mixed public/private addresses (97.4175ms)
+✔ checkNetwork accepts public DNS answers and still permits explicitly authorized private IP literals (13.4998ms)
+✔ recordApproval refuses non-grant outcomes (1.8743ms)
+✔ L1 execution is denied without an isolation provider (8.7585ms)
+✔ token bucket rate-limits an authorized host (1.9464ms)
+✔ L0 capability runs, persists evidence/finding, finalizes with report and valid chains (1973.8339ms)
+✔ out-of-workspace target is rejected before execution (119.9014ms)
+✔ L3 capability is rejected by policy and never runs (143.0353ms)
+✔ L2 capability fails closed without a platform approval channel (176.8444ms)
+✔ L0 capability timeout becomes a structured TIMEOUT error (376.3591ms)
+✔ missing capability fails the environment check durably (127.935ms)
+✔ illegal state transitions throw, legal cancellations are durable (169.0694ms)
+✔ evidence hash chain detects tampering (596.9135ms)
+✔ report formats render findings, evidence and SARIF metadata (23653.9506ms)
+✔ Markdown table cells neutralize backslash escapes and line breaks (0.4955ms)
+✔ state summary exposes tasks, capabilities and secret-free policy (1754.4122ms)
+✔ multi-client cross-workspace task read/cancel/approval are denied (432.158ms)
+✔ ctf manifest shape: 5 offline capabilities with closed params schemas (1.8968ms)
+✔ ctf.decode: base64→gzip chain, intermediates, flag detection and artifact (3.5171ms)
+✔ ctf.decode: all supported textual transforms behave correctly (3.9932ms)
+✔ ctf.decode: unknown/invalid chains fail with actionable errors, not crashes (1.1002ms)
+✔ ctf.classify: identifies base64 chain + flags, gzip/PNG/TAR magic (3.5009ms)
+✔ ctf.hash_id: length/charset/prefix identification with explicit ambiguity (1.7437ms)
+✔ ctf.crypto_basics: Caesar brute force finds the right rotation, honest labels (4.2972ms)
+✔ ctf.crypto_basics: single-byte XOR brute force recovers hex key 0x42 (3.9017ms)
+✔ ctf.flag_scan: finds known flag formats and entropy anomalies in text and binaries (1.5773ms)
+✔ ctf.classify/report determinism: identical input yields identical structured data (1.0351ms)
+✔ deterministic gzip uses a stable header and round-trips empty and ordinary input (4.8578ms)
+✔ deterministic gzip splits large payloads at the DEFLATE stored-block limit (4.6833ms)
+✔ docs consistency catches stale BLOCKED/NOT READY/test-count text (39.879ms)
+✔ mock-model E2E: workflow start → background run → evidence → report (3693.9359ms)
+✔ trusted principal creates tasks and idempotent replay returns the same task (397.119ms)
+✔ forged operators, unknown principals and cross-workspace reads are rejected (66.029ms)
+✔ task access is isolated by trusted principal and session within one workspace (79.7239ms)
+✔ getReport rejects paths outside the task reports directory and reads a pinned in-root file (107.4984ms)
+✔ requestId reuse with a different payload is rejected (57.7773ms)
+✔ task cancellation requires the workspace-authorized principal (79.4047ms)
+✔ approval tokens are bound, expire and cannot be replayed (85.671ms)
+✔ sanitized evidence envelopes are persisted and abort is fail-closed (168.8101ms)
+✔ forward-slash workspace paths are equivalent to backslash paths (61.0693ms)
+✔ deadline bounds are enforced on public Engine methods (19.7909ms)
+✔ DSH/Core/Engine share one runtime per stateRoot (44.0431ms)
+✔ getReport rejects a task.report.path outside its task report directory (430.1142ms)
+✔ getReport rejects a traversal task id before loading another task directory (72.0696ms)
+✔ getReport rejects a task reports root redirected to an outside junction (93.2865ms)
+✔ getReport rejects a reports-root junction swap in the open window (127.9545ms)
+✔ getReport fails closed when report metadata has no SHA-256 digest (94.8011ms)
+✔ getReport rejects a report file with an outside hard-link alias (88.8521ms)
+✔ provider manager never claims isolation from a CLI without a daemon (6.9497ms)
+✔ verify requires an injected self-test and then records IsolationVerified (1.0534ms)
+✔ default verify is explicit about not being a self-test; guide lists official links (0.479ms)
+✔ selfTest runs a harmless pinned container and only records IsolationVerified on success (1.5503ms)
+✔ successful self-test persists across manager instances and is invalidated by a daemon change (19.5418ms)
+✔ persisted isolation markers fail closed when either daemon identity is missing or differs (68.2602ms)
+✔ successful self-test marker is reusable only for its recorded daemon (17.6983ms)
+✔ 24 processes append evidence records without forking the per-task hash chain (1663.6216ms)
+✔ 24 processes append audit records with a continuous sequence and hash chain (732.7843ms)
+✔ lock contention times out without running the append callback (130.8789ms)
+warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/test-report.tap', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/test-report.tap', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/test-report.tap', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/generated/host-matrix.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/provider-security.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/acceptance.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/audit/environment-audit.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/test-report.tap', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/test-report.tap', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/release/readiness.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/release/readiness.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/test-report.tap', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/test-report.tap', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/test-report.tap', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/test-report.tap', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/release/stable-readiness.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/release/stable-readiness.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/test-report.tap', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/prior.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/test-report.tap', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/test-report.tap', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/provider-security.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/test-report.tap', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/test-report.tap', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SECURITY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/usage.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/test-report.tap', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'lib/source.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/v2/release-gates.mjs', LF will be replaced by CRLF the next time Git touches it
+✔ docs-only accepts only real documentation diffs, not commit messages (3228.5381ms)
+✔ docs-only rejects security, source, release-gate, evidence and build-config changes (17182.5456ms)
+✔ docs-only rejects git replace refs (3195.2665ms)
+✔ evidence-only accepts a real evidence append after the source baseline (10393.7439ms)
+✔ validator accepts a path-verified docs-only baseline and still rejects a protected diff (4059.4296ms)
+✔ stable readiness can be appended as generated evidence without replacing the historical Full GA snapshot (6462.3596ms)
+✔ docs baseline accepts prior evidence and prior docs-only merges (4271.0465ms)
+✔ docs baseline rejects CI, build and security changes in target base (4690.6139ms)
+✔ docs-only rejects a target base with unbound source changes after evidence (5197.1022ms)
+✔ docs-only rejects a gitlink disguised as a markdown document (2469.1532ms)
+✔ validator requireClean rejects a dirty working tree before trusting evidence (1286.9185ms)
+✔ evidence envelope pins identifiers and redacts secrets (5.2605ms)
+✔ event envelope and invalid identifiers fail closed (0.5911ms)
+✔ the DSH adapter is a thin shim over the legacy exports (0.1242ms)
+✔ manifest builder hashes regular files but rejects hard-linked evidence (3200.9101ms)
+✔ manifest builder refuses to bind uncommitted source changes (3623.903ms)
+✔ manifest builder includes the referenced Pi install log but keeps unrelated logs excluded (3844.9279ms)
+✔ evidence metadata recursively redacts secret fields and credential-shaped log text (85.121ms)
+✔ evidence chain detects tail truncation against its persisted head anchor (400.2502ms)
+✔ legacy non-empty evidence without a head anchor fails closed (29.8994ms)
+warning: in the working copy of 'src/release.js', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'src/release.js', CRLF will be replaced by LF the next time Git touches it
+✔ evidence validator accepts pinned files and rejects tamper/missing (211.1527ms)
+✔ evidence validator rejects dangling embedded acceptance references (128.7416ms)
+✔ evidence validator rejects stale embedded hashes for nested relative evidence (160.834ms)
+✔ evidence validator resolves references relative to their nested JSON document (171.6658ms)
+✔ evidence validator checks source hashes against the pinned Git blob across line endings (5987.9931ms)
+✔ evidence validator refuses a parent junction to acceptance data outside the repository (41.8379ms)
+✔ tshark: parses packet JSON into observed HTTP/DNS summary and hypothesis-safe findings (2.9745ms)
+✔ tshark capability calls argv seam and returns bounded data; missing target rejects (4.1009ms)
+✔ syft: normalizes CycloneDX, flags missing versions without CVE claims (0.7838ms)
+✔ syft capability uses dir: argv with seam and never claims CVE (1.1265ms)
+✔ jadx: indexes sources/APIs without returning source, and seam writes temp output (11.0573ms)
+✔ ghidra: parses bounded function summary and flags sensitive names as hypothesis (23.4048ms)
+✔ Semgrep JSON normalizes to hypothesis findings with location and source rule (3.4835ms)
+✔ Semgrep malformed or wrong-shape JSON is rejected instead of silently normalized (1.2454ms)
+✔ Trivy JSON normalizes vulnerabilities, secrets and misconfigurations separately (0.545ms)
+✔ normalization is bounded and deterministic (0.5591ms)
+✔ semgrep capability runs through the injected executor and reports normalized data (1.5188ms)
+✔ trivy capability builds offline-db args and reports normalized data (2.1639ms)
+✔ missing external tool produces actionable guidance, not a silent downgrade (0.5842ms)
+✔ missing external receipts block every Full GA external claim (25.9194ms)
+✔ valid role-authorized signed evidence verifies and binds the production artifact digest (305.8758ms)
+✔ self-consistent signed claims without an externally supplied trust pin remain UNVERIFIED (66.9457ms)
+✔ replacing trusted signer keys and re-signing every claim fails the externally pinned signer hash (68.2721ms)
+✔ receipt bundle replacement between metadata check and open is rejected (77.2129ms)
+✔ receipt bundle inside the candidate repository is rejected to prevent commit-hash self-reference (66.6407ms)
+✔ evidence hash tampering blocks only the affected signed claim (266.8099ms)
+✔ wrong signer role, wrong commit, and invalid production signature fail closed (582.0028ms)
+✔ finding elevation requires existing task-local evidence and links the cited records (353.3265ms)
+✔ unanchored legacy finding snapshots are downgraded instead of trusted (18.6504ms)
+✔ forensics manifest: domain, six capability ids, schema and no external tools required (3.1932ms)
+✔ forensics.filetype: executable, archive, document, image, script and data detection (15.0023ms)
+✔ forensics.hash: real digests, algorithm selection and truncation honesty (10.6337ms)
+✔ forensics.metadata: PE timestamp, version resources, PDB path and resources (7.1339ms)
+✔ forensics.metadata: ELF, Mach-O, ZIP, PNG, JPEG, PDF, OLE2 and gzip (8.7735ms)
+✔ forensics.timeline: PE, ZIP, PNG, JPEG events are real, sorted and deterministic (21.1404ms)
+✔ forensics.ioc: real indicator extraction, dedupe, flags and category filters (8.7063ms)
+✔ forensics.yara_lite: bundled rules, wide-string matching, filters and honest verification (3.4837ms)
+✔ forensics: malformed/truncated inputs return structured results without crashes (4.0537ms)
+✔ forensics: empty inputs throw actionable Errors for every capability (0.8745ms)
+✔ forensics: every capability honors AbortSignal and is deterministic on fixtures (2.9757ms)
+✔ forensics: result data is JSON-serializable and bounded for all capabilities (5.702ms)
+✔ pre-publication generated docs are reproducible and include host/API/Skill/release status (9626.2559ms)
+✔ generic MCP adapter installs, diagnoses and uninstalls without touching other servers (1751.7348ms)
+✔ generic MCP doctor fails closed when ArmorBreak is absent (196.9515ms)
+✔ ruleset loader fetches complete details instead of trusting list summaries (1.498ms)
+✔ ruleset loader fails closed when the named ruleset is absent or ambiguous (0.4685ms)
+✔ ruleset loader rejects invalid or mismatched detail responses (0.2105ms)
+✔ gray rollout continues only when every safety condition holds (1.1714ms)
+✔ port-scoped network targets never match a portless host (0.8086ms)
+✔ checkNetwork applies the port restriction end to end (19.9442ms)
+✔ YAML flow nesting is bounded instead of overflowing the stack (2.0811ms)
+✔ YAML parser rejects prototype-polluting keys (0.6474ms)
+✔ all shipped text files are valid UTF-8 (963.1627ms)
+✔ index publishes signed descriptors, rejects tamper and verifies with public key (38.4738ms)
+✔ unsigned index is rejected when signature is required (13.5459ms)
+✔ installer rejects traversal plan IDs before reading plans or rolling back (12.4367ms)
+✔ rollback ignores external plan paths and defers unsafe recursive cleanup (71.1661ms)
+✔ installer rollback never reaches recursive delete after a parent junction swap opportunity (83.2095ms)
+✔ installer rollback fails closed if the root is replaced before active-pointer rename (41.3973ms)
+✔ installer failure does not recurse through a replaced staging junction or symlink (33.5047ms)
+✔ all host config installers reject nested plaintext secrets before writing config (23.8988ms)
+✔ secret-shaped env names require exact environment placeholders (1.062ms)
+✔ plan rejects unknown license before any staging/execution (15.5676ms)
+✔ install transaction requires stage/verify/approval before activation and rolls back (296.8798ms)
+✔ installer rollback defers recursive cleanup instead of following a swapped installed ancestor (89.6869ms)
+✔ failed pre-activation transaction records deferred cleanup and leaves no half install active (87.2852ms)
+✔ KEV/EPSS/OSV normalize with provenance and reject malformed CVEs (2.1611ms)
+✔ 100 synthetic CVE mappings merge without wrong CVE concatenation (11.9879ms)
+✔ stale source is marked and conflicts are surfaced (0.3218ms)
+✔ JSON installer dry-run/apply/rollback preserves other servers byte-for-byte (36.4487ms)
+✔ JSON installer blocks conflicts/secrets and supports force (11.0258ms)
+✔ json uninstall removes only armorbreak and invalid input writes nothing (18.8002ms)
+✔ knowledge index returns provenance and explicit conflicts (27.4841ms)
+✔ knowledge guard blocks prompt injection/secrets and labels context untrusted (2.0859ms)
+✔ untrusted knowledge cannot make the installer route allowed (0.485ms)
+✔ layered cache stages/activates core and falls back safely on failed activation (51.2259ms)
+✔ layered cache rollback restores the previous active descriptor (39.0425ms)
+✔ versioned CAS index detects tampering and rolls back to previous hash (39.3938ms)
+✔ MCP audit log records host clientInfo and tool calls without arguments (1986.9926ms)
+✔ MCP HTTP denies unauthenticated identity binding by default (264.9721ms)
+✔ unauthenticated loopback mode works only with explicit development opt-in (33.8587ms)
+✔ MCP HTTP requires Host and Origin to match the listening authority (246.9205ms)
+✔ MCP HTTP test mode serves initialize and tools over loopback with explicit opt-in (240.6983ms)
+✔ MCP HTTP recovers persisted sessions and isolates token identities (83.5207ms)
+✔ MCP HTTP rejects non-loopback binding and enforces configured bearer token (27.7014ms)
+✔ MCP HTTP rejects cross-site Origin and malicious Host (28.1863ms)
+✔ MCP HTTP supports SSE responses when requested (25.9334ms)
+✔ MCP HTTP session remains usable after a same-principal foreign-session resources/read (1489.5771ms)
+✔ MCP HTTP restores the same engine connection identity for persisted sessions (2120.8284ms)
+✔ MCP HTTP supports explicit TLS with a test certificate (369.1573ms)
+✔ MCP initialize, tools/list and tools/call capabilities (366.3146ms)
+✔ MCP fails closed before initialize, on unknown tools and parse errors (36.3026ms)
+✔ MCP starts the fixed L0 behavior workflow without accepting caller-supplied steps (2220.802ms)
+✔ MCP armorbreak_analyze performs a real L0 task and report (2291.5376ms)
+✔ MCP armorbreak_analyze executes rebuild.contract on an authorized workspace file (2028.4997ms)
+✔ MCP exposes the seven Agent Skills with digests and readable SKILL.md (186.0055ms)
+✔ MCP isolates engine failures at the JSON-RPC boundary and stdio stays available (756.7209ms)
+✔ MCP skill reads reject junction escapes and hard links without listing their contents (122.6032ms)
+✔ ENOSPC/EACCES during replacement leaves backups and recovery restores every original byte (2368.6943ms)
+✔ a real SIGKILL child during migration is recovered from the prepared manifest (1542.2698ms)
+✔ a truncated rollback target is restored from its durable backup during recovery (4274.6667ms)
+✔ direct rollback rejects a workspace-external task target (74.4282ms)
+✔ interrupted-migration recovery rejects a workspace-external task target (76.847ms)
+✔ migration rollback rejects a backup outside its migration directory (65.8794ms)
+✔ migration planning rejects a task directory reached through a junction or symlink (24.8279ms)
+✔ migration rollback rejects a backup-root junction or symlink (61.4481ms)
+✔ migration rollback pins the opened task file across an ancestor junction swap (3898.9652ms)
+✔ migration plan is read-only and detects v1 task (42.193ms)
+✔ apply writes v2 schema, backups original and rollback restores exact bytes (1743.4604ms)
+✔ invalid task data refuses migration (63.4112ms)
+✔ M3 compiled PE/ELF fixtures preserve identity, symbol presence, and strip evidence (46.6723ms)
+✔ M3 compiled Mach-O fixture preserves native identity, stripped-symbol state, and truncation evidence (6.4197ms)
+✔ M3 corrupted PE/ELF/Mach-O fixtures return bounded structured partial or unsupported results (3.8377ms)
+✔ network: capability 清单符合契约 (2.9171ms)
+✔ network.pcap_overview: 经典 pcap（LE 微秒）协议直方图/时间范围/统计 (23.1616ms)
+✔ network.pcap_overview: 大端/纳秒 pcap，以及截断抓包只标记不抛错 (1.9481ms)
+✔ network.pcap_overview: pcapng 多 Section/多接口/多时间精度 (2.5584ms)
+✔ network.flows: TCP 状态启发式 + UDP 会话聚合 + 截断 (3.5876ms)
+✔ network.dns: 查询/响应/A 记录/NXDOMAIN/解析器配对 (3.3128ms)
+✔ network.tls: ClientHello 分段重组/SNI/ALPN/版本 + ServerHello 协商 (6.6655ms)
+✔ network.http: 明文请求/响应、状态码、chunked 与敏感信息脱敏 (3.5301ms)
+✔ network.iocs: 公网/私有 IP 分类、域名来源、URI 汇总 (8.739ms)
+✔ network.anomalies: 扫描扇出/信标/大上传/罕见端口/明文 HTTP（全部标注验证等级） (20.1235ms)
+✔ network: 不支持的链路类型返回结构化告警而非崩溃 (1.1909ms)
+✔ network.anomalies: DNS NXDOMAIN 比例与 TLS 缺 SNI 启发式（直接单测） (0.6663ms)
+✔ network: Result 契约（summary/data 体积/meta 与全部 capability 可执行） (4.6921ms)
+✔ network: IP 分类与 data 预算裁剪工具 (22.5392ms)
+✔ network: 空输入/不可识别输入报可操作错误，TCP 重组处理 seq 缺口 (1.2852ms)
+✔ L0 analyzer modules contain no network-client imports (52.5582ms)
+✔ RESOURCE_READ is default-off and not modeled as L2 (1.3214ms)
+✔ L0 file actions never select the live/L1 domain implicitly (0.9697ms)
+✔ old V2 task inspection, copy migration, fault rollback and source immutability (251.3117ms)
+✔ portable plugin manifest and MCP template are structurally valid (42.3316ms)
+✔ Claude plugin manifest is official-shaped and validates offline (33.7193ms)
+✔ unverified host overlays stay honestly unverified (14.5048ms)
+✔ catalog covers every model-facing armorbreak tool exactly once (4.2908ms)
+✔ unknown actions and model-supplied authorization are denied (0.8781ms)
+✔ L3 has no route; installation stays blocked until M2 (0.3263ms)
+✔ RESOURCE_READ is connector-gated and never grants L2 network execution (0.3695ms)
+✔ L0 file actions use real ScopePolicy containment; L1/L2 approvals are enforced (31.7636ms)
+✔ portable artifact builds and runs capabilities after clean-room extraction (9358.5023ms)
+▶ M1 recognizes the benign multi-class fixture set using the production detector
+  ✔ pe.exe (3.5578ms)
+  ✔ elf32 (0.4385ms)
+  ✔ elf64 (1.6958ms)
+  ✔ mach32 (0.4709ms)
+  ✔ mach64 (0.353ms)
+  ✔ mach-fat (0.2847ms)
+  ✔ archive.zip (2.236ms)
+  ✔ archive.tar (0.8871ms)
+  ✔ archive.gz (0.667ms)
+  ✔ application.apk (1.7485ms)
+  ✔ application.jar (0.5958ms)
+  ✔ application.aab (0.6859ms)
+  ✔ application.ipa (0.2975ms)
+  ✔ application.hap (0.3389ms)
+  ✔ classes.dex (0.1777ms)
+  ✔ module.wasm (0.1898ms)
+  ✔ Main.class (0.2023ms)
+  ✔ document.pdf (0.3465ms)
+  ✔ picture.png (0.2746ms)
+  ✔ picture.jpg (0.2087ms)
+  ✔ picture.gif (0.279ms)
+  ✔ picture.gif (0.2018ms)
+  ✔ picture.webp (0.176ms)
+  ✔ data.sqlite (0.1665ms)
+  ✔ app.js (0.3452ms)
+  ✔ app.ts (0.2492ms)
+  ✔ app.py (0.1713ms)
+  ✔ App.java (0.3394ms)
+  ✔ app.go (0.3016ms)
+  ✔ lib.rs (0.2939ms)
+  ✔ App.cs (1.6485ms)
+  ✔ header.h (0.277ms)
+  ✔ app.php (0.2085ms)
+  ✔ script.sh (0.283ms)
+  ✔ settings.json (0.1825ms)
+  ✔ settings.yaml (0.1659ms)
+  ✔ page.html (0.232ms)
+  ✔ style.css (0.1847ms)
+  ✔ query.sql (0.1384ms)
+  ✔ unknown.bin (0.1438ms)
+✔ M1 recognizes the benign multi-class fixture set using the production detector (27.5507ms)
+▶ M1 rejects hostile or malformed archive cases without extraction
+  ✔ zip parent traversal (2.8389ms)
+  ✔ zip absolute path (0.4581ms)
+  ✔ zip drive path (0.4433ms)
+  ✔ zip backslash traversal (0.4546ms)
+  ✔ zip alternate data stream (0.376ms)
+  ✔ zip reserved device name (0.3736ms)
+  ✔ zip symbolic link (0.4767ms)
+  ✔ zip reparse point flag (0.3782ms)
+  ✔ zip case-fold collision (0.8798ms)
+  ✔ zip compression ratio bomb (151.4757ms)
+  ✔ zip malformed/truncated end record (0.8239ms)
+  ✔ zip64 sentinel (0.3003ms)
+  ✔ zip local/central method mismatch (0.7389ms)
+  ✔ zip unsupported encryption feature (0.9543ms)
+  ✔ zip unsupported general-purpose flag (0.7399ms)
+  ✔ tar parent traversal (1.8847ms)
+  ✔ tar symbolic link (1.4638ms)
+  ✔ tar hard link (0.6957ms)
+  ✔ tar device node (0.5863ms)
+  ✔ tar PAX path override (1.0079ms)
+  ✔ tar global PAX metadata (0.7261ms)
+  ✔ tar missing end markers (0.7522ms)
+✔ M1 rejects hostile or malformed archive cases without extraction (171.8533ms)
+✔ M1 does not confirm package identity from an incomplete ZIP directory (0.4901ms)
+✔ M1 builds nested ZIP/TAR relationships and makes limits explicit (0.9445ms)
+✔ M1 integrates through the live registry, PolicyGateway runner and UniversalArtifactTriage workflow (1845.2715ms)
+✔ M1 preserves the explicit partial-hash boundary at a directory read cap (0.8306ms)
+✔ M1 keeps oversized result graphs within budget with consistent counts and edges (6.7762ms)
+✔ M1 schemas are versioned Draft 2020-12 contracts (8.0705ms)
+▶ M2 parses at least five valid JavaScript and TypeScript syntax fixtures with source locations
+  ✔ JavaScript: function declaration and call (46.5658ms)
+  ✔ JavaScript: class and method (4.2397ms)
+  ✔ JavaScript: static import and export (13.4993ms)
+  ✔ JavaScript: JSX component (6.5428ms)
+  ✔ JavaScript: object and destructuring (5.7218ms)
+  ✔ TypeScript: typed function and interface (4.0329ms)
+  ✔ TypeScript: enum and class (8.2513ms)
+  ✔ TypeScript: generic method (3.9982ms)
+  ✔ TypeScript: type alias and export alias (3.1088ms)
+  ✔ TypeScript: namespace and optional chaining (3.4175ms)
+✔ M2 parses at least five valid JavaScript and TypeScript syntax fixtures with source locations (102.3347ms)
+▶ M2 resolves same-file identifier references to emitted symbol IDs for JavaScript and TypeScript
+  ✔ JavaScript (2.1007ms)
+  ✔ TypeScript (1.4537ms)
+✔ M2 resolves same-file identifier references to emitted symbol IDs for JavaScript and TypeScript (4.1059ms)
+▶ M2 reports syntax errors for five invalid fixtures in each supported language
+  ✔ JavaScript: unfinished function parameters (2.4027ms)
+  ✔ JavaScript: missing variable initializer name (1.3567ms)
+  ✔ JavaScript: unterminated block (1.46ms)
+  ✔ JavaScript: invalid object member (1.0866ms)
+  ✔ JavaScript: unterminated export list (0.9076ms)
+  ✔ TypeScript: unterminated interface (0.9334ms)
+  ✔ TypeScript: missing type annotation (1.6855ms)
+  ✔ TypeScript: invalid return expression (1.7902ms)
+  ✔ TypeScript: missing type alias value (0.7597ms)
+  ✔ TypeScript: unterminated class (0.8683ms)
+✔ M2 reports syntax errors for five invalid fixtures in each supported language (14.7862ms)
+✔ M2 marks macros and unsupported languages unsupported instead of inferring symbols (1.8798ms)
+✔ M2 separates product, test, generated, vendor, and build-output source layers (1.784ms)
+✔ M2 preserves deferred imports and marks reflection, eval, truncation, and record limits (13.0939ms)
+✔ M2 keeps serialized source IR within a one-kilobyte result budget (37.1234ms)
+✔ M2 integrates source.symbols and CrossLanguageSourceReview through the real Runner and PolicyGateway (2188.8563ms)
+✔ OpenAI-compatible and Ollama requests carry correct auth/tool payloads (124.4507ms)
+✔ Anthropic request separates system and maps tool schema (16.9491ms)
+✔ OpenAI-compatible SSE stream aggregates text, usage and finish reason (11.8776ms)
+✔ timeouts fail closed without leaking credentials (112.3423ms)
+✔ normalized provider contract round-trips roles, IDs, finish reasons and usage (8.5216ms)
+✔ provider contract rejects malformed roles, IDs, finish reasons and indexes (0.974ms)
+✔ default egress policy blocks an unapproved provider origin before chat or stream sends credentials (4.3243ms)
+✔ explicit policy allows a configured custom provider origin and fetch receives manual redirect mode (0.9563ms)
+✔ host allowlisting cannot be bypassed with URL credentials or a non-standard HTTPS port (0.6961ms)
+✔ chat and stream reject provider redirects without forwarding credentials to the redirect target (128.89ms)
+✔ golden invalid parameters fail before any provider request (2.9702ms)
+✔ golden multi-turn tool loop executes and respects the token budget (2.3994ms)
+✔ golden SSE ignores malformed events and tolerates a truncated stream (115.6483ms)
+✔ golden fixtures cover text, tool, stream and error for four provider protocols (233.9466ms)
+✔ OpenAI Responses native request/response maps text, function_call and usage (116.62ms)
+✔ OpenAI Responses streaming accumulates output text, tool arguments and completion usage (17.4988ms)
+✔ Anthropic streaming maps text, tool_use lifecycle, stop reason and usage (11.747ms)
+✔ Gemini native request/response and streaming map contents, functionCall and usage (17.4712ms)
+✔ router resolves providers without exposing credentials (4.1279ms)
+✔ missing credentials, unknown models and tool mismatch fail closed (1.1054ms)
+✔ plaintext keys and secret-like provider fields are rejected (0.4953ms)
+✔ example provider file is secret-free and loadable (9.3374ms)
+✔ memory vault and redaction never expose secret values (4.1427ms)
+✔ provider policy enforces egress, budget and approved fallback (1.5745ms)
+✔ Windows DPAPI vault persists ciphertext only and decrypts for the current user (4762.5884ms)
+✔ rating is explainable and blocks unknown license/dangerous scripts (7.6984ms)
+✔ offline tier manifests are deterministic with size/capability deltas (16.0535ms)
+✔ full pack installs and uninstalls reproducibly with hash checks (36.6273ms)
+✔ Markdown-only external status flips cannot clear Full GA blockers (4909.101ms)
+✔ V2.2 Stable writes its current readiness beside the preserved Full GA snapshot (1.2819ms)
+✔ RC packages retain the legacy readiness destination even when policy metadata is present (0.2584ms)
+✔ pre-release passes with real hosts and zero waivers while GA remains blocked (3064.7979ms)
+✔ M5 behavior comparison covers three executed JS/Python programs, broken candidates, timeout, and nondeterminism (5587.6503ms)
+✔ M5 contract preparation preserves certainty and requires evidence references (17.5446ms)
+✔ release build is reproducible, hashed, SBOM-backed and test-signature verifiable (17693.6038ms)
+warning: in the working copy of 'docs/v2/acceptance/airgap-container.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/desktop-analysis.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/desktop-e2e.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/desktop-e2e.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/evidence-manifest.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/garak-live.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/jailbreak-live.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/offline-score.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/performance-compare.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/pyrit-live.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/supplychain-e2e.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/supplychain-live.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/test-report.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/acceptance/test-report.tap', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/tasks/AB2-M4-03.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/tasks/AB2-M4-04.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/tasks/AB2-M4-06.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/tasks/AB2-M4-07.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/tasks/AB2-M4-10.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/tasks/AB2-M4-11.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/v2/tasks/AB2-M4-12.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+✔ evidence-driven gates PASS only with current commit, raw TAP and pinned evidence (655.5961ms)
+✔ self-consistent fabricated evidence cannot grant release authorization (718.3306ms)
+✔ tampered evidence is FAIL, missing report is REVIEW, stale commit is REVIEW (1613.031ms)
+✔ failed test run can never be releasable (705.7585ms)
+✔ failed process metadata and skipped tests cannot produce a PASS release gate (2274.6256ms)
+✔ docs-only gate inherits local check results but never grants release authorization (1.0361ms)
+✔ docs ancestor gate accepts a base with a prior docs-only merge (3881.4237ms)
+✔ RESOURCE_READ is disabled by default and unknown connectors are rejected (2.3635ms)
+✔ only a fixed https connector registry is fetched; arbitrary URLs cannot be passed (5.5418ms)
+✔ redirects, HTTP errors and size limits are rejected (0.8068ms)
+✔ non-json resources are still bounded and hashed (0.7315ms)
+✔ sync stages/activates one source and isolates a failed source (83.9506ms)
+✔ sync refuses to run when RESOURCE_READ is disabled (2.7967ms)
+✔ retest redacts known token shapes and explicit secrets (2.199ms)
+✔ retest host args are plan/read-only and never yolo or skip-trust (0.5795ms)
+✔ retest rejects historical, concurrent, foreign and non-exact-README tasks (78.2259ms)
+✔ retest rejects a task whose README target is reached through a symlink (40.9341ms)
+✔ retest host verdict only passes a fully verified authenticated run (0.4967ms)
+✔ retest audit must bind runId, pid, principal, workspace and all L0 tool calls (13.291ms)
+✔ retest sanitize keeps JSON valid and truncates fields, not the document (0.6159ms)
+✔ retest provider preparation is network-free and run ids are unique (1.7012ms)
+✔ JSON/TOML/YAML rollback drill restores original bytes (244.496ms)
+✔ rollout requires all gates and ordered 1/10/50/100 promotion (8.1433ms)
+✔ rollback resets to zero and is audited (0.5576ms)
+✔ WebCodeSecurityReview runs on a real directory and produces multi-file findings (4248.0193ms)
+✔ planning rejects a directory task whose capabilities only accept files (122.7974ms)
+✔ file capability on a directory target returns an actionable directory-capability hint (188.6764ms)
+✔ directory readFile rejects a junction that escapes the analyzed root (303.139ms)
+✔ a directory task cannot smuggle a network capability past planning (124.1971ms)
+✔ L2 execution runs only after scope authorization + platform approval grant (2973.6413ms)
+✔ L2 approval is consumed and rate-limited per target (41.7885ms)
+✔ L1 execution runs when isolation is available and the sample is approved (2148.6278ms)
+✔ approval rejected at the workflow gate becomes REJECTED without execution (158.101ms)
+✔ L1 fails closed when the isolation self-test fails after approval (2054.7287ms)
+✔ safe evidence reads stable regular files and atomically replaces regular outputs (1357.8539ms)
+✔ safe evidence rejects hard links and symlink or junction output paths (13.3812ms)
+✔ safe evidence writes no bytes when a parent junction changes during temporary-file open (1318.8545ms)
+✔ safe evidence replacement does not follow a parent swap at the final replace boundary (1610.619ms)
+✔ safe evidence parent handle blocks or contains a concurrent rename during replacement (3384.8226ms)
+✔ sast.secrets reports PEM headers even on scanner source lines and preserves exact AWS documentation suppression (10.329ms)
+✔ sast manifest shape: 8 offline capabilities with closed params schemas (2.9415ms)
+✔ sast.scan: finds multi-language sinks, maps CWE, sorts and stays deterministic (9.9901ms)
+✔ sast.scan: maxFiles/maxFindings bounds, excludeDirs override, binary skip (1.5563ms)
+✔ sast.scan: actionable errors for missing target/unknown rule/empty source tree (2.5025ms)
+✔ sast.secrets: detects real formats, redacts values, allowlists placeholders (6.7455ms)
+✔ sast.deps: inventories manifests, heuristics labelled hypothesis, no fake CVE claims (6.875ms)
+✔ sast.deps: malformed manifest is recorded instead of crashing (0.7443ms)
+✔ sast.sbom: valid deterministic CycloneDX 1.5 with purls and artifacts (5.1701ms)
+✔ sast.patch_suggestion: builds illustrative diff + regression test, never applies (2.3556ms)
+✔ sast helpers: entropy is bounded and deterministic (0.4014ms)
+✔ sast.scan excludePaths removes rule/fixture noise from the file set (1.3096ms)
+✔ v1 tasks are readable, but writing adds schemaVersion and preserves fields (1.6094ms)
+✔ invalid tasks are rejected rather than silently coerced (0.865ms)
+✔ capabilities get explicit v2 permission sets (L3 has none) (1.3269ms)
+✔ SDK OpenAPI is generated from the stable contract (178.4576ms)
+✔ SDK contract types are generated and compile with tsc (1045.1659ms)
+✔ typed SDK works over direct Engine transport (2422.5467ms)
+✔ typed SDK works over MCP HTTP transport (2134.9786ms)
+✔ file search terminates catastrophic regular expressions in an isolated worker (359.9906ms)
+✔ file search preserves ordinary regex use and rejects invalid or oversized patterns (187.2239ms)
+✔ strict preset does not mount generic fs/shell/web tools; files tool is registered (6.108ms)
+✔ authorization requests are inert until platform-approved activation (16.3142ms)
+✔ scope rejects UNC, device and NUL path forms before touching the filesystem (3.0948ms)
+✔ gated file reader stays inside the workspace and marks truncation/hash scope (90.0687ms)
+✔ L0 file reader rejects a junction retargeted after the scope check (18.1238ms)
+✔ L0 file reader rejects multiply-linked files whose other path is unverified (9.5518ms)
+✔ http probe pins the validated IP, never follows redirects, and truncates streamed bodies (20.3657ms)
+✔ container execution requires a digest-pinned allowlisted image and hardened flags (0.7766ms)
+✔ state route is loopback-only and rejects workspace enumeration (0.6352ms)
+✔ owned contrast corpus has 20 vulnerable/safe/lookalike groups and exact local scanner metrics (21.5066ms)
+✔ correlation preserves original sources while keeping evidence maturity separate from vulnerability status (7.2634ms)
+✔ same-family duplicates are observed, not independent corroboration; incomplete keys are kept separate (1.8135ms)
+✔ derived report strings redact credentials and absolute path components (1.5604ms)
+✔ Trivy, explicit OSV matches, CycloneDX and snapshot provenance remain offline and unconverted (5.2265ms)
+✔ invalid hashes, unsupported sources, and over-limit source counts fail closed (3.7589ms)
+✔ Runner executes UniversalSecurityReview on a local bundle and writes valid JSON/SARIF artifacts (2141.1132ms)
+✔ prompt text and tool arguments cannot become authorization (1816.608ms)
+✔ tool-output text stays evidence data and CSRF/OPTIONS is not authorized (103.1312ms)
+✔ every skill has positive and negative trigger cases that route correctly (15.7244ms)
+✔ seven standard Agent Skills have valid frontmatter (18.9867ms)
+✔ Stable Gate accepts only exact main CI, verified provenance, and matching archive/SBOM inventories (20.9173ms)
+✔ local signed flags do not replace cryptographic GitHub provenance (1.5873ms)
+✔ Stable Gate blocks a wrong source SHA, missing required CI job, or stale attestation run (1.8443ms)
+✔ Stable Gate blocks modified archives, SBOM inventories, and an opened severe finding (1.5007ms)
+✔ Stable Gate rejects omitted, forged, or incomplete SBOM package components (2.4864ms)
+✔ Stable Gate refuses to rewrite legacy Full GA as passed (1.2229ms)
+✔ Stable Gate verifies historical Full GA and RC readiness bytes remain unchanged (2.1033ms)
+✔ Stable Gate blocks missing GitHub protections and untrusted release publishers (1.9115ms)
+✔ Stable Gate policy cannot omit its protected publisher and exact tag ruleset requirements (2.1327ms)
+✔ current-SHA scan results and finding closures require exact, verified evidence references (1.8149ms)
+✔ maintainer risk acceptance is scoped to non-severe findings and must cite evidence (1.0495ms)
+✔ security review must declare the exact source SHA instead of inheriting it from the runner (0.8631ms)
+✔ streaming fixture creation leaves the old predictable hard-link target untouched (25.78ms)
+✔ queue bounds concurrency and reports WAITING then RUNNING (588.0398ms)
+✔ queue cancellation aborts the runner and settles the task as CANCELLED (203.6127ms)
+✔ restart recovery marks stale running tasks INTERRUPTED/RECOVERABLE and resume completes them (1551.2213ms)
+✔ TaskStore rejects traversal task ids before reading or writing outside tasks root (8.5278ms)
+✔ TOML installer uses managed markers, upgrades, and uninstalls only armorbreak (56.9123ms)
+✔ TOML installer rejects unmanaged collision and backup restores byte-for-byte (34.8741ms)
+✔ tool loop preserves tool IDs and returns final text (2.0395ms)
+✔ tool loop rejects duplicate and replayed tool call ids (1.191ms)
+✔ tool loop consumes streamed tool calls and accumulates stream events (1.6705ms)
+✔ tool loop enforces max turns, budget, deadline and retries 429 (6.0323ms)
+✔ tools.js registers ten model-facing tools with valid JSON schemas (144.1383ms)
+✔ armorbreak_health reports environment, isolation denial and capability count (1886.7053ms)
+✔ armorbreak_capabilities lists real capabilities and describes one (18.8429ms)
+✔ armorbreak_task create/list/get works on the real task store (94.0788ms)
+✔ armorbreak_analyze rejects unknown capabilities with an actionable message (17.3415ms)
+✔ armorbreak_analyze runs a real L0 capability and produces a report (2433.9155ms)
+✔ armorbreak_scope separates request from platform-approved activation, then revokes (76.6063ms)
+✔ armorbreak_workflow lists and rejects unknown workflow ids (19.5801ms)
+✔ armorbreak_health output is lossless JSON (no embedded capability functions) (2375.1189ms)
+✔ every ArmorBreak tool returns lossless JSON data (1385.9259ms)
+✔ default workspace resolves to the session working directory (2143.9144ms)
+✔ model-supplied workspace cannot override the session working directory (18.8177ms)
+✔ tasks created by one session are hidden from another session of the same agent (70.4538ms)
+✔ isolation labels never claim verified isolation without a self-test (3.1092ms)
+✔ L2 label reports authorization count instead of a misleading zero (0.4106ms)
+✔ task and tool presentations expose bounded, secret-free metadata (1.9929ms)
+✔ task and tool routes return read-only JSON for loopback callers (2.4823ms)
+✔ live tool status exposes supported levels without implying execution or backend verification (2311.0543ms)
+✔ all workbench routes enforce loopback, GET/HEAD and reject workspace enumeration (1.09ms)
+✔ workbench create action is loopback-only and requires the local UI header (22.5011ms)
+✔ workbench creates an L0 task, exposes evidence, previews report and cancels (3129.2078ms)
+✔ workbench rejects unknown workflows with an actionable error (25.2564ms)
+✔ state route binds a known session to its recorded workspace without directory enumeration (1.0415ms)
+✔ workbench routes enforce same-origin and reject foreign/null origins (0.6274ms)
+✔ workbench creates a mock evaluation and exposes evaluations/knowledge/catalog read-only (34.1162ms)
+✔ workbench can prepare an installation but approval requires the trusted host surface (516.9058ms)
+✔ workbench report preview refuses a report path outside its task reports root (18.4227ms)
+✔ new task/evidence/finding writes carry schemaVersion v2 while old tasks stay readable (525.9307ms)
+✔ web manifest shape: 4 offline capabilities with closed JSON-Schema params (2.0307ms)
+✔ web.har: aggregates security findings, redacts tokens/cookies, flags mixed content (9.397ms)
+✔ web.har: malformed / empty / invalid-structure inputs raise actionable errors (1.3059ms)
+✔ web.har: honours maxEntries/maxFindings bounds and stays deterministic (6.5649ms)
+✔ web.openapi: parses YAML subset and reports servers/auth/paths (6.0081ms)
+✔ web.openapi: accepts JSON specs and rejects unsupported input with actionable errors (1.5173ms)
+✔ web.headers: clean header set passes, weak header set yields actionable findings (3.9305ms)
+✔ web.headers: maxFindings bound is honoured (0.6851ms)
+✔ web.http_message: parses request, redacts credentials, detects token leak + TE/CL (3.4474ms)
+✔ web.http_message: response header audit redacts Set-Cookie values (1.7847ms)
+✔ web helpers: analyzeHar/analyzeOpenApi/analyzeHttpMessage are deterministic (2.8142ms)
+✔ Workbench serves real state, host/provider tables and diagnostics (518.4908ms)
+✔ Workbench rejects forged Host and cross-origin requests before serving state (158.721ms)
+✔ compilePlan preserves legacy sequential semantics when dependsOn is absent (1.9307ms)
+✔ compilePlan accepts a parallel DAG and rejects malformed graphs (0.8033ms)
+✔ readySteps and blockedSteps follow DONE/FAILED dependency states (0.3888ms)
+✔ runner executes independent DAG steps and waits for dependencies (2009.6456ms)
+✔ a failed step skips its dependents but independent steps still run (2256.9925ms)
+✔ YAML installer adds/upgrades/uninstalls managed Hermes server (47.1997ms)
+✔ YAML installer rejects unmanaged collision/secrets and rollback is byte-exact (30.7692ms)
+✔ YAML installer rejects unsafe server names before interpreting or rendering them (6.6384ms)
+ℹ tests 647
+ℹ suites 0
+ℹ pass 647
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 363637.4342
