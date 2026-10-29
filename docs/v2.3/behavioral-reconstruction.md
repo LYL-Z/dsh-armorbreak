@@ -1,6 +1,6 @@
 # M5 — Authorized behavior contract and finite comparison
 
-Status: `IN_PROGRESS`. The implementation is deliberately offline: it normalizes caller-supplied observations and compares already-produced JSON results. It never compiles or starts a reference or candidate program.
+Status: `PARTIAL_LOCAL_TESTED` on source commit `7e42b1a5b5f1cf9c8833dd355b6c266cc62b15d3`. Windows/Node/Python local evidence is recorded in `docs/v2.3/evidence/m5/m5-validation.json`; CI and cross-platform verification remain outstanding. The implementation is deliberately offline: it normalizes caller-supplied observations and compares already-produced JSON results. It never compiles or starts a reference or candidate program.
 
 ## Contract source bundle
 
@@ -20,4 +20,4 @@ Limits: 4 MiB input, 300 observations/cases, 32 JSON nesting levels, 3,000 colle
 
 `tests/fixtures/m5` contains a JavaScript reference and a separate Python candidate for an account formatter, arithmetic evaluator, and gated state transition. The test harness actually invokes the self-authored Python file through a fixed executable plus argv, compares produced values, includes deliberately broken candidates, and records real timeout/nondeterministic outcomes as inconclusive. It exercises local fixture code only; the ArmorBreak capability receives only the generated JSON result bundle and does not execute either fixture.
 
-The exact-SHA M5 report will list per-case counts, fixture hashes, Python/Node versions, and tests. Current CI and cross-platform runs remain separate gates.
+The exact-SHA M5 report lists per-case counts, fixture hashes, Python/Node versions, and test logs. The test harness runs the authored reference/candidate fixtures locally before handing only their result bundle to ArmorBreak. Current CI and cross-platform runs remain separate gates.

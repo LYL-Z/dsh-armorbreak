@@ -1,0 +1,10 @@
+✔ M5 behavior comparison covers three executed JS/Python programs, broken candidates, timeout, and nondeterminism (1904.6902ms)
+✔ M5 contract preparation preserves certainty and requires evidence references (6.3712ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2016.8527
