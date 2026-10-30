@@ -34,6 +34,7 @@ function trackedEvidencePaths() {
       'scripts/v2/validate-v23-acceptance.mjs',
       'scripts/v2/v23-provenance.mjs',
       'scripts/v2/v23-release-gate.mjs',
+      'scripts/v2/v23-upgrade-rollback-drill.mjs',
       'scripts/v2/release-gates.mjs',
       'tests/v23-provenance.test.mjs',
       'tests/v23-release-gate.test.mjs',
