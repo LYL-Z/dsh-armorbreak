@@ -33,8 +33,13 @@ function trackedEvidencePaths() {
       'docs/releases/v2.3.0.md',
       'scripts/v2/validate-v23-acceptance.mjs',
       'scripts/v2/v23-provenance.mjs',
+      'scripts/v2/v23-release-gate.mjs',
+      'scripts/v2/release-gates.mjs',
+      'tests/v23-provenance.test.mjs',
+      'tests/v23-release-gate.test.mjs',
       '.github/workflows/ci.yml',
       '.github/workflows/v2.3-validation.yml',
+      '.github/workflows/v2.3-main-gate.yml',
     ].includes(path),
   )
   const p0hRoot = join(root, 'docs', 'v2.3', 'evidence', 'p0-h')
