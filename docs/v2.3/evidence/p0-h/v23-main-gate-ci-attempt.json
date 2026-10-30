@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "armorbreak.v2.3-main-gate-attempt/v1",
+  "capturedAt": "2026-10-30T08:26:43Z",
+  "exactHead": "c1c109453b12493b3ae9b8a76be4f271a820f835",
+  "runId": 41026002895,
+  "runUrl": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41026002895",
+  "workflowPath": ".github/workflows/v2.3-main-gate.yml",
+  "event": "push",
+  "status": "completed",
+  "conclusion": "failure",
+  "jobsObserved": 0,
+  "jobApi": "https://api.github.com/repos/LYL-Z/dsh-armorbreak/actions/runs/41026002895/jobs?per_page=100",
+  "jobApiResult": {
+    "total_count": 0,
+    "jobs": []
+  },
+  "logsApiResult": "HTTP 404; no logs were returned for this zero-job run",
+  "releaseReadiness": "NOT_READY",
+  "branchProtectionRead": "HTTP 403 Resource not accessible by integration",
+  "v22TagProtection": {
+    "rulesetId": 25816149,
+    "name": "ArmorBreak V2.2 Stable release tag protection",
+    "target": "tag",
+    "enforcement": "active"
+  },
+  "interpretation": "This is not a successful dedicated PR-event main-gate run. Root cause for the zero-job failure is not established from available GitHub evidence; do not infer that the candidate validation ran."
+}

@@ -1041,10 +1041,12 @@
         "docs/v2.3/acceptance-report.md",
         "docs/v2.3/evidence/p0-h/acceptance-manifest.json",
         "docs/v2.3/evidence/p0-h/upgrade-rollback-drill.json",
-        "docs/v2.3/evidence/p0-h/security-license-review-preliminary.json"
+        "docs/v2.3/evidence/p0-h/security-license-review-preliminary.json",
+        "docs/v2.3/evidence/p0-h/github-ci-current-head.json",
+        "docs/v2.3/evidence/p0-h/v23-main-gate-ci-attempt.json"
       ],
-      "ci": "HISTORICAL_PASS_PR_SHA_0795c4dd270f59cb60a006c756035da111e1d970_RUNS_40996527035_40996532452_40996526943_40996532448; NEW_SOURCE_SHA_26a3e8edc81bf950cc7cdde37e027607121e207b_CI_PENDING; EXACT_MAIN_NOT_RUN",
-      "limitation": "Synthetic isolated installer/data drill passed with byte hashes; it is not a real user-profile/package upgrade. Security/license record is explicitly non-independent AI pre-review. Independent human security/license review, exact-head CI for current source, exact-main CI, package/SBOM/attestation, repository protection verification, and maintainer authorization remain open."
+      "ci": "CURRENT_PR_HEAD_c1c109453b12493b3ae9b8a76be4f271a820f835_V23_RUN_41026010595_PASS_6_OF_6; INHERITED_PR_RUN_41026010642_PASS; DUPLICATE_PUSH_RUNS_41026004259_41026004165_PASS; DEDICATED_MAIN_GATE_RUN_41026002895_FAILURE_ZERO_JOBS; EXACT_MAIN_NOT_RUN",
+      "limitation": "P0-1 provenance and current exact-head CI pass. P0-3 is blocked because review is same-agent AI rather than independent human security/license review. P0-4 is only a synthetic filesystem/installer-state drill, not real package/profile migration or ACL/principal verification. P0-5 has no successful dedicated main-gate PR run (current run 41026002895 failed with zero jobs); branch-protection API returned 403; exact-main, package/SBOM/attestation, package version bump, and maintainer authorization remain open. Release remains NOT_READY."
     }
   ],
   "sourceSupportBaseline": [
@@ -1106,7 +1108,10 @@
   ],
   "sourceSupportCandidate": [
     {
-      "languages": ["JavaScript", "TypeScript"],
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
       "detectionLevel": "S1",
       "parsingLevel": "S2",
       "semanticLevel": "S2",
@@ -1123,19 +1128,49 @@
       ]
     },
     {
-      "languages": ["Python", "Java", "Go", "C", "C++", "PHP"],
+      "languages": [
+        "Python",
+        "Java",
+        "Go",
+        "C",
+        "C++",
+        "PHP"
+      ],
       "detectionLevel": "S1",
       "parsingLevel": "S0",
       "semanticLevel": "S0",
       "securityLevel": "S1",
       "reconstructionLevel": "S0",
-      "evidence": ["sast.scan", "lib/analyzers/sast/manifest.js"],
+      "evidence": [
+        "sast.scan",
+        "lib/analyzers/sast/manifest.js"
+      ],
       "limitations": [
         "Security coverage is bounded line-oriented pattern scanning; no AST, symbol graph, inter-file data flow, or language-general behavior reconstruction is claimed."
       ]
     },
     {
-      "languages": ["Rust", "C#", "Kotlin", "Swift", "Ruby", "Lua", "Shell", "Dart", "ArkTS", "SQL", "HTML", "CSS", "GraphQL", "HCL", "Nix", "HDL", "Shader", "Solidity", "Move"],
+      "languages": [
+        "Rust",
+        "C#",
+        "Kotlin",
+        "Swift",
+        "Ruby",
+        "Lua",
+        "Shell",
+        "Dart",
+        "ArkTS",
+        "SQL",
+        "HTML",
+        "CSS",
+        "GraphQL",
+        "HCL",
+        "Nix",
+        "HDL",
+        "Shader",
+        "Solidity",
+        "Move"
+      ],
       "detectionLevel": "S0",
       "parsingLevel": "S0",
       "semanticLevel": "S0",
@@ -1242,7 +1277,10 @@
         "targetKind": "file",
         "supportLevel": "S5",
         "status": "PARTIAL_LOCAL_TESTED",
-        "limitations": ["Consumes caller-supplied observations; evidence references and certainty labels are not independently authenticated.", "Does not parse arbitrary source or generate replacement code."]
+        "limitations": [
+          "Consumes caller-supplied observations; evidence references and certainty labels are not independently authenticated.",
+          "Does not parse arbitrary source or generate replacement code."
+        ]
       },
       {
         "id": "rebuild.compare",
@@ -1250,7 +1288,10 @@
         "targetKind": "file",
         "supportLevel": "S5",
         "status": "PARTIAL_LOCAL_TESTED",
-        "limitations": ["Compares pre-generated JSON outcomes only; ArmorBreak never executes either implementation.", "Finite fixture matches do not establish global behavioral equivalence."]
+        "limitations": [
+          "Compares pre-generated JSON outcomes only; ArmorBreak never executes either implementation.",
+          "Finite fixture matches do not establish global behavioral equivalence."
+        ]
       }
     ],
     "testEvidence": "docs/v2.3/evidence/m5/m5-validation.json"
@@ -1260,7 +1301,11 @@
     "capturedOn": "2026-10-29",
     "capabilityCount": 53,
     "domainCount": 12,
-    "capabilitiesByRisk": { "L0": 51, "L1": 1, "L2": 1 },
+    "capabilitiesByRisk": {
+      "L0": 51,
+      "L1": 1,
+      "L2": 1
+    },
     "capabilitiesByDomain": {
       "android": 6,
       "artifact": 2,
@@ -1283,12 +1328,22 @@
     "mcpWorkflowTool": {
       "id": "armorbreak_workflow",
       "status": "LOCAL_TESTED",
-      "actions": ["list", "start"],
+      "actions": [
+        "list",
+        "start"
+      ],
       "startRiskCeiling": "L0",
       "customStepsAccepted": false,
       "modelPrincipalOrApprovalAccepted": false
     },
-    "capabilityStatusFields": ["supportedLevels", "engine", "backendVersion", "status", "reason", "limitations"],
+    "capabilityStatusFields": [
+      "supportedLevels",
+      "engine",
+      "backendVersion",
+      "status",
+      "reason",
+      "limitations"
+    ],
     "catalogStatusMeaning": "REGISTERED_NOT_EXECUTED",
     "testEvidence": "docs/v2.3/evidence/m6/m6-validation.json"
   }
