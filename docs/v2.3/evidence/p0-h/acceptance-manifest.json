@@ -1,8 +1,8 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "98022468f90b11c3820041575c9fa18753c9789f",
-  "generatedAt": "2026-10-30T02:57:49.874Z",
+  "sourceCommit": "d53146706a760b8789b297f7445838c9b0a0a4c6",
+  "generatedAt": "2026-10-30T03:04:03.757Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     "docs/releases/v2.3.0.md": {
@@ -10,8 +10,8 @@
       "sha256": "21039ccca6fac1150bf049d5abbc500d3ab668a1e66731b202173547f61422ed"
     },
     "docs/v2.3/acceptance-report.md": {
-      "size": 10478,
-      "sha256": "512bc9ffda846cb20b1c6a6bf3fd91cf0f626ba99c0b4bc7b1b26ab1fe628853"
+      "size": 11840,
+      "sha256": "020fbd1eaf9b97373c143f441ae795de2a6264c1067bcb24b0f3aedc1e335f1e"
     },
     "docs/v2.3/architecture.md": {
       "size": 4621,
@@ -209,9 +209,17 @@
       "size": 4588,
       "sha256": "3b418fdc2af0f76145579b029c0a05a3a34fc7a1c636f55b8d2973d723849dbf"
     },
+    "docs/v2.3/evidence/p0-h/github-ci-run-40994705723.json": {
+      "size": 2880,
+      "sha256": "25c0831bb4ffa7ba264e17f421fcfbc094624a42bef7cdc645cf882de6e400f7"
+    },
     "docs/v2.3/evidence/p0-h/node22-local-validation.json": {
       "size": 2924,
       "sha256": "caaa29f811d203e369c7604c1368c95a60cba325733072f9a408460c8670836e"
+    },
+    "docs/v2.3/evidence/p0-h/npm-audit.json": {
+      "size": 625,
+      "sha256": "04b2e362f335e29d9d9aaa4e457a66de1661b68159148ff95998f532210242ad"
     },
     "docs/v2.3/fixture-catalog.json": {
       "size": 5027,
@@ -230,8 +238,8 @@
       "sha256": "7248f22f1a6f6f773c3343dcf4ca76d1d1d318df157e1c8ed095a6f2bc6e8ff3"
     },
     "scripts/v2/validate-v23-acceptance.mjs": {
-      "size": 8935,
-      "sha256": "fbc443ebb97053eeebe96fd385a404e066555423d53fe43e2d0fe1c3ed1c310f"
+      "size": 9457,
+      "sha256": "44aaa4c9229f6185ef467ba39de47591e10f009e9592d477c54ad85dd4c6c409"
     }
   }
 }

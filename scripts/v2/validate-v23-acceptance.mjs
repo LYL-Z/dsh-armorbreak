@@ -127,6 +127,15 @@ try {
 const records = manifest?.files
 if (!records || typeof records !== 'object' || Array.isArray(records)) fail('manifest files must be an object')
 else {
+  try {
+    const expectedPaths = trackedEvidencePaths()
+    const recordedPaths = Object.keys(records)
+    const unbound = expectedPaths.filter((path) => !Object.hasOwn(records, path))
+    const stale = recordedPaths.filter((path) => !expectedPaths.includes(path))
+    if (unbound.length || stale.length) fail(`manifest inventory mismatch; unbound: ${unbound.join(', ') || 'none'}; stale: ${stale.join(', ') || 'none'}`)
+  } catch (error) {
+    fail(`cannot enumerate evidence inventory: ${error?.message ?? error}`)
+  }
   const requiredStages = ['m0', 'm1', 'm2', 'm3', 'm4', 'm5', 'm6']
   for (const stage of requiredStages) {
     const present = Object.keys(records).some((path) => path.startsWith(`docs/v2.3/evidence/${stage}/`))
