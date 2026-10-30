@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       release:
-        description: 'Run fail-closed V2.3.0 release readiness checks'
+        description: 'Run fail-closed V2.3.0 release verification'
         required: true
         type: boolean
         default: false
@@ -18,13 +18,13 @@ permissions:
   contents: read
 
 concurrency:
-  group: v23-main-${{ github.event.pull_request.head.sha || github.sha }}
-  cancel-in-progress: true
+  group: v23-gate-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: false
 
 jobs:
-  candidate-validation:
-    if: ${{ github.event_name != 'push' || github.ref_type != 'tag' }}
-    name: V2.3 main check / exact candidate
+  pr-candidate-validation:
+    if: ${{ github.event_name == 'pull_request' }}
+    name: Node ${{ matrix.node }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -34,7 +34,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
@@ -43,30 +43,82 @@ jobs:
       - uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v5
         with:
           python-version: '3.11'
-      - name: Assert exact candidate SHA
+      - name: Assert exact PR candidate SHA
         shell: bash
         env:
-          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
         run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
       - name: Prepare repository-local test scratch root
-        run: node -e "require('node:fs').mkdirSync('.runtime/tmp', { recursive: true })"
+        run: >-
+          node -e "require('node:fs').mkdirSync('.runtime/tmp', { recursive: true })"
       - run: npm ci --no-audit --no-fund
       - run: node --test --test-concurrency=1
       - run: npm run typecheck
-      - name: Validate V2.3 evidence and docs
+      - name: Lint V2.3 workflow with pinned actionlint
+        if: ${{ matrix.os == 'ubuntu-latest' && matrix.node == '24' }}
+        run: docker run --rm -v "$GITHUB_WORKSPACE:/repo:ro" rhysd/actionlint@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667 /repo/.github/workflows/v2.3-main-gate.yml
+      - name: Validate V2.3 evidence and PR release contract
         env:
-          V23_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          V23_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+          V23_EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           node scripts/v2/validate-v23-acceptance.mjs
           node scripts/v2/check-docs-consistency.mjs
           node scripts/v2/v23-release-gate.mjs --check-pr
 
-  release-readiness:
-    if: ${{ (github.event_name == 'push' && github.ref_type == 'tag') || (github.event_name == 'workflow_dispatch' && inputs.release) }}
-    name: V2.3.0 release readiness (fail closed)
+  main-candidate-validation:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    name: Node ${{ matrix.node }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: ['22', '24']
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v5
+        with:
+          python-version: '3.11'
+      - name: Assert exact main SHA
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - name: Prepare repository-local test scratch root
+        run: >-
+          node -e "require('node:fs').mkdirSync('.runtime/tmp', { recursive: true })"
+      - run: npm ci --no-audit --no-fund
+      - run: node --test --test-concurrency=1
+      - run: npm run typecheck
+      - name: Lint V2.3 workflow with pinned actionlint
+        if: ${{ matrix.os == 'ubuntu-latest' && matrix.node == '24' }}
+        run: docker run --rm -v "$GITHUB_WORKSPACE:/repo:ro" rhysd/actionlint@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667 /repo/.github/workflows/v2.3-main-gate.yml
+      - name: Validate V2.3 evidence and main release contract
+        env:
+          V23_EXPECTED_HEAD: ${{ github.sha }}
+          V23_EXPECTED_SHA: ${{ github.sha }}
+        run: |
+          node scripts/v2/validate-v23-acceptance.mjs
+          node scripts/v2/check-docs-consistency.mjs
+          node scripts/v2/v23-release-gate.mjs --check-pr
+
+  build-and-attest-main-candidate:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    name: V2.3 main candidate build and provenance
+    needs: main-candidate-validation
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      id-token: write
+      attestations: write
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -75,11 +127,72 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 24
-      - name: Exact-tag integrity and release gate
+      - name: Assert exact attested source SHA
+        shell: bash
         env:
-          V23_EXPECTED_HEAD: ${{ github.sha }}
-          V23_EXPECTED_SHA: ${{ github.sha }}
+          EXPECTED_SHA: ${{ github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - run: npm ci --no-audit --no-fund
+      - name: Build reproducible candidate package and SBOM
+        run: node scripts/v2/build-release.mjs --out dist --evidence dist/release-build.json --no-portable-evidence
+      - name: Attest exact candidate package
+        id: attest
+        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2
+        with:
+          subject-path: dist/armorbreak-portable-*.tar.gz
+      - name: Verify attestation against exact main source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          gh attestation verify dist/armorbreak-portable-*.tar.gz \
+            --repo LYL-Z/dsh-armorbreak \
+            --signer-workflow LYL-Z/dsh-armorbreak/.github/workflows/v2.3-main-gate.yml \
+            --source-ref refs/heads/main --source-digest "$EXPECTED_SHA" --format json > dist/attestation-verification.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: v23-main-candidate-${{ github.sha }}
+          path: |
+            dist/armorbreak-portable-*.tar.gz
+            dist/armorbreak-portable-*.tar.gz.sbom.cdx.json
+            dist/armorbreak-portable-*.tar.gz.manifest.json
+            dist/attestation-verification.json
+          if-no-files-found: error
+          retention-days: 90
+
+  release-verification:
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/tags/v2.3.0') || (github.event_name == 'workflow_dispatch' && inputs.release) }}
+    name: V2.3.0 release verification
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      attestations: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+      - name: Exact tag and fail-closed V2.3 release gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_SHA: ${{ github.sha }}
+          V23_AUTH_ENVELOPE_PATH: ${{ runner.temp }}/v23-release-authorization.json
+          V23_AUTH_ENVELOPE_BASE64: ${{ secrets.V23_AUTH_ENVELOPE_BASE64 }}
+          V23_SECURITY_REVIEWER_PUBLIC_KEY: ${{ secrets.V23_SECURITY_REVIEWER_PUBLIC_KEY }}
+          V23_LICENSE_REVIEWER_PUBLIC_KEY: ${{ secrets.V23_LICENSE_REVIEWER_PUBLIC_KEY }}
+          V23_MAINTAINER_PUBLIC_KEY: ${{ secrets.V23_MAINTAINER_PUBLIC_KEY }}
         run: |
           test "$GITHUB_REF" = 'refs/tags/v2.3.0'
+          test -n "$V23_AUTH_ENVELOPE_BASE64"
+          printf '%s' "$V23_AUTH_ENVELOPE_BASE64" | base64 --decode > "$V23_AUTH_ENVELOPE_PATH"
+          CANDIDATE_RUN_ID="$(node -e "const e=require(process.env.V23_AUTH_ENVELOPE_PATH); process.stdout.write(String(e.claims.mainCi.runId))")"
+          test -n "$CANDIDATE_RUN_ID"
+          gh run download "$CANDIDATE_RUN_ID" --repo LYL-Z/dsh-armorbreak --name "v23-main-candidate-${GITHUB_SHA}" --dir dist
           node scripts/v2/validate-v23-acceptance.mjs
           node scripts/v2/v23-release-gate.mjs --release
