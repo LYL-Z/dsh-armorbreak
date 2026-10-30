@@ -1,8 +1,8 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "26a3e8edc81bf950cc7cdde37e027607121e207b",
-  "generatedAt": "2026-10-30T08:19:34.637Z",
+  "sourceCommit": "bf7d3d4d590d7ba2cc7d53edf548b1afc78687fd",
+  "generatedAt": "2026-10-30T08:22:12.892Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     ".github/workflows/ci.yml": {
@@ -10,8 +10,8 @@
       "sha256": "51df03dc303cab8c3b884f59364f8f7dcd56e3ad7618b50fe1c0eddbc8d29983"
     },
     ".github/workflows/v2.3-main-gate.yml": {
-      "size": 2781,
-      "sha256": "581237c34db8090be83f27ad12bf263f0a4b27904c5009b1cb00063256fbdb7f"
+      "size": 2927,
+      "sha256": "0655efd12880e61d1d120fc12f7bda81d4b79a8d4c6b5d9b1f6bcb8921ff379e"
     },
     ".github/workflows/v2.3-validation.yml": {
       "size": 4700,
@@ -298,8 +298,8 @@
       "sha256": "a875059f11a560b10242563fd36c18db1611968eaf6931e9fee707000c456475"
     },
     "tests/v23-release-gate.test.mjs": {
-      "size": 1791,
-      "sha256": "a1431d9e358d8cc09fd67c09988beb07b73635a59d8dc433d8be28a5c9e74edf"
+      "size": 1883,
+      "sha256": "4ee712ca27fcff5f8ecba4fbc933d64d55f36811b7cef219bf1eb58a99100003"
     }
   }
 }
