@@ -1,0 +1,18 @@
+✔ owned contrast corpus has 20 vulnerable/safe/lookalike groups and exact local scanner metrics (9.1455ms)
+✔ correlation preserves original sources while keeping evidence maturity separate from vulnerability status (3.4191ms)
+✔ same-family duplicates are observed, not independent corroboration; incomplete keys are kept separate (0.7378ms)
+✔ derived report strings redact credentials and absolute path components (0.738ms)
+✔ Trivy, explicit OSV matches, CycloneDX and snapshot provenance remain offline and unconverted (1.9605ms)
+✔ invalid hashes, unsupported sources, and over-limit source counts fail closed (2.0092ms)
+✔ Runner executes UniversalSecurityReview on a local bundle and writes valid JSON/SARIF artifacts (860.9652ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 988.8158
+
+verifiedCommit=23af85c900e54a2ac0f6bdf93ce2aad34b65d263
+exitCode=0

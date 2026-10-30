@@ -1,0 +1,194 @@
+{
+  "schemaVersion": "armorbreak.v2.3.milestone-tests/v1",
+  "milestone": "M2",
+  "status": "PARTIAL_LOCAL_TESTED",
+  "generatedAt": "2026-10-27T09:17:09.264Z",
+  "sourceCommit": "47b5869a7d18e32c057aa6d2083693f920a21340",
+  "branch": "feature/v2.3-universal-program-intelligence",
+  "environment": {
+    "os": "win32 10.0.26300 x64",
+    "node": "v24.16.0",
+    "npm": "11.13.0",
+    "typescript": "5.9.3",
+    "packageVersion": "2.2.0",
+    "tempVolume": "D:",
+    "portableIsolationTempRootOutsideWorktree": "same-volume sibling temp root outside the worktree"
+  },
+  "runtimeSnapshot": {
+    "path": "docs/v2.3/evidence/m2/current-registry.json",
+    "capabilityCount": 49,
+    "domainCount": 10,
+    "workflowCount": 11,
+    "registryDiagnostics": 0,
+    "dockerL1Available": false,
+    "dockerDaemonState": "UNAVAILABLE",
+    "dockerProviderState": "Installed"
+  },
+  "verifiedScope": {
+    "languages": [
+      "JavaScript",
+      "TypeScript"
+    ],
+    "supportLevel": "S2",
+    "deterministicPositiveFixturesPerLanguage": 5,
+    "deterministicNegativeFixturesPerLanguage": 5,
+    "parser": "TypeScript Compiler API",
+    "parserVersion": "5.9.3",
+    "fixtureSource": "tests/program-intelligence-source.test.mjs",
+    "fixtureSourceSha256": "b5a895686f8f2205603c4078692933fcb0365f6394ea66f327a6747e76767bfc",
+    "noSourceExecutionSentinelTested": true,
+    "thirdPartyRepositoryAccuracyClaims": false
+  },
+  "runs": [
+    {
+      "id": "npm-ci",
+      "command": "npm ci --ignore-scripts",
+      "outcome": "PASS",
+      "exitCode": 0,
+      "log": {
+        "path": "docs/v2.3/evidence/m2/npm-ci.log",
+        "bytes": 25,
+        "sha256": "f2a59920b7bb73f83ad4f8b1d8a245309cae6f3b4fcf1650759b421d16c7b6f6"
+      }
+    },
+    {
+      "id": "dependency-resolution",
+      "command": "npm ls typescript --depth=0",
+      "outcome": "PASS",
+      "exitCode": 0,
+      "log": {
+        "path": "docs/v2.3/evidence/m2/npm-typescript.log",
+        "bytes": 88,
+        "sha256": "05a89347ad1aa09c876988f015d1c5b045d17313dca9fe18b2011fdc49e28890"
+      }
+    },
+    {
+      "id": "focused-source-exact-commit",
+      "command": "node --test tests/program-intelligence-source.test.mjs",
+      "outcome": "PASS",
+      "exitCode": 0,
+      "tests": 30,
+      "passed": 30,
+      "failed": 0,
+      "durationMs": 1210.1244,
+      "log": {
+        "path": "docs/v2.3/evidence/m2/source-tests-postcommit.log",
+        "bytes": 2357,
+        "sha256": "4f40f977c3bc54e98d0578ac344b09ef4477f4b39e336f3a989efc826c57bbba"
+      }
+    },
+    {
+      "id": "release-and-portable-exact-commit",
+      "command": "node --test tests/portable-artifact.test.mjs tests/release-build.test.mjs",
+      "outcome": "PASS",
+      "exitCode": 0,
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "durationMs": 7493.2112,
+      "log": {
+        "path": "docs/v2.3/evidence/m2/package-tests.log",
+        "bytes": 316,
+        "sha256": "2a0764af80bef1e6eeecd8271350159ec37635be489f5121038446fdde9942ec"
+      }
+    },
+    {
+      "id": "typecheck-exact-commit",
+      "command": "npm run typecheck",
+      "outcome": "PASS",
+      "exitCode": 0,
+      "log": {
+        "path": "docs/v2.3/evidence/m2/typecheck-postcommit.log",
+        "bytes": 62,
+        "sha256": "be1de938e1878b0f813efa18e6f85d5b2d36dd2e33247901bdb91d5ad6c92d45"
+      }
+    },
+    {
+      "id": "path-and-hardlink-regression-files",
+      "command": "node --test tests/evidence-manifest-builder.test.mjs tests/mcp-server.test.mjs tests/safe-evidence-file.test.mjs",
+      "outcome": "PASS_SAME_VOLUME",
+      "exitCode": 0,
+      "tests": 14,
+      "passed": 14,
+      "failed": 0,
+      "durationMs": 5709.8038,
+      "log": {
+        "path": "docs/v2.3/evidence/m2/cross-volume-repro.log",
+        "bytes": 1427,
+        "sha256": "93f075edd54bfac1103f128c4fd55773163252e383f129316d935eaa15acdca5"
+      },
+      "tempRoot": "worktree-local same-volume temp root"
+    },
+    {
+      "id": "full-suite-default-c-drive-temp",
+      "command": "npm test",
+      "outcome": "ENVIRONMENT_FAILURE_CROSS_VOLUME",
+      "exitCode": 1,
+      "tests": 630,
+      "passed": 624,
+      "failed": 6,
+      "log": {
+        "path": "docs/v2.3/evidence/m2/full-test.log",
+        "bytes": 79610,
+        "sha256": "8fe85d3e6c56a345487b62eab7cf18bf2708539764a01f145dcf24c3dd5f3586"
+      },
+      "diagnosis": "Five evidence path cases failed with Windows safe-path refusal or EXDEV because TEMP/TMP were on C: while the checkout was on D:; the sixth concurrent rename case was a consequence of failed temp-file setup. The same affected test files pass when TEMP/TMP are placed on D:.",
+      "durationMs": 179380.6998
+    },
+    {
+      "id": "portable-test-temp-inside-worktree",
+      "command": "npm test",
+      "outcome": "TEST_FIXTURE_DEPENDENCY_LEAK",
+      "exitCode": 1,
+      "tests": 630,
+      "passed": 629,
+      "failed": 1,
+      "log": {
+        "path": "docs/v2.3/evidence/m2/full-test-same-volume.log",
+        "bytes": 71913,
+        "sha256": "0622f1849caebc568f7ac6d486952ed767f4cc8df0f1930b174bc228c92b973e"
+      },
+      "diagnosis": "The extracted clean-room test directory was nested under the worktree, so Node resolved the worktree node_modules/typescript from an ancestor. This was test-environment contamination, not an artifact dependency; the isolated sibling-temp run below confirms the packaged archive omits TypeScript.",
+      "durationMs": 177862.8354
+    },
+    {
+      "id": "portable-test-isolated-sibling-temp",
+      "command": "node --test tests/portable-artifact.test.mjs",
+      "outcome": "PASS",
+      "exitCode": 0,
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "durationMs": 3389.1058,
+      "log": {
+        "path": "docs/v2.3/evidence/m2/portable-isolated-temp.log",
+        "bytes": 216,
+        "sha256": "b80f8e8b14365051fabaeaa8f791cd57a23e2f574cd562a205cb2da551849223"
+      },
+      "tempRoot": "same-volume sibling temp root outside the worktree"
+    },
+    {
+      "id": "full-suite-exact-commit-isolated-same-volume",
+      "command": "npm test",
+      "outcome": "PASS",
+      "exitCode": 0,
+      "tests": 630,
+      "passed": 630,
+      "failed": 0,
+      "durationMs": 184755.3628,
+      "log": {
+        "path": "docs/v2.3/evidence/m2/full-test-same-volume-isolated.log",
+        "bytes": 68972,
+        "sha256": "c1e3754d62ec798f07dfe55536cfc085c405d18b6a278489420a45e94e1556d1"
+      },
+      "tempRoot": "same-volume sibling temp root outside the worktree"
+    }
+  ],
+  "ci": "NOT_RUN",
+  "limitations": [
+    "M2 remains partial: only JavaScript/TypeScript S2 is implemented.",
+    "No Python, Java, C/C++, Go, Rust, or C# parser backend; no four-language S3 semantics.",
+    "No CI, cross-platform Ubuntu run, third-party repository accuracy study, independent review, or release gate was run.",
+    "Docker CLI 29.8.1 is installed but the Linux daemon pipe is unavailable; no L1 isolated process authorization is claimed."
+  ]
+}

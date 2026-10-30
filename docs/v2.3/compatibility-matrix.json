@@ -1,0 +1,1352 @@
+{
+  "schemaVersion": "armorbreak.v2.3.compatibility-matrix/v1",
+  "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
+  "capturedOn": "2026-10-30",
+  "supportLevels": {
+    "S0": "safe intake or explicit refusal of unknown input",
+    "S1": "identification or inventory with evidence",
+    "S2": "format/AST structure with source locations",
+    "S3": "semantic navigation such as calls/data-flow with bounded scope",
+    "S4": "security evidence corroboration and controlled validation",
+    "S5": "bounded behavior-contract comparison against an explicit case set"
+  },
+  "runtimeBaseline": {
+    "capabilityCount": 46,
+    "domainCount": 8,
+    "capabilitiesByRisk": {
+      "L0": 44,
+      "L1": 1,
+      "L2": 1
+    },
+    "capabilitiesByDomain": {
+      "android": 6,
+      "binary": 7,
+      "ctf": 5,
+      "forensics": 6,
+      "live": 2,
+      "network": 8,
+      "sast": 8,
+      "web": 4
+    },
+    "workflowCount": 9,
+    "dshModelToolCount": 10,
+    "mcpToolCount": 7,
+    "skillCount": 7,
+    "registryDiagnostics": []
+  },
+  "legacyCapabilities": [
+    {
+      "id": "android.apk_structure",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "android.dex",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "android.findings",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "android.jadx",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "android.manifest",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "android.signing",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "binary.behavior",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "binary.entropy",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "binary.ghidra",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "binary.headers",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "binary.identify",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "binary.strings",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "binary.structure",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.classify",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.crypto_basics",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.decode",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.flag_scan",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.hash_id",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.filetype",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.hash",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.ioc",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.metadata",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.timeline",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.yara_lite",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "live.container_exec",
+      "domain": "live",
+      "riskLevel": "L1",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": [
+        "docker"
+      ]
+    },
+    {
+      "id": "live.http_probe",
+      "domain": "live",
+      "riskLevel": "L2",
+      "targetKind": "network",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "network.anomalies",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "network.dns",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "network.flows",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "network.http",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "network.iocs",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "network.pcap_overview",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "network.tls",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "network.tshark",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "sast.deps",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "sast.patch_suggestion",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "sast.sbom",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "sast.scan",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "sast.secrets",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "sast.semgrep",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": [
+        "semgrep"
+      ]
+    },
+    {
+      "id": "sast.syft",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "sast.trivy",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": [
+        "trivy"
+      ]
+    },
+    {
+      "id": "web.har",
+      "domain": "web",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "web.headers",
+      "domain": "web",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "web.http_message",
+      "domain": "web",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    },
+    {
+      "id": "web.openapi",
+      "domain": "web",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "baselineStatus": "REGISTERED_AT_BASELINE",
+      "verification": "REGISTRATION_AND_FULL_BASELINE_SUITE_ONLY",
+      "externalTools": []
+    }
+  ],
+  "existingArtifactSupport": [
+    {
+      "artifact": "PE",
+      "detectionLevel": "S2",
+      "parsingLevel": "S2",
+      "semanticLevel": "S1",
+      "securityLevel": "S1",
+      "reconstructionLevel": "S0",
+      "evidence": [
+        "binary.identify",
+        "binary.headers",
+        "binary.structure"
+      ],
+      "limitations": [
+        "No normalized instruction-level IR or validated complete call graph at baseline."
+      ]
+    },
+    {
+      "artifact": "ELF",
+      "detectionLevel": "S2",
+      "parsingLevel": "S2",
+      "semanticLevel": "S1",
+      "securityLevel": "S1",
+      "reconstructionLevel": "S0",
+      "evidence": [
+        "binary.identify",
+        "binary.headers",
+        "binary.structure"
+      ],
+      "limitations": [
+        "Function-count estimates and heuristics are not complete disassembly."
+      ]
+    },
+    {
+      "artifact": "Mach-O",
+      "detectionLevel": "S2",
+      "parsingLevel": "S2",
+      "semanticLevel": "S1",
+      "securityLevel": "S1",
+      "reconstructionLevel": "S0",
+      "evidence": [
+        "binary.identify",
+        "binary.headers",
+        "binary.structure"
+      ],
+      "limitations": [
+        "Function-count estimates and heuristics are not complete disassembly."
+      ]
+    },
+    {
+      "artifact": "Android APK/DEX",
+      "detectionLevel": "S2",
+      "parsingLevel": "S2",
+      "semanticLevel": "S1",
+      "securityLevel": "S1",
+      "reconstructionLevel": "S0",
+      "evidence": [
+        "android.apk_structure",
+        "android.manifest",
+        "android.dex",
+        "android.jadx"
+      ],
+      "limitations": [
+        "JADX was detected but no real target-analysis E2E was run at baseline."
+      ]
+    },
+    {
+      "artifact": "ZIP/archives",
+      "detectionLevel": "S1",
+      "parsingLevel": "S1",
+      "semanticLevel": "S0",
+      "securityLevel": "S0",
+      "reconstructionLevel": "S0",
+      "evidence": [
+        "forensics.metadata"
+      ],
+      "limitations": [
+        "No safe recursive artifact graph or universal intake pipeline at baseline."
+      ]
+    }
+  ],
+  "sourceSupport": [
+    {
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "detectionLevel": "S1",
+      "parsingLevel": "S2",
+      "semanticLevel": "S1",
+      "securityLevel": "S1",
+      "reconstructionLevel": "S0",
+      "evidence": [
+        "source.symbols"
+      ],
+      "limitations": [
+        "Same-file symbol references only; no inter-file linking, type-aware navigation, call graph, or data flow."
+      ]
+    },
+    {
+      "languages": [
+        "Python",
+        "Java",
+        "Go",
+        "C",
+        "C++",
+        "PHP"
+      ],
+      "detectionLevel": "S1",
+      "parsingLevel": "S0",
+      "semanticLevel": "S0",
+      "securityLevel": "S1",
+      "reconstructionLevel": "S0",
+      "evidence": [
+        "sast.scan"
+      ],
+      "limitations": [
+        "Existing bounded pattern scanner only; no AST or source-symbol backend verified in M2."
+      ]
+    },
+    {
+      "languages": [
+        "Rust",
+        "C#",
+        "Kotlin",
+        "Swift",
+        "Ruby",
+        "Lua",
+        "Shell",
+        "Dart",
+        "ArkTS",
+        "SQL",
+        "HTML",
+        "CSS",
+        "GraphQL",
+        "HCL",
+        "Nix",
+        "HDL",
+        "Shader",
+        "Solidity",
+        "Move"
+      ],
+      "detectionLevel": "S0",
+      "parsingLevel": "S0",
+      "semanticLevel": "S0",
+      "securityLevel": "S0",
+      "reconstructionLevel": "S0",
+      "evidence": [],
+      "limitations": [
+        "No language-specific M2 parser or semantic backend was verified; file-extension candidates are not semantic support."
+      ]
+    }
+  ],
+  "externalTools": [
+    {
+      "id": "ghidra",
+      "name": "Ghidra",
+      "status": "DETECTED",
+      "version": "12.1.4 (install directory)",
+      "versionEvidence": "analyzeHeadless -help returned usage; version not independently printed",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "jadx",
+      "name": "JADX",
+      "status": "DETECTED",
+      "version": "1.5.6",
+      "versionEvidence": "PowerShell jadx --version exited 0; Core Health execFile probe returned spawn EINVAL",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "semgrep",
+      "name": "Semgrep",
+      "status": "DETECTED",
+      "version": "1.181.0",
+      "versionEvidence": "PowerShell semgrep --version exited 0; Core Health execFile probe failed; no sample scan run",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "trivy",
+      "name": "Trivy",
+      "status": "DETECTED",
+      "version": "0.76.0",
+      "versionEvidence": "PowerShell trivy --version exited 0; local vulnerability DB reported present",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "syft",
+      "name": "Syft",
+      "status": "DETECTED",
+      "version": "1.54.1",
+      "versionEvidence": "PowerShell syft version exited 0",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "tshark",
+      "name": "TShark",
+      "status": "DETECTED",
+      "version": "4.6.9",
+      "versionEvidence": "PowerShell tshark -v exited 0",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    }
+  ],
+  "dependencyDeclarationGaps": [
+    "binary.ghidra",
+    "android.jadx",
+    "sast.syft",
+    "network.tshark"
+  ],
+  "isolation": {
+    "status": "BLOCKED",
+    "dockerVersion": "29.8.1",
+    "reason": "Docker CLI exists; local Docker Linux engine pipe is unavailable; HealthService isolation.available=false",
+    "ciBenignPinnedContainerPath": "PASS_ON_EXACT_PR_HEAD_RUN_40995701875",
+    "ciRealDockerIntegration": "PASS_ON_EXACT_PR_HEAD_RUN_40995701865",
+    "claimBoundary": "Hosted CI runner evidence does not establish this host's local daemon readiness or hostile-sample isolation certification."
+  },
+  "v23Features": [
+    {
+      "id": "artifact.identify",
+      "priority": "P0",
+      "status": "IMPLEMENTED_LOCAL_TESTED",
+      "verified": true,
+      "supportLevel": "S1",
+      "ci": "PASS_FULL_SUITE_AND_TYPECHECK_EXACT_PR_HEAD_RUN_40995701875",
+      "evidence": "docs/v2.3/evidence/m1/test-results.json"
+    },
+    {
+      "id": "artifact.inventory",
+      "priority": "P0",
+      "status": "IMPLEMENTED_LOCAL_TESTED",
+      "verified": true,
+      "supportLevel": "S1",
+      "ci": "PASS_FULL_SUITE_AND_TYPECHECK_EXACT_PR_HEAD_RUN_40995701875",
+      "evidence": "docs/v2.3/evidence/m1/test-results.json"
+    },
+    {
+      "id": "source.symbols",
+      "priority": "P0",
+      "status": "PARTIAL_LOCAL_TESTED",
+      "verified": true,
+      "supportLevel": "S2",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "ci": "PASS_FULL_SUITE_AND_TYPECHECK_EXACT_PR_HEAD_RUN_40995701875",
+      "evidence": "docs/v2.3/evidence/m2/test-results.json",
+      "limitations": [
+        "Python, Java, C/C++, Go, Rust, C# S2 and four-language S3 remain unimplemented."
+      ]
+    },
+    {
+      "id": "source.flows",
+      "priority": "P0",
+      "status": "NOT_IMPLEMENTED",
+      "verified": false
+    },
+    {
+      "id": "bytecode.inspect",
+      "priority": "P0",
+      "status": "NOT_IMPLEMENTED",
+      "verified": false
+    },
+    {
+      "id": "binary.program_ir",
+      "priority": "P0",
+      "status": "PARTIAL_LOCAL_REAL_TOOL_E2E",
+      "verified": true,
+      "supportLevel": "S2",
+      "formats": [
+        "PE",
+        "ELF",
+        "Mach-O"
+      ],
+      "ghidraVersion": "12.1.4",
+      "ci": "UNIT_AND_CONTRACT_SUITE_PASS_EXACT_PR_HEAD; REAL_GHIDRA_E2E_REMAINS_LOCAL_ONLY",
+      "evidence": "docs/v2.3/evidence/m3/native-ghidra-runner-e2e.json",
+      "limitations": [
+        "Static function/basic-block/call-edge evidence only; bounded output is partial and not recovered source or proof of behavior.",
+        "PE base relocations are not decoded; ELF and Mach-O relocation entries are not decoded.",
+        "No hostile input, OS-level sandbox, macOS runtime, real Ghidra E2E in CI, or P1 bytecode E2E was verified."
+      ]
+    },
+    {
+      "id": "security.correlate",
+      "priority": "P0",
+      "status": "PARTIAL_LOCAL_TESTED",
+      "verified": true,
+      "supportLevel": "S3",
+      "riskLevel": "L0",
+      "evidence": [
+        "docs/v2.3/evidence/m4/m4-validation.json",
+        "docs/v2.3/evidence/m4/focused-tests.log",
+        "docs/v2.3/evidence/m4/typecheck.log",
+        "docs/v2.3/evidence/m4/full-test.log",
+        "docs/v2.3/evidence/m4/vulnerability-corpus-metrics.json"
+      ],
+      "ci": "PASS_FULL_SUITE_AND_TYPECHECK_EXACT_PR_HEAD_RUN_40995701875",
+      "limitations": [
+        "Consumes a prepared offline evidence bundle and does not invoke scanners.",
+        "No advisory fetching or OSV version-range matching; imported claims remain not_tested.",
+        "Corpus metrics are limited to 60 authored snippets; no real-world detection rate is claimed.",
+        "Independent vulnerability validation and real-world detection-rate evidence remain outstanding."
+      ]
+    },
+    {
+      "id": "rebuild.contract",
+      "priority": "P0",
+      "status": "NOT_IMPLEMENTED",
+      "verified": false
+    },
+    {
+      "id": "rebuild.compare",
+      "priority": "P0",
+      "status": "NOT_IMPLEMENTED",
+      "verified": false
+    }
+  ],
+  "postBaselineEnvironment": {
+    "observedOn": "2026-10-26",
+    "docker": {
+      "cliVersion": "29.8.1",
+      "serverVersion": "29.8.1",
+      "operatingSystem": "linux",
+      "architecture": "x86_64",
+      "daemon": "CONNECTED"
+    },
+    "armorbreakIsolation": {
+      "probeCommand": "IsolationProviderManager.diagnose({fresh:true})",
+      "beforeSelfTest": "DaemonReady",
+      "selfTestCommand": "IsolationProviderManager.selfTest('docker')",
+      "selfTestResult": "PASS",
+      "image": "busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662",
+      "constraints": [
+        "--pull=never",
+        "--network=none",
+        "--read-only",
+        "--cap-drop=ALL",
+        "--security-opt=no-new-privileges",
+        "--user=65534:65534",
+        "--pids-limit=64",
+        "--memory=128m",
+        "--cpus=1"
+      ],
+      "afterSelfTest": "IsolationVerified",
+      "sampleProgramExecuted": false,
+      "note": "The harmless pinned-container self-test ran against an ignored task-local state root. This records current infrastructure evidence; it does not run an analyzed sample or change the frozen M0 baseline snapshot."
+    }
+  },
+  "postImplementationCurrentRuntime": {
+    "sourceCommit": "e57287f5abc9fb9ba86cb686736f67f3ab030357",
+    "capturedOn": "2026-10-29",
+    "capabilityCount": 50,
+    "domainCount": 10,
+    "capabilitiesByRisk": {
+      "L0": 48,
+      "L1": 1,
+      "L2": 1
+    },
+    "capabilitiesByDomain": {
+      "android": 6,
+      "artifact": 2,
+      "binary": 8,
+      "ctf": 5,
+      "forensics": 6,
+      "live": 2,
+      "network": 8,
+      "sast": 8,
+      "source": 1,
+      "web": 4
+    },
+    "workflowCount": 12,
+    "dshModelToolCount": 10,
+    "mcpToolCount": 7,
+    "skillCount": 7,
+    "registryDiagnostics": [],
+    "newArtifactCapabilities": [
+      {
+        "id": "artifact.identify",
+        "riskLevel": "L0",
+        "targetKind": "file",
+        "supportLevel": "S1",
+        "status": "IMPLEMENTED_LOCAL_TESTED"
+      },
+      {
+        "id": "artifact.inventory",
+        "riskLevel": "L0",
+        "targetKind": "directory",
+        "supportLevel": "S1",
+        "status": "IMPLEMENTED_LOCAL_TESTED"
+      }
+    ],
+    "newSourceCapability": {
+      "id": "source.symbols",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "supportLevel": "S2",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "status": "PARTIAL_LOCAL_TESTED",
+      "evidence": "docs/v2.3/evidence/m2/test-results.json"
+    },
+    "newNativeCapability": {
+      "id": "binary.program_ir",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "supportLevel": "S2",
+      "formats": [
+        "PE",
+        "ELF",
+        "Mach-O"
+      ],
+      "status": "PARTIAL_LOCAL_REAL_TOOL_E2E",
+      "evidence": "docs/v2.3/evidence/m3/native-ghidra-runner-e2e.json"
+    },
+    "l1IsolationDiagnostic": {
+      "observedOn": "2026-10-29",
+      "available": false,
+      "verified": false,
+      "provider": "docker",
+      "state": "DaemonUnavailable",
+      "reason": "Docker CLI found but daemon is not usable; dockerDesktopLinuxEngine named pipe is missing",
+      "dockerState": "DaemonUnavailable",
+      "dockerVersion": "Docker version 29.8.1, build 4a63305",
+      "dockerReason": "CLI 已安装，但守护进程不可用：docker info --format {{.ServerVersion}} failed: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.\n",
+      "podmanState": "NotFound",
+      "wsl2State": "Installed",
+      "wsl2TrustedAsL1": false
+    }
+  },
+  "v23Workflows": [
+    {
+      "id": "UniversalArtifactTriage",
+      "priority": "P0",
+      "status": "IMPLEMENTED_LOCAL_TESTED",
+      "verified": true,
+      "targetKind": "directory",
+      "evidence": "docs/v2.3/evidence/m1/test-results.json",
+      "ci": "PASS_EXACT_PR_HEAD_RUN_40995701875"
+    },
+    {
+      "id": "CrossLanguageSourceReview",
+      "priority": "P0",
+      "status": "PARTIAL_LOCAL_TESTED",
+      "verified": true,
+      "targetKind": "directory",
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "evidence": "docs/v2.3/evidence/m2/test-results.json",
+      "ci": "PASS_EXACT_PR_HEAD_RUN_40995701875"
+    },
+    {
+      "id": "NativeProgramIRReview",
+      "priority": "P0",
+      "status": "PARTIAL_LOCAL_REAL_TOOL_E2E",
+      "verified": true,
+      "targetKind": "file",
+      "evidence": "docs/v2.3/evidence/m3/native-ghidra-runner-e2e.json",
+      "limitations": [
+        "Only the native binary Program IR path was run through the real Ghidra backend; bytecode and package adapters were not included. The exact-head CI suite does not install or run Ghidra."
+      ],
+      "ci": "UNIT_AND_CONTRACT_PASS_EXACT_PR_HEAD_RUN_40995701875"
+    },
+    {
+      "id": "UniversalSecurityReview",
+      "priority": "P0",
+      "status": "PARTIAL_LOCAL_TESTED",
+      "verified": true,
+      "targetKind": "file",
+      "evidence": [
+        "docs/v2.3/evidence/m4/m4-validation.json",
+        "docs/v2.3/evidence/m4/focused-tests.log"
+      ],
+      "ci": "PASS_EXACT_PR_HEAD_RUN_40995701875",
+      "limitations": [
+        "Consumes an explicitly prepared local bundle; does not invoke upstream scanners.",
+        "Independent review and vulnerability validation remain outstanding."
+      ]
+    },
+    {
+      "id": "AuthorizedBehaviorReconstruction",
+      "priority": "P0",
+      "status": "PARTIAL_LOCAL_TESTED",
+      "verified": true,
+      "targetKind": "file",
+      "evidence": "docs/v2.3/evidence/m5/m5-validation.json",
+      "ci": "PASS_EXACT_PR_HEAD_RUN_40995701875",
+      "limitations": [
+        "Uses three authored fixture programs, but the capability compares caller-supplied precomputed results and does not infer arbitrary source behavior.",
+        "Timeout and nondeterminism are represented as inconclusive; the M5 suite requires the pinned Python 3.11 fixture runtime."
+      ]
+    },
+    {
+      "id": "UniversalProgramIntelligenceAccess",
+      "priority": "P0",
+      "status": "PARTIAL_LOCAL_TESTED",
+      "verified": true,
+      "targetKind": "file",
+      "evidence": "docs/v2.3/evidence/m6/m6-validation.json",
+      "ci": "PASS_EXACT_PR_HEAD_RUN_40995701875",
+      "limitations": [
+        "MCP workflow start is fixed to registered workflows with L0 steps; no arbitrary commands or caller-supplied steps are accepted.",
+        "Registry status means registered, not executed; exact CI verifies contracts, not per-target completeness."
+      ]
+    }
+  ],
+  "milestones": [
+    {
+      "id": "M0",
+      "status": "BASELINE_FROZEN",
+      "sourceCommit": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
+      "evidence": "docs/v2.3/evidence/m0/test-results.json"
+    },
+    {
+      "id": "M1",
+      "status": "IMPLEMENTED_LOCAL_TESTED",
+      "sourceCommit": "3135688b3a5cbea89798bc0c61a2a45abfa38312",
+      "evidence": "docs/v2.3/evidence/m1/test-results.json",
+      "ci": "PASS_FULL_SUITE_EXACT_PR_HEAD_RUN_40995701875"
+    },
+    {
+      "id": "M2",
+      "status": "PARTIAL_LOCAL_TESTED",
+      "sourceCommit": "47b5869a7d18e32c057aa6d2083693f920a21340",
+      "evidence": "docs/v2.3/evidence/m2/test-results.json",
+      "ci": "PASS_FULL_SUITE_EXACT_PR_HEAD_RUN_40995701875",
+      "limitation": "Only JS/TS S2 is implemented; taskbook core-language S1-S2 breadth and four-language S3 are incomplete."
+    },
+    {
+      "id": "M3",
+      "status": "PARTIAL_LOCAL_TESTED",
+      "sourceCommit": "e57287f5abc9fb9ba86cb686736f67f3ab030357",
+      "nativeP0Gate": "LOCAL_REAL_GHIDRA_E2E_PASS",
+      "evidence": "docs/v2.3/evidence/m3/m3-validation.json",
+      "ci": "UNIT_AND_CONTRACT_PASS_EXACT_PR_HEAD_RUN_40995701875",
+      "limitation": "P1 APK/DEX/AAB and JVM/.NET/WASM/Python/Lua/HAP bytecode coverage remains deferred or unverified; no hostile-input isolation or macOS runtime was tested."
+    },
+    {
+      "id": "M4",
+      "status": "PARTIAL_LOCAL_TESTED",
+      "ci": "PASS_FULL_SUITE_EXACT_PR_HEAD_RUN_40995701875",
+      "sourceCommit": "23af85c900e54a2ac0f6bdf93ce2aad34b65d263",
+      "evidence": [
+        "docs/v2.3/evidence/m4/m4-validation.json",
+        "docs/v2.3/evidence/m4/focused-tests.log",
+        "docs/v2.3/evidence/m4/typecheck.log",
+        "docs/v2.3/evidence/m4/full-test.log",
+        "docs/v2.3/evidence/m4/vulnerability-corpus-metrics.json"
+      ],
+      "limitation": "Exact-head full suite and typecheck passed on Windows and Ubuntu with Node 22/24. Independent vulnerability validation and real-world detection-rate evidence remain outstanding."
+    },
+    {
+      "id": "M5",
+      "status": "PARTIAL_LOCAL_TESTED",
+      "sourceCommit": "7e42b1a5b5f1cf9c8833dd355b6c266cc62b15d3",
+      "evidence": "docs/v2.3/evidence/m5/m5-validation.json",
+      "ci": "PASS_FULL_SUITE_AND_TYPECHECK_EXACT_PR_HEAD_RUN_40995701875",
+      "limitation": "Three authored JS/Python reference/candidate fixture families were locally exercised; ArmorBreak consumes the resulting JSON only. No general source inference or global equivalence claim."
+    },
+    {
+      "id": "M6",
+      "status": "PARTIAL_LOCAL_TESTED",
+      "sourceCommit": "965fbe4fa9abd2af73644865a56d8db64c8a6089",
+      "evidence": "docs/v2.3/evidence/m6/m6-validation.json",
+      "ci": "PASS_FULL_SUITE_AND_TYPECHECK_EXACT_PR_HEAD_RUN_40995701875",
+      "limitation": "Fixed MCP route and status contract are tested; registry status is not per-target execution or completeness evidence."
+    },
+    {
+      "id": "P0-H",
+      "status": "IN_PROGRESS",
+      "evidence": [
+        "docs/v2.3/acceptance-report.md",
+        "docs/v2.3/evidence/p0-h/acceptance-manifest.json",
+        "docs/v2.3/evidence/p0-h/upgrade-rollback-drill.json",
+        "docs/v2.3/evidence/p0-h/security-license-review-preliminary.json",
+        "docs/v2.3/evidence/p0-h/github-ci-current-head.json",
+        "docs/v2.3/evidence/p0-h/v23-main-gate-ci-attempt.json",
+        "docs/v2.3/evidence/p0-h/github-ci-current-head-7bf3078.json",
+        "docs/v2.3/evidence/p0-h/v23-main-gate-ci-attempt-7bf3078.json"
+      ],
+      "ci": "CURRENT_PR_HEAD_7bf30788e387d916403f74ba5fc190e2bf9e8a17_V23_PR_RUN_41026982720_PASS_6_OF_6; INHERITED_PR_RUN_41026982814_PASS; DUPLICATE_PUSH_RUNS_41026973927_41026973788_PASS; DEDICATED_MAIN_GATE_PUSH_RUN_41026971941_FAILURE_ZERO_JOBS; WORKFLOW_DISPATCH_422_NOT_ON_MAIN; EXACT_MAIN_NOT_RUN",
+      "limitation": "P0-1 provenance and current exact-head CI pass. P0-3 is blocked because review is same-agent AI rather than independent human security/license review. P0-4 is only a synthetic filesystem/installer-state drill, not real package/profile migration or ACL/principal verification. P0-5 has no successful dedicated main-gate PR run; workflow_dispatch is unavailable because the workflow is absent from default main; branch-protection API returned 403; exact-main, package/SBOM/attestation, package version bump, and maintainer authorization remain open. The active v2.2.0 tag ruleset remains unchanged; its owner bypass is enabled. Release remains NOT_READY."
+    }
+  ],
+  "sourceSupportBaseline": [
+    {
+      "languages": [
+        "JavaScript",
+        "TypeScript",
+        "Python",
+        "Java",
+        "Go",
+        "C",
+        "C++",
+        "PHP"
+      ],
+      "detectionLevel": "S1",
+      "parsingLevel": "S0",
+      "semanticLevel": "S0",
+      "securityLevel": "S1",
+      "reconstructionLevel": "S0",
+      "evidence": [
+        "sast.scan"
+      ],
+      "limitations": [
+        "Existing scanner is bounded line-oriented pattern matching; no AST, symbol graph, or cross-file taint claim."
+      ]
+    },
+    {
+      "languages": [
+        "Rust",
+        "C#",
+        "Kotlin",
+        "Swift",
+        "Ruby",
+        "Lua",
+        "Shell",
+        "Dart",
+        "ArkTS",
+        "SQL",
+        "HTML",
+        "CSS",
+        "GraphQL",
+        "HCL",
+        "Nix",
+        "HDL",
+        "Shader",
+        "Solidity",
+        "Move"
+      ],
+      "detectionLevel": "S0",
+      "parsingLevel": "S0",
+      "semanticLevel": "S0",
+      "securityLevel": "S0",
+      "reconstructionLevel": "S0",
+      "evidence": [],
+      "limitations": [
+        "No language-specific v2.3 parser or semantic backend was verified at baseline; file-extension recognition alone is not claimed."
+      ]
+    }
+  ],
+  "sourceSupportCandidate": [
+    {
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "detectionLevel": "S1",
+      "parsingLevel": "S2",
+      "semanticLevel": "S2",
+      "securityLevel": "S1",
+      "reconstructionLevel": "S0",
+      "evidence": [
+        "docs/v2.3/evidence/m1/test-results.json",
+        "docs/v2.3/evidence/m2/test-results.json",
+        "docs/v2.3/evidence/m5/m5-validation.json"
+      ],
+      "limitations": [
+        "S2 is limited to tested source symbol and local reference structures; it is not full inter-file taint or four-language S3.",
+        "M5 fixtures compare finite precomputed outputs and do not constitute general source reconstruction."
+      ]
+    },
+    {
+      "languages": [
+        "Python",
+        "Java",
+        "Go",
+        "C",
+        "C++",
+        "PHP"
+      ],
+      "detectionLevel": "S1",
+      "parsingLevel": "S0",
+      "semanticLevel": "S0",
+      "securityLevel": "S1",
+      "reconstructionLevel": "S0",
+      "evidence": [
+        "sast.scan",
+        "lib/analyzers/sast/manifest.js"
+      ],
+      "limitations": [
+        "Security coverage is bounded line-oriented pattern scanning; no AST, symbol graph, inter-file data flow, or language-general behavior reconstruction is claimed."
+      ]
+    },
+    {
+      "languages": [
+        "Rust",
+        "C#",
+        "Kotlin",
+        "Swift",
+        "Ruby",
+        "Lua",
+        "Shell",
+        "Dart",
+        "ArkTS",
+        "SQL",
+        "HTML",
+        "CSS",
+        "GraphQL",
+        "HCL",
+        "Nix",
+        "HDL",
+        "Shader",
+        "Solidity",
+        "Move"
+      ],
+      "detectionLevel": "S0",
+      "parsingLevel": "S0",
+      "semanticLevel": "S0",
+      "securityLevel": "S0",
+      "reconstructionLevel": "S0",
+      "evidence": [],
+      "limitations": [
+        "No language-specific V2.3 parser or security backend was verified; filename or extension recognition is not promoted to tested language support."
+      ]
+    }
+  ],
+  "postM4ImplementationRuntime": {
+    "sourceCommit": "23af85c900e54a2ac0f6bdf93ce2aad34b65d263",
+    "capturedOn": "2026-10-29",
+    "capabilityCount": 51,
+    "domainCount": 11,
+    "capabilitiesByRisk": {
+      "L0": 49,
+      "L1": 1,
+      "L2": 1
+    },
+    "capabilitiesByDomain": {
+      "android": 6,
+      "artifact": 2,
+      "binary": 8,
+      "ctf": 5,
+      "forensics": 6,
+      "live": 2,
+      "network": 8,
+      "sast": 8,
+      "security": 1,
+      "source": 1,
+      "web": 4
+    },
+    "workflowCount": 13,
+    "dshModelToolCount": 10,
+    "mcpToolCount": 7,
+    "skillCount": 7,
+    "registryDiagnostics": [],
+    "newSecurityCapability": {
+      "id": "security.correlate",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "supportLevel": "S3",
+      "status": "PARTIAL_LOCAL_TESTED",
+      "evidence": [
+        "docs/v2.3/evidence/m4/m4-validation.json",
+        "docs/v2.3/evidence/m4/focused-tests.log",
+        "docs/v2.3/evidence/m4/typecheck.log",
+        "docs/v2.3/evidence/m4/full-test.log",
+        "docs/v2.3/evidence/m4/vulnerability-corpus-metrics.json"
+      ]
+    },
+    "environmentObservations": {
+      "docker": {
+        "cliVersion": "29.8.1",
+        "serverVersion": "29.8.1",
+        "desktopVersion": "4.93.0",
+        "daemon": "CONNECTED"
+      },
+      "l1Isolation": {
+        "status": "REAL_LOCAL_VERIFIED",
+        "evidence": "docs/acceptance/l1-docker-verification.json",
+        "taskId": "task_mvtp9hb3_fa92f1dc",
+        "sampleProgramExecuted": false,
+        "scope": "benign temporary fixture only; Windows host and Docker Linux container"
+      }
+    },
+    "testEvidence": "docs/v2.3/evidence/m4/m4-validation.json"
+  },
+  "postM5ImplementationRuntime": {
+    "sourceCommit": "7e42b1a5b5f1cf9c8833dd355b6c266cc62b15d3",
+    "capturedOn": "2026-10-29",
+    "capabilityCount": 53,
+    "domainCount": 12,
+    "capabilitiesByRisk": {
+      "L0": 51,
+      "L1": 1,
+      "L2": 1
+    },
+    "capabilitiesByDomain": {
+      "android": 6,
+      "artifact": 2,
+      "binary": 8,
+      "ctf": 5,
+      "forensics": 6,
+      "live": 2,
+      "network": 8,
+      "rebuild": 2,
+      "sast": 8,
+      "security": 1,
+      "source": 1,
+      "web": 4
+    },
+    "workflowCount": 14,
+    "dshModelToolCount": 10,
+    "mcpToolCount": 7,
+    "skillCount": 7,
+    "registryDiagnostics": [],
+    "newCapabilities": [
+      {
+        "id": "rebuild.contract",
+        "riskLevel": "L0",
+        "targetKind": "file",
+        "supportLevel": "S5",
+        "status": "PARTIAL_LOCAL_TESTED",
+        "limitations": [
+          "Consumes caller-supplied observations; evidence references and certainty labels are not independently authenticated.",
+          "Does not parse arbitrary source or generate replacement code."
+        ]
+      },
+      {
+        "id": "rebuild.compare",
+        "riskLevel": "L0",
+        "targetKind": "file",
+        "supportLevel": "S5",
+        "status": "PARTIAL_LOCAL_TESTED",
+        "limitations": [
+          "Compares pre-generated JSON outcomes only; ArmorBreak never executes either implementation.",
+          "Finite fixture matches do not establish global behavioral equivalence."
+        ]
+      }
+    ],
+    "testEvidence": "docs/v2.3/evidence/m5/m5-validation.json"
+  },
+  "postM6IntegrationRuntime": {
+    "sourceCommit": "965fbe4fa9abd2af73644865a56d8db64c8a6089",
+    "capturedOn": "2026-10-29",
+    "capabilityCount": 53,
+    "domainCount": 12,
+    "capabilitiesByRisk": {
+      "L0": 51,
+      "L1": 1,
+      "L2": 1
+    },
+    "capabilitiesByDomain": {
+      "android": 6,
+      "artifact": 2,
+      "binary": 8,
+      "ctf": 5,
+      "forensics": 6,
+      "live": 2,
+      "network": 8,
+      "rebuild": 2,
+      "sast": 8,
+      "security": 1,
+      "source": 1,
+      "web": 4
+    },
+    "workflowCount": 14,
+    "dshModelToolCount": 10,
+    "mcpToolCount": 8,
+    "skillCount": 7,
+    "registryDiagnostics": [],
+    "mcpWorkflowTool": {
+      "id": "armorbreak_workflow",
+      "status": "LOCAL_TESTED",
+      "actions": [
+        "list",
+        "start"
+      ],
+      "startRiskCeiling": "L0",
+      "customStepsAccepted": false,
+      "modelPrincipalOrApprovalAccepted": false
+    },
+    "capabilityStatusFields": [
+      "supportedLevels",
+      "engine",
+      "backendVersion",
+      "status",
+      "reason",
+      "limitations"
+    ],
+    "catalogStatusMeaning": "REGISTERED_NOT_EXECUTED",
+    "testEvidence": "docs/v2.3/evidence/m6/m6-validation.json"
+  }
+}

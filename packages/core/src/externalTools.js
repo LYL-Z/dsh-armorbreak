@@ -8,7 +8,7 @@
  * @module dsh-armorbreak/lib/core/externalTools
  */
 import { execFile } from 'node:child_process'
-import { existsSync, readdirSync, statSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { createHash } from 'node:crypto'
 
@@ -146,7 +146,7 @@ export function resolveGhidra(env = process.env) {
   const toolsRoot = 'D:\\dsh-tools\\ghidra-dl'
   if (existsSync(toolsRoot)) {
     try {
-      for (const dir of readdirSync(toolsRoot)) if (/^ghidra_.*_PUBLIC$/.test(dir)) candidates.push(join(toolsRoot, dir))
+      for (const dir of readdirSync(toolsRoot).sort()) if (/^ghidra_.*_PUBLIC$/.test(dir)) candidates.push(join(toolsRoot, dir))
     } catch {
       /* ignore */
     }
@@ -154,10 +154,18 @@ export function resolveGhidra(env = process.env) {
   for (const home of candidates) {
     const launcher = process.platform === 'win32' ? join(home, 'support', 'analyzeHeadless.bat') : join(home, 'support', 'analyzeHeadless')
     if (!existsSync(launcher)) continue
+    let version = null
+    try {
+      const properties = readFileSync(join(home, 'Ghidra', 'application.properties'), 'utf8')
+      version = properties.match(/^application\.version=(.+)$/m)?.[1]?.trim() ?? null
+    } catch {
+      /* a missing version file is not a verified tool installation */
+    }
+    if (version !== '12.1.4') continue
     const javaExe = resolveJava21(env)
-    return { home, launcher, javaHome: dirname(dirname(javaExe)) }
+    return { home, launcher, javaHome: dirname(dirname(javaExe)), version }
   }
-  throw new Error(`Ghidra 未安装或未找到 analyzeHeadless。${EXTERNAL_TOOL_GUIDANCE.ghidra}`)
+  throw new Error(`未找到已验证的 Ghidra 12.1.4 analyzeHeadless 安装。当前适配器锁定 Ghidra 12.1.4 与 JDK 21；${EXTERNAL_TOOL_GUIDANCE.ghidra}`)
 }
 
 /** @returns {{command: string, prefixArgs: string[], versionHint: string}} */

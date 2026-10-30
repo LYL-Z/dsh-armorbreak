@@ -1,0 +1,476 @@
+{
+  "capability": "binary.program_ir",
+  "domain": "binary",
+  "riskLevel": "L0",
+  "summary": "Native Program IR (elf, x86)：SHA-256 e3cbff8a06da61abdabd33cd7ad006493012257656f07737af687687bb546275；Ghidra ANALYZED，函数 3，调用边 2，基本块 3。结果状态 PARTIAL。",
+  "data": {
+    "schemaVersion": "armorbreak.native-program-ir/v1",
+    "analysis": {
+      "level": "S2",
+      "status": "PARTIAL",
+      "reason": null,
+      "inputExecuted": false,
+      "backend": "Ghidra",
+      "backendVersion": "12.1.4",
+      "parserWarnings": [],
+      "truncated": false
+    },
+    "artifact": {
+      "format": "elf",
+      "container": "elf",
+      "fileSize": 12988,
+      "analyzedBytes": 12988,
+      "sha256": "e3cbff8a06da61abdabd33cd7ad006493012257656f07737af687687bb546275",
+      "truncated": false
+    },
+    "program": {
+      "architecture": "x86",
+      "bitness": 32,
+      "endianness": "little",
+      "type": "executable",
+      "entryPoint": "0x8049026",
+      "entryPointVa": "0x8049026",
+      "imageBase": null,
+      "sections": [
+        {
+          "name": "",
+          "type": "null",
+          "address": "0x0",
+          "offset": 0,
+          "size": "0x0",
+          "flags": []
+        },
+        {
+          "name": ".note.gnu.build-id",
+          "type": "note",
+          "address": "0x80480f4",
+          "offset": 244,
+          "size": "0x24",
+          "flags": [
+            "alloc"
+          ]
+        },
+        {
+          "name": ".text",
+          "type": "progbits",
+          "address": "0x8049000",
+          "offset": 4096,
+          "size": "0x35",
+          "flags": [
+            "alloc",
+            "exec"
+          ]
+        },
+        {
+          "name": ".eh_frame",
+          "type": "progbits",
+          "address": "0x804a000",
+          "offset": 8192,
+          "size": "0x78",
+          "flags": [
+            "alloc"
+          ]
+        },
+        {
+          "name": ".data",
+          "type": "progbits",
+          "address": "0x804b000",
+          "offset": 12288,
+          "size": "0x4",
+          "flags": [
+            "write",
+            "alloc"
+          ]
+        },
+        {
+          "name": ".comment",
+          "type": "progbits",
+          "address": "0x0",
+          "offset": 12292,
+          "size": "0x26",
+          "flags": [
+            "merge",
+            "strings"
+          ]
+        },
+        {
+          "name": ".symtab",
+          "type": "symtab",
+          "address": "0x0",
+          "offset": 12332,
+          "size": "0x90",
+          "flags": []
+        },
+        {
+          "name": ".strtab",
+          "type": "strtab",
+          "address": "0x0",
+          "offset": 12476,
+          "size": "0x4b",
+          "flags": []
+        },
+        {
+          "name": ".shstrtab",
+          "type": "strtab",
+          "address": "0x0",
+          "offset": 12551,
+          "size": "0x4d",
+          "flags": []
+        }
+      ],
+      "segments": [
+        {
+          "type": "load",
+          "offset": 0,
+          "virtualAddress": "0x8048000",
+          "fileSize": "0x118",
+          "memorySize": "0x118",
+          "flags": 4,
+          "alignment": "0x1000"
+        },
+        {
+          "type": "load",
+          "offset": 4096,
+          "virtualAddress": "0x8049000",
+          "fileSize": "0x35",
+          "memorySize": "0x35",
+          "flags": 5,
+          "alignment": "0x1000"
+        },
+        {
+          "type": "load",
+          "offset": 8192,
+          "virtualAddress": "0x804a000",
+          "fileSize": "0x78",
+          "memorySize": "0x78",
+          "flags": 4,
+          "alignment": "0x1000"
+        },
+        {
+          "type": "load",
+          "offset": 12288,
+          "virtualAddress": "0x804b000",
+          "fileSize": "0x4",
+          "memorySize": "0x4",
+          "flags": 6,
+          "alignment": "0x1000"
+        },
+        {
+          "type": "note",
+          "offset": 244,
+          "virtualAddress": "0x80480f4",
+          "fileSize": "0x24",
+          "memorySize": "0x24",
+          "flags": 4,
+          "alignment": "0x4"
+        },
+        {
+          "type": "gnu-stack",
+          "offset": 0,
+          "virtualAddress": "0x0",
+          "fileSize": "0x0",
+          "memorySize": "0x0",
+          "flags": 6,
+          "alignment": "0x10"
+        }
+      ],
+      "imports": {
+        "libraries": [],
+        "undefinedSymbolCount": 0,
+        "sample": [],
+        "truncated": false
+      },
+      "exports": {
+        "definedSymbolCount": 0,
+        "sample": []
+      },
+      "relocations": {
+        "status": "NOT_DECODED",
+        "entriesParsed": 0,
+        "sections": []
+      },
+      "debugInfo": {
+        "status": "NO_DEBUG_SECTIONS_DETECTED",
+        "sections": [],
+        "buildId": "b42e5ade76cc388f1a8978812f37b1794480963a"
+      },
+      "resources": {
+        "status": "NOT_APPLICABLE"
+      },
+      "parseWarnings": [],
+      "sourceSymbolSummary": {
+        "format": "elf",
+        "arch": "x86",
+        "bits": 32,
+        "entryPoints": [
+          {
+            "kind": "elf-e_entry",
+            "address": "0x8049026"
+          }
+        ],
+        "interpreter": null,
+        "functions": [
+          {
+            "name": "helper",
+            "address": "0x8049000",
+            "size": "0x14",
+            "bind": "global",
+            "type": "func",
+            "source": "symtab"
+          },
+          {
+            "name": "caller",
+            "address": "0x8049014",
+            "size": "0x12",
+            "bind": "global",
+            "type": "func",
+            "source": "symtab"
+          },
+          {
+            "name": "main",
+            "address": "0x8049026",
+            "size": "0xf",
+            "bind": "global",
+            "type": "func",
+            "source": "symtab"
+          }
+        ],
+        "dynamicFunctions": [],
+        "imports": [],
+        "exports": [],
+        "counts": {
+          "symtabPresent": true,
+          "symtabCount": 9,
+          "symtabFunctions": 3,
+          "dynsymPresent": false,
+          "dynsymCount": 0,
+          "undefinedDynamicSymbols": 0,
+          "definedDynamicFunctions": 0,
+          "programHeaders": 6,
+          "sections": 9
+        },
+        "buildId": "b42e5ade76cc388f1a8978812f37b1794480963a",
+        "functionEstimate": {
+          "count": 3,
+          "method": "STT_FUNC 且已定义的 .symtab 符号计数（未含静态函数以外的未知区域）",
+          "verification": "hypothesis"
+        },
+        "warnings": []
+      }
+    },
+    "symbols": {
+      "format": "elf",
+      "arch": "x86",
+      "bits": 32,
+      "entryPoints": [
+        {
+          "kind": "elf-e_entry",
+          "address": "0x8049026"
+        }
+      ],
+      "interpreter": null,
+      "functions": [
+        {
+          "name": "helper",
+          "address": "0x8049000",
+          "size": "0x14",
+          "bind": "global",
+          "type": "func",
+          "source": "symtab"
+        },
+        {
+          "name": "caller",
+          "address": "0x8049014",
+          "size": "0x12",
+          "bind": "global",
+          "type": "func",
+          "source": "symtab"
+        },
+        {
+          "name": "main",
+          "address": "0x8049026",
+          "size": "0xf",
+          "bind": "global",
+          "type": "func",
+          "source": "symtab"
+        }
+      ],
+      "dynamicFunctions": [],
+      "imports": [],
+      "exports": [],
+      "counts": {
+        "symtabPresent": true,
+        "symtabCount": 9,
+        "symtabFunctions": 3,
+        "dynsymPresent": false,
+        "dynsymCount": 0,
+        "undefinedDynamicSymbols": 0,
+        "definedDynamicFunctions": 0,
+        "programHeaders": 6,
+        "sections": 9
+      },
+      "buildId": "b42e5ade76cc388f1a8978812f37b1794480963a",
+      "functionEstimate": {
+        "count": 3,
+        "method": "STT_FUNC 且已定义的 .symtab 符号计数（未含静态函数以外的未知区域）",
+        "verification": "hypothesis"
+      },
+      "warnings": []
+    },
+    "functionCount": 3,
+    "emittedFunctions": 3,
+    "functions": [
+      {
+        "name": "helper",
+        "entry": "08049000",
+        "relativeAddress": "0x1000",
+        "fileOffset": "0x1000",
+        "end": "08049013",
+        "size": 20,
+        "external": false,
+        "thunk": false,
+        "callingConvention": "unknown",
+        "callers": 1,
+        "byteHashSha256": "5abe6afd012d13c350f389c42f75c9cf9d993695e76602be36da4ed01c80f861",
+        "byteHashBytes": 20,
+        "byteHashStatus": "COMPLETE"
+      },
+      {
+        "name": "caller",
+        "entry": "08049014",
+        "relativeAddress": "0x1014",
+        "fileOffset": "0x1014",
+        "end": "08049025",
+        "size": 18,
+        "external": false,
+        "thunk": false,
+        "callingConvention": "unknown",
+        "callers": 1,
+        "byteHashSha256": "938c370d65b9a2b1f7091ba2551722913eabf9f434c1af86cabb717d7393a4a9",
+        "byteHashBytes": 18,
+        "byteHashStatus": "COMPLETE"
+      },
+      {
+        "name": "main",
+        "entry": "08049026",
+        "relativeAddress": "0x1026",
+        "fileOffset": "0x1026",
+        "end": "08049034",
+        "size": 15,
+        "external": false,
+        "thunk": false,
+        "callingConvention": "processEntry",
+        "callers": 0,
+        "byteHashSha256": "08abd8151e9e9d31ad768fe42aa5066d763eff940610503ac7dfdfceea00bc7d",
+        "byteHashBytes": 15,
+        "byteHashStatus": "COMPLETE"
+      }
+    ],
+    "callEdgeCount": 2,
+    "callEdges": [
+      {
+        "caller": "caller",
+        "callerEntry": "08049014",
+        "callSite": "0804901c",
+        "callSiteFileOffset": "0x101c",
+        "callee": "helper",
+        "calleeEntry": "08049000",
+        "calleeFileOffset": "0x1000",
+        "referenceType": "UNCONDITIONAL_CALL"
+      },
+      {
+        "caller": "main",
+        "callerEntry": "08049026",
+        "callSite": "0804902b",
+        "callSiteFileOffset": "0x102b",
+        "callee": "caller",
+        "calleeEntry": "08049014",
+        "calleeFileOffset": "0x1014",
+        "referenceType": "UNCONDITIONAL_CALL"
+      }
+    ],
+    "basicBlockCount": 3,
+    "basicBlocks": [
+      {
+        "functionEntry": "08049000",
+        "start": "08049000",
+        "end": "08049013",
+        "fileOffset": "0x1000",
+        "size": 20,
+        "flowType": "TERMINATOR"
+      },
+      {
+        "functionEntry": "08049014",
+        "start": "08049014",
+        "end": "08049025",
+        "fileOffset": "0x1014",
+        "size": 18,
+        "flowType": "TERMINATOR"
+      },
+      {
+        "functionEntry": "08049026",
+        "start": "08049026",
+        "end": "08049034",
+        "fileOffset": "0x1026",
+        "size": 15,
+        "flowType": "TERMINATOR"
+      }
+    ],
+    "functionHashes": [
+      {
+        "function": "helper",
+        "entry": "08049000",
+        "fileOffset": "0x1000",
+        "sha256": "5abe6afd012d13c350f389c42f75c9cf9d993695e76602be36da4ed01c80f861",
+        "bytesHashed": 20,
+        "status": "COMPLETE"
+      },
+      {
+        "function": "caller",
+        "entry": "08049014",
+        "fileOffset": "0x1014",
+        "sha256": "938c370d65b9a2b1f7091ba2551722913eabf9f434c1af86cabb717d7393a4a9",
+        "bytesHashed": 18,
+        "status": "COMPLETE"
+      },
+      {
+        "function": "main",
+        "entry": "08049026",
+        "fileOffset": "0x1026",
+        "sha256": "08abd8151e9e9d31ad768fe42aa5066d763eff940610503ac7dfdfceea00bc7d",
+        "bytesHashed": 15,
+        "status": "COMPLETE"
+      }
+    ],
+    "ghidra": {
+      "status": "ANALYZED",
+      "reason": null,
+      "toolVersion": "12.1.4"
+    },
+    "limitations": [
+      "Ghidra auto-analysis output is evidence for navigation; it is not recovered source code or a proof of behavior.",
+      "ELF and Mach-O relocation entries are not decoded in this slice; PE base-relocation directory is presence/size only.",
+      "Function byte hashes cover Ghidra loaded-memory bytes in function-body address order; relocation effects may differ from original file bytes.",
+      "Call edges and basic blocks depend on the selected Ghidra language and auto-analysis; indirect calls, data cross-references and unresolved targets remain unknown.",
+      "No control-flow/data-flow taint, deobfuscation, unpacking, runtime behavior, or platform execution is claimed."
+    ]
+  },
+  "findings": [
+    {
+      "id": "fnd_mvqihnxh_ecd4cee4",
+      "title": "Ghidra 枚举 3 个内部函数、0 个外部函数（输出 3）",
+      "severity": "info",
+      "verification": "observed"
+    }
+  ],
+  "evidenceIds": [
+    "ev_mvqihnth_d41cb842",
+    "ev_mvqihnug_2b320edd",
+    "ev_mvqihnvi_83012604"
+  ],
+  "artifacts": [],
+  "durationMs": 11192,
+  "target": "<fixture>/native_fixture_i386.elf",
+  "targetSha256": "e3cbff8a06da61abdabd33cd7ad006493012257656f07737af687687bb546275",
+  "truncated": false
+}

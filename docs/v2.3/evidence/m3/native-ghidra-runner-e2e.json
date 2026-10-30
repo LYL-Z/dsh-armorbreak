@@ -1,0 +1,3935 @@
+{
+  "schemaVersion": "armorbreak.v2.3.m3-ghidra-e2e/v1",
+  "checkedAt": "2026-10-29T09:37:08.928Z",
+  "sourceCommit": "e57287f5abc9fb9ba86cb686736f67f3ab030357",
+  "runner": "ArmorBreakRuntime.runner.runCapability + PolicyGateway",
+  "capability": "binary.program_ir",
+  "workflow": "NativeProgramIRReview (registry presence checked; individual E2E invokes the capability via Runner)",
+  "inputExecution": false,
+  "externalToolExecution": "Ghidra headless static analysis only",
+  "environment": {
+    "platform": "win32-x64",
+    "node": "v24.16.0",
+    "java": "21.0.12.1",
+    "ghidra": "12.1.4"
+  },
+  "registry": {
+    "capabilityCount": 50,
+    "domains": [
+      "android",
+      "artifact",
+      "binary",
+      "ctf",
+      "forensics",
+      "live",
+      "network",
+      "sast",
+      "source",
+      "web"
+    ],
+    "capabilitiesByRisk": {
+      "L0": 48,
+      "L1": 1,
+      "L2": 1,
+      "L3": 0
+    },
+    "capabilitiesByDomain": {
+      "android": 6,
+      "artifact": 2,
+      "binary": 8,
+      "ctf": 5,
+      "forensics": 6,
+      "live": 2,
+      "network": 8,
+      "sast": 8,
+      "source": 1,
+      "web": 4
+    },
+    "workflowCount": 12,
+    "registryDiagnostics": []
+  },
+  "resultCount": 6,
+  "results": [
+    {
+      "fixture": "native_fixture_x64.exe",
+      "fixtureSha256": "917d56c8bd8c542094018fa2c091205652bcd7918b9bf7fae3399ffa9ea8c7b3",
+      "fixtureBytes": 54360,
+      "format": "pe",
+      "architecture": "x86-64",
+      "bitness": 64,
+      "ghidraStatus": "ANALYZED",
+      "ghidraVersion": "12.1.4",
+      "functionCount": 129,
+      "functionsEmitted": 93,
+      "callEdgeCount": 127,
+      "callEdgesEmitted": 127,
+      "basicBlockCount": 301,
+      "basicBlocksEmitted": 300,
+      "analysisTruncated": true,
+      "inputExecuted": false,
+      "evidenceCount": 3,
+      "functions": [
+        {
+          "name": "FUN_140001000",
+          "entry": "140001000",
+          "fileOffset": "0x600",
+          "size": 23,
+          "byteHashSha256": "196eb20eb3eff6e6ffcda0ea6ee9b928756e1b29ec8baefedbd1caacfad7ec51",
+          "byteHashBytes": 23,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "safe_flush",
+          "entry": "140001017",
+          "fileOffset": "0x617",
+          "size": 25,
+          "byteHashSha256": "95486866da3087147517e71fb47d204d6cfb80a7a852c4c73365d024809ccde4",
+          "byteHashBytes": 25,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "WinMainCRTStartup",
+          "entry": "140001030",
+          "fileOffset": "0x630",
+          "size": 47,
+          "byteHashSha256": "518cba3c57ba549fdd31d64234ec38c97c5c334b44e9fc6f51a70a73a69281dc",
+          "byteHashBytes": 47,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "mainCRTStartup",
+          "entry": "14000105f",
+          "fileOffset": "0x65f",
+          "size": 47,
+          "byteHashSha256": "b15dce9c86fcf38c1710c83a620ea842dffb8f85e36553f91ee958046837c097",
+          "byteHashBytes": 47,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__tmainCRTStartup",
+          "entry": "14000108e",
+          "fileOffset": "0x68e",
+          "size": 862,
+          "byteHashSha256": "bbcaacde6aecda1c5a70436ad1a9d0c6a45f6de52b09d2741f455de3d9d87581",
+          "byteHashBytes": 862,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "check_managed_app",
+          "entry": "1400013ec",
+          "fileOffset": "0x9ec",
+          "size": 260,
+          "byteHashSha256": "448dfc23561169568f62cd2f3af2933cc3721bb49f70b05f53d3151601f8b138",
+          "byteHashBytes": 260,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "duplicate_ppstrings",
+          "entry": "1400014f0",
+          "fileOffset": "0xaf0",
+          "size": 319,
+          "byteHashSha256": "c2809d3666d1445d21e36073f8711bc5b69a435b0695e86cdb869ffd9b62f0f9",
+          "byteHashBytes": 319,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "atexit",
+          "entry": "14000162f",
+          "fileOffset": "0xc2f",
+          "size": 30,
+          "byteHashSha256": "f4bdf0ae82a0236ec0f47386440126961f8c71f060a3240fc329fe0d65ca5cb3",
+          "byteHashBytes": 30,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": ".text",
+          "entry": "140001650",
+          "fileOffset": "0xc50",
+          "size": 1,
+          "byteHashSha256": "ae3f4619b0413d70d3004b9131c3752153074e45725be13b9a148978895e359e",
+          "byteHashBytes": 1,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": ".weak.__deregister_frame_info.hmod_libgcc",
+          "entry": "140001660",
+          "fileOffset": "0xc60",
+          "size": 3,
+          "byteHashSha256": "251447ee91a9067dcd6ab96703133f617565974cd6c4819021760c4688c91abf",
+          "byteHashBytes": 3,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__gcc_register_frame",
+          "entry": "140001670",
+          "fileOffset": "0xc70",
+          "size": 167,
+          "byteHashSha256": "ae21fab3aeecb9e69d89dba6d360ef0a6da4f709a00693454672e0ecd58c15eb",
+          "byteHashBytes": 167,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__gcc_deregister_frame",
+          "entry": "140001720",
+          "fileOffset": "0xd20",
+          "size": 59,
+          "byteHashSha256": "982a577c9e7a505cbb0bef45ec3db7aec721bf167701079b74e779debde55241",
+          "byteHashBytes": 59,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "helper",
+          "entry": "140001760",
+          "fileOffset": "0xd60",
+          "size": 28,
+          "byteHashSha256": "fcb02beb693a28c0056a751fb0838360c0861fb116bcb2a2d3c0d3b2553dd7f0",
+          "byteHashBytes": 28,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "caller",
+          "entry": "14000177c",
+          "fileOffset": "0xd7c",
+          "size": 32,
+          "byteHashSha256": "7f225e0d4fcde59cf05947ccfd3009bc18405f811344c9f8d7c9f11c3bd9b243",
+          "byteHashBytes": 32,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "main",
+          "entry": "14000179c",
+          "fileOffset": "0xd9c",
+          "size": 29,
+          "byteHashSha256": "622a40eecb0eccfc95bff37375d2c7402cbf27e91ac61152796e96aeb5e455cf",
+          "byteHashBytes": 29,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__do_global_dtors",
+          "entry": "1400017c0",
+          "fileOffset": "0xdc0",
+          "size": 63,
+          "byteHashSha256": "83955fdc12d1a5c8afd4c358e11ef2914655470d8d36a0b9e1442131c2810840",
+          "byteHashBytes": 63,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__do_global_ctors",
+          "entry": "1400017ff",
+          "fileOffset": "0xdff",
+          "size": 120,
+          "byteHashSha256": "65a22f433cd93551264a944ebe6b5362f438d3e1555059a4a0a1809c27c79b26",
+          "byteHashBytes": 120,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__main",
+          "entry": "140001877",
+          "fileOffset": "0xe77",
+          "size": 40,
+          "byteHashSha256": "d757ec3f893b64a2ac3dd71e439b04b722ef52283d05c7a199572745a4fdf03d",
+          "byteHashBytes": 40,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": ".text",
+          "entry": "1400018a0",
+          "fileOffset": "0xea0",
+          "size": 11,
+          "byteHashSha256": "f12727971949436c373f4b61d57cdf14896304283cd7fc154a96fc83301be93e",
+          "byteHashBytes": 11,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "tls_callback_0",
+          "entry": "1400018b0",
+          "fileOffset": "0xeb0",
+          "size": 156,
+          "byteHashSha256": "e0f2f1b755789df7d9b2e10a8cda7a649ad2baccc3221effd344072891d564ff",
+          "byteHashBytes": 156,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__tlregdtor",
+          "entry": "14000194c",
+          "fileOffset": "0xf4c",
+          "size": 29,
+          "byteHashSha256": "2c039881278e61f26edf9acbf6fa8edede48c237407738792d48d0195e614ccd",
+          "byteHashBytes": 29,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "tls_callback_1",
+          "entry": "140001969",
+          "fileOffset": "0xf69",
+          "size": 62,
+          "byteHashSha256": "25352a2acd520166901a470f377584cd2609cb932c70241fdb772099850c6900",
+          "byteHashBytes": 62,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": ".text",
+          "entry": "1400019b0",
+          "fileOffset": "0xfb0",
+          "size": 300,
+          "byteHashSha256": "e28320dfa87e50313cef5c820daaa7bd6b73177e73276790687965466326b5a6",
+          "byteHashBytes": 300,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": ".text",
+          "entry": "140001ae0",
+          "fileOffset": "0x10e0",
+          "size": 100,
+          "byteHashSha256": "5b8220e27100f90ebb67e2aac208aa91feed8f18fe21b92b5234ce6a9204ead6",
+          "byteHashBytes": 100,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "mark_section_writable",
+          "entry": "140001b45",
+          "fileOffset": "0x1145",
+          "size": 734,
+          "byteHashSha256": "22976004c40adcbf3a92cef88f1333c52434db06f67f1a3b2b731bb173ec37f7",
+          "byteHashBytes": 734,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "restore_modified_sections",
+          "entry": "140001e23",
+          "fileOffset": "0x1423",
+          "size": 216,
+          "byteHashSha256": "32a03376d94c7a7c482cc9931b90dc6408595ec6b2484f77c7c59873809e332e",
+          "byteHashBytes": 216,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__write_memory",
+          "entry": "140001efb",
+          "fileOffset": "0x14fb",
+          "size": 71,
+          "byteHashSha256": "1002d507ae59f5c7d1b7610e4a958c7bff2b52cbb02b530e27a4f13044ea747e",
+          "byteHashBytes": 71,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "do_pseudo_reloc",
+          "entry": "140001f42",
+          "fileOffset": "0x1542",
+          "size": 894,
+          "byteHashSha256": "6a08a5a34d62cbab3ebd68fc025773b5cf88eecb13a8eaf55779887f86e76269",
+          "byteHashBytes": 894,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "_pei386_runtime_relocator",
+          "entry": "1400022c0",
+          "fileOffset": "0x18c0",
+          "size": 164,
+          "byteHashSha256": "e91dc12b59c1bd7b7f7efd7c1632bdc18d7fa501a3e351fdc7c802b66dd824fe",
+          "byteHashBytes": 164,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__mingw_raise_matherr",
+          "entry": "140002370",
+          "fileOffset": "0x1970",
+          "size": 106,
+          "byteHashSha256": "c77e9543fcb76c8960ffdd45ba983a8e3683e0f9009080c4edc765930fac438e",
+          "byteHashBytes": 106,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__mingw_setusermatherr",
+          "entry": "1400023da",
+          "fileOffset": "0x19da",
+          "size": 42,
+          "byteHashSha256": "bc8ac21296f8b42492c5590b0148eecad7ad1318e36b3d131fdee88e4245598a",
+          "byteHashBytes": 42,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": ".text",
+          "entry": "140002410",
+          "fileOffset": "0x1a10",
+          "size": 602,
+          "byteHashSha256": "0c973a366c8c128b3dcbe7a6058ae57d0c4022b71c2b0bbd1962102a1447407d",
+          "byteHashBytes": 602,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "_gnu_exception_handler",
+          "entry": "14000266a",
+          "fileOffset": "0x1c6a",
+          "size": 612,
+          "byteHashSha256": "8805b3053be56d87bacbd1a0bc02c1d3d004b232654461c4b4ccf1ac80877043",
+          "byteHashBytes": 612,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "___w64_mingwthr_add_key_dtor",
+          "entry": "1400028d0",
+          "fileOffset": "0x1ed0",
+          "size": 161,
+          "byteHashSha256": "4c05625c90cdd0cb65b6635633b025756dcb13d0c0762d79c76610963a1688eb",
+          "byteHashBytes": 161,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "___w64_mingwthr_remove_key_dtor",
+          "entry": "140002971",
+          "fileOffset": "0x1f71",
+          "size": 193,
+          "byteHashSha256": "31ed3614d6f0bdd82d82026aa330790cecb5b3c119618ebb4d578918331e0c4e",
+          "byteHashBytes": 193,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__mingwthr_run_key_dtors",
+          "entry": "140002a32",
+          "fileOffset": "0x2032",
+          "size": 159,
+          "byteHashSha256": "90ed89daa45532b20d0de5971d262d632fd164b297530a8c3561925a3d0319c2",
+          "byteHashBytes": 159,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__mingw_TLScallback",
+          "entry": "140002ad1",
+          "fileOffset": "0x20d1",
+          "size": 252,
+          "byteHashSha256": "3f2a4f46047c8a4f4318aa2fe975177b181c2deebd14ada9a3b56219a1afaa5c",
+          "byteHashBytes": 252,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": ".text",
+          "entry": "140002bd0",
+          "fileOffset": "0x21d0",
+          "size": 9,
+          "byteHashSha256": "a527b3336914a73d9ec1ed548cd25b37ea2bf71439040dfc6422a267bb5b939c",
+          "byteHashBytes": 9,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": ".text",
+          "entry": "140002be0",
+          "fileOffset": "0x21e0",
+          "size": 124,
+          "byteHashSha256": "b81b55b1f0a553f71fd5ac7e6797df1410c32380164586c9f092bd8dea5432ed",
+          "byteHashBytes": 124,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "_FindPESection",
+          "entry": "140002c5c",
+          "fileOffset": "0x225c",
+          "size": 153,
+          "byteHashSha256": "ebb0076bc3ee5516699d75496938f2cce0896abf6a92cd55f9d690f056229caf",
+          "byteHashBytes": 153,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "_FindPESectionByName",
+          "entry": "140002cf5",
+          "fileOffset": "0x22f5",
+          "size": 198,
+          "byteHashSha256": "38666c6dab1e59da3f7d0eaf8b9f101f5931ef5aa7978492bffadbcb935997c8",
+          "byteHashBytes": 198,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__mingw_GetSectionForAddress",
+          "entry": "140002dbb",
+          "fileOffset": "0x23bb",
+          "size": 80,
+          "byteHashSha256": "7ae739b44aca25d6e0063591e52ad5c188785d57ed81a6c2523b857baf6140e5",
+          "byteHashBytes": 80,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__mingw_GetSectionCount",
+          "entry": "140002e0b",
+          "fileOffset": "0x240b",
+          "size": 80,
+          "byteHashSha256": "703cc7e5300707e693d1ea5b44c32611c7e0807932dd0f2a91c5a6ecd1e7b343",
+          "byteHashBytes": 80,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "_FindPESectionExec",
+          "entry": "140002e5b",
+          "fileOffset": "0x245b",
+          "size": 172,
+          "byteHashSha256": "e35a71479155ce307a3c6bb8e43ace9a806e339f25a5565f54add682998c025e",
+          "byteHashBytes": 172,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "_GetPEImageBase",
+          "entry": "140002f07",
+          "fileOffset": "0x2507",
+          "size": 52,
+          "byteHashSha256": "078bc5dab1aa8d50cb42e74f7d00789bb4cebdf5fa9c15473322776be8d6cf88",
+          "byteHashBytes": 52,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "_IsNonwritableInCurrentImage",
+          "entry": "140002f3b",
+          "fileOffset": "0x253b",
+          "size": 113,
+          "byteHashSha256": "39001e48e22c23f8e86c35eb4887b3bc264b33444564641a2511066dce647fe8",
+          "byteHashBytes": 113,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__mingw_enum_import_library_names",
+          "entry": "140002fac",
+          "fileOffset": "0x25ac",
+          "size": 225,
+          "byteHashSha256": "9f0e2251c9782f3f6ef2277b450af89d24d760120c3faf272463d2b5e9303dae",
+          "byteHashBytes": 225,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "___chkstk_ms",
+          "entry": "140003090",
+          "fileOffset": "0x2690",
+          "size": 50,
+          "byteHashSha256": "bce13f521d98d43d9b310608038f0450d573ea6aa27f8c1c1e2459bda44ff4a6",
+          "byteHashBytes": 50,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": ".text",
+          "entry": "1400030d0",
+          "fileOffset": "0x26d0",
+          "size": 88,
+          "byteHashSha256": "4d7e4564a211eb28863b8c476441626ccd2a6492864fcca2936c0c51c8db0dcd",
+          "byteHashBytes": 88,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__p__fmode",
+          "entry": "140003130",
+          "fileOffset": "0x2730",
+          "size": 16,
+          "byteHashSha256": "79d1d7fd1bad8635c86bfd173bb242932b40595a16540967b181cbe88ba18750",
+          "byteHashBytes": 16,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__p__commode",
+          "entry": "140003140",
+          "fileOffset": "0x2740",
+          "size": 16,
+          "byteHashSha256": "ca88523cf31ce1160c1546a2638cdbd9f527ae207816d583bab1a13fe7462a14",
+          "byteHashBytes": 16,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__p___initenv",
+          "entry": "140003150",
+          "fileOffset": "0x2750",
+          "size": 16,
+          "byteHashSha256": "e79d727e0becdf8b7e383a5d4e9e7dc9293e88f1f6586f9275886f65c31317ad",
+          "byteHashBytes": 16,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "mingw_set_invalid_parameter_handler",
+          "entry": "140003160",
+          "fileOffset": "0x2760",
+          "size": 51,
+          "byteHashSha256": "0093a70414bfa38f2684f00756e5a138b2c4a1487d942a946657fc5743993e92",
+          "byteHashBytes": 51,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "mingw_get_invalid_parameter_handler",
+          "entry": "140003193",
+          "fileOffset": "0x2793",
+          "size": 13,
+          "byteHashSha256": "58e75b96417c1d7156eb6af1b5ba8f9dd49309da695f40d3a3f161862291a4bd",
+          "byteHashBytes": 13,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "_configthreadlocale",
+          "entry": "1400031a0",
+          "fileOffset": "0x27a0",
+          "size": 27,
+          "byteHashSha256": "01171dc973503d61a39fabf0147b95844b563ce821c8ba0bd8faada42c2a2c13",
+          "byteHashBytes": 27,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__acrt_iob_func",
+          "entry": "1400031c0",
+          "fileOffset": "0x27c0",
+          "size": 44,
+          "byteHashSha256": "b3d49000bac3a4076b848f47294073f014ad2c08932d554f6a889055e6a06d45",
+          "byteHashBytes": 44,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__C_specific_handler",
+          "entry": "1400031f0",
+          "fileOffset": "0x27f0",
+          "size": 6,
+          "byteHashSha256": "3d76db6174337d2d91d3c22c9a7aa571c46f1c4260c2287dd55d759d93a28962",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__getmainargs",
+          "entry": "1400031f8",
+          "fileOffset": "0x27f8",
+          "size": 6,
+          "byteHashSha256": "3d76db6174337d2d91d3c22c9a7aa571c46f1c4260c2287dd55d759d93a28962",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__iob_func",
+          "entry": "140003200",
+          "fileOffset": "0x2800",
+          "size": 6,
+          "byteHashSha256": "517cbe654eea749da8b1f53ef036f5e22cac8f126783d540e79877fdf79da334",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__set_app_type",
+          "entry": "140003208",
+          "fileOffset": "0x2808",
+          "size": 6,
+          "byteHashSha256": "517cbe654eea749da8b1f53ef036f5e22cac8f126783d540e79877fdf79da334",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__setusermatherr",
+          "entry": "140003210",
+          "fileOffset": "0x2810",
+          "size": 6,
+          "byteHashSha256": "517cbe654eea749da8b1f53ef036f5e22cac8f126783d540e79877fdf79da334",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "_amsg_exit",
+          "entry": "140003218",
+          "fileOffset": "0x2818",
+          "size": 6,
+          "byteHashSha256": "517cbe654eea749da8b1f53ef036f5e22cac8f126783d540e79877fdf79da334",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "_cexit",
+          "entry": "140003220",
+          "fileOffset": "0x2820",
+          "size": 6,
+          "byteHashSha256": "517cbe654eea749da8b1f53ef036f5e22cac8f126783d540e79877fdf79da334",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "_initterm",
+          "entry": "140003228",
+          "fileOffset": "0x2828",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "_crt_atexit",
+          "entry": "140003230",
+          "fileOffset": "0x2830",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "abort",
+          "entry": "140003238",
+          "fileOffset": "0x2838",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "calloc",
+          "entry": "140003240",
+          "fileOffset": "0x2840",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "exit",
+          "entry": "140003248",
+          "fileOffset": "0x2848",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "fflush",
+          "entry": "140003250",
+          "fileOffset": "0x2850",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "fprintf",
+          "entry": "140003258",
+          "fileOffset": "0x2858",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "free",
+          "entry": "140003260",
+          "fileOffset": "0x2860",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "malloc",
+          "entry": "140003268",
+          "fileOffset": "0x2868",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "memcpy",
+          "entry": "140003270",
+          "fileOffset": "0x2870",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "setvbuf",
+          "entry": "140003278",
+          "fileOffset": "0x2878",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "signal",
+          "entry": "140003280",
+          "fileOffset": "0x2880",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "strlen",
+          "entry": "140003288",
+          "fileOffset": "0x2888",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "strncmp",
+          "entry": "140003290",
+          "fileOffset": "0x2890",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "vfprintf",
+          "entry": "140003298",
+          "fileOffset": "0x2898",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "VirtualQuery",
+          "entry": "1400032a0",
+          "fileOffset": "0x28a0",
+          "size": 6,
+          "byteHashSha256": "6a53db13f5457baf811986ac41995a80221005e54bea70e374385be9800b3604",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "VirtualProtect",
+          "entry": "1400032a8",
+          "fileOffset": "0x28a8",
+          "size": 6,
+          "byteHashSha256": "272670b27db0ba7353a471f4e70fc595315cf83933c504f7fe796aeacf822e25",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "TlsGetValue",
+          "entry": "1400032b0",
+          "fileOffset": "0x28b0",
+          "size": 6,
+          "byteHashSha256": "73b004ba63300ab0eb2e6249c7c168ec3581e204e797e45773cf1503eaa9f2a0",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "Sleep",
+          "entry": "1400032b8",
+          "fileOffset": "0x28b8",
+          "size": 6,
+          "byteHashSha256": "d62f223e09dcd7a3b0fbc945836351c67c8d95736c70c5b0ea1edb16e97c524b",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "SetUnhandledExceptionFilter",
+          "entry": "1400032c0",
+          "fileOffset": "0x28c0",
+          "size": 6,
+          "byteHashSha256": "1fefbc9712a0610e9bd030da90e67efeba9c7365ca745f40e518e8d286945a5e",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "LoadLibraryA",
+          "entry": "1400032c8",
+          "fileOffset": "0x28c8",
+          "size": 6,
+          "byteHashSha256": "4f58ebe6e831588728b2a4b658a4d8bdb4e6789853fa08bda6a03f147224c85a",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "LeaveCriticalSection",
+          "entry": "1400032d0",
+          "fileOffset": "0x28d0",
+          "size": 6,
+          "byteHashSha256": "a3261f839c41983ef3d994cc59284938660524886292dcdd3a94c58d135efff7",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "InitializeCriticalSection",
+          "entry": "1400032d8",
+          "fileOffset": "0x28d8",
+          "size": 6,
+          "byteHashSha256": "98463a7f02969ed408182e4d88adcb7f13c4296e4c1edd9e2ec7fc3b9c21e05f",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "GetProcAddress",
+          "entry": "1400032e0",
+          "fileOffset": "0x28e0",
+          "size": 6,
+          "byteHashSha256": "658643680651b14d738edd4f3e72d4ab6456ace81b3d0ee1ae84c76447199aee",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "GetModuleHandleA",
+          "entry": "1400032e8",
+          "fileOffset": "0x28e8",
+          "size": 6,
+          "byteHashSha256": "8843dc8b5eba7c12a53ad732d8dc5e6e1293e6c84ad3a5979a8eea5096802b25",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "GetLastError",
+          "entry": "1400032f0",
+          "fileOffset": "0x28f0",
+          "size": 6,
+          "byteHashSha256": "ed52427af3e508c1b6fd88c4de908c77e1675015fce623f2e6e7c4ac4e79ffcf",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FreeLibrary",
+          "entry": "1400032f8",
+          "fileOffset": "0x28f8",
+          "size": 6,
+          "byteHashSha256": "65bffa08e09e256e9b6afeb3b384b0497129e98f19479800d4fad6fcc9fef399",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "EnterCriticalSection",
+          "entry": "140003300",
+          "fileOffset": "0x2900",
+          "size": 6,
+          "byteHashSha256": "932d60b7b781c1e5160d412258377f370c2cb55ad9ce5b56ae2f007b392d6032",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "DeleteCriticalSection",
+          "entry": "140003308",
+          "fileOffset": "0x2908",
+          "size": 6,
+          "byteHashSha256": "ebe7c113f175a84c5f42c0aa3a883e36761c1c7df61166bb73d32b2d5e05e3d3",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": ".text",
+          "entry": "140003310",
+          "fileOffset": "0x2910",
+          "size": 5,
+          "byteHashSha256": "947ee3d11d20438fccf5ce1b3aaf2fc784e91ac917bfa8c52e52c542839301d5",
+          "byteHashBytes": 5,
+          "byteHashStatus": "COMPLETE"
+        }
+      ],
+      "callEdges": [
+        {
+          "caller": "safe_flush",
+          "callerEntry": "140001017",
+          "callSite": "140001024",
+          "callee": "fflush",
+          "calleeEntry": "140003250",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "WinMainCRTStartup",
+          "callerEntry": "140001030",
+          "callSite": "14000104c",
+          "callee": "__tmainCRTStartup",
+          "calleeEntry": "14000108e",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "mainCRTStartup",
+          "callerEntry": "14000105f",
+          "callSite": "14000107b",
+          "callee": "__tmainCRTStartup",
+          "calleeEntry": "14000108e",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "1400010ef",
+          "callee": "Sleep",
+          "calleeEntry": "EXTERNAL:0000000b",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "14000113b",
+          "callee": "_amsg_exit",
+          "calleeEntry": "140003218",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "140001163",
+          "callee": "__acrt_iob_func",
+          "calleeEntry": "1400031c0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "14000117c",
+          "callee": "setvbuf",
+          "calleeEntry": "140003278",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "14000118b",
+          "callee": "atexit",
+          "calleeEntry": "14000162f",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "140001194",
+          "callee": "abort",
+          "calleeEntry": "140003238",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "140001199",
+          "callee": "_pei386_runtime_relocator",
+          "calleeEntry": "1400022c0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "1400011af",
+          "callee": "SetUnhandledExceptionFilter",
+          "calleeEntry": "EXTERNAL:0000000a",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "1400011c5",
+          "callee": "mingw_set_invalid_parameter_handler",
+          "calleeEntry": "140003160",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "1400011ca",
+          "callee": ".text",
+          "calleeEntry": "140002bd0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "1400011cf",
+          "callee": "check_managed_app",
+          "calleeEntry": "1400013ec",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "1400011ec",
+          "callee": "__set_app_type",
+          "calleeEntry": "140003208",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "1400011f8",
+          "callee": "__set_app_type",
+          "calleeEntry": "140003208",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "1400011fd",
+          "callee": "__p__fmode",
+          "calleeEntry": "140003130",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "14000120d",
+          "callee": "__p__commode",
+          "calleeEntry": "140003140",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "14000121d",
+          "callee": ".text",
+          "calleeEntry": "1400018a0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "140001230",
+          "callee": "_amsg_exit",
+          "calleeEntry": "140003218",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "14000124d",
+          "callee": "__mingw_setusermatherr",
+          "calleeEntry": "1400023da",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "140001265",
+          "callee": "_configthreadlocale",
+          "calleeEntry": "1400031a0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "14000127b",
+          "callee": ".text",
+          "calleeEntry": "1400030d0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "140001289",
+          "callee": "_amsg_exit",
+          "calleeEntry": "140003218",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "1400012cb",
+          "callee": "__getmainargs",
+          "calleeEntry": "1400031f8",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "1400012de",
+          "callee": "_amsg_exit",
+          "calleeEntry": "140003218",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "1400012f2",
+          "callee": "duplicate_ppstrings",
+          "calleeEntry": "1400014f0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "140001305",
+          "callee": "_amsg_exit",
+          "calleeEntry": "140003218",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "14000131b",
+          "callee": "_initterm",
+          "calleeEntry": "140003228",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "140001320",
+          "callee": "__main",
+          "calleeEntry": "140001877",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "14000138b",
+          "callee": "tls_callback_0",
+          "calleeEntry": "1400018b0",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "14000138d",
+          "callee": "__p___initenv",
+          "calleeEntry": "140003150",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "1400013b5",
+          "callee": "main",
+          "calleeEntry": "14000179c",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "1400013cc",
+          "callee": "exit",
+          "calleeEntry": "140003248",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__tmainCRTStartup",
+          "callerEntry": "14000108e",
+          "callSite": "1400013db",
+          "callee": "_cexit",
+          "calleeEntry": "140003220",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "duplicate_ppstrings",
+          "callerEntry": "1400014f0",
+          "callSite": "140001511",
+          "callee": "malloc",
+          "calleeEntry": "140003268",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "duplicate_ppstrings",
+          "callerEntry": "1400014f0",
+          "callSite": "14000155c",
+          "callee": "strlen",
+          "calleeEntry": "140003288",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "duplicate_ppstrings",
+          "callerEntry": "1400014f0",
+          "callSite": "140001585",
+          "callee": "malloc",
+          "calleeEntry": "140003268",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "duplicate_ppstrings",
+          "callerEntry": "1400014f0",
+          "callSite": "1400015e8",
+          "callee": "memcpy",
+          "calleeEntry": "140003270",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "atexit",
+          "callerEntry": "14000162f",
+          "callSite": "140001642",
+          "callee": "_crt_atexit",
+          "calleeEntry": "140003230",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__gcc_register_frame",
+          "callerEntry": "140001670",
+          "callSite": "140001682",
+          "callee": "GetModuleHandleA",
+          "calleeEntry": "EXTERNAL:00000005",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "__gcc_register_frame",
+          "callerEntry": "140001670",
+          "callSite": "140001697",
+          "callee": "LoadLibraryA",
+          "calleeEntry": "EXTERNAL:00000009",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "__gcc_register_frame",
+          "callerEntry": "140001670",
+          "callSite": "1400016b9",
+          "callee": "GetProcAddress",
+          "calleeEntry": "EXTERNAL:00000006",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "__gcc_register_frame",
+          "callerEntry": "140001670",
+          "callSite": "1400016ca",
+          "callee": "GetProcAddress",
+          "calleeEntry": "EXTERNAL:00000006",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "__gcc_register_frame",
+          "callerEntry": "140001670",
+          "callSite": "1400016eb",
+          "callee": ".text",
+          "calleeEntry": "140001650",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "__gcc_register_frame",
+          "callerEntry": "140001670",
+          "callSite": "1400016fb",
+          "callee": "atexit",
+          "calleeEntry": "14000162f",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "caller",
+          "callerEntry": "14000177c",
+          "callSite": "140001791",
+          "callee": "helper",
+          "calleeEntry": "140001760",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "main",
+          "callerEntry": "14000179c",
+          "callSite": "1400017a4",
+          "callee": "__main",
+          "calleeEntry": "140001877",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "main",
+          "callerEntry": "14000179c",
+          "callSite": "1400017ae",
+          "callee": "caller",
+          "calleeEntry": "14000177c",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__do_global_ctors",
+          "callerEntry": "1400017ff",
+          "callSite": "14000186b",
+          "callee": "atexit",
+          "calleeEntry": "14000162f",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__main",
+          "callerEntry": "140001877",
+          "callSite": "140001893",
+          "callee": "__do_global_ctors",
+          "calleeEntry": "1400017ff",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "tls_callback_0",
+          "callerEntry": "1400018b0",
+          "callSite": "1400018fb",
+          "callee": "__mingw_TLScallback",
+          "calleeEntry": "140002ad1",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "tls_callback_1",
+          "callerEntry": "140001969",
+          "callSite": "140001999",
+          "callee": "__mingw_TLScallback",
+          "calleeEntry": "140002ad1",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": ".text",
+          "callerEntry": "1400019b0",
+          "callSite": "140001a8c",
+          "callee": "__acrt_iob_func",
+          "calleeEntry": "1400031c0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": ".text",
+          "callerEntry": "1400019b0",
+          "callSite": "140001abb",
+          "callee": "fprintf",
+          "calleeEntry": "140003258",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": ".text",
+          "callerEntry": "140001ae0",
+          "callSite": "140001b08",
+          "callee": "__acrt_iob_func",
+          "calleeEntry": "1400031c0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": ".text",
+          "callerEntry": "140001ae0",
+          "callSite": "140001b1a",
+          "callee": "fprintf",
+          "calleeEntry": "140003258",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": ".text",
+          "callerEntry": "140001ae0",
+          "callSite": "140001b28",
+          "callee": "__acrt_iob_func",
+          "calleeEntry": "1400031c0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": ".text",
+          "callerEntry": "140001ae0",
+          "callSite": "140001b3a",
+          "callee": "vfprintf",
+          "calleeEntry": "140003298",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": ".text",
+          "callerEntry": "140001ae0",
+          "callSite": "140001b3f",
+          "callee": "abort",
+          "calleeEntry": "140003238",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "mark_section_writable",
+          "callerEntry": "140001b45",
+          "callSite": "140001bf5",
+          "callee": "__mingw_GetSectionForAddress",
+          "calleeEntry": "140002dbb",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "mark_section_writable",
+          "callerEntry": "140001b45",
+          "callSite": "140001c13",
+          "callee": ".text",
+          "calleeEntry": "140001ae0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "mark_section_writable",
+          "callerEntry": "140001b45",
+          "callSite": "140001c63",
+          "callee": "_GetPEImageBase",
+          "calleeEntry": "140002f07",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "mark_section_writable",
+          "callerEntry": "140001b45",
+          "callSite": "140001cd1",
+          "callee": "VirtualQuery",
+          "calleeEntry": "EXTERNAL:0000000e",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "mark_section_writable",
+          "callerEntry": "140001b45",
+          "callSite": "140001d12",
+          "callee": ".text",
+          "calleeEntry": "140001ae0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "mark_section_writable",
+          "callerEntry": "140001b45",
+          "callSite": "140001deb",
+          "callee": "VirtualProtect",
+          "calleeEntry": "EXTERNAL:0000000d",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "mark_section_writable",
+          "callerEntry": "140001b45",
+          "callSite": "140001df8",
+          "callee": "GetLastError",
+          "calleeEntry": "EXTERNAL:00000004",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "mark_section_writable",
+          "callerEntry": "140001b45",
+          "callSite": "140001e06",
+          "callee": ".text",
+          "calleeEntry": "140001ae0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "restore_modified_sections",
+          "callerEntry": "140001e23",
+          "callSite": "140001edb",
+          "callee": "VirtualProtect",
+          "calleeEntry": "EXTERNAL:0000000d",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "__write_memory",
+          "callerEntry": "140001efb",
+          "callSite": "140001f1d",
+          "callee": "mark_section_writable",
+          "calleeEntry": "140001b45",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__write_memory",
+          "callerEntry": "140001efb",
+          "callSite": "140001f34",
+          "callee": "memcpy",
+          "calleeEntry": "140003270",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "do_pseudo_reloc",
+          "callerEntry": "140001f42",
+          "callSite": "140001ff6",
+          "callee": "__write_memory",
+          "calleeEntry": "140001efb",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "do_pseudo_reloc",
+          "callerEntry": "140001f42",
+          "callSite": "14000202e",
+          "callee": ".text",
+          "calleeEntry": "140001ae0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "do_pseudo_reloc",
+          "callerEntry": "140001f42",
+          "callSite": "140002167",
+          "callee": ".text",
+          "calleeEntry": "140001ae0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "do_pseudo_reloc",
+          "callerEntry": "140001f42",
+          "callSite": "140002216",
+          "callee": ".text",
+          "calleeEntry": "140001ae0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "do_pseudo_reloc",
+          "callerEntry": "140001f42",
+          "callSite": "140002256",
+          "callee": "__write_memory",
+          "calleeEntry": "140001efb",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "do_pseudo_reloc",
+          "callerEntry": "140001f42",
+          "callSite": "14000226e",
+          "callee": "__write_memory",
+          "calleeEntry": "140001efb",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "do_pseudo_reloc",
+          "callerEntry": "140001f42",
+          "callSite": "140002286",
+          "callee": "__write_memory",
+          "calleeEntry": "140001efb",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "do_pseudo_reloc",
+          "callerEntry": "140001f42",
+          "callSite": "14000229e",
+          "callee": "__write_memory",
+          "calleeEntry": "140001efb",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "_pei386_runtime_relocator",
+          "callerEntry": "1400022c0",
+          "callSite": "1400022e5",
+          "callee": "__mingw_GetSectionCount",
+          "calleeEntry": "140002e0b",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "_pei386_runtime_relocator",
+          "callerEntry": "1400022c0",
+          "callSite": "14000230d",
+          "callee": "___chkstk_ms",
+          "calleeEntry": "140003090",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "_pei386_runtime_relocator",
+          "callerEntry": "1400022c0",
+          "callSite": "140002352",
+          "callee": "do_pseudo_reloc",
+          "calleeEntry": "140001f42",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "_pei386_runtime_relocator",
+          "callerEntry": "1400022c0",
+          "callSite": "140002357",
+          "callee": "restore_modified_sections",
+          "calleeEntry": "140001e23",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__mingw_setusermatherr",
+          "callerEntry": "1400023da",
+          "callSite": "1400023f8",
+          "callee": "__setusermatherr",
+          "calleeEntry": "140003210",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": ".text",
+          "callerEntry": "140002410",
+          "callSite": "14000254e",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": ".text",
+          "callerEntry": "140002410",
+          "callSite": "140002568",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": ".text",
+          "callerEntry": "140002410",
+          "callSite": "1400025a5",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": ".text",
+          "callerEntry": "140002410",
+          "callSite": "1400025bf",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": ".text",
+          "callerEntry": "140002410",
+          "callSite": "140002600",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": ".text",
+          "callerEntry": "140002410",
+          "callSite": "14000261a",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": ".text",
+          "callerEntry": "140002410",
+          "callSite": "140002625",
+          "callee": ".text",
+          "calleeEntry": "140002bd0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "_gnu_exception_handler",
+          "callerEntry": "14000266a",
+          "callSite": "14000278d",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "_gnu_exception_handler",
+          "callerEntry": "14000266a",
+          "callSite": "1400027a7",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "_gnu_exception_handler",
+          "callerEntry": "14000266a",
+          "callSite": "1400027e4",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "_gnu_exception_handler",
+          "callerEntry": "14000266a",
+          "callSite": "1400027fe",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "_gnu_exception_handler",
+          "callerEntry": "14000266a",
+          "callSite": "14000283f",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "_gnu_exception_handler",
+          "callerEntry": "14000266a",
+          "callSite": "140002859",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "_gnu_exception_handler",
+          "callerEntry": "14000266a",
+          "callSite": "140002864",
+          "callee": ".text",
+          "calleeEntry": "140002bd0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "___w64_mingwthr_add_key_dtor",
+          "callerEntry": "1400028d0",
+          "callSite": "1400028fa",
+          "callee": "calloc",
+          "calleeEntry": "140003240",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "___w64_mingwthr_add_key_dtor",
+          "callerEntry": "1400028d0",
+          "callSite": "140002937",
+          "callee": "EnterCriticalSection",
+          "calleeEntry": "EXTERNAL:00000002",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "___w64_mingwthr_add_key_dtor",
+          "callerEntry": "1400028d0",
+          "callSite": "140002964",
+          "callee": "LeaveCriticalSection",
+          "calleeEntry": "EXTERNAL:00000008",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "___w64_mingwthr_remove_key_dtor",
+          "callerEntry": "140002971",
+          "callSite": "1400029a1",
+          "callee": "EnterCriticalSection",
+          "calleeEntry": "EXTERNAL:00000002",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "___w64_mingwthr_remove_key_dtor",
+          "callerEntry": "140002971",
+          "callSite": "1400029f2",
+          "callee": "free",
+          "calleeEntry": "140003260",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "___w64_mingwthr_remove_key_dtor",
+          "callerEntry": "140002971",
+          "callSite": "140002a25",
+          "callee": "LeaveCriticalSection",
+          "calleeEntry": "EXTERNAL:00000008",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "__mingwthr_run_key_dtors",
+          "callerEntry": "140002a32",
+          "callSite": "140002a59",
+          "callee": "EnterCriticalSection",
+          "calleeEntry": "EXTERNAL:00000002",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "__mingwthr_run_key_dtors",
+          "callerEntry": "140002a32",
+          "callSite": "140002a77",
+          "callee": "TlsGetValue",
+          "calleeEntry": "EXTERNAL:0000000c",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "__mingwthr_run_key_dtors",
+          "callerEntry": "140002a32",
+          "callSite": "140002a84",
+          "callee": "GetLastError",
+          "calleeEntry": "EXTERNAL:00000004",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "__mingwthr_run_key_dtors",
+          "callerEntry": "140002a32",
+          "callSite": "140002ac6",
+          "callee": "LeaveCriticalSection",
+          "calleeEntry": "EXTERNAL:00000008",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "__mingw_TLScallback",
+          "callerEntry": "140002ad1",
+          "callSite": "140002b37",
+          "callee": "InitializeCriticalSection",
+          "calleeEntry": "EXTERNAL:00000007",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "__mingw_TLScallback",
+          "callerEntry": "140002ad1",
+          "callSite": "140002b45",
+          "callee": "__mingwthr_run_key_dtors",
+          "calleeEntry": "140002a32",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__mingw_TLScallback",
+          "callerEntry": "140002ad1",
+          "callSite": "140002b75",
+          "callee": "free",
+          "calleeEntry": "140003260",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__mingw_TLScallback",
+          "callerEntry": "140002ad1",
+          "callSite": "140002baf",
+          "callee": "DeleteCriticalSection",
+          "calleeEntry": "EXTERNAL:00000001",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "__mingw_TLScallback",
+          "callerEntry": "140002ad1",
+          "callSite": "140002bb3",
+          "callee": ".text",
+          "calleeEntry": "140002bd0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__mingw_TLScallback",
+          "callerEntry": "140002ad1",
+          "callSite": "140002bba",
+          "callee": "__mingwthr_run_key_dtors",
+          "calleeEntry": "140002a32",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "_FindPESectionByName",
+          "callerEntry": "140002cf5",
+          "callSite": "140002d08",
+          "callee": "strlen",
+          "calleeEntry": "140003288",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "_FindPESectionByName",
+          "callerEntry": "140002cf5",
+          "callSite": "140002d2f",
+          "callee": ".text",
+          "calleeEntry": "140002be0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "_FindPESectionByName",
+          "callerEntry": "140002cf5",
+          "callSite": "140002d88",
+          "callee": "strncmp",
+          "calleeEntry": "140003290",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__mingw_GetSectionForAddress",
+          "callerEntry": "140002dbb",
+          "callSite": "140002dd9",
+          "callee": ".text",
+          "calleeEntry": "140002be0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__mingw_GetSectionForAddress",
+          "callerEntry": "140002dbb",
+          "callSite": "140002e00",
+          "callee": "_FindPESection",
+          "calleeEntry": "140002c5c",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__mingw_GetSectionCount",
+          "callerEntry": "140002e0b",
+          "callSite": "140002e25",
+          "callee": ".text",
+          "calleeEntry": "140002be0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "_FindPESectionExec",
+          "callerEntry": "140002e5b",
+          "callSite": "140002e79",
+          "callee": ".text",
+          "calleeEntry": "140002be0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "_GetPEImageBase",
+          "callerEntry": "140002f07",
+          "callSite": "140002f21",
+          "callee": ".text",
+          "calleeEntry": "140002be0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "_IsNonwritableInCurrentImage",
+          "callerEntry": "140002f3b",
+          "callSite": "140002f59",
+          "callee": ".text",
+          "calleeEntry": "140002be0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "_IsNonwritableInCurrentImage",
+          "callerEntry": "140002f3b",
+          "callSite": "140002f80",
+          "callee": "_FindPESection",
+          "calleeEntry": "140002c5c",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__mingw_enum_import_library_names",
+          "callerEntry": "140002fac",
+          "callSite": "140002fc9",
+          "callee": ".text",
+          "calleeEntry": "140002be0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__mingw_enum_import_library_names",
+          "callerEntry": "140002fac",
+          "callSite": "140003015",
+          "callee": "_FindPESection",
+          "calleeEntry": "140002c5c",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "__acrt_iob_func",
+          "callerEntry": "1400031c0",
+          "callSite": "1400031cb",
+          "callee": "__iob_func",
+          "calleeEntry": "140003200",
+          "referenceType": "UNCONDITIONAL_CALL"
+        }
+      ]
+    },
+    {
+      "fixture": "native_fixture_x64_stripped.exe",
+      "fixtureSha256": "2e6796990252f35235fda836bf9420571b8735b0963a4276de9d75e839d54e9f",
+      "fixtureBytes": 18958,
+      "format": "pe",
+      "architecture": "x86-64",
+      "bitness": 64,
+      "ghidraStatus": "ANALYZED",
+      "ghidraVersion": "12.1.4",
+      "functionCount": 112,
+      "functionsEmitted": 78,
+      "callEdgeCount": 127,
+      "callEdgesEmitted": 127,
+      "basicBlockCount": 301,
+      "basicBlocksEmitted": 300,
+      "analysisTruncated": true,
+      "inputExecuted": false,
+      "evidenceCount": 3,
+      "functions": [
+        {
+          "name": "FUN_140001000",
+          "entry": "140001000",
+          "fileOffset": "0x400",
+          "size": 23,
+          "byteHashSha256": "196eb20eb3eff6e6ffcda0ea6ee9b928756e1b29ec8baefedbd1caacfad7ec51",
+          "byteHashBytes": 23,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140001017",
+          "entry": "140001017",
+          "fileOffset": "0x417",
+          "size": 25,
+          "byteHashSha256": "95486866da3087147517e71fb47d204d6cfb80a7a852c4c73365d024809ccde4",
+          "byteHashBytes": 25,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140001030",
+          "entry": "140001030",
+          "fileOffset": "0x430",
+          "size": 47,
+          "byteHashSha256": "518cba3c57ba549fdd31d64234ec38c97c5c334b44e9fc6f51a70a73a69281dc",
+          "byteHashBytes": 47,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "entry",
+          "entry": "14000105f",
+          "fileOffset": "0x45f",
+          "size": 47,
+          "byteHashSha256": "b15dce9c86fcf38c1710c83a620ea842dffb8f85e36553f91ee958046837c097",
+          "byteHashBytes": 47,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_14000108e",
+          "entry": "14000108e",
+          "fileOffset": "0x48e",
+          "size": 862,
+          "byteHashSha256": "bbcaacde6aecda1c5a70436ad1a9d0c6a45f6de52b09d2741f455de3d9d87581",
+          "byteHashBytes": 862,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_1400013ec",
+          "entry": "1400013ec",
+          "fileOffset": "0x7ec",
+          "size": 260,
+          "byteHashSha256": "448dfc23561169568f62cd2f3af2933cc3721bb49f70b05f53d3151601f8b138",
+          "byteHashBytes": 260,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_1400014f0",
+          "entry": "1400014f0",
+          "fileOffset": "0x8f0",
+          "size": 319,
+          "byteHashSha256": "c2809d3666d1445d21e36073f8711bc5b69a435b0695e86cdb869ffd9b62f0f9",
+          "byteHashBytes": 319,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_14000162f",
+          "entry": "14000162f",
+          "fileOffset": "0xa2f",
+          "size": 30,
+          "byteHashSha256": "f4bdf0ae82a0236ec0f47386440126961f8c71f060a3240fc329fe0d65ca5cb3",
+          "byteHashBytes": 30,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140001650",
+          "entry": "140001650",
+          "fileOffset": "0xa50",
+          "size": 1,
+          "byteHashSha256": "ae3f4619b0413d70d3004b9131c3752153074e45725be13b9a148978895e359e",
+          "byteHashBytes": 1,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140001660",
+          "entry": "140001660",
+          "fileOffset": "0xa60",
+          "size": 3,
+          "byteHashSha256": "251447ee91a9067dcd6ab96703133f617565974cd6c4819021760c4688c91abf",
+          "byteHashBytes": 3,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140001670",
+          "entry": "140001670",
+          "fileOffset": "0xa70",
+          "size": 167,
+          "byteHashSha256": "ae21fab3aeecb9e69d89dba6d360ef0a6da4f709a00693454672e0ecd58c15eb",
+          "byteHashBytes": 167,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140001720",
+          "entry": "140001720",
+          "fileOffset": "0xb20",
+          "size": 59,
+          "byteHashSha256": "982a577c9e7a505cbb0bef45ec3db7aec721bf167701079b74e779debde55241",
+          "byteHashBytes": 59,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140001760",
+          "entry": "140001760",
+          "fileOffset": "0xb60",
+          "size": 28,
+          "byteHashSha256": "fcb02beb693a28c0056a751fb0838360c0861fb116bcb2a2d3c0d3b2553dd7f0",
+          "byteHashBytes": 28,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_14000177c",
+          "entry": "14000177c",
+          "fileOffset": "0xb7c",
+          "size": 32,
+          "byteHashSha256": "7f225e0d4fcde59cf05947ccfd3009bc18405f811344c9f8d7c9f11c3bd9b243",
+          "byteHashBytes": 32,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_14000179c",
+          "entry": "14000179c",
+          "fileOffset": "0xb9c",
+          "size": 29,
+          "byteHashSha256": "622a40eecb0eccfc95bff37375d2c7402cbf27e91ac61152796e96aeb5e455cf",
+          "byteHashBytes": 29,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_1400017c0",
+          "entry": "1400017c0",
+          "fileOffset": "0xbc0",
+          "size": 63,
+          "byteHashSha256": "83955fdc12d1a5c8afd4c358e11ef2914655470d8d36a0b9e1442131c2810840",
+          "byteHashBytes": 63,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_1400017ff",
+          "entry": "1400017ff",
+          "fileOffset": "0xbff",
+          "size": 120,
+          "byteHashSha256": "65a22f433cd93551264a944ebe6b5362f438d3e1555059a4a0a1809c27c79b26",
+          "byteHashBytes": 120,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140001877",
+          "entry": "140001877",
+          "fileOffset": "0xc77",
+          "size": 40,
+          "byteHashSha256": "d757ec3f893b64a2ac3dd71e439b04b722ef52283d05c7a199572745a4fdf03d",
+          "byteHashBytes": 40,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_1400018a0",
+          "entry": "1400018a0",
+          "fileOffset": "0xca0",
+          "size": 11,
+          "byteHashSha256": "f12727971949436c373f4b61d57cdf14896304283cd7fc154a96fc83301be93e",
+          "byteHashBytes": 11,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "tls_callback_0",
+          "entry": "1400018b0",
+          "fileOffset": "0xcb0",
+          "size": 156,
+          "byteHashSha256": "e0f2f1b755789df7d9b2e10a8cda7a649ad2baccc3221effd344072891d564ff",
+          "byteHashBytes": 156,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_14000194c",
+          "entry": "14000194c",
+          "fileOffset": "0xd4c",
+          "size": 29,
+          "byteHashSha256": "2c039881278e61f26edf9acbf6fa8edede48c237407738792d48d0195e614ccd",
+          "byteHashBytes": 29,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "tls_callback_1",
+          "entry": "140001969",
+          "fileOffset": "0xd69",
+          "size": 62,
+          "byteHashSha256": "25352a2acd520166901a470f377584cd2609cb932c70241fdb772099850c6900",
+          "byteHashBytes": 62,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_1400019b0",
+          "entry": "1400019b0",
+          "fileOffset": "0xdb0",
+          "size": 300,
+          "byteHashSha256": "e28320dfa87e50313cef5c820daaa7bd6b73177e73276790687965466326b5a6",
+          "byteHashBytes": 300,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140001ae0",
+          "entry": "140001ae0",
+          "fileOffset": "0xee0",
+          "size": 100,
+          "byteHashSha256": "5b8220e27100f90ebb67e2aac208aa91feed8f18fe21b92b5234ce6a9204ead6",
+          "byteHashBytes": 100,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140001b45",
+          "entry": "140001b45",
+          "fileOffset": "0xf45",
+          "size": 734,
+          "byteHashSha256": "22976004c40adcbf3a92cef88f1333c52434db06f67f1a3b2b731bb173ec37f7",
+          "byteHashBytes": 734,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140001e23",
+          "entry": "140001e23",
+          "fileOffset": "0x1223",
+          "size": 216,
+          "byteHashSha256": "32a03376d94c7a7c482cc9931b90dc6408595ec6b2484f77c7c59873809e332e",
+          "byteHashBytes": 216,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140001efb",
+          "entry": "140001efb",
+          "fileOffset": "0x12fb",
+          "size": 71,
+          "byteHashSha256": "1002d507ae59f5c7d1b7610e4a958c7bff2b52cbb02b530e27a4f13044ea747e",
+          "byteHashBytes": 71,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140001f42",
+          "entry": "140001f42",
+          "fileOffset": "0x1342",
+          "size": 894,
+          "byteHashSha256": "6a08a5a34d62cbab3ebd68fc025773b5cf88eecb13a8eaf55779887f86e76269",
+          "byteHashBytes": 894,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_1400022c0",
+          "entry": "1400022c0",
+          "fileOffset": "0x16c0",
+          "size": 164,
+          "byteHashSha256": "e91dc12b59c1bd7b7f7efd7c1632bdc18d7fa501a3e351fdc7c802b66dd824fe",
+          "byteHashBytes": 164,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140002370",
+          "entry": "140002370",
+          "fileOffset": "0x1770",
+          "size": 106,
+          "byteHashSha256": "c77e9543fcb76c8960ffdd45ba983a8e3683e0f9009080c4edc765930fac438e",
+          "byteHashBytes": 106,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_1400023da",
+          "entry": "1400023da",
+          "fileOffset": "0x17da",
+          "size": 42,
+          "byteHashSha256": "bc8ac21296f8b42492c5590b0148eecad7ad1318e36b3d131fdee88e4245598a",
+          "byteHashBytes": 42,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140002410",
+          "entry": "140002410",
+          "fileOffset": "0x1810",
+          "size": 602,
+          "byteHashSha256": "0c973a366c8c128b3dcbe7a6058ae57d0c4022b71c2b0bbd1962102a1447407d",
+          "byteHashBytes": 602,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_14000266a",
+          "entry": "14000266a",
+          "fileOffset": "0x1a6a",
+          "size": 612,
+          "byteHashSha256": "8805b3053be56d87bacbd1a0bc02c1d3d004b232654461c4b4ccf1ac80877043",
+          "byteHashBytes": 612,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_1400028d0",
+          "entry": "1400028d0",
+          "fileOffset": "0x1cd0",
+          "size": 161,
+          "byteHashSha256": "4c05625c90cdd0cb65b6635633b025756dcb13d0c0762d79c76610963a1688eb",
+          "byteHashBytes": 161,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140002971",
+          "entry": "140002971",
+          "fileOffset": "0x1d71",
+          "size": 193,
+          "byteHashSha256": "31ed3614d6f0bdd82d82026aa330790cecb5b3c119618ebb4d578918331e0c4e",
+          "byteHashBytes": 193,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140002a32",
+          "entry": "140002a32",
+          "fileOffset": "0x1e32",
+          "size": 159,
+          "byteHashSha256": "90ed89daa45532b20d0de5971d262d632fd164b297530a8c3561925a3d0319c2",
+          "byteHashBytes": 159,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140002ad1",
+          "entry": "140002ad1",
+          "fileOffset": "0x1ed1",
+          "size": 252,
+          "byteHashSha256": "3f2a4f46047c8a4f4318aa2fe975177b181c2deebd14ada9a3b56219a1afaa5c",
+          "byteHashBytes": 252,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140002bd0",
+          "entry": "140002bd0",
+          "fileOffset": "0x1fd0",
+          "size": 9,
+          "byteHashSha256": "a527b3336914a73d9ec1ed548cd25b37ea2bf71439040dfc6422a267bb5b939c",
+          "byteHashBytes": 9,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140002be0",
+          "entry": "140002be0",
+          "fileOffset": "0x1fe0",
+          "size": 124,
+          "byteHashSha256": "b81b55b1f0a553f71fd5ac7e6797df1410c32380164586c9f092bd8dea5432ed",
+          "byteHashBytes": 124,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140002c5c",
+          "entry": "140002c5c",
+          "fileOffset": "0x205c",
+          "size": 153,
+          "byteHashSha256": "ebb0076bc3ee5516699d75496938f2cce0896abf6a92cd55f9d690f056229caf",
+          "byteHashBytes": 153,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140002cf5",
+          "entry": "140002cf5",
+          "fileOffset": "0x20f5",
+          "size": 198,
+          "byteHashSha256": "38666c6dab1e59da3f7d0eaf8b9f101f5931ef5aa7978492bffadbcb935997c8",
+          "byteHashBytes": 198,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140002dbb",
+          "entry": "140002dbb",
+          "fileOffset": "0x21bb",
+          "size": 80,
+          "byteHashSha256": "7ae739b44aca25d6e0063591e52ad5c188785d57ed81a6c2523b857baf6140e5",
+          "byteHashBytes": 80,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140002e0b",
+          "entry": "140002e0b",
+          "fileOffset": "0x220b",
+          "size": 80,
+          "byteHashSha256": "703cc7e5300707e693d1ea5b44c32611c7e0807932dd0f2a91c5a6ecd1e7b343",
+          "byteHashBytes": 80,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140002e5b",
+          "entry": "140002e5b",
+          "fileOffset": "0x225b",
+          "size": 172,
+          "byteHashSha256": "e35a71479155ce307a3c6bb8e43ace9a806e339f25a5565f54add682998c025e",
+          "byteHashBytes": 172,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140002f07",
+          "entry": "140002f07",
+          "fileOffset": "0x2307",
+          "size": 52,
+          "byteHashSha256": "078bc5dab1aa8d50cb42e74f7d00789bb4cebdf5fa9c15473322776be8d6cf88",
+          "byteHashBytes": 52,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140002f3b",
+          "entry": "140002f3b",
+          "fileOffset": "0x233b",
+          "size": 113,
+          "byteHashSha256": "39001e48e22c23f8e86c35eb4887b3bc264b33444564641a2511066dce647fe8",
+          "byteHashBytes": 113,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140002fac",
+          "entry": "140002fac",
+          "fileOffset": "0x23ac",
+          "size": 225,
+          "byteHashSha256": "9f0e2251c9782f3f6ef2277b450af89d24d760120c3faf272463d2b5e9303dae",
+          "byteHashBytes": 225,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140003090",
+          "entry": "140003090",
+          "fileOffset": "0x2490",
+          "size": 50,
+          "byteHashSha256": "bce13f521d98d43d9b310608038f0450d573ea6aa27f8c1c1e2459bda44ff4a6",
+          "byteHashBytes": 50,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_1400030d0",
+          "entry": "1400030d0",
+          "fileOffset": "0x24d0",
+          "size": 88,
+          "byteHashSha256": "4d7e4564a211eb28863b8c476441626ccd2a6492864fcca2936c0c51c8db0dcd",
+          "byteHashBytes": 88,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140003130",
+          "entry": "140003130",
+          "fileOffset": "0x2530",
+          "size": 16,
+          "byteHashSha256": "79d1d7fd1bad8635c86bfd173bb242932b40595a16540967b181cbe88ba18750",
+          "byteHashBytes": 16,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140003140",
+          "entry": "140003140",
+          "fileOffset": "0x2540",
+          "size": 16,
+          "byteHashSha256": "ca88523cf31ce1160c1546a2638cdbd9f527ae207816d583bab1a13fe7462a14",
+          "byteHashBytes": 16,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140003150",
+          "entry": "140003150",
+          "fileOffset": "0x2550",
+          "size": 16,
+          "byteHashSha256": "e79d727e0becdf8b7e383a5d4e9e7dc9293e88f1f6586f9275886f65c31317ad",
+          "byteHashBytes": 16,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140003160",
+          "entry": "140003160",
+          "fileOffset": "0x2560",
+          "size": 51,
+          "byteHashSha256": "0093a70414bfa38f2684f00756e5a138b2c4a1487d942a946657fc5743993e92",
+          "byteHashBytes": 51,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_140003193",
+          "entry": "140003193",
+          "fileOffset": "0x2593",
+          "size": 13,
+          "byteHashSha256": "58e75b96417c1d7156eb6af1b5ba8f9dd49309da695f40d3a3f161862291a4bd",
+          "byteHashBytes": 13,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_1400031a0",
+          "entry": "1400031a0",
+          "fileOffset": "0x25a0",
+          "size": 27,
+          "byteHashSha256": "01171dc973503d61a39fabf0147b95844b563ce821c8ba0bd8faada42c2a2c13",
+          "byteHashBytes": 27,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_1400031c0",
+          "entry": "1400031c0",
+          "fileOffset": "0x25c0",
+          "size": 44,
+          "byteHashSha256": "b3d49000bac3a4076b848f47294073f014ad2c08932d554f6a889055e6a06d45",
+          "byteHashBytes": 44,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__getmainargs",
+          "entry": "1400031f8",
+          "fileOffset": "0x25f8",
+          "size": 6,
+          "byteHashSha256": "3d76db6174337d2d91d3c22c9a7aa571c46f1c4260c2287dd55d759d93a28962",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__iob_func",
+          "entry": "140003200",
+          "fileOffset": "0x2600",
+          "size": 6,
+          "byteHashSha256": "517cbe654eea749da8b1f53ef036f5e22cac8f126783d540e79877fdf79da334",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__set_app_type",
+          "entry": "140003208",
+          "fileOffset": "0x2608",
+          "size": 6,
+          "byteHashSha256": "517cbe654eea749da8b1f53ef036f5e22cac8f126783d540e79877fdf79da334",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "__setusermatherr",
+          "entry": "140003210",
+          "fileOffset": "0x2610",
+          "size": 6,
+          "byteHashSha256": "517cbe654eea749da8b1f53ef036f5e22cac8f126783d540e79877fdf79da334",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "_amsg_exit",
+          "entry": "140003218",
+          "fileOffset": "0x2618",
+          "size": 6,
+          "byteHashSha256": "517cbe654eea749da8b1f53ef036f5e22cac8f126783d540e79877fdf79da334",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "_cexit",
+          "entry": "140003220",
+          "fileOffset": "0x2620",
+          "size": 6,
+          "byteHashSha256": "517cbe654eea749da8b1f53ef036f5e22cac8f126783d540e79877fdf79da334",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "_initterm",
+          "entry": "140003228",
+          "fileOffset": "0x2628",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "atexit",
+          "entry": "140003230",
+          "fileOffset": "0x2630",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "abort",
+          "entry": "140003238",
+          "fileOffset": "0x2638",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "calloc",
+          "entry": "140003240",
+          "fileOffset": "0x2640",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "exit",
+          "entry": "140003248",
+          "fileOffset": "0x2648",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "fflush",
+          "entry": "140003250",
+          "fileOffset": "0x2650",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "fprintf",
+          "entry": "140003258",
+          "fileOffset": "0x2658",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "free",
+          "entry": "140003260",
+          "fileOffset": "0x2660",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "malloc",
+          "entry": "140003268",
+          "fileOffset": "0x2668",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "memcpy",
+          "entry": "140003270",
+          "fileOffset": "0x2670",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "setvbuf",
+          "entry": "140003278",
+          "fileOffset": "0x2678",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "signal",
+          "entry": "140003280",
+          "fileOffset": "0x2680",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "strlen",
+          "entry": "140003288",
+          "fileOffset": "0x2688",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "strncmp",
+          "entry": "140003290",
+          "fileOffset": "0x2690",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "vfprintf",
+          "entry": "140003298",
+          "fileOffset": "0x2698",
+          "size": 6,
+          "byteHashSha256": "146aace0b9217e16ed2e4166a620ae36030388855916aa7df66a815d39deca8d",
+          "byteHashBytes": 6,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "thunk_FUN_140001670",
+          "entry": "140003310",
+          "fileOffset": "0x2710",
+          "size": 5,
+          "byteHashSha256": "947ee3d11d20438fccf5ce1b3aaf2fc784e91ac917bfa8c52e52c542839301d5",
+          "byteHashBytes": 5,
+          "byteHashStatus": "COMPLETE"
+        }
+      ],
+      "callEdges": [
+        {
+          "caller": "FUN_140001017",
+          "callerEntry": "140001017",
+          "callSite": "140001024",
+          "callee": "fflush",
+          "calleeEntry": "140003250",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001030",
+          "callerEntry": "140001030",
+          "callSite": "14000104c",
+          "callee": "FUN_14000108e",
+          "calleeEntry": "14000108e",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "entry",
+          "callerEntry": "14000105f",
+          "callSite": "14000107b",
+          "callee": "FUN_14000108e",
+          "calleeEntry": "14000108e",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "1400010ef",
+          "callee": "Sleep",
+          "calleeEntry": "EXTERNAL:0000000b",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "14000113b",
+          "callee": "_amsg_exit",
+          "calleeEntry": "140003218",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "140001163",
+          "callee": "FUN_1400031c0",
+          "calleeEntry": "1400031c0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "14000117c",
+          "callee": "setvbuf",
+          "calleeEntry": "140003278",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "14000118b",
+          "callee": "FUN_14000162f",
+          "calleeEntry": "14000162f",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "140001194",
+          "callee": "abort",
+          "calleeEntry": "140003238",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "140001199",
+          "callee": "FUN_1400022c0",
+          "calleeEntry": "1400022c0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "1400011af",
+          "callee": "SetUnhandledExceptionFilter",
+          "calleeEntry": "EXTERNAL:0000000a",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "1400011c5",
+          "callee": "FUN_140003160",
+          "calleeEntry": "140003160",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "1400011ca",
+          "callee": "FUN_140002bd0",
+          "calleeEntry": "140002bd0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "1400011cf",
+          "callee": "FUN_1400013ec",
+          "calleeEntry": "1400013ec",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "1400011ec",
+          "callee": "__set_app_type",
+          "calleeEntry": "140003208",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "1400011f8",
+          "callee": "__set_app_type",
+          "calleeEntry": "140003208",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "1400011fd",
+          "callee": "FUN_140003130",
+          "calleeEntry": "140003130",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "14000120d",
+          "callee": "FUN_140003140",
+          "calleeEntry": "140003140",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "14000121d",
+          "callee": "FUN_1400018a0",
+          "calleeEntry": "1400018a0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "140001230",
+          "callee": "_amsg_exit",
+          "calleeEntry": "140003218",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "14000124d",
+          "callee": "FUN_1400023da",
+          "calleeEntry": "1400023da",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "140001265",
+          "callee": "FUN_1400031a0",
+          "calleeEntry": "1400031a0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "14000127b",
+          "callee": "FUN_1400030d0",
+          "calleeEntry": "1400030d0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "140001289",
+          "callee": "_amsg_exit",
+          "calleeEntry": "140003218",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "1400012cb",
+          "callee": "__getmainargs",
+          "calleeEntry": "1400031f8",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "1400012de",
+          "callee": "_amsg_exit",
+          "calleeEntry": "140003218",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "1400012f2",
+          "callee": "FUN_1400014f0",
+          "calleeEntry": "1400014f0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "140001305",
+          "callee": "_amsg_exit",
+          "calleeEntry": "140003218",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "14000131b",
+          "callee": "_initterm",
+          "calleeEntry": "140003228",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "140001320",
+          "callee": "FUN_140001877",
+          "calleeEntry": "140001877",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "14000138b",
+          "callee": "tls_callback_0",
+          "calleeEntry": "1400018b0",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "14000138d",
+          "callee": "FUN_140003150",
+          "calleeEntry": "140003150",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "1400013b5",
+          "callee": "FUN_14000179c",
+          "calleeEntry": "14000179c",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "1400013cc",
+          "callee": "exit",
+          "calleeEntry": "140003248",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000108e",
+          "callerEntry": "14000108e",
+          "callSite": "1400013db",
+          "callee": "_cexit",
+          "calleeEntry": "140003220",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_1400014f0",
+          "callerEntry": "1400014f0",
+          "callSite": "140001511",
+          "callee": "malloc",
+          "calleeEntry": "140003268",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_1400014f0",
+          "callerEntry": "1400014f0",
+          "callSite": "14000155c",
+          "callee": "strlen",
+          "calleeEntry": "140003288",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_1400014f0",
+          "callerEntry": "1400014f0",
+          "callSite": "140001585",
+          "callee": "malloc",
+          "calleeEntry": "140003268",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_1400014f0",
+          "callerEntry": "1400014f0",
+          "callSite": "1400015e8",
+          "callee": "memcpy",
+          "calleeEntry": "140003270",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000162f",
+          "callerEntry": "14000162f",
+          "callSite": "140001642",
+          "callee": "atexit",
+          "calleeEntry": "140003230",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001670",
+          "callerEntry": "140001670",
+          "callSite": "140001682",
+          "callee": "GetModuleHandleA",
+          "calleeEntry": "EXTERNAL:00000005",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_140001670",
+          "callerEntry": "140001670",
+          "callSite": "140001697",
+          "callee": "LoadLibraryA",
+          "calleeEntry": "EXTERNAL:00000009",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_140001670",
+          "callerEntry": "140001670",
+          "callSite": "1400016b9",
+          "callee": "GetProcAddress",
+          "calleeEntry": "EXTERNAL:00000006",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_140001670",
+          "callerEntry": "140001670",
+          "callSite": "1400016ca",
+          "callee": "GetProcAddress",
+          "calleeEntry": "EXTERNAL:00000006",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_140001670",
+          "callerEntry": "140001670",
+          "callSite": "1400016eb",
+          "callee": "FUN_140001650",
+          "calleeEntry": "140001650",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_140001670",
+          "callerEntry": "140001670",
+          "callSite": "1400016fb",
+          "callee": "FUN_14000162f",
+          "calleeEntry": "14000162f",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000177c",
+          "callerEntry": "14000177c",
+          "callSite": "140001791",
+          "callee": "FUN_140001760",
+          "calleeEntry": "140001760",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000179c",
+          "callerEntry": "14000179c",
+          "callSite": "1400017a4",
+          "callee": "FUN_140001877",
+          "calleeEntry": "140001877",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000179c",
+          "callerEntry": "14000179c",
+          "callSite": "1400017ae",
+          "callee": "FUN_14000177c",
+          "calleeEntry": "14000177c",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_1400017ff",
+          "callerEntry": "1400017ff",
+          "callSite": "14000186b",
+          "callee": "FUN_14000162f",
+          "calleeEntry": "14000162f",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001877",
+          "callerEntry": "140001877",
+          "callSite": "140001893",
+          "callee": "FUN_1400017ff",
+          "calleeEntry": "1400017ff",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "tls_callback_0",
+          "callerEntry": "1400018b0",
+          "callSite": "1400018fb",
+          "callee": "FUN_140002ad1",
+          "calleeEntry": "140002ad1",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "tls_callback_1",
+          "callerEntry": "140001969",
+          "callSite": "140001999",
+          "callee": "FUN_140002ad1",
+          "calleeEntry": "140002ad1",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_1400019b0",
+          "callerEntry": "1400019b0",
+          "callSite": "140001a8c",
+          "callee": "FUN_1400031c0",
+          "calleeEntry": "1400031c0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_1400019b0",
+          "callerEntry": "1400019b0",
+          "callSite": "140001abb",
+          "callee": "fprintf",
+          "calleeEntry": "140003258",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001ae0",
+          "callerEntry": "140001ae0",
+          "callSite": "140001b08",
+          "callee": "FUN_1400031c0",
+          "calleeEntry": "1400031c0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001ae0",
+          "callerEntry": "140001ae0",
+          "callSite": "140001b1a",
+          "callee": "fprintf",
+          "calleeEntry": "140003258",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001ae0",
+          "callerEntry": "140001ae0",
+          "callSite": "140001b28",
+          "callee": "FUN_1400031c0",
+          "calleeEntry": "1400031c0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001ae0",
+          "callerEntry": "140001ae0",
+          "callSite": "140001b3a",
+          "callee": "vfprintf",
+          "calleeEntry": "140003298",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001ae0",
+          "callerEntry": "140001ae0",
+          "callSite": "140001b3f",
+          "callee": "abort",
+          "calleeEntry": "140003238",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001b45",
+          "callerEntry": "140001b45",
+          "callSite": "140001bf5",
+          "callee": "FUN_140002dbb",
+          "calleeEntry": "140002dbb",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001b45",
+          "callerEntry": "140001b45",
+          "callSite": "140001c13",
+          "callee": "FUN_140001ae0",
+          "calleeEntry": "140001ae0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001b45",
+          "callerEntry": "140001b45",
+          "callSite": "140001c63",
+          "callee": "FUN_140002f07",
+          "calleeEntry": "140002f07",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001b45",
+          "callerEntry": "140001b45",
+          "callSite": "140001cd1",
+          "callee": "VirtualQuery",
+          "calleeEntry": "EXTERNAL:0000000e",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_140001b45",
+          "callerEntry": "140001b45",
+          "callSite": "140001d12",
+          "callee": "FUN_140001ae0",
+          "calleeEntry": "140001ae0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001b45",
+          "callerEntry": "140001b45",
+          "callSite": "140001deb",
+          "callee": "VirtualProtect",
+          "calleeEntry": "EXTERNAL:0000000d",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_140001b45",
+          "callerEntry": "140001b45",
+          "callSite": "140001df8",
+          "callee": "GetLastError",
+          "calleeEntry": "EXTERNAL:00000004",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_140001b45",
+          "callerEntry": "140001b45",
+          "callSite": "140001e06",
+          "callee": "FUN_140001ae0",
+          "calleeEntry": "140001ae0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001e23",
+          "callerEntry": "140001e23",
+          "callSite": "140001edb",
+          "callee": "VirtualProtect",
+          "calleeEntry": "EXTERNAL:0000000d",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_140001efb",
+          "callerEntry": "140001efb",
+          "callSite": "140001f1d",
+          "callee": "FUN_140001b45",
+          "calleeEntry": "140001b45",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001efb",
+          "callerEntry": "140001efb",
+          "callSite": "140001f34",
+          "callee": "memcpy",
+          "calleeEntry": "140003270",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001f42",
+          "callerEntry": "140001f42",
+          "callSite": "140001ff6",
+          "callee": "FUN_140001efb",
+          "calleeEntry": "140001efb",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001f42",
+          "callerEntry": "140001f42",
+          "callSite": "14000202e",
+          "callee": "FUN_140001ae0",
+          "calleeEntry": "140001ae0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001f42",
+          "callerEntry": "140001f42",
+          "callSite": "140002167",
+          "callee": "FUN_140001ae0",
+          "calleeEntry": "140001ae0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001f42",
+          "callerEntry": "140001f42",
+          "callSite": "140002216",
+          "callee": "FUN_140001ae0",
+          "calleeEntry": "140001ae0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001f42",
+          "callerEntry": "140001f42",
+          "callSite": "140002256",
+          "callee": "FUN_140001efb",
+          "calleeEntry": "140001efb",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001f42",
+          "callerEntry": "140001f42",
+          "callSite": "14000226e",
+          "callee": "FUN_140001efb",
+          "calleeEntry": "140001efb",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001f42",
+          "callerEntry": "140001f42",
+          "callSite": "140002286",
+          "callee": "FUN_140001efb",
+          "calleeEntry": "140001efb",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140001f42",
+          "callerEntry": "140001f42",
+          "callSite": "14000229e",
+          "callee": "FUN_140001efb",
+          "calleeEntry": "140001efb",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_1400022c0",
+          "callerEntry": "1400022c0",
+          "callSite": "1400022e5",
+          "callee": "FUN_140002e0b",
+          "calleeEntry": "140002e0b",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_1400022c0",
+          "callerEntry": "1400022c0",
+          "callSite": "14000230d",
+          "callee": "FUN_140003090",
+          "calleeEntry": "140003090",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_1400022c0",
+          "callerEntry": "1400022c0",
+          "callSite": "140002352",
+          "callee": "FUN_140001f42",
+          "calleeEntry": "140001f42",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_1400022c0",
+          "callerEntry": "1400022c0",
+          "callSite": "140002357",
+          "callee": "FUN_140001e23",
+          "calleeEntry": "140001e23",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_1400023da",
+          "callerEntry": "1400023da",
+          "callSite": "1400023f8",
+          "callee": "__setusermatherr",
+          "calleeEntry": "140003210",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002410",
+          "callerEntry": "140002410",
+          "callSite": "14000254e",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002410",
+          "callerEntry": "140002410",
+          "callSite": "140002568",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002410",
+          "callerEntry": "140002410",
+          "callSite": "1400025a5",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002410",
+          "callerEntry": "140002410",
+          "callSite": "1400025bf",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002410",
+          "callerEntry": "140002410",
+          "callSite": "140002600",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002410",
+          "callerEntry": "140002410",
+          "callSite": "14000261a",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002410",
+          "callerEntry": "140002410",
+          "callSite": "140002625",
+          "callee": "FUN_140002bd0",
+          "calleeEntry": "140002bd0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000266a",
+          "callerEntry": "14000266a",
+          "callSite": "14000278d",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000266a",
+          "callerEntry": "14000266a",
+          "callSite": "1400027a7",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000266a",
+          "callerEntry": "14000266a",
+          "callSite": "1400027e4",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000266a",
+          "callerEntry": "14000266a",
+          "callSite": "1400027fe",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000266a",
+          "callerEntry": "14000266a",
+          "callSite": "14000283f",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000266a",
+          "callerEntry": "14000266a",
+          "callSite": "140002859",
+          "callee": "signal",
+          "calleeEntry": "140003280",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_14000266a",
+          "callerEntry": "14000266a",
+          "callSite": "140002864",
+          "callee": "FUN_140002bd0",
+          "calleeEntry": "140002bd0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_1400028d0",
+          "callerEntry": "1400028d0",
+          "callSite": "1400028fa",
+          "callee": "calloc",
+          "calleeEntry": "140003240",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_1400028d0",
+          "callerEntry": "1400028d0",
+          "callSite": "140002937",
+          "callee": "EnterCriticalSection",
+          "calleeEntry": "EXTERNAL:00000002",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_1400028d0",
+          "callerEntry": "1400028d0",
+          "callSite": "140002964",
+          "callee": "LeaveCriticalSection",
+          "calleeEntry": "EXTERNAL:00000008",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_140002971",
+          "callerEntry": "140002971",
+          "callSite": "1400029a1",
+          "callee": "EnterCriticalSection",
+          "calleeEntry": "EXTERNAL:00000002",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_140002971",
+          "callerEntry": "140002971",
+          "callSite": "1400029f2",
+          "callee": "free",
+          "calleeEntry": "140003260",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002971",
+          "callerEntry": "140002971",
+          "callSite": "140002a25",
+          "callee": "LeaveCriticalSection",
+          "calleeEntry": "EXTERNAL:00000008",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_140002a32",
+          "callerEntry": "140002a32",
+          "callSite": "140002a59",
+          "callee": "EnterCriticalSection",
+          "calleeEntry": "EXTERNAL:00000002",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_140002a32",
+          "callerEntry": "140002a32",
+          "callSite": "140002a77",
+          "callee": "TlsGetValue",
+          "calleeEntry": "EXTERNAL:0000000c",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_140002a32",
+          "callerEntry": "140002a32",
+          "callSite": "140002a84",
+          "callee": "GetLastError",
+          "calleeEntry": "EXTERNAL:00000004",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_140002a32",
+          "callerEntry": "140002a32",
+          "callSite": "140002ac6",
+          "callee": "LeaveCriticalSection",
+          "calleeEntry": "EXTERNAL:00000008",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_140002ad1",
+          "callerEntry": "140002ad1",
+          "callSite": "140002b37",
+          "callee": "InitializeCriticalSection",
+          "calleeEntry": "EXTERNAL:00000007",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_140002ad1",
+          "callerEntry": "140002ad1",
+          "callSite": "140002b45",
+          "callee": "FUN_140002a32",
+          "calleeEntry": "140002a32",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002ad1",
+          "callerEntry": "140002ad1",
+          "callSite": "140002b75",
+          "callee": "free",
+          "calleeEntry": "140003260",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002ad1",
+          "callerEntry": "140002ad1",
+          "callSite": "140002baf",
+          "callee": "DeleteCriticalSection",
+          "calleeEntry": "EXTERNAL:00000001",
+          "referenceType": "COMPUTED_CALL"
+        },
+        {
+          "caller": "FUN_140002ad1",
+          "callerEntry": "140002ad1",
+          "callSite": "140002bb3",
+          "callee": "FUN_140002bd0",
+          "calleeEntry": "140002bd0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002ad1",
+          "callerEntry": "140002ad1",
+          "callSite": "140002bba",
+          "callee": "FUN_140002a32",
+          "calleeEntry": "140002a32",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002cf5",
+          "callerEntry": "140002cf5",
+          "callSite": "140002d08",
+          "callee": "strlen",
+          "calleeEntry": "140003288",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002cf5",
+          "callerEntry": "140002cf5",
+          "callSite": "140002d2f",
+          "callee": "FUN_140002be0",
+          "calleeEntry": "140002be0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002cf5",
+          "callerEntry": "140002cf5",
+          "callSite": "140002d88",
+          "callee": "strncmp",
+          "calleeEntry": "140003290",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002dbb",
+          "callerEntry": "140002dbb",
+          "callSite": "140002dd9",
+          "callee": "FUN_140002be0",
+          "calleeEntry": "140002be0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002dbb",
+          "callerEntry": "140002dbb",
+          "callSite": "140002e00",
+          "callee": "FUN_140002c5c",
+          "calleeEntry": "140002c5c",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002e0b",
+          "callerEntry": "140002e0b",
+          "callSite": "140002e25",
+          "callee": "FUN_140002be0",
+          "calleeEntry": "140002be0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002e5b",
+          "callerEntry": "140002e5b",
+          "callSite": "140002e79",
+          "callee": "FUN_140002be0",
+          "calleeEntry": "140002be0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002f07",
+          "callerEntry": "140002f07",
+          "callSite": "140002f21",
+          "callee": "FUN_140002be0",
+          "calleeEntry": "140002be0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002f3b",
+          "callerEntry": "140002f3b",
+          "callSite": "140002f59",
+          "callee": "FUN_140002be0",
+          "calleeEntry": "140002be0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002f3b",
+          "callerEntry": "140002f3b",
+          "callSite": "140002f80",
+          "callee": "FUN_140002c5c",
+          "calleeEntry": "140002c5c",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002fac",
+          "callerEntry": "140002fac",
+          "callSite": "140002fc9",
+          "callee": "FUN_140002be0",
+          "calleeEntry": "140002be0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_140002fac",
+          "callerEntry": "140002fac",
+          "callSite": "140003015",
+          "callee": "FUN_140002c5c",
+          "calleeEntry": "140002c5c",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "FUN_1400031c0",
+          "callerEntry": "1400031c0",
+          "callSite": "1400031cb",
+          "callee": "__iob_func",
+          "calleeEntry": "140003200",
+          "referenceType": "UNCONDITIONAL_CALL"
+        }
+      ]
+    },
+    {
+      "fixture": "native_fixture_i386.elf",
+      "fixtureSha256": "e3cbff8a06da61abdabd33cd7ad006493012257656f07737af687687bb546275",
+      "fixtureBytes": 12988,
+      "format": "elf",
+      "architecture": "x86",
+      "bitness": 32,
+      "ghidraStatus": "ANALYZED",
+      "ghidraVersion": "12.1.4",
+      "functionCount": 3,
+      "functionsEmitted": 3,
+      "callEdgeCount": 2,
+      "callEdgesEmitted": 2,
+      "basicBlockCount": 3,
+      "basicBlocksEmitted": 3,
+      "analysisTruncated": false,
+      "inputExecuted": false,
+      "evidenceCount": 3,
+      "functions": [
+        {
+          "name": "helper",
+          "entry": "08049000",
+          "fileOffset": "0x1000",
+          "size": 20,
+          "byteHashSha256": "5abe6afd012d13c350f389c42f75c9cf9d993695e76602be36da4ed01c80f861",
+          "byteHashBytes": 20,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "caller",
+          "entry": "08049014",
+          "fileOffset": "0x1014",
+          "size": 18,
+          "byteHashSha256": "938c370d65b9a2b1f7091ba2551722913eabf9f434c1af86cabb717d7393a4a9",
+          "byteHashBytes": 18,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "main",
+          "entry": "08049026",
+          "fileOffset": "0x1026",
+          "size": 15,
+          "byteHashSha256": "08abd8151e9e9d31ad768fe42aa5066d763eff940610503ac7dfdfceea00bc7d",
+          "byteHashBytes": 15,
+          "byteHashStatus": "COMPLETE"
+        }
+      ],
+      "callEdges": [
+        {
+          "caller": "caller",
+          "callerEntry": "08049014",
+          "callSite": "0804901c",
+          "callee": "helper",
+          "calleeEntry": "08049000",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "main",
+          "callerEntry": "08049026",
+          "callSite": "0804902b",
+          "callee": "caller",
+          "calleeEntry": "08049014",
+          "referenceType": "UNCONDITIONAL_CALL"
+        }
+      ]
+    },
+    {
+      "fixture": "native_fixture_i386_stripped.elf",
+      "fixtureSha256": "794c04178d7040da2c5f2cb13788077fa3ad42b273197854b4b5feed2867b721",
+      "fixtureBytes": 12672,
+      "format": "elf",
+      "architecture": "x86",
+      "bitness": 32,
+      "ghidraStatus": "ANALYZED",
+      "ghidraVersion": "12.1.4",
+      "functionCount": 3,
+      "functionsEmitted": 3,
+      "callEdgeCount": 2,
+      "callEdgesEmitted": 2,
+      "basicBlockCount": 3,
+      "basicBlocksEmitted": 3,
+      "analysisTruncated": false,
+      "inputExecuted": false,
+      "evidenceCount": 3,
+      "functions": [
+        {
+          "name": "FUN_08049000",
+          "entry": "08049000",
+          "fileOffset": "0x1000",
+          "size": 20,
+          "byteHashSha256": "5abe6afd012d13c350f389c42f75c9cf9d993695e76602be36da4ed01c80f861",
+          "byteHashBytes": 20,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_08049014",
+          "entry": "08049014",
+          "fileOffset": "0x1014",
+          "size": 18,
+          "byteHashSha256": "938c370d65b9a2b1f7091ba2551722913eabf9f434c1af86cabb717d7393a4a9",
+          "byteHashBytes": 18,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "entry",
+          "entry": "08049026",
+          "fileOffset": "0x1026",
+          "size": 15,
+          "byteHashSha256": "08abd8151e9e9d31ad768fe42aa5066d763eff940610503ac7dfdfceea00bc7d",
+          "byteHashBytes": 15,
+          "byteHashStatus": "COMPLETE"
+        }
+      ],
+      "callEdges": [
+        {
+          "caller": "FUN_08049014",
+          "callerEntry": "08049014",
+          "callSite": "0804901c",
+          "callee": "FUN_08049000",
+          "calleeEntry": "08049000",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "entry",
+          "callerEntry": "08049026",
+          "callSite": "0804902b",
+          "callee": "FUN_08049014",
+          "calleeEntry": "08049014",
+          "referenceType": "UNCONDITIONAL_CALL"
+        }
+      ]
+    },
+    {
+      "fixture": "native_fixture_x86_64_macho.macho",
+      "fixtureSha256": "02edb976b622c349337f53429a424ae853f0b0a86d0fa73a80a709571ed302de",
+      "fixtureBytes": 17222,
+      "format": "macho",
+      "architecture": "x86-64",
+      "bitness": 64,
+      "ghidraStatus": "ANALYZED",
+      "ghidraVersion": "12.1.4",
+      "functionCount": 3,
+      "functionsEmitted": 3,
+      "callEdgeCount": 2,
+      "callEdgesEmitted": 2,
+      "basicBlockCount": 3,
+      "basicBlocksEmitted": 3,
+      "analysisTruncated": false,
+      "inputExecuted": false,
+      "evidenceCount": 3,
+      "functions": [
+        {
+          "name": "_helper",
+          "entry": "100001490",
+          "fileOffset": "0x1490",
+          "size": 26,
+          "byteHashSha256": "7f2a8c594132121983f45d222ba44373898eb11504f2687bb69bcf08327aa5a3",
+          "byteHashBytes": 26,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "_caller",
+          "entry": "1000014b0",
+          "fileOffset": "0x14b0",
+          "size": 30,
+          "byteHashSha256": "49084a76ca62f566fb06f6233170957f10e894b795c635d7b64f8c6393197c98",
+          "byteHashBytes": 30,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "entry",
+          "entry": "1000014d0",
+          "fileOffset": "0x14d0",
+          "size": 31,
+          "byteHashSha256": "042ffbe6d758aa8b98eb1c2be71c7cc90a8d606dd7c4a241f73200fc18936073",
+          "byteHashBytes": 31,
+          "byteHashStatus": "COMPLETE"
+        }
+      ],
+      "callEdges": [
+        {
+          "caller": "_caller",
+          "callerEntry": "1000014b0",
+          "callSite": "1000014c3",
+          "callee": "_helper",
+          "calleeEntry": "100001490",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "entry",
+          "callerEntry": "1000014d0",
+          "callSite": "1000014e4",
+          "callee": "_caller",
+          "calleeEntry": "1000014b0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        }
+      ]
+    },
+    {
+      "fixture": "native_fixture_x86_64_macho_stripped.macho",
+      "fixtureSha256": "78255a8f267a4ba7ea62ff2d5f75528c24fc062c2dd8954cc9f3ea8ab866e38b",
+      "fixtureBytes": 16572,
+      "format": "macho",
+      "architecture": "x86-64",
+      "bitness": 64,
+      "ghidraStatus": "ANALYZED",
+      "ghidraVersion": "12.1.4",
+      "functionCount": 3,
+      "functionsEmitted": 3,
+      "callEdgeCount": 2,
+      "callEdgesEmitted": 2,
+      "basicBlockCount": 3,
+      "basicBlocksEmitted": 3,
+      "analysisTruncated": false,
+      "inputExecuted": false,
+      "evidenceCount": 3,
+      "functions": [
+        {
+          "name": "FUN_100001490",
+          "entry": "100001490",
+          "fileOffset": "0x1490",
+          "size": 26,
+          "byteHashSha256": "7f2a8c594132121983f45d222ba44373898eb11504f2687bb69bcf08327aa5a3",
+          "byteHashBytes": 26,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "FUN_1000014b0",
+          "entry": "1000014b0",
+          "fileOffset": "0x14b0",
+          "size": 30,
+          "byteHashSha256": "49084a76ca62f566fb06f6233170957f10e894b795c635d7b64f8c6393197c98",
+          "byteHashBytes": 30,
+          "byteHashStatus": "COMPLETE"
+        },
+        {
+          "name": "entry",
+          "entry": "1000014d0",
+          "fileOffset": "0x14d0",
+          "size": 31,
+          "byteHashSha256": "042ffbe6d758aa8b98eb1c2be71c7cc90a8d606dd7c4a241f73200fc18936073",
+          "byteHashBytes": 31,
+          "byteHashStatus": "COMPLETE"
+        }
+      ],
+      "callEdges": [
+        {
+          "caller": "FUN_1000014b0",
+          "callerEntry": "1000014b0",
+          "callSite": "1000014c3",
+          "callee": "FUN_100001490",
+          "calleeEntry": "100001490",
+          "referenceType": "UNCONDITIONAL_CALL"
+        },
+        {
+          "caller": "entry",
+          "callerEntry": "1000014d0",
+          "callSite": "1000014e4",
+          "callee": "FUN_1000014b0",
+          "calleeEntry": "1000014b0",
+          "referenceType": "UNCONDITIONAL_CALL"
+        }
+      ]
+    }
+  ]
+}

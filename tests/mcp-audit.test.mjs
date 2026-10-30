@@ -28,7 +28,7 @@ test('MCP audit log records host clientInfo and tool calls without arguments', a
   assert.equal(lines[0].schemaVersion, 'armorbreak.mcp-audit/v1')
   assert.equal(lines[0].event, 'initialize')
   assert.deepEqual(lines[0].clientInfo, { name: 'cursor', version: '3.17.8' })
-  assert.ok(lines.some((line) => line.event === 'tools/list' && line.tools === 7))
+  assert.ok(lines.some((line) => line.event === 'tools/list' && line.tools === 8))
   const call = lines.find((line) => line.event === 'tools/call')
   assert.equal(call.tool, 'armorbreak_health')
   assert.equal(call.ok, true)

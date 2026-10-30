@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "armorbreak.v2.3-main-gate-attempt/v1",
+  "observations": [
+    {
+      "schemaVersion": "armorbreak.v2.3-main-gate-attempt/v1",
+      "capturedAt": "2026-10-30T08:26:43Z",
+      "exactHead": "c1c109453b12493b3ae9b8a76be4f271a820f835",
+      "runId": 41026002895,
+      "runUrl": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41026002895",
+      "workflowPath": ".github/workflows/v2.3-main-gate.yml",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "jobsObserved": 0,
+      "jobApi": "https://api.github.com/repos/LYL-Z/dsh-armorbreak/actions/runs/41026002895/jobs?per_page=100",
+      "jobApiResult": {
+        "total_count": 0,
+        "jobs": []
+      },
+      "logsApiResult": "HTTP 404; no logs were returned for this zero-job run",
+      "releaseReadiness": "NOT_READY",
+      "branchProtectionRead": "HTTP 403 Resource not accessible by integration",
+      "v22TagProtection": {
+        "rulesetId": 25816149,
+        "name": "ArmorBreak V2.2 Stable release tag protection",
+        "target": "tag",
+        "enforcement": "active"
+      },
+      "interpretation": "This is not a successful dedicated PR-event main-gate run. Root cause for the zero-job failure is not established from available GitHub evidence; do not infer that the candidate validation ran."
+    },
+    {
+      "schemaVersion": "armorbreak.v2.3-main-gate-attempt/v1",
+      "capturedAt": "2026-10-30T08:34:08Z",
+      "exactHead": "7bf30788e387d916403f74ba5fc190e2bf9e8a17",
+      "attempts": [
+        {
+          "runId": 41026002895,
+          "sha": "c1c109453b12493b3ae9b8a76be4f271a820f835",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "failure",
+          "jobsObserved": 0
+        },
+        {
+          "runId": 41026971941,
+          "sha": "7bf30788e387d916403f74ba5fc190e2bf9e8a17",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "failure",
+          "jobsObserved": 0
+        },
+        {
+          "runId": 41025798504,
+          "sha": "59681acd9b808de32e6a661edc66aa9450c31a1e",
+          "event": "pull_request",
+          "status": "completed",
+          "conclusion": "failure",
+          "observedIssue": "Linux Node 24 suite had three ENOENT failures because .runtime/tmp was not initialized; fix added in bf7d3d4d590d7ba2cc7d53edf548b1afc78687fd; this old SHA was not rerun with the fix."
+        }
+      ],
+      "dispatchAttempt": {
+        "command": "gh workflow run \"V2.3 main and release gate\" --repo LYL-Z/dsh-armorbreak --ref feature/v2.3-universal-program-intelligence -f release=false",
+        "result": "HTTP 422: Workflow does not have workflow_dispatch trigger"
+      },
+      "defaultBranchWorkflowRead": {
+        "path": ".github/workflows/v2.3-main-gate.yml",
+        "ref": "main",
+        "result": "HTTP 404; this workflow file is not on main"
+      },
+      "branchProtectionRead": "HTTP 403 Resource not accessible by integration",
+      "v22TagProtection": {
+        "rulesetId": 25816149,
+        "name": "ArmorBreak V2.2 Stable release tag protection",
+        "target": "tag",
+        "enforcement": "active",
+        "include": [
+          "refs/tags/v2.2.0"
+        ],
+        "rules": [
+          "creation",
+          "update",
+          "deletion"
+        ],
+        "bypassActors": [
+          {
+            "actorId": 250811935,
+            "actorType": "User",
+            "bypassMode": "always"
+          }
+        ]
+      },
+      "releaseReadiness": "NOT_READY",
+      "interpretation": "No successful dedicated main-gate pull_request run exists at the current head. Push runs report failure with zero jobs, and this evidence does not establish whether candidate-validation executed. Workflow dispatch is unavailable until the workflow exists on the default branch. Do not merge merely to test it; retain this as a blocker. The v2.2.0 rule is unchanged and active, with an owner bypass recorded."
+    }
+  ]
+}

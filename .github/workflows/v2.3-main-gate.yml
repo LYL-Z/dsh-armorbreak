@@ -1,0 +1,85 @@
+name: V2.3 main and release gate
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    tags: ['v2.3.0']
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Run fail-closed V2.3.0 release readiness checks'
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: v23-main-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  candidate-validation:
+    if: ${{ github.event_name != 'push' || github.ref_type != 'tag' }}
+    name: V2.3 main check / exact candidate
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: ['22', '24']
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v5
+        with:
+          python-version: '3.11'
+      - name: Assert exact candidate SHA
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - name: Prepare repository-local test scratch root
+        run: node -e "require('node:fs').mkdirSync('.runtime/tmp', { recursive: true })"
+      - run: npm ci --no-audit --no-fund
+      - run: node --test --test-concurrency=1
+      - run: npm run typecheck
+      - name: Validate V2.3 evidence and docs
+        env:
+          V23_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          node scripts/v2/validate-v23-acceptance.mjs
+          node scripts/v2/check-docs-consistency.mjs
+          node scripts/v2/v23-release-gate.mjs --check-pr
+
+  release-readiness:
+    if: ${{ (github.event_name == 'push' && github.ref_type == 'tag') || (github.event_name == 'workflow_dispatch' && inputs.release) }}
+    name: V2.3.0 release readiness (fail closed)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+      - name: Exact-tag integrity and release gate
+        env:
+          V23_EXPECTED_HEAD: ${{ github.sha }}
+          V23_EXPECTED_SHA: ${{ github.sha }}
+        run: |
+          test "$GITHUB_REF" = 'refs/tags/v2.3.0'
+          node scripts/v2/validate-v23-acceptance.mjs
+          node scripts/v2/v23-release-gate.mjs --release

@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, feature/abu-universal, feature/v2.2-ga]
+    branches: [main, feature/abu-universal, feature/v2.2-ga, feature/v2.3-universal-program-intelligence]
     tags: ['v*']
   pull_request:
   workflow_dispatch:
@@ -26,25 +26,31 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - name: Prepare workspace-local temporary directory (Windows)
+      - name: Prepare runner-local temporary directory (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $runtimeTemp = Join-Path $env:GITHUB_WORKSPACE '.runtime\tmp'
+          $runtimeTemp = Join-Path $env:RUNNER_TEMP 'armorbreak-ci-tmp'
           New-Item -ItemType Directory -Force -Path $runtimeTemp | Out-Null
           [System.IO.File]::AppendAllText($env:GITHUB_ENV, "TEMP=$runtimeTemp`nTMP=$runtimeTemp`n")
 
-      - name: Prepare workspace-local temporary directory (Unix)
+      - name: Prepare runner-local temporary directory (Unix)
         if: runner.os != 'Windows'
         shell: bash
         run: |
-          runtime_temp="$GITHUB_WORKSPACE/.runtime/tmp"
+          runtime_temp="$RUNNER_TEMP/armorbreak-ci-tmp"
           mkdir -p "$runtime_temp"
           printf 'TMPDIR=%s\nTEMP=%s\nTMP=%s\n' "$runtime_temp" "$runtime_temp" "$runtime_temp" >> "$GITHUB_ENV"
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: ${{ matrix.node }}
+
+      # The M5 behavior regression suite executes a self-authored Python
+      # reference fixture; pin its runtime instead of relying on runner image PATH.
+      - uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v5
+        with:
+          python-version: '3.11'
 
       - name: Environment facts
         run: node --version && node -e "console.log(process.platform, process.arch)"
@@ -139,6 +145,10 @@ jobs:
 
   release-evidence:
     name: Release evidence checks (commit-bound)
+    # V2.3 has a separate exact-head acceptance manifest. Preserve the V2.2
+    # release gates for every other branch/tag; do not reinterpret V2.3 source
+    # changes as an evidence-only append to the inherited V2.2 baseline.
+    if: ${{ !((github.event_name == 'pull_request' && startsWith(github.head_ref, 'feature/v2.3-')) || (github.event_name != 'pull_request' && startsWith(github.ref_name, 'feature/v2.3-'))) }}
     runs-on: ubuntu-latest
     permissions:
       contents: read

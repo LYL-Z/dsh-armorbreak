@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "armorbreak.v2.3.m1-evidence/v1",
+  "capturedOn": "2026-10-26",
+  "sourceCommit": "3135688b3a5cbea89798bc0c61a2a45abfa38312",
+  "branch": "feature/v2.3-universal-program-intelligence",
+  "environment": {
+    "os": "Windows 11 build 26300",
+    "platform": "win32",
+    "node": "v24.16.0",
+    "npm": "11.13.0",
+    "tempLocation": "ignored .runtime directory on the same D: volume as the worktree"
+  },
+  "implementation": {
+    "capabilityIds": [
+      "artifact.identify",
+      "artifact.inventory"
+    ],
+    "workflowIds": [
+      "UniversalArtifactTriage"
+    ],
+    "supportLevel": "S1",
+    "scope": "bounded local identification and ZIP/TAR/GZIP inventory; L0; no payload execution or archive extraction to disk",
+    "fixtures": {
+      "positiveOrUnknown": 40,
+      "adversarial": 22,
+      "oversizedResultBudget": 1,
+      "allLocallyGenerated": true,
+      "thirdPartySampleE2E": false
+    },
+    "liveCoreIntegration": [
+      "artifact.identify via ExecutionRunner and PolicyGateway",
+      "artifact.inventory via ExecutionRunner and PolicyGateway",
+      "UniversalArtifactTriage via prepareTask and runWorkflow"
+    ]
+  },
+  "commands": [
+    {
+      "command": "node --test tests/program-intelligence-artifact.test.mjs",
+      "exitCode": 0,
+      "tests": 70,
+      "passed": 70,
+      "failed": 0,
+      "durationMs": 717.4906,
+      "rawLog": {
+        "path": "docs/v2.3/evidence/m1/artifact-tests.log",
+        "sha256": "74a3ec13f8aedb6d5294cfd821cff46e8ca1c004c43be208f49bd58dd3958f69",
+        "bytes": 3040,
+        "committed": false
+      }
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "rawLog": {
+        "path": "docs/v2.3/evidence/m1/typecheck.log",
+        "sha256": "be1de938e1878b0f813efa18e6f85d5b2d36dd2e33247901bdb91d5ad6c92d45",
+        "bytes": 62,
+        "committed": false
+      }
+    },
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "tests": 600,
+      "passed": 600,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 139865.7689,
+      "rawLog": {
+        "path": "docs/v2.3/evidence/m1/full-test.log",
+        "sha256": "16960053cc49c0d25abcba341ba76b537e06391980cb9eb663dae9d95cf8e8e2",
+        "bytes": 68466,
+        "committed": false
+      }
+    },
+    {
+      "command": "node --check intake.js, manifest.js, program-intelligence-artifact.test.mjs, build-release.mjs, release-build.test.mjs; git diff --check",
+      "exitCode": 0,
+      "status": "PASS"
+    }
+  ],
+  "intermediateAttempt": {
+    "command": "npm test (before M1 source commit)",
+    "exitCode": 1,
+    "classification": "EXPECTED_DIRTY_SOURCE_GUARD",
+    "detail": "release and portable artifact tests require committed source; build-release.mjs rejected dirty source paths. The suite was rerun after commit 3135688 and passed 600/600.",
+    "rawLogRetained": false
+  },
+  "registrySnapshot": {
+    "path": "docs/v2.3/evidence/m1/current-registry.json",
+    "sourceCommit": "3135688b3a5cbea89798bc0c61a2a45abfa38312",
+    "capabilityCount": 48,
+    "domainCount": 9,
+    "workflowCount": 10,
+    "diagnostics": 0
+  },
+  "limits": [
+    "CI/PR jobs have not yet run for this commit.",
+    "No real third-party application or external-tool analysis E2E was run by M1.",
+    "The external adapters in the M0 registry snapshot remain DETECTED or MOCK_ONLY as recorded; Docker isolation self-test is evidence for a task-local state root, not sample execution or global L1 approval."
+  ],
+  "evidenceDigests": {
+    "currentRegistrySha256": "d63b15ae39ce32aea9f3dc0b2c7e4170b070e2a1a77875ee48b899359b21ef06",
+    "compatibilityMatrixSha256": "9d7d397c787dd7414b4578f1ae422d6e9336a5b993f782953c4d152450233ff0",
+    "m1ImplementationDocSha256": "14fba25cd96783b023c03240c92c36604c7eb381ba6cecf98f436879a2ff3c1a"
+  }
+}

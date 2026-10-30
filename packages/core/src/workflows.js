@@ -12,6 +12,54 @@
 
 /** @type {Record<string, WorkflowDefinition>} */
 export const WORKFLOWS = {
+  UniversalArtifactTriage: {
+    id: 'UniversalArtifactTriage',
+    title: '通用产物清点与归档索引',
+    description: '对授权的本地项目目录做有界文件清单、格式候选识别与 ZIP/TAR/GZIP 内嵌关系索引；成员只在内存中读取，不执行或写出样本。',
+    targetKind: 'directory',
+    steps: [
+      { id: 'inventory', title: '产物识别与递归清单', capabilityId: 'artifact.inventory' },
+    ],
+  },
+  CrossLanguageSourceReview: {
+    id: 'CrossLanguageSourceReview',
+    title: '跨语言源码符号审查',
+    description: '从授权本地目录中为 JS/TS 文件生成 S2 语法、符号、导入导出与同文件引用；其他语言、跨文件解析、类型语义和数据流会明确报告为覆盖限制。',
+    targetKind: 'directory',
+    steps: [
+      { id: 'symbols', title: 'JS/TS 符号与引用索引', capabilityId: 'source.symbols' },
+    ],
+  },
+  NativeProgramIRReview: {
+    id: 'NativeProgramIRReview',
+    title: '原生二进制 Program IR 审查',
+    description: '对授权的 PE、ELF、Mach-O 文件汇总结构证据，并请求锁定版本的 Ghidra 静态函数、基本块与调用边。字节码与行为执行分析仍按实际后端能力降级。',
+    targetKind: 'file',
+    steps: [
+      { id: 'identify', title: '文件识别与哈希', capabilityId: 'binary.identify' },
+      { id: 'headers', title: '加载布局与区段', capabilityId: 'binary.headers' },
+      { id: 'symbols', title: '符号与函数线索', capabilityId: 'binary.structure' },
+      { id: 'program-ir', title: '归一化 Program IR 与 Ghidra 调用图', capabilityId: 'binary.program_ir' },
+    ],
+  },
+  UniversalSecurityReview: {
+    id: 'UniversalSecurityReview',
+    title: '通用安全证据关联审查',
+    description: '读取本地 armorbreak.security-evidence-bundle/v1 文件，离线归并既有扫描结果、SARIF 和供应链来源；保留来源、脱敏并输出 JSON/SARIF。它不替代各扫描器，也不执行样本或将来源关联提升为漏洞确认。',
+    targetKind: 'file',
+    steps: [
+      { id: 'correlate', title: '关联本地安全证据包', capabilityId: 'security.correlate' },
+    ],
+  },
+  AuthorizedBehaviorReconstruction: {
+    id: 'AuthorizedBehaviorReconstruction',
+    title: '授权行为规格与有限差异比较',
+    description: '读取带 artifact 哈希、有限测试用例、参考/候选预生成结果和证据引用的本地行为对照包。只比较已经产生的结果，不编译或启动程序；超时、随机/不确定输出和环境不匹配返回 INCONCLUSIVE。',
+    targetKind: 'file',
+    steps: [
+      { id: 'compare', title: '比较已生成的离线行为结果', capabilityId: 'rebuild.compare' },
+    ],
+  },
   BinaryStaticAnalysis: {
     id: 'BinaryStaticAnalysis',
     title: '二进制静态分析',

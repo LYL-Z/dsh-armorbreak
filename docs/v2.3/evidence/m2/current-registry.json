@@ -1,0 +1,447 @@
+{
+  "schemaVersion": "armorbreak.v2.3.runtime-snapshot/v1",
+  "generatedAt": "2026-10-27T09:17:09.262Z",
+  "sourceCommit": "47b5869a7d18e32c057aa6d2083693f920a21340",
+  "branch": "feature/v2.3-universal-program-intelligence",
+  "packageVersion": "2.2.0",
+  "platform": "win32",
+  "arch": "x64",
+  "osRelease": "10.0.26300",
+  "node": "v24.16.0",
+  "typescript": "5.9.3",
+  "capabilityCount": 49,
+  "domainCount": 10,
+  "capabilitiesByRisk": {
+    "L0": 47,
+    "L1": 1,
+    "L2": 1
+  },
+  "capabilitiesByDomain": {
+    "android": 6,
+    "artifact": 2,
+    "binary": 7,
+    "ctf": 5,
+    "forensics": 6,
+    "live": 2,
+    "network": 8,
+    "sast": 8,
+    "source": 1,
+    "web": 4
+  },
+  "workflowCount": 11,
+  "capabilities": [
+    {
+      "id": "android.apk_structure",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "android.dex",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "android.findings",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "android.jadx",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "android.manifest",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "android.signing",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "artifact.identify",
+      "domain": "artifact",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "artifact.inventory",
+      "domain": "artifact",
+      "riskLevel": "L0",
+      "targetKind": "directory"
+    },
+    {
+      "id": "binary.behavior",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "binary.entropy",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "binary.ghidra",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "binary.headers",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "binary.identify",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "binary.strings",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "binary.structure",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "ctf.classify",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "ctf.crypto_basics",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "ctf.decode",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "ctf.flag_scan",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "ctf.hash_id",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "forensics.filetype",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "forensics.hash",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "forensics.ioc",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "forensics.metadata",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "forensics.timeline",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "forensics.yara_lite",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "live.container_exec",
+      "domain": "live",
+      "riskLevel": "L1",
+      "targetKind": "file"
+    },
+    {
+      "id": "live.http_probe",
+      "domain": "live",
+      "riskLevel": "L2",
+      "targetKind": "network"
+    },
+    {
+      "id": "network.anomalies",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "network.dns",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "network.flows",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "network.http",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "network.iocs",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "network.pcap_overview",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "network.tls",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "network.tshark",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "sast.deps",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory"
+    },
+    {
+      "id": "sast.patch_suggestion",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "sast.sbom",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory"
+    },
+    {
+      "id": "sast.scan",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory"
+    },
+    {
+      "id": "sast.secrets",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory"
+    },
+    {
+      "id": "sast.semgrep",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory"
+    },
+    {
+      "id": "sast.syft",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory"
+    },
+    {
+      "id": "sast.trivy",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory"
+    },
+    {
+      "id": "source.symbols",
+      "domain": "source",
+      "riskLevel": "L0",
+      "targetKind": "directory"
+    },
+    {
+      "id": "web.har",
+      "domain": "web",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "web.headers",
+      "domain": "web",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "web.http_message",
+      "domain": "web",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    },
+    {
+      "id": "web.openapi",
+      "domain": "web",
+      "riskLevel": "L0",
+      "targetKind": "file"
+    }
+  ],
+  "workflows": [
+    {
+      "id": "UniversalArtifactTriage",
+      "title": "通用产物清点与归档索引",
+      "description": "对授权的本地项目目录做有界文件清单、格式候选识别与 ZIP/TAR/GZIP 内嵌关系索引；成员只在内存中读取，不执行或写出样本。",
+      "targetKind": "directory",
+      "steps": 1
+    },
+    {
+      "id": "CrossLanguageSourceReview",
+      "title": "跨语言源码符号审查",
+      "description": "从授权本地目录中为 JS/TS 文件生成 S2 语法、符号、导入导出与同文件引用；其他语言、跨文件解析、类型语义和数据流会明确报告为覆盖限制。",
+      "targetKind": "directory",
+      "steps": 1
+    },
+    {
+      "id": "BinaryStaticAnalysis",
+      "title": "二进制静态分析",
+      "description": "对 PE/ELF/Mach-O 样本做格式识别、结构、函数/符号、字符串、熵、哈希与 IOC 关联，全程离线、不执行样本。",
+      "targetKind": "file",
+      "steps": 7
+    },
+    {
+      "id": "AndroidAPKReview",
+      "title": "Android APK 安全审计",
+      "description": "APK 结构、二进制 Manifest、DEX、签名与权限/组件暴露审计，全程离线。",
+      "targetKind": "file",
+      "steps": 5
+    },
+    {
+      "id": "WebCodeSecurityReview",
+      "title": "Web/源码安全审计",
+      "description": "对本地代码目录做危险调用、敏感信息、依赖与供应链审计，产出 CWE 映射与修复建议。",
+      "targetKind": "directory",
+      "steps": 4
+    },
+    {
+      "id": "PCAPInvestigation",
+      "title": "PCAP 流量取证分析",
+      "description": "离线解析 PCAP/PCAPNG：会话、DNS、TLS 元数据、HTTP、IOC 与异常模式。",
+      "targetKind": "file",
+      "steps": 7
+    },
+    {
+      "id": "DependencyAudit",
+      "title": "依赖与供应链审计",
+      "description": "对代码目录的依赖清单做盘点、SBOM 生成与密钥泄漏检查；缺少漏洞库时不伪造 CVE 结论。",
+      "targetKind": "directory",
+      "steps": 3
+    },
+    {
+      "id": "CTFArtifactAnalysis",
+      "title": "CTF 题目产物分析",
+      "description": "题目文件分类、哈希识别、编码/古典密码启发式与 flag 模式扫描；仅用于本地题目与靶场。",
+      "targetKind": "file",
+      "steps": 4
+    },
+    {
+      "id": "ForensicFileReview",
+      "title": "数字取证文件审查",
+      "description": "文件类型、哈希、元数据、时间线、IOC 与规则匹配，形成可复核证据链。",
+      "targetKind": "file",
+      "steps": 6
+    },
+    {
+      "id": "WebAPIReview",
+      "title": "Web API 规范审计",
+      "description": "审计 OpenAPI 规范与 HAR 记录：认证/授权、安全响应头、Cookie、CORS、敏感参数。",
+      "targetKind": "file",
+      "steps": 2
+    },
+    {
+      "id": "SecurityReportGeneration",
+      "title": "安全研究报告生成",
+      "description": "不执行分析，仅从任务已有证据/发现生成报告（Markdown/HTML/JSON/SARIF/PDF）。",
+      "targetKind": "none",
+      "steps": 0
+    }
+  ],
+  "registry": {
+    "loaded": true,
+    "capabilities": 49,
+    "domains": [
+      "android",
+      "artifact",
+      "binary",
+      "ctf",
+      "forensics",
+      "live",
+      "network",
+      "sast",
+      "source",
+      "web"
+    ],
+    "diagnostics": []
+  },
+  "isolation": {
+    "capturedAt": "2026-10-27T09:17:09.262Z",
+    "docker": {
+      "state": "Installed",
+      "version": "Docker version 29.8.1, build 4a63305",
+      "reason": "CLI 已安装，但守护进程不可用：docker info --format {{.ServerVersion}} failed: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.\n"
+    },
+    "podman": {
+      "state": "Unavailable",
+      "reason": "Podman CLI 未安装"
+    },
+    "wsl2": {
+      "state": "Installed",
+      "note": "WSL2 可用不等于未知样本可安全执行；默认不把它作为安全沙箱，也不自动启用。"
+    },
+    "l1": {
+      "available": false,
+      "verified": false,
+      "provider": null,
+      "state": "Unavailable",
+      "reason": "没有可用的隔离提供者"
+    }
+  }
+}

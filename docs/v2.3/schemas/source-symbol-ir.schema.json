@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://armorbreak.dev/schemas/v2.3/source-symbol-ir.schema.json",
+  "title": "ArmorBreak Source Symbol IR v1",
+  "type": "object",
+  "required": ["schemaVersion", "parser", "summary", "files", "analysis"],
+  "properties": {
+    "schemaVersion": { "const": "armorbreak.source-symbol-ir/v1" },
+    "parser": {
+      "type": "object",
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "const": "typescript-compiler-api" },
+        "version": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "summary": {
+      "type": "object",
+      "required": ["filesProvided", "filesParsed", "filesOmitted", "filesWithSyntaxErrors", "filesTruncated", "symbols", "imports", "exports", "references", "unknownEdges", "recordsEmitted", "omittedRecords", "filesExcludedByLayer", "excludedFileDetailsOmitted"],
+      "properties": {
+        "filesProvided": { "type": "integer", "minimum": 0 },
+        "filesParsed": { "type": "integer", "minimum": 0 },
+        "filesOmitted": { "type": "integer", "minimum": 0 },
+        "filesWithSyntaxErrors": { "type": "integer", "minimum": 0 },
+        "filesTruncated": { "type": "integer", "minimum": 0 },
+        "filesExcludedByLayer": { "type": "integer", "minimum": 0 },
+        "excludedFileDetailsOmitted": { "type": "integer", "minimum": 0 },
+        "symbols": { "type": "integer", "minimum": 0 },
+        "imports": { "type": "integer", "minimum": 0 },
+        "exports": { "type": "integer", "minimum": 0 },
+        "references": { "type": "integer", "minimum": 0 },
+        "unknownEdges": { "type": "integer", "minimum": 0 },
+        "recordsEmitted": { "type": "integer", "minimum": 0 },
+        "omittedRecords": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "sourceLayers", "language", "supportLevel", "parserId", "parserVersion", "languageVersion", "truncated", "status", "syntaxErrorCount", "syntaxErrors", "symbols", "imports", "exports", "references", "unknownEdges", "unsupportedFeatures", "coverage"],
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "sourceLayers": { "type": "array", "items": { "enum": ["product", "test", "generated", "vendor", "build-output"] } },
+          "language": { "enum": ["JavaScript", "TypeScript"] },
+          "supportLevel": { "const": "S2" },
+          "parserId": { "const": "typescript-compiler-api" },
+          "parserVersion": { "type": "string", "minLength": 1 },
+          "languageVersion": { "type": "string", "minLength": 1 },
+          "truncated": { "type": "boolean" },
+          "status": { "enum": ["COMPLETE", "PARTIAL"] },
+          "syntaxErrorCount": { "type": "integer", "minimum": 0 },
+          "syntaxErrors": { "type": "array", "items": { "type": "object" } },
+          "symbols": { "type": "array", "items": { "type": "object" } },
+          "imports": { "type": "array", "items": { "type": "object" } },
+          "exports": { "type": "array", "items": { "type": "object" } },
+          "references": { "type": "array", "items": { "type": "object" } },
+          "unknownEdges": { "type": "array", "items": { "type": "object" } },
+          "unsupportedFeatures": { "type": "array", "items": { "type": "string" } },
+          "coverage": { "type": "object" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "unsupportedFiles": { "type": "array", "items": { "type": "object" } },
+    "excludedFiles": { "type": "array", "items": { "type": "object" } },
+    "analysis": {
+      "type": "object",
+      "required": ["level", "status", "warnings", "limitsApplied", "coverageNotes", "extraction"],
+      "properties": {
+        "level": { "const": "S2" },
+        "status": { "enum": ["COMPLETE", "PARTIAL", "UNSUPPORTED"] },
+        "warnings": { "type": "array", "items": { "type": "string" } },
+        "limitsApplied": { "type": "array", "items": { "type": "string" } },
+        "coverageNotes": { "type": "array", "items": { "type": "string" } },
+        "extraction": { "const": "IN_MEMORY_ONLY_NO_CODE_EXECUTED" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

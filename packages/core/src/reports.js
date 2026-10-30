@@ -137,7 +137,8 @@ function renderMarkdown(data) {
     lines.push('')
     lines.push(`- 编号：\`${finding.id}\``)
     lines.push(`- 严重程度：**${finding.severity}**（评分依据：${finding.cvss !== null ? `CVSS ${finding.cvss}` : `严重程度映射 ${SEVERITY_SCORE[finding.severity] ?? 'n/a'}`}）`)
-    lines.push(`- 验证状态：**${finding.verification}**（observed=直接观测；corroborated=多源印证；hypothesis=假设；unverified=未验证）`)
+    lines.push(`- 证据成熟度：**${finding.verification}**（observed=来源直接报告的事实；corroborated=不同来源族关联；hypothesis=来源推断；unverified=来源状态未知）`)
+    lines.push(`- 漏洞验证：**${finding.vulnerabilityStatus ?? 'not_tested'}**（证据关联不等于独立复现）`)
     lines.push(`- CWE：${finding.cwe ? `${finding.cwe} — ${cweUrl(finding.cwe)}` : '未映射'}`)
     lines.push(`- 检测方法：${finding.method}`)
     lines.push(`- 定位：\`${finding.target ?? '-'}\``)
@@ -303,16 +304,37 @@ function renderSarif(data) {
         properties: { tags: finding.cwe ? ['security', `external/cwe/${finding.cwe.toLowerCase()}`] : ['security'] },
       })
     }
+    const evidenceById = new Map(data.evidence.map((item) => [item.id, item]))
+    const relatedLocations = []
+    for (const evidenceId of finding.evidenceIds ?? []) {
+      const item = evidenceById.get(evidenceId)
+      const location = item?.meta?.location
+      if (!location || typeof location.uri !== 'string' || !location.uri) continue
+      const primaryUri = parseReportTarget(finding.target)?.uri
+      if (location.uri === primaryUri && location.startLine === parseReportTarget(finding.target)?.line) continue
+      relatedLocations.push({
+        id: relatedLocations.length + 1,
+        message: { text: `${item.title}: ${item.excerpt}`.slice(0, 2000) },
+        physicalLocation: {
+          artifactLocation: { uri: location.uri },
+          ...(Number.isSafeInteger(location.startLine) && location.startLine > 0 ? { region: { startLine: location.startLine, ...(Number.isSafeInteger(location.startColumn) && location.startColumn > 0 ? { startColumn: location.startColumn } : {}) } } : {}),
+        },
+      })
+    }
+    const parsedTarget = parseReportTarget(finding.target)
     results.push({
       ruleId,
       level: sarifLevel(finding.severity),
       message: { text: `${finding.title} — ${finding.description || 'no description'} (verification: ${finding.verification})` },
-      locations: finding.target
-        ? [{ physicalLocation: { artifactLocation: { uri: finding.target }, region: { startLine: 1 } } }]
+      locations: parsedTarget
+        ? [{ physicalLocation: { artifactLocation: { uri: parsedTarget.uri }, ...(parsedTarget.line ? { region: { startLine: parsedTarget.line, ...(parsedTarget.column ? { startColumn: parsedTarget.column } : {}) } } : {}) } }]
         : [],
+      ...(relatedLocations.length ? { relatedLocations } : {}),
       properties: {
         severity: finding.severity,
         verification: finding.verification,
+        evidenceStatus: finding.verification,
+        vulnerabilityStatus: finding.vulnerabilityStatus ?? 'not_tested',
         method: finding.method,
         evidenceIds: finding.evidenceIds,
         remediation: finding.remediation,
@@ -343,6 +365,18 @@ function renderSarif(data) {
     null,
     2,
   )
+}
+
+/** Parse `path:line[:column]` while preserving Windows drive-letter colons. */
+function parseReportTarget(target) {
+  if (typeof target !== 'string' || !target.trim()) return null
+  const match = /^(.*?):(\d+)(?::(\d+))?$/.exec(target)
+  if (!match) return { uri: target.replace(/\\/g, '/'), line: null, column: null }
+  return {
+    uri: match[1].replace(/\\/g, '/'),
+    line: Number(match[2]) || null,
+    column: match[3] ? Number(match[3]) || null : null,
+  }
 }
 
 /**
