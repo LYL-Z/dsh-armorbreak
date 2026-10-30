@@ -1,6 +1,6 @@
 {
   "schemaVersion": "armorbreak.v2.3.p0-h-node22-local-validation/v1",
-  "sourceCommit": "82ef2f3ce8bff1b3bed3405bfa81329a77345b1b",
+  "sourceCommit": "679bbeb6152d9f9c9f151c5bae6f7c01d098b357",
   "capturedOn": "2026-10-29",
   "environment": {
     "os": "Windows 11 x64",
@@ -10,6 +10,7 @@
   "runs": [
     {
       "id": "initial-invalid-temp-setup",
+      "sourceCommit": "82ef2f3ce8bff1b3bed3405bfa81329a77345b1b",
       "command": "npm exec --yes --package=node@22 -- node --test --test-concurrency=1",
       "tempLocation": "inside the repository worktree (invalid for this clean-room test)",
       "status": "ENVIRONMENT_INVALID",
@@ -26,6 +27,7 @@
     },
     {
       "id": "rerun-isolated-same-volume-temp",
+      "sourceCommit": "82ef2f3ce8bff1b3bed3405bfa81329a77345b1b",
       "command": "npm exec --yes --package=node@22 -- node --test --test-concurrency=1",
       "tempLocation": "separate directory on the same volume, outside repository ancestry",
       "status": "PASS",
@@ -41,10 +43,30 @@
         "path": ".runtime/p0-h-node22-isolated-temp-test.log",
         "sha256": "7b61004ffc7d89877a9c7d2801039b3cddf3ff29a103854d5f8dc05d1081c1b2"
       }
+    },
+    {
+      "id": "exact-source-rerun",
+      "sourceCommit": "679bbeb6152d9f9c9f151c5bae6f7c01d098b357",
+      "command": "npm exec --yes --package=node@22 -- node --test --test-concurrency=1",
+      "tempLocation": "separate directory on the same volume, outside repository ancestry",
+      "status": "PASS",
+      "tests": 647,
+      "passed": 647,
+      "failed": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "todo": 0,
+      "durationMs": 142499.8253,
+      "exitCode": 0,
+      "log": {
+        "path": ".runtime/p0-h-node22-final-test.log",
+        "sha256": "95bc6d58445ed9178b6de39a1c187963b487732e91db958e865bfe61562b962a"
+      }
     }
   ],
   "typecheck": {
     "command": "npm exec --yes --package=node@22 -- node node_modules/typescript/bin/tsc -p tsconfig.json",
+    "sourceCommit": "679bbeb6152d9f9c9f151c5bae6f7c01d098b357",
     "exitCode": 0,
     "stdout": "empty",
     "stderr": "empty"

@@ -10,7 +10,6 @@ This report follows taskbook §15. It reports the latest evidence available for 
 - M6 source: `965fbe4fa9abd2af73644865a56d8db64c8a6089`; local evidence commit: `945a8363a77a8e580609854f82859ea774c8b031`.
 - Windows 11 build 26300, x64; baseline and M6 recorded Node `v24.16.0`, npm `11.13.0`; TypeScript lock `5.9.3`.
 - Frozen M0 full test: 530/530 on the baseline after setting TEMP/TMP to a same-volume worktree directory; default cross-volume run had 6 environment-dependent failures and was retained in evidence. Candidate M6 evidence reports 647/647 on the exact M6 source SHA.
-- The working repository during this report has one uncommitted interruption-checkpoint edit. It records the pause; it is not a code change.
 
 ## 2. IMPLEMENTED
 
@@ -36,7 +35,7 @@ Observed M6 runtime registry: 53 capabilities / 12 domains (51 L0, 1 L1, 1 L2), 
 | M4 corpus | `evidence/m4/vulnerability-corpus-metrics.json`; 20 groups / 60 snippets; TP=20 FP=20 FN=0 TN=20; precision .50, recall 1.00, FPR .50 | Authored regex corpus only; not a real-world accuracy estimate or independent confirmation |
 | M5 behavior | `evidence/m5/m5-validation.json`; 11 cases, 8 compared, 5 pass, 3 fail, 3 inconclusive | Authored JS/Python local fixtures; ArmorBreak itself receives precomputed results and does not execute programs |
 | M6 integration | `evidence/m6/m6-validation.json`; full suite 647/647, focused CLI/MCP/API 24/24, typecheck exit 0 | Windows / Node 24 local exact-source run; no exact-head CI yet |
-| Node 22 compatibility | `evidence/p0-h/node22-local-validation.json`; corrected Windows run 647/647 and TypeScript check exit 0 | Local Node `v22.23.4`; first attempt's temp-root setup invalidated clean-room isolation and is recorded separately; Linux/CI still outstanding |
+| Node 22 compatibility | `evidence/p0-h/node22-local-validation.json`; exact source `679bbeb6152d9f9c9f151c5bae6f7c01d098b357`, 647/647 and TypeScript check exit 0 | Local Windows Node `v22.23.4`; the invalid temp-root attempt is retained separately; Linux/CI still outstanding |
 | Performance | [`performance-report.md`](performance-report.md) and sanitized raw benchmark | Same benchmark script/Node/OS family; baseline CPU identity not recorded, no peak-memory comparison |
 
 The stage JSON records include exact source SHAs, commands, counts and evidence hashes. Fixture SHA-256 values are catalogued in `fixture-catalog.json` and stage evidence. M3 tool versions are in its exact evidence record. Full raw M6 test output is ignored locally; the committed JSON records its log digest.
@@ -80,7 +79,7 @@ See [`performance-report.md`](performance-report.md). In the recorded seven-step
 
 - Candidate/current evidence SHA at the previous pause: `945a8363a77a8e580609854f82859ea774c8b031`; M6 source SHA: `965fbe4fa9abd2af73644865a56d8db64c8a6089`.
 - `npm test` at M6 SHA: 647/647; focused CLI/MCP/API: 24/24; `npm run typecheck`: exit 0.
-- Node 22.23.4 local validation at `82ef2f3ce8bff1b3bed3405bfa81329a77345b1b`: full suite 647/647 and TypeScript check exit 0; the exact log hashes and invalid first attempt are recorded in `evidence/p0-h/node22-local-validation.json`.
+- Node 22.23.4 local validation at `679bbeb6152d9f9c9f151c5bae6f7c01d098b357`: full suite 647/647 and TypeScript check exit 0; the exact log hashes and invalid first attempt are recorded in `evidence/p0-h/node22-local-validation.json`.
 - GitHub CI run IDs/URLs, exact-head statuses, package hashes, SBOM and attestation: **NOT_RUN / NOT_CREATED** at report time.
 - Migration and rollback drill: **NOT_RUN**.
 - Owner merge/tag/publish decision: pending; this report is not an authorization.
