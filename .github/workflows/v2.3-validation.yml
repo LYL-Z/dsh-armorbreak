@@ -35,19 +35,19 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: npm
 
-      - name: Prepare workspace-local temporary directory (Windows)
+      - name: Prepare runner-local temporary directory (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $runtimeTemp = Join-Path $env:GITHUB_WORKSPACE '.runtime\tmp'
+          $runtimeTemp = Join-Path $env:RUNNER_TEMP 'armorbreak-v23-ci-tmp'
           New-Item -ItemType Directory -Force -Path $runtimeTemp | Out-Null
           [System.IO.File]::AppendAllText($env:GITHUB_ENV, "TEMP=$runtimeTemp`nTMP=$runtimeTemp`n")
 
-      - name: Prepare workspace-local temporary directory (Unix)
+      - name: Prepare runner-local temporary directory (Unix)
         if: runner.os != 'Windows'
         shell: bash
         run: |
-          runtime_temp="$GITHUB_WORKSPACE/.runtime/tmp"
+          runtime_temp="$RUNNER_TEMP/armorbreak-v23-ci-tmp"
           mkdir -p "$runtime_temp"
           printf 'TMPDIR=%s\nTEMP=%s\nTMP=%s\n' "$runtime_temp" "$runtime_temp" "$runtime_temp" >> "$GITHUB_ENV"
 

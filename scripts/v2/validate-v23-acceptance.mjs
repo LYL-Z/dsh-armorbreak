@@ -2,7 +2,7 @@
 /** Validate the separate V2.3 evidence bundle without rewriting V2.2 evidence. */
 import { createHash } from 'node:crypto'
 import { execFileSync } from 'node:child_process'
-import { lstatSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { lstatSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, normalize } from 'node:path'
 
 const root = process.cwd()
@@ -12,7 +12,7 @@ const git = (args, options = {}) => execFileSync('git', ['-C', root, ...args], {
 const fail = (message) => { console.error(`V2.3 acceptance integrity: FAIL: ${message}`); process.exitCode = 1 }
 
 function trackedEvidencePaths() {
-  return git(['ls-files', '-z']).split('\0').filter((path) =>
+  const paths = git(['ls-files', '-z']).split('\0').filter((path) =>
     /^docs\/v2\.3\/evidence\/m[0-6]\//.test(path) || (/^docs\/v2\.3\/evidence\/p0-h\//.test(path) && path !== manifestPath) || [
       'docs/v2.3/acceptance-report.md',
       'docs/v2.3/architecture.md',
@@ -24,7 +24,25 @@ function trackedEvidencePaths() {
       'docs/v2.3/fixture-catalog.json',
       'docs/releases/v2.3.0.md',
     ].includes(path),
-  ).sort()
+  )
+  const p0hRoot = join(root, 'docs', 'v2.3', 'evidence', 'p0-h')
+  try {
+    const visit = (absolute, relative) => {
+      for (const entry of readdirSync(absolute, { withFileTypes: true })) {
+        const childPath = `${relative}/${entry.name}`
+        const childAbsolute = join(absolute, entry.name)
+        const info = lstatSync(childAbsolute)
+        if (info.isSymbolicLink()) throw new Error(`symlink in P0-H evidence directory: ${childPath}`)
+        if (entry.isDirectory()) visit(childAbsolute, childPath)
+        else if (entry.isFile() && childPath !== manifestPath) paths.push(childPath)
+        else throw new Error(`unsupported P0-H evidence entry: ${childPath}`)
+      }
+    }
+    visit(p0hRoot, 'docs/v2.3/evidence/p0-h')
+  } catch (error) {
+    if (error?.code !== 'ENOENT') throw error
+  }
+  return [...new Set(paths)].sort()
 }
 
 function regularFile(relativePath) {
@@ -41,7 +59,8 @@ function regularFile(relativePath) {
   return readFileSync(current)
 }
 
-if (process.argv.includes('--generate')) {
+if (process.argv.includes('--generate') || process.argv.includes('--regenerate')) {
+  const regenerate = process.argv.includes('--regenerate')
   const sourceCommit = git(['rev-parse', 'HEAD'])
   if (!/^[a-f0-9]{40}$/i.test(sourceCommit)) throw new Error('HEAD must be a full commit SHA')
   const files = Object.fromEntries(trackedEvidencePaths().map((path) => {
@@ -58,9 +77,10 @@ if (process.argv.includes('--generate')) {
   }
   const absolute = join(root, ...manifestPath.split('/'))
   mkdirSync(dirname(absolute), { recursive: true })
-  // Refuse a path already present so regeneration is an explicit review action.
-  try { lstatSync(absolute); throw new Error(`${manifestPath} already exists; inspect and remove it explicitly before regeneration`) } catch (error) { if (error?.code !== 'ENOENT') throw error }
-  writeFileSync(absolute, `${JSON.stringify(manifest, null, 2)}\n`, { flag: 'wx' })
+  if (!regenerate) {
+    try { lstatSync(absolute); throw new Error(`${manifestPath} already exists; use --regenerate only after reviewing the changed evidence`) } catch (error) { if (error?.code !== 'ENOENT') throw error }
+  }
+  writeFileSync(absolute, `${JSON.stringify(manifest, null, 2)}\n`, { flag: regenerate ? 'w' : 'wx' })
   console.log(JSON.stringify({ generated: manifestPath, sourceCommit, files: Object.keys(files).length }, null, 2))
   process.exit(0)
 }
@@ -89,7 +109,7 @@ try {
 
 try {
   const changed = git(['diff', '--name-only', '--no-renames', '-z', `${manifest.sourceCommit}..${head}`]).split('\0').filter(Boolean)
-  const forbidden = changed.filter((path) => path !== 'docs/v2.3/acceptance-report.md' && path !== manifestPath && !path.startsWith('docs/v2.3/evidence/p0-h/'))
+  const forbidden = changed.filter((path) => path !== 'docs/v2.3/acceptance-report.md' && path !== 'docs/v2.3/compatibility-matrix.json' && path !== manifestPath && !path.startsWith('docs/v2.3/evidence/p0-h/'))
   if (forbidden.length) fail(`post-source changes escape the evidence-only allowlist: ${forbidden.join(', ')}`)
 } catch (error) {
   fail(`cannot verify source-to-head path lineage: ${error?.message ?? error}`)

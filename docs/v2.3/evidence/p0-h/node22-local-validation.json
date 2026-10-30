@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "armorbreak.v2.3.p0-h-node22-local-validation/v1",
+  "sourceCommit": "82ef2f3ce8bff1b3bed3405bfa81329a77345b1b",
+  "capturedOn": "2026-10-29",
+  "environment": {
+    "os": "Windows 11 x64",
+    "node": "v22.23.4",
+    "typescript": "5.9.3"
+  },
+  "runs": [
+    {
+      "id": "initial-invalid-temp-setup",
+      "command": "npm exec --yes --package=node@22 -- node --test --test-concurrency=1",
+      "tempLocation": "inside the repository worktree (invalid for this clean-room test)",
+      "status": "ENVIRONMENT_INVALID",
+      "tests": 647,
+      "passed": 646,
+      "failed": 1,
+      "skipped": 0,
+      "exitCode": 1,
+      "failure": "portable artifact clean-room extraction found the repository TypeScript dependency via the temp directory parent chain; this does not represent an isolated archive environment",
+      "log": {
+        "path": ".runtime/p0-h-node22-clean-test.log",
+        "sha256": "1eb45403e2bdb3797cdc67cf60aa031d47fdb1faf0097fe9a5dd7ead31475945"
+      }
+    },
+    {
+      "id": "rerun-isolated-same-volume-temp",
+      "command": "npm exec --yes --package=node@22 -- node --test --test-concurrency=1",
+      "tempLocation": "separate directory on the same volume, outside repository ancestry",
+      "status": "PASS",
+      "tests": 647,
+      "passed": 647,
+      "failed": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "todo": 0,
+      "durationMs": 148843.6306,
+      "exitCode": 0,
+      "log": {
+        "path": ".runtime/p0-h-node22-isolated-temp-test.log",
+        "sha256": "7b61004ffc7d89877a9c7d2801039b3cddf3ff29a103854d5f8dc05d1081c1b2"
+      }
+    }
+  ],
+  "typecheck": {
+    "command": "npm exec --yes --package=node@22 -- node node_modules/typescript/bin/tsc -p tsconfig.json",
+    "exitCode": 0,
+    "stdout": "empty",
+    "stderr": "empty"
+  },
+  "limitations": [
+    "This is a local Windows Node 22 compatibility run, not Node 22 GitHub CI or Ubuntu/Linux evidence.",
+    "The first run is retained as an invalid test-environment attempt and is not counted as product-test failure evidence."
+  ]
+}
