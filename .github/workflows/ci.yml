@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, feature/abu-universal, feature/v2.2-ga]
+    branches: [main, feature/abu-universal, feature/v2.2-ga, feature/v2.3-universal-program-intelligence]
     tags: ['v*']
   pull_request:
   workflow_dispatch:
@@ -139,6 +139,10 @@ jobs:
 
   release-evidence:
     name: Release evidence checks (commit-bound)
+    # V2.3 has a separate exact-head acceptance manifest. Preserve the V2.2
+    # release gates for every other branch/tag; do not reinterpret V2.3 source
+    # changes as an evidence-only append to the inherited V2.2 baseline.
+    if: ${{ !((github.event_name == 'pull_request' && startsWith(github.head_ref, 'feature/v2.3-')) || (github.event_name != 'pull_request' && startsWith(github.ref_name, 'feature/v2.3-'))) }}
     runs-on: ubuntu-latest
     permissions:
       contents: read

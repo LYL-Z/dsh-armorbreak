@@ -942,6 +942,32 @@
         "Consumes an explicitly prepared local bundle; does not invoke upstream scanners.",
         "CI and cross-platform workflow runs were not performed."
       ]
+    },
+    {
+      "id": "AuthorizedBehaviorReconstruction",
+      "priority": "P0",
+      "status": "PARTIAL_LOCAL_TESTED",
+      "verified": true,
+      "targetKind": "file",
+      "evidence": "docs/v2.3/evidence/m5/m5-validation.json",
+      "ci": "NOT_RUN",
+      "limitations": [
+        "Uses three authored fixture programs, but the capability compares caller-supplied precomputed results and does not infer arbitrary source behavior.",
+        "Timeout and nondeterminism are represented as inconclusive; exact-head CI and cross-platform runs were not yet performed."
+      ]
+    },
+    {
+      "id": "UniversalProgramIntelligenceAccess",
+      "priority": "P0",
+      "status": "PARTIAL_LOCAL_TESTED",
+      "verified": true,
+      "targetKind": "file",
+      "evidence": "docs/v2.3/evidence/m6/m6-validation.json",
+      "ci": "NOT_RUN",
+      "limitations": [
+        "MCP workflow start is fixed to registered workflows with L0 steps; no arbitrary commands or caller-supplied steps are accepted.",
+        "Registry status means registered, not executed; Node 22/Linux exact-head CI remained outstanding at this snapshot."
+      ]
     }
   ],
   "milestones": [
@@ -991,18 +1017,26 @@
     },
     {
       "id": "M5",
-      "status": "NOT_IMPLEMENTED",
-      "ci": "NOT_RUN"
+      "status": "PARTIAL_LOCAL_TESTED",
+      "sourceCommit": "7e42b1a5b5f1cf9c8833dd355b6c266cc62b15d3",
+      "evidence": "docs/v2.3/evidence/m5/m5-validation.json",
+      "ci": "NOT_RUN",
+      "limitation": "Three authored JS/Python reference/candidate fixture families were locally exercised; ArmorBreak consumes the resulting JSON only. No general source inference or global equivalence claim."
     },
     {
       "id": "M6",
-      "status": "NOT_IMPLEMENTED",
-      "ci": "NOT_RUN"
+      "status": "PARTIAL_LOCAL_TESTED",
+      "sourceCommit": "965fbe4fa9abd2af73644865a56d8db64c8a6089",
+      "evidence": "docs/v2.3/evidence/m6/m6-validation.json",
+      "ci": "NOT_RUN",
+      "limitation": "Local Windows exact-source tests passed; current PR-head CI, Node 22 and Ubuntu/Linux evidence had not yet been collected."
     },
     {
       "id": "P0-H",
-      "status": "NOT_IMPLEMENTED",
-      "ci": "NOT_RUN"
+      "status": "IN_PROGRESS",
+      "evidence": "docs/v2.3/acceptance-report.md",
+      "ci": "NOT_RUN",
+      "limitation": "Separate V2.3 evidence and documentation are being completed. Exact-head CI, Node 22/Linux, independent review, release artifacts/SBOM/attestation, and an upgrade/rollback drill are not yet verified."
     }
   ],
   "sourceSupportBaseline": [
