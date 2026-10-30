@@ -1,8 +1,8 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "e4b9e34c0f1341deab00bfcaeb6399b7b5a1f06f",
-  "generatedAt": "2026-10-30T02:51:45.468Z",
+  "sourceCommit": "c32d106ff4a7ff70c5e3c6db0b89e6be14700d1f",
+  "generatedAt": "2026-10-30T02:53:26.656Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     "docs/releases/v2.3.0.md": {
@@ -50,12 +50,12 @@
       "sha256": "2b05c7fb668573b77406bb981cd979b5a103b13c7f70d7873d3e01aca951a631"
     },
     "docs/v2.3/evidence/m2/interruption-checkpoint-2026-10-26.md": {
-      "size": 5053,
-      "sha256": "602b50f4cb58152ac953909442dd6f5e070d4e011e8163c05f09348ad08e0af0"
+      "size": 5028,
+      "sha256": "43ca545c2cc35ee4ef24054d39207dff33d4fa6d7cd325c26f08203dc14d1188"
     },
     "docs/v2.3/evidence/m2/test-results.json": {
-      "size": 6949,
-      "sha256": "3b98c68f08b3c429fe0d7db2063e5f756708bda7c4b5089c765a5c4cebb4accb"
+      "size": 6970,
+      "sha256": "df95cdd259212f63e6108eba3062b856fe47082e310a1b8b41d26700495d5cd7"
     },
     "docs/v2.3/evidence/m3/fixtures/malformed_elf.bin": {
       "size": 20,
@@ -110,12 +110,12 @@
       "sha256": "517da67e32e0a5be4ed29cf2e3a9d96977f44c2f410b77b88ff706ab6aa4f25e"
     },
     "docs/v2.3/evidence/m3/ghidra-bounded-scope-i386.json": {
-      "size": 6419,
-      "sha256": "e668c4d656e36a35b744290d59f63e318938d46b943fb63fe07bfc0c84c18cf4"
+      "size": 6384,
+      "sha256": "b8a7132810b4640b21a6e04f117fae1c2c85387146d05111c4c90145977c9baa"
     },
     "docs/v2.3/evidence/m3/m3-validation.json": {
-      "size": 3532,
-      "sha256": "5c6a4c503ae74d0b48b7211ff9090a1b6cacf03d233876476f88eaac2657397c"
+      "size": 3535,
+      "sha256": "71654ffd812e7538c99dcc15d58d4c4e82265b2cb35174c375fbe9fb012c2e7b"
     },
     "docs/v2.3/evidence/m3/mach-o-toolchain.json": {
       "size": 1620,
@@ -150,8 +150,8 @@
       "sha256": "408d700a2eeaec3bed1c65fe30ef76692fa357dc6c25b492e4adfcf2ba21a957"
     },
     "docs/v2.3/evidence/m3/windows-temp-volume-diagnostic.md": {
-      "size": 1679,
-      "sha256": "62b4a8d49fc6d242157a5b4c689ffc0e93d2a0af5d5ae6cd24e3d2d108e9f8b5"
+      "size": 1681,
+      "sha256": "fe0ab4b78560ec3a9af4bec3869e8e85afc2c78f996e5a4640afb009d053572e"
     },
     "docs/v2.3/evidence/m4/focused-tests.log": {
       "size": 943,
