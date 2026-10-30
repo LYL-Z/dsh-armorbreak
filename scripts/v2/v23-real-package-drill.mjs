@@ -103,7 +103,7 @@ try {
   const whoami = execute('whoami.exe', ['/user', '/fo', 'csv', '/nh'])
   const sid = /S-1-\d+(?:-\d+)+/.exec(whoami.stdout)?.[0]
   if (!sid) throw new Error('cannot identify the Windows current-user principal SID')
-  const aclResult = execute('icacls.exe', [scratch, '/inheritance:r', '/grant:r', `${sid}:(OI)(CI)F`, '/T', '/C'])
+  const aclResult = execute('icacls.exe', [scratch, '/inheritance:r', '/grant:r', `*${sid}:(OI)(CI)F`, '/T', '/C'])
   const workspaceAcl = execute('icacls.exe', [workspace]).stdout
   const configAcl = execute('icacls.exe', [configDir]).stdout + execute('icacls.exe', [configPath]).stdout
   const disallowedAclSids = ['S-1-1-0', 'S-1-5-32-545', 'S-1-5-11']
