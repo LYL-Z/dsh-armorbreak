@@ -33,8 +33,9 @@ function trackedEvidencePaths() {
         const childAbsolute = join(absolute, entry.name)
         const info = lstatSync(childAbsolute)
         if (info.isSymbolicLink()) throw new Error(`symlink in P0-H evidence directory: ${childPath}`)
+        if (childPath === manifestPath) continue
         if (entry.isDirectory()) visit(childAbsolute, childPath)
-        else if (entry.isFile() && childPath !== manifestPath) paths.push(childPath)
+        else if (entry.isFile()) paths.push(childPath)
         else throw new Error(`unsupported P0-H evidence entry: ${childPath}`)
       }
     }
