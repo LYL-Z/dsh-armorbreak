@@ -67,7 +67,19 @@ const scratch = mkdtempSync(join(tmpdir(), 'armorbreak-v23-real-deploy-'))
 try {
   const v22Downloads = join(scratch, 'v22-download')
   mkdirSync(v22Downloads, { recursive: true })
-  const v22DownloadResult = execute('gh', ['release', 'download', 'v2.2.0', '--repo', 'LYL-Z/dsh-armorbreak', '--pattern', V22_ASSET, '--dir', v22Downloads], { cwd: root })
+  const v22DownloadArgs = ['release', 'download', 'v2.2.0', '--repo', 'LYL-Z/dsh-armorbreak', '--pattern', V22_ASSET, '--dir', v22Downloads]
+  let v22DownloadAttempts = 0
+  let v22DownloadResult
+  while (v22DownloadAttempts < 4) {
+    v22DownloadAttempts += 1
+    v22DownloadResult = run('gh', v22DownloadArgs, { cwd: root })
+    if (!v22DownloadResult.error && v22DownloadResult.status === 0) break
+    if (v22DownloadAttempts < 4) await new Promise((resolveDelay) => setTimeout(resolveDelay, 1500 * v22DownloadAttempts))
+  }
+  if (v22DownloadResult.error || v22DownloadResult.status !== 0) {
+    const failureDigest = digest(Buffer.from(`${v22DownloadResult.error ?? ''}\n${v22DownloadResult.stderr}`))
+    throw new Error(`read-only v2.2.0 asset download failed after ${v22DownloadAttempts} attempts (diagnostic SHA-256 ${failureDigest})`)
+  }
   const v22Artifact = join(v22Downloads, V22_ASSET)
   const v22Sha256 = fileDigest(v22Artifact)
   assert.equal(v22Sha256, V22_SHA256, 'downloaded historical asset must match the GitHub Release API SHA-256')
@@ -228,7 +240,7 @@ try {
       temporaryWorkspaceRemovedAtCompletion: false,
     },
     commands: [
-      summary('gh', ['release', 'download', 'v2.2.0', '--repo', 'LYL-Z/dsh-armorbreak', '--pattern', V22_ASSET], v22DownloadResult),
+      { ...summary('gh', v22DownloadArgs, v22DownloadResult), attempts: v22DownloadAttempts },
       summary('tar', ['-xzf', V22_ASSET, '-C', 'isolated V2.2 install'], v22UnpackResult),
       summary('icacls.exe', ['isolated temp root', '/inheritance:r', '/grant:r', 'CURRENT_USER_SID:(OI)(CI)F', '/T', '/C'], aclResult),
       summary('powershell.exe', ['-NoProfile', '-NonInteractive', '-File', 'verify-acl.ps1'], aclChecks),
