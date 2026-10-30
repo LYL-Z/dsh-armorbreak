@@ -28,6 +28,7 @@ test('V2.3 main gate is separate and the published v2.2.0 tag guard remains pres
   const legacy = readFileSync('.github/workflows/ci.yml', 'utf8')
   assert.match(workflow, /pull_request:[\s\S]*branches:\s*\[main\]/)
   assert.match(workflow, /tags:\s*\['v2\.3\.0'\]/)
+  assert.match(workflow, /Prepare repository-local test scratch root[\s\S]*\.runtime\/tmp/)
   assert.match(workflow, /v23-release-gate\.mjs --release/)
   assert.match(legacy, /if: github\.ref != 'refs\/tags\/v2\.2\.0'/)
   assert.match(legacy, /if: github\.ref == 'refs\/tags\/v2\.2\.0'/)

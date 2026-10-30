@@ -48,6 +48,8 @@ jobs:
         env:
           EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - name: Prepare repository-local test scratch root
+        run: node -e "require('node:fs').mkdirSync('.runtime/tmp', { recursive: true })"
       - run: npm ci --no-audit --no-fund
       - run: node --test --test-concurrency=1
       - run: npm run typecheck
