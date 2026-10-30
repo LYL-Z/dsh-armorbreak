@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto'
 import { execFileSync } from 'node:child_process'
 import { lstatSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, normalize } from 'node:path'
+import { findForbiddenPostSourcePaths, isFullCommitSha } from './v23-provenance.mjs'
 
 const root = process.cwd()
 const manifestPath = 'docs/v2.3/evidence/p0-h/acceptance-manifest.json'
@@ -31,6 +32,7 @@ function trackedEvidencePaths() {
       'docs/v2.3/fixture-catalog.json',
       'docs/releases/v2.3.0.md',
       'scripts/v2/validate-v23-acceptance.mjs',
+      'scripts/v2/v23-provenance.mjs',
       '.github/workflows/ci.yml',
       '.github/workflows/v2.3-validation.yml',
     ].includes(path),
@@ -73,7 +75,7 @@ function regularFile(relativePath) {
 if (process.argv.includes('--generate') || process.argv.includes('--regenerate')) {
   const regenerate = process.argv.includes('--regenerate')
   const sourceCommit = git(['rev-parse', 'HEAD'])
-  if (!/^[a-f0-9]{40}$/i.test(sourceCommit)) throw new Error('HEAD must be a full commit SHA')
+  if (!isFullCommitSha(sourceCommit)) throw new Error('HEAD must be a full commit SHA')
   const files = Object.fromEntries(trackedEvidencePaths().map((path) => {
     const bytes = regularFile(path)
     return [path, { size: bytes.length, sha256: sha256(bytes) }]
@@ -109,7 +111,7 @@ const expectedHead = process.env.V23_EXPECTED_HEAD ?? process.env.GITHUB_SHA
 if (expectedHead && expectedHead !== head) fail(`checked out HEAD ${head} does not match expected exact head ${expectedHead}`)
 if (manifest?.schemaVersion !== 'armorbreak.v2.3-acceptance-manifest/v1') fail('manifest schema is invalid')
 if (manifest?.baselineSha !== '66ec0017af4b9d636f09e45f7cf55eed060512ac') fail('manifest baseline SHA does not match the frozen M0 baseline')
-if (!/^[a-f0-9]{40}$/i.test(manifest?.sourceCommit ?? '')) fail('manifest sourceCommit is not a full Git SHA')
+if (!isFullCommitSha(manifest?.sourceCommit)) fail('manifest sourceCommit is not a full Git SHA')
 
 try {
   git(['rev-parse', '--verify', `${manifest.sourceCommit}^{commit}`])
@@ -120,16 +122,7 @@ try {
 
 try {
   const changed = git(['diff', '--name-only', '--no-renames', '-z', `${manifest.sourceCommit}..${head}`]).split('\0').filter(Boolean)
-  const allowedPostSource = new Set([
-    'docs/v2.3/acceptance-report.md',
-    'docs/v2.3/threat-model.md',
-    'docs/v2.3/compatibility-matrix.json',
-    manifestPath,
-    'scripts/v2/validate-v23-acceptance.mjs',
-    '.github/workflows/ci.yml',
-    '.github/workflows/v2.3-validation.yml',
-  ])
-  const forbidden = changed.filter((path) => !allowedPostSource.has(path) && !path.startsWith('docs/v2.3/evidence/p0-h/'))
+  const forbidden = findForbiddenPostSourcePaths(changed)
   if (forbidden.length) fail(`post-source changes escape the evidence-only allowlist: ${forbidden.join(', ')}`)
 } catch (error) {
   fail(`cannot verify source-to-head path lineage: ${error?.message ?? error}`)
