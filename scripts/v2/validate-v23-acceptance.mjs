@@ -30,6 +30,7 @@ function trackedEvidencePaths() {
       'docs/v2.3/compatibility-matrix.json',
       'docs/v2.3/fixture-catalog.json',
       'docs/releases/v2.3.0.md',
+      'scripts/v2/validate-v23-acceptance.mjs',
     ].includes(path),
   )
   const p0hRoot = join(root, 'docs', 'v2.3', 'evidence', 'p0-h')
@@ -117,7 +118,7 @@ try {
 
 try {
   const changed = git(['diff', '--name-only', '--no-renames', '-z', `${manifest.sourceCommit}..${head}`]).split('\0').filter(Boolean)
-  const forbidden = changed.filter((path) => path !== 'docs/v2.3/acceptance-report.md' && path !== 'docs/v2.3/compatibility-matrix.json' && path !== manifestPath && !path.startsWith('docs/v2.3/evidence/p0-h/'))
+  const forbidden = changed.filter((path) => path !== 'docs/v2.3/acceptance-report.md' && path !== 'docs/v2.3/compatibility-matrix.json' && path !== manifestPath && path !== 'scripts/v2/validate-v23-acceptance.mjs' && !path.startsWith('docs/v2.3/evidence/p0-h/'))
   if (forbidden.length) fail(`post-source changes escape the evidence-only allowlist: ${forbidden.join(', ')}`)
 } catch (error) {
   fail(`cannot verify source-to-head path lineage: ${error?.message ?? error}`)

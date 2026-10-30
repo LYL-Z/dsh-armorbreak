@@ -1,8 +1,8 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "1e98871c40d9b64a621add653eb318bcf5178941",
-  "generatedAt": "2026-10-30T02:56:38.786Z",
+  "sourceCommit": "98022468f90b11c3820041575c9fa18753c9789f",
+  "generatedAt": "2026-10-30T02:57:49.874Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     "docs/releases/v2.3.0.md": {
@@ -228,6 +228,10 @@
     "docs/v2.3/threat-model.md": {
       "size": 5092,
       "sha256": "7248f22f1a6f6f773c3343dcf4ca76d1d1d318df157e1c8ed095a6f2bc6e8ff3"
+    },
+    "scripts/v2/validate-v23-acceptance.mjs": {
+      "size": 8935,
+      "sha256": "fbc443ebb97053eeebe96fd385a404e066555423d53fe43e2d0fe1c3ed1c310f"
     }
   }
 }
