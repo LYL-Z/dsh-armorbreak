@@ -80,6 +80,7 @@ See [`performance-report.md`](performance-report.md). In the recorded seven-step
 - Candidate/current evidence SHA at the previous pause: `945a8363a77a8e580609854f82859ea774c8b031`; M6 source SHA: `965fbe4fa9abd2af73644865a56d8db64c8a6089`.
 - `npm test` at M6 SHA: 647/647; focused CLI/MCP/API: 24/24; `npm run typecheck`: exit 0.
 - Node 22.23.4 local validation at `679bbeb6152d9f9c9f151c5bae6f7c01d098b357`: full suite 647/647 and TypeScript check exit 0; the exact log hashes and invalid first attempt are recorded in `evidence/p0-h/node22-local-validation.json`.
+- The V2.3-specific integrity validator generated a separate manifest and verified all 56 bound evidence/document files. A reversible byte-tamper probe was rejected (exit 1), then the restored bundle validated again. This is an integrity check only; its machine result says release readiness `NOT_READY`.
 - GitHub CI run IDs/URLs, exact-head statuses, package hashes, SBOM and attestation: **NOT_RUN / NOT_CREATED** at report time.
 - Migration and rollback drill: **NOT_RUN**.
 - Owner merge/tag/publish decision: pending; this report is not an authorization.
@@ -93,6 +94,7 @@ npm test
 npm run typecheck
 node --test --test-concurrency=1 tests/cli.test.mjs tests/mcp-stdio.test.mjs tests/api.test.mjs
 node benchmarks/bench.mjs --sample fixtures/notepad.exe --out .runtime/p0-h-benchmark.json
+node scripts/v2/validate-v23-acceptance.mjs
 ```
 
 Relevant evidence is under `docs/v2.3/evidence/m0/` through `m6/`; current P0-H continuation and limitations are in `docs/v2.3/INTERRUPT_CHECKPOINT.md`. PR link is **not yet available**. Next priorities are the P0-H evidence bundle and exact-SHA CI on Windows/Ubuntu with Node 22/24, followed by review of remaining failures. No merge, tag or formal release without the owner's explicit decision.

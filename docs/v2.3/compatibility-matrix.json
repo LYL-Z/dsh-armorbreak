@@ -1034,7 +1034,10 @@
     {
       "id": "P0-H",
       "status": "IN_PROGRESS",
-      "evidence": "docs/v2.3/acceptance-report.md",
+      "evidence": [
+        "docs/v2.3/acceptance-report.md",
+        "docs/v2.3/evidence/p0-h/acceptance-manifest.json"
+      ],
       "ci": "NOT_RUN",
       "limitation": "Separate V2.3 evidence and documentation are being completed. Exact-head CI, Node 22/Linux, independent review, release artifacts/SBOM/attestation, and an upgrade/rollback drill are not yet verified."
     }
