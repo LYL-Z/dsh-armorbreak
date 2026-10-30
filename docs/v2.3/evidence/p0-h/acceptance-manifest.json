@@ -1,8 +1,8 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "d7e8a03706f7cecb9d592673811032c174259a4b",
-  "generatedAt": "2026-10-30T02:53:43.097Z",
+  "sourceCommit": "1e98871c40d9b64a621add653eb318bcf5178941",
+  "generatedAt": "2026-10-30T02:56:38.786Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     "docs/releases/v2.3.0.md": {
@@ -70,8 +70,8 @@
       "sha256": "cc0bf0e0d268d42e726bec5233c94644343486ef22394fc12539a89590ecc7db"
     },
     "docs/v2.3/evidence/m3/fixtures/native_fixture.c": {
-      "size": 232,
-      "sha256": "2bb6f4d242cbf4e578c416532cb202a8c64a4fb9f664f59c5fd802b9509a130e"
+      "size": 231,
+      "sha256": "143ed88df7d62e5846d8e8853bf2941dba465e43a195b4cbb1c943bf16f41e40"
     },
     "docs/v2.3/evidence/m3/fixtures/native_fixture_i386.elf": {
       "size": 12988,
@@ -102,12 +102,12 @@
       "sha256": "b92165f70fa9aa4503f1e42d25603ecfb1efbe15f809afd9d167658896e31195"
     },
     "docs/v2.3/evidence/m3/focused-tests-final.log": {
-      "size": 2673,
-      "sha256": "2a644e53717fb73fc5c95fc20ede07f9f0c29991f0ae1440ffd09dfb25b9d5a9"
+      "size": 2637,
+      "sha256": "ec52b40a465dad3e7b5648b92ea0648bd688d37ccdee7027d387bbad5925fd03"
     },
     "docs/v2.3/evidence/m3/full-test-default-final.log": {
-      "size": 74633,
-      "sha256": "517da67e32e0a5be4ed29cf2e3a9d96977f44c2f410b77b88ff706ab6aa4f25e"
+      "size": 73784,
+      "sha256": "af575fcefb0a4a784cfe01a63d32075fd2a07ac9998201f485f342bde005e7f2"
     },
     "docs/v2.3/evidence/m3/ghidra-bounded-scope-i386.json": {
       "size": 6384,
@@ -146,28 +146,28 @@
       "sha256": "f582bf51d5562146a58b1e495d2e0a6742d85f47aa7b34676a2cc1f20b59520f"
     },
     "docs/v2.3/evidence/m3/typecheck-final.log": {
-      "size": 59,
-      "sha256": "408d700a2eeaec3bed1c65fe30ef76692fa357dc6c25b492e4adfcf2ba21a957"
+      "size": 57,
+      "sha256": "6e71d9aff12155eb945012759d7d5c3a324746c7941e729bcdc11a66772e21c7"
     },
     "docs/v2.3/evidence/m3/windows-temp-volume-diagnostic.md": {
       "size": 1681,
       "sha256": "fe0ab4b78560ec3a9af4bec3869e8e85afc2c78f996e5a4640afb009d053572e"
     },
     "docs/v2.3/evidence/m4/focused-tests.log": {
-      "size": 943,
-      "sha256": "03f2b398a3358c484a2a5c3737cb13f1372a85fe32747866731c712ebcf0fc84"
+      "size": 928,
+      "sha256": "9f56bcdb12e1173b238a8bc83102c265dd16615b815f2fbc8fe94a8ad616dc45"
     },
     "docs/v2.3/evidence/m4/full-test.log": {
-      "size": 70335,
-      "sha256": "be6752be877730821d8a6c2c66d9f00c11f5ac4a4f99ebf3a62c32632618f886"
+      "size": 69523,
+      "sha256": "19b7e2c4f4ff91870bfe1291a06d6da3a6933b05a0d720a204eb3bda3d6ca9e6"
     },
     "docs/v2.3/evidence/m4/m4-validation.json": {
       "size": 3629,
       "sha256": "83e2887537cc5b49ef8a8117a1f8e51dc4737456bfea2f74a7b86bbd54cf1887"
     },
     "docs/v2.3/evidence/m4/typecheck.log": {
-      "size": 130,
-      "sha256": "01fd10a92d49508e4846c6d1a910a5a52a72348348f59d2896960745119ec41c"
+      "size": 126,
+      "sha256": "d585dc6dc105bd6d344752f165a4be72e49ecad1b3599a0e42d73e8a4f9e56c6"
     },
     "docs/v2.3/evidence/m4/vulnerability-corpus-metrics.json": {
       "size": 22122,

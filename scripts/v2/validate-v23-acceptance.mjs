@@ -8,6 +8,13 @@ import { dirname, join, normalize } from 'node:path'
 const root = process.cwd()
 const manifestPath = 'docs/v2.3/evidence/p0-h/acceptance-manifest.json'
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex')
+// Git may check text files out with CRLF on Windows and LF on Unix. Bind
+// evidence to its content using canonical LF bytes so one manifest validates
+// identically on every supported runner.
+const canonicalBytes = (path, bytes) => {
+  if (!/\.(?:c|json|log|md)$/i.test(path)) return bytes
+  return Buffer.from(bytes.toString('utf8').replaceAll('\r\n', '\n'), 'utf8')
+}
 const git = (args, options = {}) => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], ...options }).trim()
 const fail = (message) => { console.error(`V2.3 acceptance integrity: FAIL: ${message}`); process.exitCode = 1 }
 
@@ -57,7 +64,7 @@ function regularFile(relativePath) {
   }
   const info = lstatSync(current)
   if (!info.isFile()) throw new Error(`evidence is not a regular file: ${relativePath}`)
-  return readFileSync(current)
+  return canonicalBytes(relativePath, readFileSync(current))
 }
 
 if (process.argv.includes('--generate') || process.argv.includes('--regenerate')) {
