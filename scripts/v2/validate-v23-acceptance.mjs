@@ -122,6 +122,7 @@ try {
   const changed = git(['diff', '--name-only', '--no-renames', '-z', `${manifest.sourceCommit}..${head}`]).split('\0').filter(Boolean)
   const allowedPostSource = new Set([
     'docs/v2.3/acceptance-report.md',
+    'docs/v2.3/threat-model.md',
     'docs/v2.3/compatibility-matrix.json',
     manifestPath,
     'scripts/v2/validate-v23-acceptance.mjs',
