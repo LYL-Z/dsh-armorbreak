@@ -81,7 +81,7 @@ See [`performance-report.md`](performance-report.md). In the recorded seven-step
 - `npm test` at M6 SHA: 647/647; focused CLI/MCP/API: 24/24; `npm run typecheck`: exit 0.
 - Node 22.23.4 local validation at `679bbeb6152d9f9c9f151c5bae6f7c01d098b357`: full suite 647/647 and TypeScript check exit 0; the exact log hashes and invalid first attempt are recorded in `evidence/p0-h/node22-local-validation.json`.
 - The V2.3-specific integrity validator generated a separate manifest and verified all 56 bound evidence/document files. A reversible byte-tamper probe was rejected (exit 1), then the restored bundle validated again. This is an integrity check only; its machine result says release readiness `NOT_READY`.
-- The committed manifest binds evidence to source `4160645617888ee291d9ce13ebd1d9fe93e744d4`; post-commit validation passed on exact head `2201d600c449150ed811a67fec580b4315a39318` with 56 files checked.
+- The final sanitized manifest binds evidence to source `c32d106ff4a7ff70c5e3c6db0b89e6be14700d1f`; post-commit validation passed on exact head `1c58ffa30a2e9c752c4d39b44ad8a4fc6e0be72c` with 56 files checked.
 - GitHub CI run IDs/URLs, exact-head statuses, package hashes, SBOM and attestation: **NOT_RUN / NOT_CREATED** at report time.
 - Migration and rollback drill: **NOT_RUN**.
 - Owner merge/tag/publish decision: pending; this report is not an authorization.
