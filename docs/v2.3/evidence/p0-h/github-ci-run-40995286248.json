@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "armorbreak.v2.3-ci-diagnostic/v1",
+  "repository": "LYL-Z/dsh-armorbreak",
+  "runId": 40995286248,
+  "runUrl": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/40995286248",
+  "event": "pull_request",
+  "headBranch": "feature/v2.3-universal-program-intelligence",
+  "headSha": "7feaaa3e48459cf43b3f974e1cb2c47e8c050c4d",
+  "conclusion": "failure",
+  "jobs": [
+    {
+      "name": "L0 offline boundary (static gate)",
+      "conclusion": "success"
+    },
+    {
+      "name": "L1 Docker integration (real daemon)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Node 24 on ubuntu-latest",
+      "conclusion": "success"
+    },
+    {
+      "name": "Node 24 on windows-latest",
+      "conclusion": "failure",
+      "failedStep": "Full test suite",
+      "test": "M5 behavior comparison covers three executed JS/Python programs, broken candidates, timeout, and nondeterminism",
+      "error": "Python reference fixture process exit status was null; Python runtime was not explicitly set up in the test job."
+    },
+    {
+      "name": "Release evidence checks (commit-bound)",
+      "conclusion": "skipped",
+      "reason": "V2.3 uses its separate exact-head evidence gate on this branch."
+    }
+  ],
+  "remediation": "Add the repository-pinned setup-python action to both exact-head and inherited CI test matrices; verify the new exact commit."
+}

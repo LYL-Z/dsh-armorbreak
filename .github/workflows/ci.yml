@@ -46,6 +46,12 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      # The M5 behavior regression suite executes a self-authored Python
+      # reference fixture; pin its runtime instead of relying on runner image PATH.
+      - uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v5
+        with:
+          python-version: '3.11'
+
       - name: Environment facts
         run: node --version && node -e "console.log(process.platform, process.arch)"
 

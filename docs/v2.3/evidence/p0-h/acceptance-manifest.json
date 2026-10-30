@@ -1,17 +1,25 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "d53146706a760b8789b297f7445838c9b0a0a4c6",
-  "generatedAt": "2026-10-30T03:04:03.757Z",
+  "sourceCommit": "7feaaa3e48459cf43b3f974e1cb2c47e8c050c4d",
+  "generatedAt": "2026-10-30T03:08:17.523Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
+    ".github/workflows/ci.yml": {
+      "size": 7327,
+      "sha256": "51df03dc303cab8c3b884f59364f8f7dcd56e3ad7618b50fe1c0eddbc8d29983"
+    },
+    ".github/workflows/v2.3-validation.yml": {
+      "size": 4700,
+      "sha256": "a504409fbc62398fa4e40c2cb20aa19a40e4b9d06706efa703ba0153d4b52a2e"
+    },
     "docs/releases/v2.3.0.md": {
       "size": 1992,
       "sha256": "21039ccca6fac1150bf049d5abbc500d3ab668a1e66731b202173547f61422ed"
     },
     "docs/v2.3/acceptance-report.md": {
-      "size": 11840,
-      "sha256": "020fbd1eaf9b97373c143f441ae795de2a6264c1067bcb24b0f3aedc1e335f1e"
+      "size": 12404,
+      "sha256": "a93dea15b0f98410b64bf602401dc3b91f2417d550d9ac2e3bd9ac25e44be939"
     },
     "docs/v2.3/architecture.md": {
       "size": 4621,
@@ -213,6 +221,10 @@
       "size": 2880,
       "sha256": "25c0831bb4ffa7ba264e17f421fcfbc094624a42bef7cdc645cf882de6e400f7"
     },
+    "docs/v2.3/evidence/p0-h/github-ci-run-40995286248.json": {
+      "size": 1380,
+      "sha256": "c341b91ab0d0c8b4281541683b156932dc126f08e8435dbfcd1f4b071cf7347b"
+    },
     "docs/v2.3/evidence/p0-h/node22-local-validation.json": {
       "size": 2924,
       "sha256": "caaa29f811d203e369c7604c1368c95a60cba325733072f9a408460c8670836e"
@@ -238,8 +250,8 @@
       "sha256": "7248f22f1a6f6f773c3343dcf4ca76d1d1d318df157e1c8ed095a6f2bc6e8ff3"
     },
     "scripts/v2/validate-v23-acceptance.mjs": {
-      "size": 9457,
-      "sha256": "44aaa4c9229f6185ef467ba39de47591e10f009e9592d477c54ad85dd4c6c409"
+      "size": 9668,
+      "sha256": "6db006f00b95fa651c724573bf238e4b2d2d30a071bb49022b58f0fd4bd2d9ed"
     }
   }
 }

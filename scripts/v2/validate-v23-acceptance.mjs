@@ -12,7 +12,7 @@ const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex')
 // evidence to its content using canonical LF bytes so one manifest validates
 // identically on every supported runner.
 const canonicalBytes = (path, bytes) => {
-  if (!/\.(?:c|json|log|md)$/i.test(path)) return bytes
+  if (!/\.(?:c|json|log|md|ya?ml)$/i.test(path)) return bytes
   return Buffer.from(bytes.toString('utf8').replaceAll('\r\n', '\n'), 'utf8')
 }
 const git = (args, options = {}) => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], ...options }).trim()
@@ -31,6 +31,8 @@ function trackedEvidencePaths() {
       'docs/v2.3/fixture-catalog.json',
       'docs/releases/v2.3.0.md',
       'scripts/v2/validate-v23-acceptance.mjs',
+      '.github/workflows/ci.yml',
+      '.github/workflows/v2.3-validation.yml',
     ].includes(path),
   )
   const p0hRoot = join(root, 'docs', 'v2.3', 'evidence', 'p0-h')
@@ -118,7 +120,15 @@ try {
 
 try {
   const changed = git(['diff', '--name-only', '--no-renames', '-z', `${manifest.sourceCommit}..${head}`]).split('\0').filter(Boolean)
-  const forbidden = changed.filter((path) => path !== 'docs/v2.3/acceptance-report.md' && path !== 'docs/v2.3/compatibility-matrix.json' && path !== manifestPath && path !== 'scripts/v2/validate-v23-acceptance.mjs' && !path.startsWith('docs/v2.3/evidence/p0-h/'))
+  const allowedPostSource = new Set([
+    'docs/v2.3/acceptance-report.md',
+    'docs/v2.3/compatibility-matrix.json',
+    manifestPath,
+    'scripts/v2/validate-v23-acceptance.mjs',
+    '.github/workflows/ci.yml',
+    '.github/workflows/v2.3-validation.yml',
+  ])
+  const forbidden = changed.filter((path) => !allowedPostSource.has(path) && !path.startsWith('docs/v2.3/evidence/p0-h/'))
   if (forbidden.length) fail(`post-source changes escape the evidence-only allowlist: ${forbidden.join(', ')}`)
 } catch (error) {
   fail(`cannot verify source-to-head path lineage: ${error?.message ?? error}`)
