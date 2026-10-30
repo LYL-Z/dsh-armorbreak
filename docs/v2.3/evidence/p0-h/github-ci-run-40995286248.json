@@ -33,5 +33,8 @@
       "reason": "V2.3 uses its separate exact-head evidence gate on this branch."
     }
   ],
-  "remediation": "Add the repository-pinned setup-python action to both exact-head and inherited CI test matrices; verify the new exact commit."
+  "remediation": "Add the repository-pinned setup-python action to both exact-head and inherited CI test matrices; verify the new exact commit.",
+  "resolvedByCommit": "8364343fc2ef75007009d8074341ee5d7bbc6b0d",
+  "verificationRuns": [40995701875, 40995701865],
+  "resolutionEvidence": "Both follow-up workflow runs passed on the resolved commit."
 }

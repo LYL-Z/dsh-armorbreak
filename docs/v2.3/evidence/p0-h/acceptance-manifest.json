@@ -1,8 +1,8 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "7feaaa3e48459cf43b3f974e1cb2c47e8c050c4d",
-  "generatedAt": "2026-10-30T03:08:17.523Z",
+  "sourceCommit": "8364343fc2ef75007009d8074341ee5d7bbc6b0d",
+  "generatedAt": "2026-10-30T03:14:45.022Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     ".github/workflows/ci.yml": {
@@ -18,8 +18,8 @@
       "sha256": "21039ccca6fac1150bf049d5abbc500d3ab668a1e66731b202173547f61422ed"
     },
     "docs/v2.3/acceptance-report.md": {
-      "size": 12404,
-      "sha256": "a93dea15b0f98410b64bf602401dc3b91f2417d550d9ac2e3bd9ac25e44be939"
+      "size": 12764,
+      "sha256": "7cc8fc26b3f6a1198f0e562272f33af44e2978fa9376a8083f78d12deb82717b"
     },
     "docs/v2.3/architecture.md": {
       "size": 4621,
@@ -30,8 +30,8 @@
       "sha256": "3ecb9f50976afe01747d4f3045a803b1c93ccfcb9a5890cbe955763dff314f15"
     },
     "docs/v2.3/compatibility-matrix.json": {
-      "size": 37328,
-      "sha256": "d8fbe6e95cd54d6902478dc9d7d82140467d23d0054f7a2c9cb09c153708e6a3"
+      "size": 40220,
+      "sha256": "9955a883315414b308c6a43a5bc591c9a350894cc8ffdffc5f113f7f402a6f44"
     },
     "docs/v2.3/evidence/m0/current-registry.json": {
       "size": 12385,
@@ -222,8 +222,16 @@
       "sha256": "25c0831bb4ffa7ba264e17f421fcfbc094624a42bef7cdc645cf882de6e400f7"
     },
     "docs/v2.3/evidence/p0-h/github-ci-run-40995286248.json": {
-      "size": 1380,
-      "sha256": "c341b91ab0d0c8b4281541683b156932dc126f08e8435dbfcd1f4b071cf7347b"
+      "size": 1583,
+      "sha256": "09de4508c2a11044cca65e42a0e7b3c056393a26d9c14545f92193224c318d42"
+    },
+    "docs/v2.3/evidence/p0-h/github-ci-run-40995701865.json": {
+      "size": 1658,
+      "sha256": "3ed0184ea16a8afa73bd42e9d97454dd0a733633611ec36bbc7f7e84ad798301"
+    },
+    "docs/v2.3/evidence/p0-h/github-ci-run-40995701875.json": {
+      "size": 2880,
+      "sha256": "0c4a5c68ab32776478aa0dd31fa53d4b511bf241f630e4fe9cafb58890c7e294"
     },
     "docs/v2.3/evidence/p0-h/node22-local-validation.json": {
       "size": 2924,
@@ -246,8 +254,8 @@
       "sha256": "1bd9b4723d7281dcf1a86e66a42bd1bd1559e919592d5ad2e70553e767030b8a"
     },
     "docs/v2.3/threat-model.md": {
-      "size": 5092,
-      "sha256": "7248f22f1a6f6f773c3343dcf4ca76d1d1d318df157e1c8ed095a6f2bc6e8ff3"
+      "size": 5511,
+      "sha256": "5d7be40146fb511c10ca1ad6779fab72550dd6cc680f8deabbedc1792993e7a4"
     },
     "scripts/v2/validate-v23-acceptance.mjs": {
       "size": 9668,
