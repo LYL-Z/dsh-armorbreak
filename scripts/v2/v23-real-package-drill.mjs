@@ -60,7 +60,8 @@ const head = execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], { encoding: 
 const candidateManifest = JSON.parse(readFileSync(candidateManifestPath, 'utf8'))
 if (candidateManifest.commit !== head || candidateManifest.version !== '2.3.0' || candidateManifest.productionSigned !== false) throw new Error('candidate manifest must identify the current exact commit and remain explicitly unsigned')
 const candidateSha256 = fileDigest(candidateArtifact)
-if (candidateManifest.artifact?.sha256 !== candidateSha256 || candidateManifest.reproducible !== true || candidateManifest.cleanRoom?.result !== 'PASS') throw new Error('candidate artifact digest, reproducibility, or clean-room execution check failed')
+const manifestSha256 = candidateManifest.sha256 ?? candidateManifest.artifact?.sha256
+if (manifestSha256 !== candidateSha256 || candidateManifest.reproducible !== true || candidateManifest.cleanRoom?.result !== 'PASS') throw new Error('candidate artifact digest, reproducibility, or clean-room execution check failed')
 
 const scratch = mkdtempSync(join(tmpdir(), 'armorbreak-v23-real-deploy-'))
 try {
