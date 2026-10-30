@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.v2.3.compatibility-matrix/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "capturedOn": "2026-10-26",
+  "capturedOn": "2026-10-30",
   "supportLevels": {
     "S0": "safe intake or explicit refusal of unknown input",
     "S1": "identification or inventory with evidence",
@@ -1039,10 +1039,12 @@
       "status": "IN_PROGRESS",
       "evidence": [
         "docs/v2.3/acceptance-report.md",
-        "docs/v2.3/evidence/p0-h/acceptance-manifest.json"
+        "docs/v2.3/evidence/p0-h/acceptance-manifest.json",
+        "docs/v2.3/evidence/p0-h/upgrade-rollback-drill.json",
+        "docs/v2.3/evidence/p0-h/security-license-review-preliminary.json"
       ],
-      "ci": "PASS_PR_HEAD_RUNS_40995701875_AND_40995701865; EXACT_MAIN_RELEASE_GATE_NOT_RUN",
-      "limitation": "Independent security and license review, release artifacts/SBOM/attestation, exact-main CI, and an upgrade/rollback drill remain unverified."
+      "ci": "HISTORICAL_PASS_PR_SHA_0795c4dd270f59cb60a006c756035da111e1d970_RUNS_40996527035_40996532452_40996526943_40996532448; NEW_SOURCE_SHA_26a3e8edc81bf950cc7cdde37e027607121e207b_CI_PENDING; EXACT_MAIN_NOT_RUN",
+      "limitation": "Synthetic isolated installer/data drill passed with byte hashes; it is not a real user-profile/package upgrade. Security/license record is explicitly non-independent AI pre-review. Independent human security/license review, exact-head CI for current source, exact-main CI, package/SBOM/attestation, repository protection verification, and maintainer authorization remain open."
     }
   ],
   "sourceSupportBaseline": [

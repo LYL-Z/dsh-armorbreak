@@ -4,11 +4,10 @@ This report follows taskbook §15. It reports the latest evidence available for 
 
 ## 1. BASELINE
 
-- Repository: `LYL-Z/dsh-armorbreak`; latest live `origin/main` checked on 2026-10-29: `66ec0017af4b9d636f09e45f7cf55eed060512ac`.
+- Repository: `LYL-Z/dsh-armorbreak`; frozen `origin/main` baseline: `66ec0017af4b9d636f09e45f7cf55eed060512ac`.
 - Baseline tag: `v2.2.0` exists; no V2.3 tag is created.
 - Branch: `feature/v2.3-universal-program-intelligence`; implementation branch was created from the exact main SHA above.
-- Working tree: clean at the latest pushed branch state; report and evidence updates are committed on the same PR branch.
-- M6 source: `965fbe4fa9abd2af73644865a56d8db64c8a6089`; current implementation/CI source: `8364343fc2ef75007009d8074341ee5d7bbc6b0d` (draft PR #25).
+- M6 source: `965fbe4fa9abd2af73644865a56d8db64c8a6089`; last previously pushed PR head tested by GitHub: `0795c4dd270f59cb60a006c756035da111e1d970`. New P0-H source commits are recorded below; historical CI is not proof for them.
 - Windows 11 build 26300, x64; baseline and M6 recorded Node `v24.16.0`, npm `11.13.0`; TypeScript lock `5.9.3`.
 - Frozen M0 full test: 530/530 on the baseline after setting TEMP/TMP to a same-volume worktree directory; default cross-volume run had 6 environment-dependent failures and was retained in evidence. Candidate M6 evidence reports 647/647 on the exact M6 source SHA.
 
@@ -42,6 +41,12 @@ Observed M6 runtime registry: 53 capabilities / 12 domains (51 L0, 1 L1, 1 L2), 
 | Exact-head CI | Run `40995701875`, SHA `8364343fc2ef75007009d8074341ee5d7bbc6b0d`; `evidence/p0-h/github-ci-run-40995701875.json` | Ubuntu Node 22/24: 649/649 each; Windows Node 22/24: 647/647 each; all typechecks exit 0. The two-count difference is from two explicitly Linux-only tests not registered on Windows; evidence integrity and benign pinned-image L1 path passed |
 | Inherited CI | Run `40995701865`, same exact SHA; `evidence/p0-h/github-ci-run-40995701865.json` | Node 24 Windows/Ubuntu full suite passed; L0 static boundary passed; real Docker daemon integration passed; release evidence job skipped under the V2.3 branch rule |
 | Dependency audit | `evidence/p0-h/npm-audit.json`; npm audit via `https://registry.npmjs.org` | Exit 0; 0 info/low/moderate/high/critical advisories in the audited lockfile dependency set; license review not included |
+| Latest local full test/typecheck | Source SHA `26a3e8edc81bf950cc7cdde37e027607121e207b`; `npm test`, `npm run typecheck` | 654/654 passed, 0 failed/skipped; typecheck exit 0; local Windows x64 / Node 24.16.0; GitHub CI for this SHA is pending |
+| P0-1 evidence provenance | `tests/v23-provenance.test.mjs`; `evidence/p0-h/acceptance-manifest.json` | Negative tests 4/4 passed locally; allowlist now admits only named docs and P0-H evidence; 72 manifest files bind source SHA `26a3e8e…`; exact-head GitHub run pending |
+| P0-4 isolated upgrade/rollback | `evidence/p0-h/upgrade-rollback-drill.json` | Synthetic V2.2-compatible task/report/config were read by current Core; actual local installer state transitions, failure injection, rollback pointer, and pre/post SHA checks passed. This was not a real package install or user-profile exercise; OS ACL/service principal was not measured |
+| P0-5 V2.3-specific gate | `scripts/v2/v23-release-gate.mjs`, `.github/workflows/v2.3-main-gate.yml`, `tests/v23-release-gate.test.mjs` | PR/check and fail-closed release modes passed local tests 3/3; release readiness remains NOT_READY. GitHub workflow and repository required-check settings are pending verification |
+| Security/license pre-review | `evidence/p0-h/security-license-review-preliminary.json` | Explicitly same-agent AI pre-review, not independent or human; it documents coverage and blockers but does not satisfy P0-3 |
+| Latest dependency audit | `evidence/p0-h/npm-audit-latest.json`, source SHA `26a3e8e…` | Official npm registry audit exit 0; zero advisories; package-lock SHA recorded. This is not a license review |
 | Performance | [`performance-report.md`](performance-report.md) and sanitized raw benchmark | Same benchmark script/Node/OS family; baseline CPU identity not recorded, no peak-memory comparison |
 
 The stage JSON records include exact source SHAs, commands, counts and evidence hashes. Fixture SHA-256 values are catalogued in `fixture-catalog.json` and stage evidence. M3 tool versions are in its exact evidence record. Full raw M6 test output is ignored locally; the committed JSON records its log digest.
@@ -54,7 +59,7 @@ The stage JSON records include exact source SHAs, commands, counts and evidence 
 - M4 aggregate vulnerability status stays `not_tested`; imported “confirmed” claims cannot confirm findings. Its authored contrast corpus has FPR 0.50.
 - L1: local Docker CLI 29.8.1 still cannot reach `dockerDesktopLinuxEngine`; exact-head GitHub Ubuntu jobs passed both the pinned BusyBox benign container path and the inherited real-daemon integration. These validate the hosted CI runner path only and do not establish local daemon or hostile-sample isolation readiness.
 - L2: no new remote workflow was added. L3 remains refused.
-- `npm audit` against the official npm registry found zero known advisories for the lockfile dependency set. A license review and independent security review, exhaustive Windows reparse/TOCTOU matrix, hostile archive/fuzzing campaign and full approval/session adversarial matrix have not been completed.
+- `npm audit` against the official npm registry at source SHA `26a3e8e…` found zero known advisories in the lockfile set. The separate review record is explicitly a same-agent AI pre-review, not an independent security audit or human certification. Redistribution/license review for the final package, optional external tools and binary fixtures remains open. The Ghidra host run is not hostile-sample isolation; exhaustive Windows reparse/TOCTOU, hostile archive/fuzzing, and full approval/session adversarial matrices are not complete.
 
 ## 5. PERFORMANCE
 
@@ -67,11 +72,11 @@ See [`performance-report.md`](performance-report.md). In the recorded seven-step
 - A fresh runtime enumeration against the M6 worktree found all 46 baseline capability IDs and all 9 baseline workflow IDs still present (missing IDs: none); capability risk counts remain 51 L0 / 1 L1 / 1 L2.
 - Existing Core version `0.1.0-p1`, protocol v1, CLI command families and policy path are retained. M6 adds one fixed MCP tool and support-status fields.
 - The live registry has no diagnostics. The compatibility matrix was corrected to report M5/M6 as locally implemented instead of stale `NOT_IMPLEMENTED`.
-- Old user task/report files were not migrated. Read compatibility on the local committed fixtures is covered by the existing suite, but no full external user-data corpus or upgrade migration was exercised.
+- No real user data were accessed or migrated. A current local drill used a synthetic V2.2-compatible task/report/config copy, read historical content using the candidate Core, injected a staged-artifact hash failure, activated and rolled back through the actual installer state machine, and verified exact task/evidence/report/config hashes. It does not establish a full external user-data corpus, owner package install, OS ACL, or service-principal boundary.
 
 ## 7. BLOCKED / PARTIAL / UNSUPPORTED
 
-- **P0-H `IN_PROGRESS`, release `NOT_READY`:** Exact SHA `8364343fc2ef75007009d8074341ee5d7bbc6b0d` passed the V2.3 matrix and inherited CI runs `40995701875` and `40995701865`. A prior Windows failure caused by an unpinned Python test fixture runtime was recorded in `github-ci-run-40995286248.json`; both matrices now explicitly pin Python 3.11. Independent security and license reviews, an upgrade/rollback drill, exact-main release artifacts, SBOM and attestation remain incomplete.
+- **P0-H `IN_PROGRESS`, release `NOT_READY`:** The latest historical GitHub checks are runs `40996527035` and `40996532452` (V2.3 workflow), plus `40996526943` and `40996532448` (inherited CI), all on PR SHA `0795c4dd270f59cb60a006c756035da111e1d970`. They do not cover newer local source `26a3e8edc81bf950cc7cdde37e027607121e207b`; CI for the newer source is pending. P0-1 local tests and evidence manifest pass; P0-4 synthetic isolated drill passes with stated limits; P0-5 gate implementation passes local tests. Independent human security/license review, exact-main, package/SBOM/attestation, branch-protection verification, package version bump from 2.2.0, and owner authorization remain open.
 - **M2 PARTIAL:** JS/TS only; no four-language S3, inter-file taint or broad language matrix.
 - **M3 PARTIAL:** native P0 local static E2E is present; P1 bytecode families/APK/DEX refresh and hostile-input isolated E2E are deferred/unverified.
 - **M4 PARTIAL:** correlation only; advisory fetching/version evaluation and independent finding validation are unsupported; corpus FPR is 0.50.
@@ -79,17 +84,22 @@ See [`performance-report.md`](performance-report.md). In the recorded seven-step
 - **M6 PARTIAL:** the integration is tested on Windows/Ubuntu with Node 22/24, but capability depth and broad language support remain partial as scoped above.
 - **Performance PARTIAL:** descriptive microbenchmark only; no peak-memory baseline or soak.
 - **Docker/L1 BLOCKED on this host check:** Docker CLI present, Engine named pipe unavailable.
+- **P0-3 BLOCKED:** The saved AI pre-review is transparently non-independent and cannot close the human security/license gate.
+- **P0-4 PARTIAL:** Real local installer transitions and synthetic-data rollback were exercised; real candidate-package deployment, real user-profile backup/restore, and OS permission identity checks were not.
+- **P0-5 PARTIAL:** Version-specific PR/main/tag workflow and a failing-closed release script exist locally; exact workflow runs and repository required-check configuration are not verified. The existing `v2.2.0` guard remains unchanged.
 - **Formal release is not authorized:** no tag, merge or publication is performed in this task.
 
 ## 8. RELEASE READINESS
 
-- Exact PR head tested by runs `40995701875` and `40995701865`: `8364343fc2ef75007009d8074341ee5d7bbc6b0d`; M6 source SHA: `965fbe4fa9abd2af73644865a56d8db64c8a6089`.
+- Historical exact PR head tested by runs `40996527035`, `40996532452`, `40996526943`, and `40996532448`: `0795c4dd270f59cb60a006c756035da111e1d970`; M6 source SHA: `965fbe4fa9abd2af73644865a56d8db64c8a6089`. These CI records predate the P0-H code changes below.
+- Current P0-H source SHA: `26a3e8edc81bf950cc7cdde37e027607121e207b`. Local full suite: 654/654, zero failures/skips; typecheck exit 0. Latest exact-head GitHub run IDs for this source are not yet available.
 - `npm test` at M6 SHA: 647/647; focused CLI/MCP/API: 24/24; `npm run typecheck`: exit 0.
 - Node 22.23.4 local validation at `679bbeb6152d9f9c9f151c5bae6f7c01d098b357`: full suite 647/647 and TypeScript check exit 0; the exact log hashes and invalid first attempt are recorded in `evidence/p0-h/node22-local-validation.json`.
-- The V2.3-specific integrity validator passed on `8364343…` and checked 62 bound files. Inventory completeness, CRLF portability, and content-tamper rejection were exercised locally. This integrity check is not the Stable release gate; its machine result says `NOT_READY`.
+- The V2.3-specific integrity validator passed on source `26a3e8e…` and checked 72 bound files. The current post-source allowlist excludes validators, workflows and security gates; 4 negative provenance tests passed locally. This integrity check is not the release gate; its machine result says `NOT_READY`.
 - V2.3 exact-head CI: [40995701875](https://github.com/LYL-Z/dsh-armorbreak/actions/runs/40995701875), head `8364343…`, all six jobs successful. Inherited exact-head CI: [40995701865](https://github.com/LYL-Z/dsh-armorbreak/actions/runs/40995701865), same SHA, full suite, L0 gate and real-daemon Docker integration successful; release evidence gate skipped by the V2.3 branch condition. Benign and real Docker artifact digests are respectively `sha256:bad252c760cd0edcaca51e492cc186db2f0794af4b5ac99bea4ae5ac865b77d8` and `sha256:2b4524eb902045d76ef094a0bed8d9119934e44417ab2cac4541a56d6e45dda9`.
-- Official-registry npm audit: exit 0, zero known vulnerabilities; evidence is committed separately. Package hashes/SBOM/attestation: **NOT_CREATED**. Exact-main CI: **NOT_RUN** because the PR is unmerged.
-- Migration and rollback drill: **NOT_RUN**.
+- Official-registry npm audit at current source: exit 0, zero known advisories; package-lock SHA is recorded in its evidence. License review remains incomplete. Package hashes/SBOM/attestation: **NOT_CREATED**. Exact-main CI: **NOT_RUN** because the PR is unmerged.
+- Isolated synthetic upgrade/rollback drill: **PASS_ISOLATED_FILESYSTEM_DRILL**; not a real package install or user-data test. Evidence preserves before/after hashes and lists remaining permission limits.
+- V2.3 main/tag release gate: local configuration tests pass; GitHub execution and repo branch-protection requirements are pending. No merge, tag or release was performed.
 - Owner merge/tag/publish decision: pending; this report is not an authorization.
 
 ## 9. HANDOFF
@@ -104,4 +114,4 @@ node benchmarks/bench.mjs --sample fixtures/notepad.exe --out .runtime/p0-h-benc
 node scripts/v2/validate-v23-acceptance.mjs
 ```
 
-Relevant evidence is under `docs/v2.3/evidence/m0/` through `m6/` and `docs/v2.3/evidence/p0-h/`. Draft PR: [#25](https://github.com/LYL-Z/dsh-armorbreak/pull/25). The tested source SHA and run IDs are listed in §8. Next priorities are independent security/license review and an upgrade/rollback drill; exact-main artifacts/SBOM/attestation require a later owner-controlled release stage. No merge, tag or formal release without the owner's explicit decision.
+Relevant evidence is under `docs/v2.3/evidence/m0/` through `m6/` and `docs/v2.3/evidence/p0-h/`. Draft PR: [#25](https://github.com/LYL-Z/dsh-armorbreak/pull/25). The historical tested PR SHA/run IDs and current local source SHA are kept separate in §8. Next blockers are exact-head GitHub runs for the updated source, independent human security/license review, real package/profile upgrade and rollback, exact-main/artifact/SBOM/attestation, repository protection verification, and maintainer authorization. No merge, tag or formal release without the owner's explicit decision.

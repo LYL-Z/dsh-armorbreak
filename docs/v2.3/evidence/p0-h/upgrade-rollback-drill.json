@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "armorbreak.v2.3-upgrade-rollback-drill/v1",
+  "sourceCommit": "26a3e8edc81bf950cc7cdde37e027607121e207b",
+  "executedAt": "2026-10-30T08:16:37.960Z",
+  "status": "PASS_ISOLATED_FILESYSTEM_DRILL",
+  "dataOrigin": "synthetic V2.2-compatible task/report/config fixture; no user data or formal install used",
+  "tempRootWasOutsideRepository": true,
+  "packageMechanism": "TransactionalInstaller staged/verified/approved/activated a synthetic candidate artifact; no package code was executed",
+  "checks": {
+    "v22PackageActivated": true,
+    "v23StagedArtifactFailureWasInjected": true,
+    "injectedFailurePreservedV22ActivePointer": true,
+    "v23CandidateActivatedAfterIntegrityRestoration": true,
+    "historicalTaskAndReportReadByCurrentCandidateCore": true,
+    "pathTraversalDenied": true,
+    "v23RollbackRestoredV22ActivePointer": true,
+    "oldTaskEvidenceReportAndConfigSha256Unchanged": true,
+    "before": {
+      "task": {
+        "files": {
+          "evidence.jsonl": {
+            "sha256": "991d25bdeb3b15cf13097f0f6da2eb0a39dc437260e418c6fee0599717f07bcc",
+            "size": 89
+          },
+          "report.md": {
+            "sha256": "eb48be7791bf5f1634b993fda54cb24ce7c5588b7720b75ebba3fa9b6572db4e",
+            "size": 53
+          },
+          "task.json": {
+            "sha256": "ebc133720b4f60615d70c33ccd5669f3119f6d16ce33015e49b6323df51a99ea",
+            "size": 821
+          }
+        }
+      },
+      "configSha256": "5f70a55f079652279cd7b687de375562ace37a61066f78a2c0cf666e79d6ca94",
+      "reportSha256": "eb48be7791bf5f1634b993fda54cb24ce7c5588b7720b75ebba3fa9b6572db4e"
+    },
+    "after": {
+      "task": {
+        "files": {
+          "evidence.jsonl": {
+            "sha256": "991d25bdeb3b15cf13097f0f6da2eb0a39dc437260e418c6fee0599717f07bcc",
+            "size": 89
+          },
+          "report.md": {
+            "sha256": "eb48be7791bf5f1634b993fda54cb24ce7c5588b7720b75ebba3fa9b6572db4e",
+            "size": 53
+          },
+          "task.json": {
+            "sha256": "ebc133720b4f60615d70c33ccd5669f3119f6d16ce33015e49b6323df51a99ea",
+            "size": 821
+          }
+        }
+      },
+      "configSha256": "5f70a55f079652279cd7b687de375562ace37a61066f78a2c0cf666e79d6ca94",
+      "reportSha256": "eb48be7791bf5f1634b993fda54cb24ce7c5588b7720b75ebba3fa9b6572db4e"
+    },
+    "rollbackCleanup": {
+      "status": "DEFERRED",
+      "targets": [
+        "installed",
+        "staging"
+      ],
+      "reason": "portable-handle-relative-recursive-delete-unavailable"
+    },
+    "limitation": "This exercises real local installer state transitions and Core reads on synthetic data; it is not an owner package installation or real user-profile upgrade, and OS ACL/service-principal isolation was not independently measured."
+  },
+  "tempRootRemoved": true
+}

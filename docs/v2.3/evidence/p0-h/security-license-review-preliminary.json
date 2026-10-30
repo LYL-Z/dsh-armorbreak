@@ -1,0 +1,130 @@
+{
+  "schemaVersion": "armorbreak.v2.3-p0-h-security-license-review/v1",
+  "reviewStatus": "BLOCKED_NOT_INDEPENDENT",
+  "reviewer": {
+    "identity": "Codex AI implementation agent",
+    "role": "same agent that implemented the P0-H changes",
+    "independent": false,
+    "humanAudit": false,
+    "certificationClaim": false
+  },
+  "sourceCommitReviewed": "26a3e8edc81bf950cc7cdde37e027607121e207b",
+  "reviewedAt": "2026-10-30",
+  "method": {
+    "type": "declared-limited-source-and-evidence-review",
+    "commands": [
+      "npm ls --all --json",
+      "npm audit --registry=https://registry.npmjs.org --json",
+      "node --test --test-concurrency=1",
+      "npm run typecheck"
+    ],
+    "limitations": [
+      "This is not an independent reviewer assessment, penetration test, human certification, or legal opinion.",
+      "Source inspection was limited to the named V2.3 attack surfaces and linked existing tests; it was not exhaustive line-by-line review of the repository.",
+      "No hostile sample was processed, no production/user data was accessed, and no live third-party tool was invoked during this review."
+    ]
+  },
+  "coverage": [
+    {
+      "area": "Untrusted archives and path boundaries",
+      "inspected": ["lib/analyzers/artifact/intake.js", "tests/program-intelligence-artifact.test.mjs"],
+      "evidence": "Current full suite includes hostile ZIP/TAR path traversal, links, special files, collisions, and expansion-bound cases; members are indexed and not extracted.",
+      "status": "LOCAL_TESTED_LIMITED",
+      "remaining": "No independent hostile-archive fuzzing or external corpus review."
+    },
+    {
+      "area": "JavaScript and TypeScript source parsing",
+      "inspected": ["lib/analyzers/source/symbols.js", "tests/program-intelligence-source.test.mjs"],
+      "evidence": "Parser uses locked TypeScript 5.9.3 Compiler API; valid and invalid authored syntax fixtures run in the full suite.",
+      "status": "LOCAL_TESTED_LIMITED",
+      "remaining": "Cross-file resolution, compiler semantics, data flow, and broad language support remain explicitly unsupported."
+    },
+    {
+      "area": "Ghidra external process",
+      "inspected": ["lib/analyzers/binary/ghidra.js", "lib/core/externalTools.js", "docs/v2.3/m3-native-program-ir.md"],
+      "evidence": "Invocation is bounded by timeout/output caps and analyzes a temporary exact input copy; existing real-tool run covered only self-authored fixtures.",
+      "status": "LIMITED_HOST_VALIDATION",
+      "remaining": "Host execution is not a hostile-sample sandbox. Local Docker daemon availability is unverified; no hostile sample isolation or platform matrix was tested."
+    },
+    {
+      "area": "Sensitive-information redaction",
+      "inspected": ["lib/analyzers/security/correlator.js", "lib/analyzers/sast/common.js", "tests/security-correlator.test.mjs"],
+      "evidence": "Existing tests cover credential-shaped text, secret fields, bounded summaries, and path redaction.",
+      "status": "LOCAL_TESTED_LIMITED",
+      "remaining": "No independent leak review across every output serializer and external tool log."
+    },
+    {
+      "area": "MCP principal, session, and permissions",
+      "inspected": ["packages/mcp-server/index.js", "packages/mcp-server/http.js", "lib/control/policyGateway.js", "tests/mcp-http.test.mjs", "tests/mcp-server.test.mjs"],
+      "evidence": "Current suite covers trusted configured identity, bearer/session binding, cross-principal denial, and fixed L0-only workflow input.",
+      "status": "LOCAL_TESTED_LIMITED",
+      "remaining": "No independent deployment-configuration review or external identity-provider integration test."
+    },
+    {
+      "area": "Behavior comparator input trust",
+      "inspected": ["lib/analyzers/rebuild/manifest.js", "docs/v2.3/behavioral-reconstruction.md"],
+      "evidence": "Code labels inputs as caller-supplied and unverified, does not execute either implementation, and limits equivalence statements to supplied cases.",
+      "status": "BOUNDED_BY_DESIGN",
+      "remaining": "Caller-supplied evidence references and certainty labels are not authenticated."
+    },
+    {
+      "area": "Evidence integrity and CI self-validation",
+      "inspected": ["scripts/v2/validate-v23-acceptance.mjs", "scripts/v2/v23-provenance.mjs", ".github/workflows/v2.3-validation.yml", ".github/workflows/v2.3-main-gate.yml", "tests/v23-provenance.test.mjs", "tests/v23-release-gate.test.mjs"],
+      "evidence": "Post-source code/workflow edits are excluded from the evidence-only allowlist. Local negative tests cover validator/workflow/security-gate changes, allowlist expansion, and an older source SHA followed by source changes.",
+      "status": "LOCAL_TESTED_AWAITING_EXACT_HEAD_CI",
+      "remediationCommit": "c07252613cf60623866391acf20f138eceafb132",
+      "retest": "4/4 focused provenance tests passed locally; 654/654 full tests and TypeScript check passed at source commit 26a3e8edc81bf950cc7cdde37e027607121e207b. New workflow has not yet run on GitHub."
+    },
+    {
+      "area": "Dependencies, test fixtures, binaries, and license provenance",
+      "inspected": ["package-lock.json", "docs/v2.3/fixture-catalog.json", "docs/v2.3/m3-native-program-ir.md", "scripts/v2/build-sbom.mjs", "docs/v2.3/evidence/p0-h/npm-audit-latest.json"],
+      "evidence": "Lockfile contains TypeScript 5.9.3 with Apache-2.0; official npm registry audit at this SHA returned zero advisories. M3 records identify compiled fixtures and the Zig input hash; the current SBOM generator declares optional external tools as not bundled.",
+      "status": "PARTIAL_LOCAL_INVENTORY",
+      "remaining": "No final V2.3 package/SBOM exists. Exact license notices and redistribution terms for optional Ghidra/JDK/Zig/toolchain components and every binary fixture still need independent review."
+    }
+  ],
+  "findings": [
+    {
+      "id": "V23-REV-001",
+      "severity": "P1_RELEASE_BLOCKER",
+      "title": "Independent human security review not obtained",
+      "statement": "This report is authored by the implementation agent and cannot satisfy the independent security gate.",
+      "fixCommit": null,
+      "retest": "OPEN; requires a separate qualified human reviewer and exact-candidate retest record."
+    },
+    {
+      "id": "V23-REV-002",
+      "severity": "P1_RELEASE_BLOCKER",
+      "title": "License and redistribution review incomplete",
+      "statement": "The current lockfile audit is not a license review; optional external binaries/toolchains and the final distributable inventory are not independently cleared.",
+      "fixCommit": null,
+      "retest": "OPEN; requires a separate reviewer, exact final file inventory, notices, and redistribution determination."
+    },
+    {
+      "id": "V23-REV-003",
+      "severity": "P1_OPERATIONAL_LIMITATION",
+      "title": "Ghidra host execution is not hostile-sample isolation",
+      "statement": "Existing real-tool evidence uses project-authored fixtures on the host. It does not establish safe processing of hostile external binaries.",
+      "fixCommit": null,
+      "retest": "OPEN; release scope must either exclude hostile-input processing or add a separately verified isolation environment."
+    },
+    {
+      "id": "V23-REV-004",
+      "severity": "P1_RELEASE_BLOCKER",
+      "title": "Exact-main and protected-check configuration not verified",
+      "statement": "The PR workflow source can be exercised on the branch, but repository required-check/branch-protection settings and exact-main release provenance are not established by this local review.",
+      "fixCommit": "91c9dac453932590661e08a65425b9b5668deac9",
+      "retest": "OPEN; requires exact PR workflow run and maintainer-visible protection configuration; no merge was performed."
+    },
+    {
+      "id": "V23-REV-005",
+      "severity": "P2_EVIDENCE_LIMITATION",
+      "title": "Behavior comparison evidence is caller-asserted",
+      "statement": "Comparison inputs and evidence references are not authenticated by ArmorBreak; bounded results do not establish whole-program equivalence.",
+      "fixCommit": null,
+      "retest": "Documented limitation; no remediation claimed."
+    }
+  ],
+  "decision": "P0-3_NOT_SATISFIED",
+  "releaseReadiness": "NOT_READY"
+}
