@@ -1,11 +1,11 @@
 # ArmorBreak V2.3 interruption checkpoint
 
 Pause recorded on 2026-10-27; explicitly resumed on 2026-10-29.
-Status: the original pause was explicitly lifted; implementation resumed at M3. This file preserves the pause point and records the verified continuation below. No release, push, PR, or merge has been performed.
+Status: the original pause was explicitly lifted; implementation resumed at M3. This file preserves the pause point and records the verified continuation below. As of the pause entries recorded here, no formal release, push, PR, or merge had been performed.
 
 ## Exact repository state at pause
 
-- Worktree: `D:\dsh-ABM\armorbreak-v2.3-worktree`
+- Worktree: `<worktree>`
 - Branch: `feature/v2.3-universal-program-intelligence`
 - HEAD: `ca88b0b12a974f1f763acd39433afab247144e0b` (`feat: add native program IR`)
 - The branch was 7 commits ahead of `origin/main` when checked.
@@ -55,7 +55,7 @@ Status: the original pause was explicitly lifted; implementation resumed at M3. 
 ## Resume verification on 2026-10-29 — M4 in progress, paused again
 
 - The user explicitly resumed work, so M4 implementation began after the M3 P0 local gate. This pause was explicitly requested after the latest targeted M4 test run.
-- Worktree: `D:\dsh-ABM\armorbreak-v2.3-worktree`
+- Worktree: `<worktree>`
 - Branch: `feature/v2.3-universal-program-intelligence` (10 commits ahead of `origin/main` at pause)
 - HEAD at pause: `4906162a6c3b23ed8cbca94ccbb41920f5e0cd63` (`docs: record exact-SHA M3 verification evidence`)
 - No M4 implementation commit exists. All changes below are uncommitted and must be preserved on resume:

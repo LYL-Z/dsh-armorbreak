@@ -220,7 +220,7 @@
     "domain": "binary",
     "capability": "binary.ghidra",
     "tool": "ghidra",
-    "target": "D:/dsh-ABM/armorbreak-v2.3-worktree/docs/v2.3/evidence/m3/fixtures/native_fixture_i386.elf",
+    "target": "docs/v2.3/evidence/m3/fixtures/native_fixture_i386.elf",
     "toolVersion": "12.1.4",
     "inputBytes": 12988,
     "emitted": 1,

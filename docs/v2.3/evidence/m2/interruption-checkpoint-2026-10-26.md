@@ -8,7 +8,7 @@ The user requested that implementation stop temporarily and that an interruption
 
 ## Repository state
 
-- Worktree: `D:\dsh-ABM\armorbreak-v2.3-worktree`
+- Worktree: `<worktree>`
 - Branch: `feature/v2.3-universal-program-intelligence`
 - HEAD: `003c1a008da3d8a60a67f94d28da16700cd620ca` (`docs: record v2.3 M1 evidence and status`)
 - `origin/main`: `66ec0017af4b9d636f09e45f7cf55eed060512ac`

@@ -72,7 +72,7 @@
     },
     "observedCause": [
       "Windows temporary fixtures were created on C: while the checkout was on D:.",
-      "The safe-evidence helper could not traverse the host-protected C:\\Users path in this environment, and a hard-link fixture failed with EXDEV across volumes.",
+      "The safe-evidence helper could not traverse the protected user-profile temp path in this environment, and a hard-link fixture failed with EXDEV across volumes.",
       "With TEMP/TMP pointed to D:, the same 635-test suite passed; the remaining rename-race assertion also passed once the temporary root was accessible."
     ],
     "resolution": "Committed a test-only helper that keeps filesystem-security and hard-link fixtures on the workspace volume/device when the system temp differs. The 14 affected tests and the final default npm test then passed without environment overrides.",

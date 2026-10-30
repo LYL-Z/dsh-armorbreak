@@ -12,7 +12,7 @@
     "typescript": "5.9.3",
     "packageVersion": "2.2.0",
     "tempVolume": "D:",
-    "portableIsolationTempRootOutsideWorktree": "D:\\dsh-ABM\\armorbreak-m2-test-tmp"
+    "portableIsolationTempRootOutsideWorktree": "same-volume sibling temp root outside the worktree"
   },
   "runtimeSnapshot": {
     "path": "docs/v2.3/evidence/m2/current-registry.json",
@@ -117,7 +117,7 @@
         "bytes": 1427,
         "sha256": "93f075edd54bfac1103f128c4fd55773163252e383f129316d935eaa15acdca5"
       },
-      "tempRoot": "D:\\dsh-ABM\\armorbreak-v2.3-worktree\\.runtime\\m2-test-tmp"
+      "tempRoot": "worktree-local same-volume temp root"
     },
     {
       "id": "full-suite-default-c-drive-temp",
@@ -165,7 +165,7 @@
         "bytes": 216,
         "sha256": "b80f8e8b14365051fabaeaa8f791cd57a23e2f574cd562a205cb2da551849223"
       },
-      "tempRoot": "D:\\dsh-ABM\\armorbreak-m2-test-tmp"
+      "tempRoot": "same-volume sibling temp root outside the worktree"
     },
     {
       "id": "full-suite-exact-commit-isolated-same-volume",
@@ -181,7 +181,7 @@
         "bytes": 68972,
         "sha256": "c1e3754d62ec798f07dfe55536cfc085c405d18b6a278489420a45e94e1556d1"
       },
-      "tempRoot": "D:\\dsh-ABM\\armorbreak-m2-test-tmp"
+      "tempRoot": "same-volume sibling temp root outside the worktree"
     }
   ],
   "ci": "NOT_RUN",
