@@ -123,7 +123,8 @@ try {
   const whoami = execute('whoami.exe', ['/user', '/fo', 'csv', '/nh'])
   const sid = /S-1-\d+(?:-\d+)+/.exec(whoami.stdout)?.[0]
   if (!sid) throw new Error('cannot identify the Windows current-user principal SID')
-  const aclResult = execute('icacls.exe', [scratch, '/inheritance:r', '/grant:r', `*${sid}:(OI)(CI)F`, '/T', '/C'])
+  const aclResult = execute('icacls.exe', [scratch, '/inheritance:r', '/grant:r', `*${sid}:(F)`, '/T', '/C'])
+  const aclInheritanceResult = execute('icacls.exe', [scratch, '/grant', `*${sid}:(OI)(CI)(IO)(F)`, '/T', '/C'])
   const workspaceAcl = execute('icacls.exe', [workspace]).stdout
   const configAcl = execute('icacls.exe', [configDir]).stdout + execute('icacls.exe', [configPath]).stdout
   const disallowedAclSids = ['S-1-1-0', 'S-1-5-32-545', 'S-1-5-11']
@@ -239,7 +240,7 @@ try {
       candidateHostConfigDoctorStatus: JSON.parse(hostConfig.stdout).status,
       mcpInitializeProtocol: initialize.result.protocolVersion,
       mcpReadHistoricalTaskAndReport: true,
-      trustedPrincipal: { configuredByHostEnvironment: true, callerPrincipalOverrideRejected: true, windowsSidSha256: digest(Buffer.from(sid)), aclRestrictedToCurrentUser: true, aclEntries: aclEntries.map((entry) => ({ ...entry, path: entry.path === workspace ? '<isolated-workspace>' : entry.path === configDir ? '<isolated-workspace>/.armorbreak' : '<isolated-workspace>/.armorbreak/mcp-host-config.json', sid: 'CURRENT_USER_SID' })), icaclsOutput: safeAcl(`${workspaceAcl}\n${configAcl}`), aclCommandOutputSha256: digest(Buffer.from(aclResult.stdout)), aclInspectionOutputSha256: digest(Buffer.from(aclChecks.stdout)) },
+      trustedPrincipal: { configuredByHostEnvironment: true, callerPrincipalOverrideRejected: true, windowsSidSha256: digest(Buffer.from(sid)), aclRestrictedToCurrentUser: true, aclEntries: aclEntries.map((entry) => ({ ...entry, path: entry.path === workspace ? '<isolated-workspace>' : entry.path === configDir ? '<isolated-workspace>/.armorbreak' : '<isolated-workspace>/.armorbreak/mcp-host-config.json', sid: 'CURRENT_USER_SID' })), icaclsOutput: safeAcl(`${workspaceAcl}\n${configAcl}`), aclCommandOutputSha256: digest(Buffer.from(`${aclResult.stdout}\n${aclInheritanceResult.stdout}`)), aclInspectionOutputSha256: digest(Buffer.from(aclChecks.stdout)) },
       workspaceBoundary: { outsideTargetRejected: true, stderrSha256: digest(Buffer.from(outOfWorkspace.stderr)) },
       failureInjection: { candidateStageEntry: 'index.js', corruptedEntrySha256: corruptedHash, rejectedBeforeCandidateStartup: injectedFailureRejected, v22PackageStillStartedAfterFault: true },
       rollback: { selectedPreviousVersion: '2.2.0', previousPackageRestarted: true, taskTreeHashesBeforeAndAfterEqual: JSON.stringify(before.tasks) === JSON.stringify(after.tasks), configHashBefore: before.configSha256, configHashAfter: after.configSha256, reportHashBefore: before.reportSha256, reportHashAfter: after.reportSha256 },
@@ -250,7 +251,8 @@ try {
     commands: [
       { ...summary('gh', v22DownloadArgs, v22DownloadResult), attempts: v22DownloadAttempts },
       summary('tar', ['-xzf', V22_ASSET, '-C', 'isolated V2.2 install'], v22UnpackResult),
-      summary('icacls.exe', ['isolated temp root', '/inheritance:r', '/grant:r', 'CURRENT_USER_SID:(OI)(CI)F', '/T', '/C'], aclResult),
+      summary('icacls.exe', ['isolated temp root', '/inheritance:r', '/grant:r', 'CURRENT_USER_SID:(F)', '/T', '/C'], aclResult),
+      summary('icacls.exe', ['isolated temp root', '/grant', 'CURRENT_USER_SID:(OI)(CI)(IO)(F)', '/T', '/C'], aclInheritanceResult),
       summary('powershell.exe', ['-NoProfile', '-NonInteractive', '-File', 'verify-acl.ps1'], aclChecks),
       summary('tar', ['-xzf', relative(root, candidateArtifact), '-C', 'fault-injected stage'], corruptUnpackResult),
       summary('tar', ['-xzf', relative(root, candidateArtifact), '-C', 'isolated V2.3 install'], candidateUnpackResult),
