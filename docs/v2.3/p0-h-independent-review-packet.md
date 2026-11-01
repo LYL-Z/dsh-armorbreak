@@ -4,7 +4,7 @@ Status: prepared for an independent reviewer; **not an independent audit**. The 
 
 ## Scope and materials
 
-Review the exact PR source SHA and final evidence SHA named in the V2.3 acceptance manifest (current local manifest source snapshot is `7a78aef15e59f16f71b192089dcb82a81e811fb5`; it is not yet the remote PR HEAD). Compare the source commit to frozen M0 baseline `66ec0017af4b9d636f09e45f7cf55eed060512ac`; inspect the final source-to-evidence diff separately. Do not infer safety from this packet, test pass counts, or README statements. The review should cover:
+Before beginning, record the actual PR HEAD and acceptance manifest source/evidence SHAs. Review that exact source SHA and final evidence SHA; compare source to frozen M0 baseline `66ec0017af4b9d636f09e45f7cf55eed060512ac` and inspect the final source-to-evidence diff separately. Do not infer safety from this packet, test pass counts, or README statements. The review should cover:
 
 1. Untrusted archives, archive entry count/expanded-size limits, path normalization, absolute paths, traversal, duplicate names, hard links/symlinks, reparse points, and extraction root containment.
 2. Archive read/write TOCTOU, directory replacement races, handle-relative APIs and fallback behavior on Windows and Linux.
@@ -30,6 +30,7 @@ npm run typecheck
 node scripts/v2/validate-v23-acceptance.mjs
 node scripts/v2/check-docs-consistency.mjs
 node scripts/v2/v23-release-gate.mjs --check-pr
+node scripts/v2/v23-release-gate.mjs --check-main # only after an exact main push; never simulate this as hosted evidence
 node scripts/v2/build-release.mjs --out dist --evidence dist/release-build.json --no-portable-evidence
 node scripts/v2/v23-real-package-drill.mjs
 ```
@@ -42,7 +43,7 @@ Focused boundary tests and source map:
 - Redaction: `tests/redaction.test.mjs`, `lib/evidence/redact.js`.
 - MCP identity/authority: `tests/mcp-http-auth-default.test.mjs`, `tests/mcp-http-origin-authority.test.mjs`, `tests/mcp-server.test.mjs`, `tests/approval-authority.test.mjs`, `packages/mcp-server/`.
 - Behavior comparator: `tests/behavior-compare.test.mjs`, `packages/core/src/behaviorCompare.js`.
-- Manifest and provenance: `tests/v23-provenance.test.mjs`, `tests/v23-release-gate.test.mjs`, `scripts/v2/validate-v23-acceptance.mjs`, `scripts/v2/v23-provenance.mjs`, `scripts/v2/v23-release-gate.mjs`.
+- Manifest and provenance: `tests/v23-provenance.test.mjs`, `tests/v23-release-gate.test.mjs`, `scripts/v2/validate-v23-acceptance.mjs`, `scripts/v2/v23-provenance.mjs`, `scripts/v2/v23-release-gate.mjs`. Verify the PR/main/release state contracts separately; release readiness is read from the structured P0-H field, not Markdown search.
 
 The command list is a reproducibility starting point; it is not evidence that an independent reviewer ran these commands. The reviewer should add targeted adversarial cases and report both accepted and rejected inputs.
 

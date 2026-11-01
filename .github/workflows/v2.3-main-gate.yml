@@ -136,7 +136,7 @@ jobs:
         run: |
           node scripts/v2/validate-v23-acceptance.mjs
           node scripts/v2/check-docs-consistency.mjs
-          node scripts/v2/v23-release-gate.mjs --check-pr
+          node scripts/v2/v23-release-gate.mjs --check-main
 
   build-and-attest-main-candidate:
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}

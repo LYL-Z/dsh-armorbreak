@@ -2,38 +2,44 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
-import { evaluatePrContract, evaluateReleaseContract } from '../scripts/v2/v23-release-gate.mjs'
+import { evaluateMainContract, evaluatePrContract, evaluateReleaseContract, missingRequiredReleaseClaims } from '../scripts/v2/v23-release-gate.mjs'
 
 const node = process.execPath
 const gateScript = 'scripts/v2/v23-release-gate.mjs'
 const SHA = 'a'.repeat(40)
-const READY = '## RELEASE READINESS: READY\n'
-const NOT_READY = '## RELEASE READINESS: NOT_READY\n'
 
-test('PR contract accepts an in-progress candidate only while release remains explicitly NOT_READY', () => {
-  assert.deepEqual(evaluatePrContract({ packageName: 'dsh-armorbreak', status: 'IN_PROGRESS', report: NOT_READY }), {
+test('PR contract accepts an in-progress candidate only while structured readiness remains NOT_READY', () => {
+  assert.deepEqual(evaluatePrContract({ packageName: 'dsh-armorbreak', status: 'IN_PROGRESS', releaseState: 'NOT_READY' }), {
     valid: true, releaseReadiness: 'NOT_READY', blockers: [],
   })
 })
 
-test('PR contract never interprets readiness as release approval and allows a completed milestone pending release authorization', () => {
-  assert.equal(evaluatePrContract({ packageName: 'dsh-armorbreak', status: 'COMPLETE', report: NOT_READY }).valid, true)
-  assert.equal(evaluatePrContract({ packageName: 'dsh-armorbreak', status: 'IN_PROGRESS', report: READY }).valid, false)
-  assert.equal(evaluatePrContract({ packageName: 'other', status: 'IN_PROGRESS', report: NOT_READY }).valid, false)
-  assert.equal(evaluatePrContract({ packageName: 'dsh-armorbreak', status: 'BLOCKED', report: NOT_READY }).valid, false)
+test('PR contract ignores historical Markdown wording and rejects contradictory structured state', () => {
+  assert.equal(evaluatePrContract({ packageName: 'dsh-armorbreak', status: 'COMPLETE', releaseState: 'NOT_READY' }).valid, true)
+  assert.equal(evaluatePrContract({ packageName: 'dsh-armorbreak', status: 'IN_PROGRESS', releaseState: 'READY' }).valid, false)
+  assert.equal(evaluatePrContract({ packageName: 'other', status: 'IN_PROGRESS', releaseState: 'NOT_READY' }).valid, false)
+  assert.equal(evaluatePrContract({ packageName: 'dsh-armorbreak', status: 'BLOCKED', releaseState: 'NOT_READY' }).valid, false)
 })
 
-test('Release contract transitions to READY only for complete P0-H, version 2.3.0, exact tag, SHA and READY report', () => {
-  assert.deepEqual(evaluateReleaseContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', report: READY, tag: 'refs/tags/v2.3.0', expectedSha: SHA }), {
+test('main candidate contract accepts NOT_READY without future release evidence and binds exact SHA', () => {
+  assert.deepEqual(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'IN_PROGRESS', releaseState: 'NOT_READY', expectedSha: SHA, head: SHA }), {
+    valid: true, releaseReadiness: 'NOT_READY', blockers: [],
+  })
+  assert.equal(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'IN_PROGRESS', releaseState: 'NOT_READY', expectedSha: SHA, head: 'b'.repeat(40) }).valid, false)
+  assert.equal(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'IN_PROGRESS', releaseState: 'READY', expectedSha: SHA, head: SHA }).valid, false)
+})
+
+test('Release contract transitions to READY only for complete P0-H, structured READY, exact tag and SHA', () => {
+  assert.deepEqual(evaluateReleaseContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', releaseState: 'READY', tag: 'refs/tags/v2.3.0', expectedSha: SHA }), {
     valid: true, blockers: [],
   })
 })
 
 test('Release contract rejects reverse and partial transitions', () => {
-  const base = { packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', report: READY, tag: 'refs/tags/v2.3.0', expectedSha: SHA }
+  const base = { packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', releaseState: 'READY', tag: 'refs/tags/v2.3.0', expectedSha: SHA }
   for (const invalid of [
     { ...base, status: 'IN_PROGRESS' },
-    { ...base, report: NOT_READY },
+    { ...base, releaseState: 'NOT_READY' },
     { ...base, packageVersion: '2.2.0' },
     { ...base, tag: 'refs/tags/v2.3.1' },
     { ...base, expectedSha: 'HEAD' },
@@ -47,6 +53,23 @@ test('PR readiness keeps remaining installer and second-principal validation dis
   assert.equal(report.releaseReadiness, 'NOT_READY')
   assert.ok(report.blockers.includes('OS-integrated updater and second-principal permission validation'))
   assert.ok(!report.blockers.includes('real candidate package upgrade/rollback and OS permission drill'))
+})
+
+test('PR, main-candidate and release modes follow a monotonic simulated transition', () => {
+  assert.equal(evaluatePrContract({ packageName: 'dsh-armorbreak', status: 'IN_PROGRESS', releaseState: 'NOT_READY' }).valid, true)
+  assert.equal(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'IN_PROGRESS', releaseState: 'NOT_READY', expectedSha: SHA, head: SHA }).valid, true)
+  assert.equal(evaluateReleaseContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', releaseState: 'READY', tag: 'refs/tags/v2.3.0', expectedSha: SHA }).valid, true)
+})
+
+test('every absent mandatory release claim is rejected before release authorization can proceed', () => {
+  const required = ['securityReview', 'licenseReview', 'upgradeRollback', 'artifact', 'sbom', 'mainCi', 'attestation', 'maintainerAuthorization']
+  const claims = Object.fromEntries(required.map((key) => [key, { status: 'PASS', evidencePath: `evidence/${key}.json`, evidenceSha256: '0'.repeat(64) }]))
+  assert.deepEqual(missingRequiredReleaseClaims(claims), [])
+  for (const key of required) {
+    const { [key]: ignored, ...incomplete } = claims
+    assert.deepEqual(missingRequiredReleaseClaims(incomplete), [key])
+  }
+  assert.deepEqual(missingRequiredReleaseClaims({ ...claims, artifact: 'PASS' }), ['artifact'])
 })
 
 test('Release CLI fails closed while P0-H is open and no signed evidence package exists', () => {
@@ -65,6 +88,8 @@ test('V2.3 workflow separates PR, main and exact-tag checks and preserves the V2
   assert.match(workflow, /tags:\s*\['v2\.3\.0'\]/)
   assert.match(workflow, /pr-candidate-validation:[\s\S]*if: \$\{\{ github\.event_name == 'pull_request' \}\}[\s\S]*name: Node \$\{\{ matrix\.node \}\} \/ \$\{\{ matrix\.os \}\}/)
   assert.match(workflow, /main-candidate-validation:[\s\S]*if: \$\{\{ github\.event_name == 'push' && github\.ref == 'refs\/heads\/main' \}\}[\s\S]*name: Node \$\{\{ matrix\.node \}\} \/ \$\{\{ matrix\.os \}\}/)
+  assert.match(workflow, /main-candidate-validation:[\s\S]*v23-release-gate\.mjs --check-main/)
+  assert.match(workflow, /pr-candidate-validation:[\s\S]*v23-release-gate\.mjs --check-pr/)
   assert.match(workflow, /name: V2\.3\.0 release verification/)
   assert.equal((workflow.match(/Prepare runner-local temporary directory \(Windows\)/g) ?? []).length, 2)
   assert.equal((workflow.match(/Prepare runner-local temporary directory \(Unix\)/g) ?? []).length, 2)

@@ -15,6 +15,10 @@ const REQUIRED_RELEASE_GATES = ['securityReview', 'licenseReview', 'upgradeRollb
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)))
 const repoRoot = resolve(process.env.V23_REPO_ROOT || process.cwd())
 
+export function missingRequiredReleaseClaims(claims) {
+  return REQUIRED_RELEASE_GATES.filter((key) => !claims?.[key] || typeof claims[key] !== 'object' || Array.isArray(claims[key]))
+}
+
 function canonical(value) {
   if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`
   if (value && typeof value === 'object') return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonical(value[key])}`).join(',')}}`
@@ -46,20 +50,30 @@ function verifyDigest(path, expected, label) {
   if (sha256(path) !== expected.toLowerCase()) throw new Error(`${label} SHA-256 does not match its signed claim`)
 }
 
-export function evaluatePrContract({ packageName, status, report }) {
+export function evaluatePrContract({ packageName, status, releaseState }) {
   const blockers = []
   if (packageName !== 'dsh-armorbreak') blockers.push('unexpected package identity')
   if (!['IN_PROGRESS', 'COMPLETE'].includes(status)) blockers.push('P0-H status must be IN_PROGRESS or COMPLETE')
-  if (!/RELEASE READINESS/i.test(report) || !/\bNOT_READY\b/.test(report)) blockers.push('PR contract requires explicit RELEASE READINESS and NOT_READY markers')
+  if (releaseState !== 'NOT_READY') blockers.push('PR candidate structured releaseState must remain NOT_READY')
   return { valid: blockers.length === 0, releaseReadiness: 'NOT_READY', blockers }
 }
 
-export function evaluateReleaseContract({ packageName, packageVersion, status, report, tag, expectedSha }) {
+export function evaluateMainContract({ packageName, packageVersion, status, releaseState, expectedSha, head }) {
+  const blockers = []
+  if (packageName !== 'dsh-armorbreak') blockers.push('unexpected package identity')
+  if (packageVersion !== '2.3.0') blockers.push(`package version must be 2.3.0, found ${packageVersion}`)
+  if (!['IN_PROGRESS', 'COMPLETE'].includes(status)) blockers.push('P0-H status must be IN_PROGRESS or COMPLETE')
+  if (!['NOT_READY', 'CANDIDATE'].includes(releaseState)) blockers.push('main candidate structured releaseState must be NOT_READY or CANDIDATE')
+  if (!isFullCommitSha(expectedSha) || expectedSha !== head) blockers.push('exact main candidate SHA is required')
+  return { valid: blockers.length === 0, releaseReadiness: 'NOT_READY', blockers }
+}
+
+export function evaluateReleaseContract({ packageName, packageVersion, status, releaseState, tag, expectedSha }) {
   const blockers = []
   if (packageName !== 'dsh-armorbreak') blockers.push('unexpected package identity')
   if (packageVersion !== '2.3.0') blockers.push(`package version must be 2.3.0, found ${packageVersion}`)
   if (status !== 'COMPLETE') blockers.push('P0-H matrix status is not COMPLETE')
-  if (!/RELEASE READINESS/i.test(report) || !/(?:^|[^A-Z_])READY(?:[^A-Z_]|$)/.test(report) || /\bNOT_READY\b/.test(report)) blockers.push('release report does not declare READY or still contains NOT_READY')
+  if (releaseState !== 'READY') blockers.push('structured releaseState is not READY')
   if (tag !== 'refs/tags/v2.3.0' && tag !== 'v2.3.0') blockers.push('release gate only accepts the exact v2.3.0 tag')
   if (!isFullCommitSha(expectedSha)) blockers.push('exact release commit SHA is required')
   return { valid: blockers.length === 0, blockers }
@@ -70,7 +84,6 @@ function loadCommon() {
   const manifest = readJson('docs/v2.3/evidence/p0-h/acceptance-manifest.json')
   const matrix = readJson('docs/v2.3/compatibility-matrix.json')
   const milestone = matrix.milestones?.find((item) => item.id === 'P0-H')
-  const report = readFileSync(safeRepoPath('docs/v2.3/acceptance-report.md'), 'utf8')
   if (manifest.schemaVersion !== 'armorbreak.v2.3-acceptance-manifest/v1') throw new Error('acceptance manifest schema mismatch')
   if (manifest.baselineSha !== '66ec0017af4b9d636f09e45f7cf55eed060512ac') throw new Error('V2.3 evidence baseline is not the frozen M0 SHA')
   if (!isFullCommitSha(manifest.sourceCommit)) throw new Error('manifest sourceCommit must be a full Git SHA')
@@ -79,7 +92,7 @@ function loadCommon() {
   const changed = git(['diff', '--name-only', '-z', `${manifest.sourceCommit}..${head}`]).split('\0').filter(Boolean)
   const forbidden = findForbiddenPostSourcePaths(changed)
   if (forbidden.length) throw new Error(`post-source changes escape evidence-only allowlist: ${forbidden.join(', ')}`)
-  return { pkg, manifest, milestone, report, head }
+  return { pkg, manifest, milestone, head }
 }
 
 function verifySignature(claims, signature, envName, label) {
@@ -111,7 +124,8 @@ function verifyExternalAuthorization({ expectedSha, sourceCommit, pkg }) {
   const forbidden = findForbiddenPostSourcePaths(changed)
   if (forbidden.length) throw new Error(`evidence commit contains source/workflow changes after sourceCommit: ${forbidden.join(', ')}`)
 
-  for (const key of REQUIRED_RELEASE_GATES) if (!claims[key]) throw new Error(`authorization claim ${key} is missing`)
+  const missingClaims = missingRequiredReleaseClaims(claims)
+  if (missingClaims.length) throw new Error(`authorization claim ${missingClaims.join(', ')} is missing or malformed`)
   verifySignature(claims, signatures.securityReviewer, 'V23_SECURITY_REVIEWER_PUBLIC_KEY', 'independent security reviewer')
   verifySignature(claims, signatures.licenseReviewer, 'V23_LICENSE_REVIEWER_PUBLIC_KEY', 'independent license reviewer')
   verifySignature(claims, signatures.maintainer, 'V23_MAINTAINER_PUBLIC_KEY', 'maintainer')
@@ -151,16 +165,17 @@ function verifyExternalAuthorization({ expectedSha, sourceCommit, pkg }) {
 
 function main() {
   const args = new Set(process.argv.slice(2))
-  const mode = args.has('--release') ? 'release' : args.has('--check-pr') ? 'check-pr' : null
-  if (!mode || [...args].some((arg) => !['--release', '--check-pr'].includes(arg))) {
-    console.error('Usage: node scripts/v2/v23-release-gate.mjs --check-pr | --release')
+  const selected = ['--check-pr', '--check-main', '--release'].filter((arg) => args.has(arg))
+  const mode = selected.length === 1 ? selected[0].slice(2) : null
+  if (!mode || [...args].some((arg) => !['--release', '--check-pr', '--check-main'].includes(arg))) {
+    console.error('Usage: node scripts/v2/v23-release-gate.mjs --check-pr | --check-main | --release')
     process.exitCode = 2
     return
   }
   try {
-    const { pkg, manifest, milestone, report, head } = loadCommon()
+    const { pkg, manifest, milestone, head } = loadCommon()
     if (mode === 'check-pr') {
-      const state = evaluatePrContract({ packageName: pkg.name, status: milestone?.status, report })
+      const state = evaluatePrContract({ packageName: pkg.name, status: milestone?.status, releaseState: milestone?.releaseState ?? milestone?.releaseReadiness })
       if (!state.valid) throw new Error(state.blockers.join('; '))
       const expectedSha = process.env.V23_EXPECTED_SHA ?? null
       if (expectedSha && (!isFullCommitSha(expectedSha) || expectedSha !== head)) throw new Error('V23_EXPECTED_SHA must match the full validated HEAD SHA')
@@ -179,9 +194,17 @@ function main() {
       return
     }
 
+    if (mode === 'check-main') {
+      const expectedSha = process.env.GITHUB_SHA ?? process.env.V23_EXPECTED_SHA ?? ''
+      const state = evaluateMainContract({ packageName: pkg.name, packageVersion: pkg.version, status: milestone?.status, releaseState: milestone?.releaseState ?? milestone?.releaseReadiness, expectedSha, head })
+      if (!state.valid) throw new Error(state.blockers.join('; '))
+      console.log(JSON.stringify({ schemaVersion: 'armorbreak.v2.3-main-candidate-gate/v1', mode, gateConfiguration: 'VALIDATED', releaseReadiness: 'NOT_READY', sourceCommit: manifest.sourceCommit, head, blockers: ['P0-H final closure', 'independent human security and license review', 'artifact/SBOM/attestation and exact-main release evidence', 'maintainer release authorization'], note: 'main candidate validation does not grant release approval and does not require future release evidence.' }, null, 2))
+      return
+    }
+
     const tag = process.env.GITHUB_REF ?? process.env.V23_TAG ?? ''
     const expectedSha = process.env.GITHUB_SHA ?? process.env.V23_EXPECTED_SHA ?? ''
-    const state = evaluateReleaseContract({ packageName: pkg.name, packageVersion: pkg.version, status: milestone?.status, report, tag, expectedSha })
+    const state = evaluateReleaseContract({ packageName: pkg.name, packageVersion: pkg.version, status: milestone?.status, releaseState: milestone?.releaseState ?? milestone?.releaseReadiness, tag, expectedSha })
     if (!state.valid) throw new Error(state.blockers.join('; '))
     if (git(['rev-parse', 'refs/tags/v2.3.0^{commit}']) !== expectedSha) throw new Error('the exact v2.3.0 tag does not resolve to GITHUB_SHA')
     verifyExternalAuthorization({ expectedSha, sourceCommit: manifest.sourceCommit, pkg })
