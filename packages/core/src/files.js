@@ -15,6 +15,7 @@ import { extname, resolve } from 'node:path'
 import { performance } from 'node:perf_hooks'
 import { Worker } from 'node:worker_threads'
 import { sha256 } from './util.js'
+import { sameFilesystemPath } from '../../../lib/core/pathBoundary.js'
 
 export const FILE_TOOL_LIMITS = Object.freeze({
   maxReadBytes: 262_144,
@@ -193,9 +194,7 @@ async function authorizePath(scope, workspaceRoot, targetPath) {
 
 /** Compare canonical paths without relying on case sensitivity on Windows. */
 function samePath(left, right) {
-  const a = resolve(left)
-  const b = resolve(right)
-  return process.platform === 'win32' ? a.toLowerCase() === b.toLowerCase() : a === b
+  return sameFilesystemPath(left, right)
 }
 
 /** Compare the stable file identity exposed by the platform. */

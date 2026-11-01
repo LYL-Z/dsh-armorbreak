@@ -16,6 +16,7 @@ import { ApprovalAuthority } from '../../lib/control/approvalAuthority.js'
 import { listWorkflows } from '../../lib/core/workflows.js'
 import { validateInvocation } from '../protocol/index.js'
 import { createEvidenceEnvelope, createEventEnvelope, CORE_VERSION } from '../core/index.js'
+import { isFilesystemPathWithin, sameFilesystemPath } from '../../lib/core/pathBoundary.js'
 
 const MAX_TITLE = 300
 const MAX_OBJECTIVE = 5000
@@ -24,9 +25,7 @@ const MAX_IDEMPOTENCY = 10_000
 const MAX_REPORT_BYTES = 256 * 1024
 
 function samePath(a, b) {
-  const left = resolve(String(a))
-  const right = resolve(String(b))
-  return process.platform === 'win32' ? left.toLowerCase() === right.toLowerCase() : left === right
+  return sameFilesystemPath(a, b)
 }
 
 function sessionOf(ctx) {
@@ -41,8 +40,7 @@ function taskOwnedBy(task, principal, sessionId) {
 }
 
 function pathWithin(root, target) {
-  const rel = relative(root, target)
-  return rel === '' || (rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel))
+  return isFilesystemPathWithin(root, target)
 }
 
 function denyReport(message) {
