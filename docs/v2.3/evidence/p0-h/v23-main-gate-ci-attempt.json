@@ -91,6 +91,46 @@
       },
       "releaseReadiness": "NOT_READY",
       "interpretation": "No successful dedicated main-gate pull_request run exists at the current head. Push runs report failure with zero jobs, and this evidence does not establish whether candidate-validation executed. Workflow dispatch is unavailable until the workflow exists on the default branch. Do not merge merely to test it; retain this as a blocker. The v2.2.0 rule is unchanged and active, with an owner bypass recorded."
+    },
+    {
+      "schemaVersion": "armorbreak.v2.3-main-gate-attempt/v1",
+      "observationId": "actionlint-zero-job-root-cause-2026-10-31",
+      "capturedAt": "2026-11-01T02:43:50.945Z",
+      "failedRun": {
+        "runId": 41027505694,
+        "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41027505694",
+        "event": "push",
+        "exactHead": "ed3d6f9c0b3c171f74482cf78ed1bcfbc9ec0d07",
+        "status": "completed",
+        "conclusion": "failure",
+        "jobsObserved": 0,
+        "logsApiResult": "HTTP 404; zero-job run returned no logs"
+      },
+      "badWorkflow": {
+        "sha256": "0655efd12880e61d1d120fc12f7bda81d4b79a8d4c6b5d9b1f6bcb8921ff379e",
+        "actionlintVersion": "1.7.12",
+        "actionlintExitCode": 1,
+        "diagnostic": "line 52: unquoted run scalar containing { recursive: true } caused YAML mapping-values parse error",
+        "introducedByCommit": "bf7d3d4d590d7ba2cc7d53edf548b1afc78687fd"
+      },
+      "fixedWorkflow": {
+        "sourceCommit": "bf92ac7e1d9a54ca560610d46efd43650e35af43",
+        "sha256": "bd55681b5d0bab17469eb812d28feb54e9a6c085a5547accbd8417cce6cdb898",
+        "actionlintVersion": "1.7.12",
+        "actionlintExitCode": 0,
+        "image": "rhysd/actionlint@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667"
+      },
+      "earlierPrEvent": {
+        "runId": 41025798504,
+        "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41025798504",
+        "event": "pull_request",
+        "apiHeadSha": "59681acd9b808de32e6a661ed66aa9450c31a1e",
+        "jobsObserved": 4,
+        "conclusion": "failure",
+        "finding": "Four matrix jobs were created before the malformed line was committed; all failed tests. This proves earlier event scheduling, not successful validation."
+      },
+      "rootCauseAssessment": "The zero-job push coincides with a reproducible workflow YAML syntax failure introduced after an earlier pull_request run had jobs. GitHub supplied no run logs, so the platform parser’s internal error is unavailable; retain this as a strongly supported root-cause diagnosis, not a retrieved GitHub parser trace.",
+      "currentStatus": "Corrected workflow actionlint passes; no successful dedicated pull_request run at the currently pushed PR HEAD yet."
     }
   ]
 }

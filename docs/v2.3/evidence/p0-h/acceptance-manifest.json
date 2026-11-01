@@ -1,8 +1,8 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "bf7d3d4d590d7ba2cc7d53edf548b1afc78687fd",
-  "generatedAt": "2026-10-30T08:35:25.369Z",
+  "sourceCommit": "2cb8a3de102870fc54056ace75688cdfd5594bd0",
+  "generatedAt": "2026-11-01T02:51:12.744Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     ".github/workflows/ci.yml": {
@@ -10,8 +10,8 @@
       "sha256": "51df03dc303cab8c3b884f59364f8f7dcd56e3ad7618b50fe1c0eddbc8d29983"
     },
     ".github/workflows/v2.3-main-gate.yml": {
-      "size": 2927,
-      "sha256": "0655efd12880e61d1d120fc12f7bda81d4b79a8d4c6b5d9b1f6bcb8921ff379e"
+      "size": 8304,
+      "sha256": "bd55681b5d0bab17469eb812d28feb54e9a6c085a5547accbd8417cce6cdb898"
     },
     ".github/workflows/v2.3-validation.yml": {
       "size": 4700,
@@ -22,8 +22,8 @@
       "sha256": "21039ccca6fac1150bf049d5abbc500d3ab668a1e66731b202173547f61422ed"
     },
     "docs/v2.3/acceptance-report.md": {
-      "size": 17728,
-      "sha256": "9bd7f26b2d16ad42535b17eca2980336ed6116e60db15ad40037660491bf3a88"
+      "size": 20515,
+      "sha256": "688b324daccaa5f6ec8ca483a1c6b651232749984bcb6720257dc46e94bf60dd"
     },
     "docs/v2.3/architecture.md": {
       "size": 4621,
@@ -34,8 +34,8 @@
       "sha256": "3ecb9f50976afe01747d4f3045a803b1c93ccfcb9a5890cbe955763dff314f15"
     },
     "docs/v2.3/compatibility-matrix.json": {
-      "size": 41768,
-      "sha256": "b8b5cf20ae1c82b416ffb9a9107da5a628a4be2614bc427a3796f9da4adf82cb"
+      "size": 42930,
+      "sha256": "055cc3d0402a87df7e4b8c3b61849a2041949c92e47357aafba9089ee6dd1a0a"
     },
     "docs/v2.3/evidence/m0/current-registry.json": {
       "size": 12385,
@@ -253,6 +253,14 @@
       "size": 625,
       "sha256": "04b2e362f335e29d9d9aaa4e457a66de1661b68159148ff95998f532210242ad"
     },
+    "docs/v2.3/evidence/p0-h/npm-package-dry-run.json": {
+      "size": 3420,
+      "sha256": "39e5e8cf6e674667d2da01da9b13dfbf21cc0a2f30c2d098b336d36b3e1fa57c"
+    },
+    "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback.json": {
+      "size": 15111,
+      "sha256": "1df3b533e4526a50068f2f451bbc651b6b53e5665bf0c7858bb9fd5886d3e884"
+    },
     "docs/v2.3/evidence/p0-h/security-license-review-preliminary.json": {
       "size": 8266,
       "sha256": "058efcf0a4f230f43674339c1c6780530a1a360f57a0237716a0c6c277055e9a"
@@ -262,24 +270,36 @@
       "sha256": "ec526c2f4fc94ef10ec5596bcbff21a9a2f8a0eabc71a5074da9a2a55fed7f26"
     },
     "docs/v2.3/evidence/p0-h/v23-main-gate-ci-attempt.json": {
-      "size": 3995,
-      "sha256": "962a250d52265e68d26dd2fc7510663b055c4845612813533448980f5b25a92f"
+      "size": 6301,
+      "sha256": "3a06b8c4fbf67ce8471882b1df0f13823858be2c0128f451c7d917942defdd43"
     },
     "docs/v2.3/fixture-catalog.json": {
       "size": 5027,
       "sha256": "b0e571fcf5f9953d5a02e04b4652b38d6cbaea6196d6c952459cbb5ca64a2b3e"
     },
     "docs/v2.3/migration-and-rollback.md": {
-      "size": 2377,
-      "sha256": "acabd63932df12d19aa3bcaadb6eef35611ddc1549bafdb388274533be243f09"
+      "size": 3278,
+      "sha256": "0061d04cb159fa6496f2c003cd0f4d743343fe4a223990cd859e42b7d0e9c728"
+    },
+    "docs/v2.3/p0-h-independent-review-packet.md": {
+      "size": 8808,
+      "sha256": "70b39f8ca9c6dc70b514699f4cc0ae273cd333a65b03f7009f541b06ce1b4fb3"
+    },
+    "docs/v2.3/p0-h-license-inventory.md": {
+      "size": 6517,
+      "sha256": "5168fb1a2d62ff939d65645cef0dc4e1153ca18a5c6139c906650762fe408abb"
     },
     "docs/v2.3/performance-report.md": {
       "size": 3590,
       "sha256": "1bd9b4723d7281dcf1a86e66a42bd1bd1559e919592d5ad2e70553e767030b8a"
     },
+    "docs/v2.3/release-provenance-protocol.md": {
+      "size": 7500,
+      "sha256": "f58ad6263155e5eb7fc694db8e7f5d5012c19afd49dc66d8df878ef6b84bb238"
+    },
     "docs/v2.3/threat-model.md": {
-      "size": 7541,
-      "sha256": "0da0a83471df8a3d188324eacf05492a56fc5218b7c011acc33c4a0d974f4a55"
+      "size": 7998,
+      "sha256": "b2c2df759239ffbd8dedd280b8fc0bec6bacad80b18963d99bbf2948fab32d69"
     },
     "scripts/v2/release-gates.mjs": {
       "size": 3087,
@@ -289,25 +309,29 @@
       "size": 789,
       "sha256": "d6fd0149b9621147019626f23ff8441bebdc5dff625ce07727c65462fb500f7c"
     },
+    "scripts/v2/v23-real-package-drill.mjs": {
+      "size": 23826,
+      "sha256": "1ad0dad2ea0e6e80ad15dd0462c3cb8adeda8f885cb565d73b9da09787af47d0"
+    },
     "scripts/v2/v23-release-gate.mjs": {
-      "size": 4576,
-      "sha256": "4f18bf2b7bb2360cbcc49dcb2f24a7b4e3f504de13e6a27091e27954cd18cd99"
+      "size": 15210,
+      "sha256": "46ec07ed29c1ab2fa1d2a7e3fac2eff176600a9037463a05ec7ceec12c4ed625"
     },
     "scripts/v2/v23-upgrade-rollback-drill.mjs": {
       "size": 7931,
       "sha256": "feefd1bee1c52a51eaa57050775d5d6193018b62bd3dc13cb5cf4510eab21bd5"
     },
     "scripts/v2/validate-v23-acceptance.mjs": {
-      "size": 9698,
-      "sha256": "e7267736bedde06ee3f317d6b052b01e0e6d0b8d46839ae5e31e0d51c34942ca"
+      "size": 10502,
+      "sha256": "da922f1badddc17425e13c31dc106eb62ace3065e344d22d3cb45f5044551115"
     },
     "tests/v23-provenance.test.mjs": {
-      "size": 2113,
-      "sha256": "a875059f11a560b10242563fd36c18db1611968eaf6931e9fee707000c456475"
+      "size": 4965,
+      "sha256": "9bbd218f677256f69adf4018401736e161b1c4a38bea85eee1ea89f72076da93"
     },
     "tests/v23-release-gate.test.mjs": {
-      "size": 1883,
-      "sha256": "4ee712ca27fcff5f8ecba4fbc933d64d55f36811b7cef219bf1eb58a99100003"
+      "size": 4563,
+      "sha256": "62cb255c5ce321d7eb5a1232189f8539d355c9dab96d772852c7a7cff84129ca"
     }
   }
 }

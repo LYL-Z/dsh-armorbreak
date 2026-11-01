@@ -1,0 +1,420 @@
+{
+  "schemaVersion": "armorbreak.v2.3-real-package-upgrade-rollback/v1",
+  "status": "PASS_ISOLATED_REAL_PACKAGE_DEPLOYMENT",
+  "capturedAt": "2026-11-01T02:39:32.550Z",
+  "sourceCommit": "34b431931857e786b77ff28c90610857b8c8844c",
+  "platform": {
+    "os": "win32",
+    "arch": "x64",
+    "node": "v24.16.0"
+  },
+  "historicalPackage": {
+    "version": "2.2.0",
+    "release": "v2.2.0",
+    "asset": "armorbreak-portable-2.2.0.tar.gz",
+    "source": "GitHub Release API asset digest; downloaded read-only",
+    "sha256": "5e5aca98da18d4f0cb17db71cf57c5577f8f8f64810a30844bd5237b4ed7b630",
+    "expectedSha256": "5e5aca98da18d4f0cb17db71cf57c5577f8f8f64810a30844bd5237b4ed7b630"
+  },
+  "candidatePackage": {
+    "version": "2.3.0",
+    "artifact": "dist/armorbreak-portable-2.3.0.tar.gz",
+    "sha256": "f23b79948faf2d53164dddddeea37a00c0625c758eb02dee9542678cd0ce779d",
+    "reproducible": true,
+    "cleanRoomCliCapabilities": 53,
+    "productionSigned": false
+  },
+  "deployment": {
+    "v22PackageExtractedAndExecuted": true,
+    "v22HistoricalCapabilityCount": 46,
+    "v22PackageCreatedHistoryTask": {
+      "id": "task_mvx81szo_ad06ce93",
+      "schemaVersion": "armorbreak/v2",
+      "taskSha256": "5fa9c02f0ee9cdaae9ce70cd62db18508b0741e63ba3625f7d864f9870d513b2",
+      "reportSha256": "36b5d43e97360007b54ad132e3c9f5e1272e26a4949fb30d53bbcae19c764946"
+    },
+    "candidateExtractedAndInstalledUnderIsolatedTempRoot": true,
+    "candidateStartedAndReported53Capabilities": true,
+    "candidateReadHistoricalTaskAndReport": true,
+    "candidateHostConfigDoctorStatus": "OK",
+    "mcpInitializeProtocol": "2025-06-18",
+    "mcpHistoricalCliTaskHiddenFromNewMcpSession": true,
+    "mcpReportDeniedForForeignCliSessionTask": true,
+    "trustedPrincipal": {
+      "configuredByHostEnvironment": true,
+      "callerPrincipalOverrideRejected": true,
+      "windowsSidSha256": "582392de1c279b7f7ab1f8c38277da07a8b55c8486ecf17cc5c285d158fec75f",
+      "aclRestrictedToCurrentUser": true,
+      "aclEntries": [
+        {
+          "path": "<isolated-workspace>",
+          "sid": "CURRENT_USER_SID",
+          "type": "Allow",
+          "rights": "FullControl",
+          "inherited": false
+        },
+        {
+          "path": "<isolated-workspace>/.armorbreak",
+          "sid": "CURRENT_USER_SID",
+          "type": "Allow",
+          "rights": "FullControl",
+          "inherited": false
+        },
+        {
+          "path": "<isolated-workspace>/.armorbreak/mcp-host-config.json",
+          "sid": "CURRENT_USER_SID",
+          "type": "Allow",
+          "rights": "FullControl",
+          "inherited": false
+        }
+      ],
+      "aclCommandOutputSha256": "8958d78da63e80c059947534700b3c6f7b6cc73600b154afba748a21f5e09f43",
+      "aclInspectionOutputSha256": "016134cd13a620597b4e179744d4dd3aba1558b8dde52a24bc347368d96c617b",
+      "rawIcaclsAccountOutput": "redacted; normalized ACL entries and command-output SHA-256 are retained"
+    },
+    "workspaceBoundary": {
+      "outsideTargetRejected": true,
+      "stderrSha256": "6188f20a7b02f4d3c4bda38718d0b38e316566810cfc6b96804fc9c49f757dd0"
+    },
+    "failureInjection": {
+      "candidateStageEntry": "index.js",
+      "corruptedEntrySha256": "96783f9d816df5f7d17da767dca233e743547f43c848f2b8e6dc9006bd3ccfe3",
+      "rejectedBeforeCandidateStartup": true,
+      "v22PackageStillStartedAfterFault": true
+    },
+    "rollback": {
+      "selectedPreviousVersion": "2.2.0",
+      "previousPackageRestarted": true,
+      "taskTreeHashesBeforeAndAfterEqual": true,
+      "configHashBefore": "e596f92209a59737175a85c2cde836fa34cbcd555051c7152b3cf622e2f2aa1b",
+      "configHashAfter": "e596f92209a59737175a85c2cde836fa34cbcd555051c7152b3cf622e2f2aa1b",
+      "reportHashBefore": "36b5d43e97360007b54ad132e3c9f5e1272e26a4949fb30d53bbcae19c764946",
+      "reportHashAfter": "36b5d43e97360007b54ad132e3c9f5e1272e26a4949fb30d53bbcae19c764946"
+    },
+    "packageInstallMechanism": "Candidate tarball was extracted and executed from an isolated version directory; rollback selected and restarted the preserved V2.2 package. Project does not yet ship an OS-integrated updater/installer.",
+    "noFormalInstallOrV2_2AssetModified": true,
+    "temporaryWorkspaceRemovedAtCompletion": true
+  },
+  "commands": [
+    {
+      "command": [
+        "gh",
+        "release",
+        "download",
+        "v2.2.0",
+        "--repo",
+        "LYL-Z/dsh-armorbreak",
+        "--pattern",
+        "armorbreak-portable-2.2.0.tar.gz",
+        "--dir",
+        "<isolated-temp>/v22-download"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null,
+      "attempts": 1
+    },
+    {
+      "command": [
+        "tar",
+        "-xzf",
+        "armorbreak-portable-2.2.0.tar.gz",
+        "-C",
+        "isolated V2.2 install"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    },
+    {
+      "command": [
+        "icacls.exe",
+        "isolated temp root",
+        "/inheritance:r",
+        "/grant:r",
+        "CURRENT_USER_SID:(F)",
+        "/T",
+        "/C"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "17beb3374fe77dd699fa4117a4b366aaa1f3aefc9ed46177ae999f50d7b9b340",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    },
+    {
+      "command": [
+        "icacls.exe",
+        "isolated temp root",
+        "/grant",
+        "CURRENT_USER_SID:(OI)(CI)(IO)(F)",
+        "/T",
+        "/C"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "17beb3374fe77dd699fa4117a4b366aaa1f3aefc9ed46177ae999f50d7b9b340",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    },
+    {
+      "command": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-File",
+        "verify-acl.ps1"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "016134cd13a620597b4e179744d4dd3aba1558b8dde52a24bc347368d96c617b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    },
+    {
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "packages/cli/index.js",
+        "capabilities",
+        "--json",
+        "(published V2.2.0 baseline)"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "1b4deee1e4d99b2d60da502dbb54573b4e14e25f7042e708a0fa57f33a4cef47",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    },
+    {
+      "command": [
+        "tar",
+        "-xzf",
+        "dist\\armorbreak-portable-2.3.0.tar.gz",
+        "-C",
+        "fault-injected stage"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    },
+    {
+      "command": [
+        "tar",
+        "-xzf",
+        "dist\\armorbreak-portable-2.3.0.tar.gz",
+        "-C",
+        "isolated V2.3 install"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    },
+    {
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "packages/cli/index.js",
+        "analyze",
+        "--capability",
+        "forensics.hash",
+        "--target",
+        "<isolated-workspace>/v22-read-only-sample.txt",
+        "--json"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "aa3bbc0c10376ce782eac5830b46ad98ca95ce830cf870a3cd398b3fefc4fab6",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    },
+    {
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "packages/cli/index.js",
+        "capabilities",
+        "--json"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "8cb1430189cbcf3572062de67cdd4fac02bf7d803b2eaeec4f906debff9bfd0c",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    },
+    {
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "packages/cli/index.js",
+        "task",
+        "status",
+        "task_mvx81szo_ad06ce93",
+        "--json"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "5fa9c02f0ee9cdaae9ce70cd62db18508b0741e63ba3625f7d864f9870d513b2",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    },
+    {
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "packages/cli/index.js",
+        "report",
+        "task_mvx81szo_ad06ce93",
+        "--json"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "c35b3f200e156d11e094c1136ccda779ed3a6e452980657b5f7feebb964c7e7b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    },
+    {
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "packages/mcp-server/index.js",
+        "stdio MCP JSON-RPC initialize/task/report/principal-boundary"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "15e5844772d2e62f81f878314b70137ea6bf8c95924e0c93a7cbfd81af8b11c1",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    },
+    {
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "packages/cli/index.js",
+        "analyze",
+        "--capability",
+        "forensics.hash",
+        "--target",
+        "outside-workspace sentinel",
+        "--json"
+      ],
+      "exitCode": 1,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "6188f20a7b02f4d3c4bda38718d0b38e316566810cfc6b96804fc9c49f757dd0",
+      "error": null
+    },
+    {
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "packages/cli/index.js",
+        "agent",
+        "doctor",
+        "--config",
+        "<isolated-workspace>/.armorbreak/mcp-host-config.json",
+        "--json"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "75c21c6450ed4dbfde83802f71c91f2ac27048424b65211ac51fde8fe19d21a5",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    },
+    {
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "packages/cli/index.js",
+        "capabilities",
+        "--json",
+        "(V2.2 rollback selection)"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "1b4deee1e4d99b2d60da502dbb54573b4e14e25f7042e708a0fa57f33a4cef47",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    },
+    {
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "packages/cli/index.js",
+        "task",
+        "status",
+        "task_mvx81szo_ad06ce93",
+        "--json",
+        "(V2.2 rollback selection)"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "5fa9c02f0ee9cdaae9ce70cd62db18508b0741e63ba3625f7d864f9870d513b2",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    },
+    {
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "packages/cli/index.js",
+        "report",
+        "task_mvx81szo_ad06ce93",
+        "--json",
+        "(V2.2 rollback selection)"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "c35b3f200e156d11e094c1136ccda779ed3a6e452980657b5f7feebb964c7e7b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    },
+    {
+      "command": [
+        "icacls.exe",
+        "<isolated-temp>",
+        "/reset",
+        "/T",
+        "/C"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "72d9c1f3a44e0a6fafba63067dd28047654cbe6ead3b76e5a04102ae183cbcb2",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    }
+  ],
+  "dataHashes": {
+    "before": {
+      "tasks": {
+        "task_mvx81szo_ad06ce93/evidence.head.json": {
+          "size": 187,
+          "sha256": "d51b827424843d3d35bb06504df6233d64f7aca320545b99ad887aa45856e8e2"
+        },
+        "task_mvx81szo_ad06ce93/evidence.jsonl": {
+          "size": 2183,
+          "sha256": "2931af8678137670b65edf816893a9acddc93162e60ce1f257f89d59973fe503"
+        },
+        "task_mvx81szo_ad06ce93/reports/mcp-多算法文件哈希与完整性标识_2026-11-01_02-39-28.md": {
+          "size": 7988,
+          "sha256": "36b5d43e97360007b54ad132e3c9f5e1272e26a4949fb30d53bbcae19c764946"
+        },
+        "task_mvx81szo_ad06ce93/task.json": {
+          "size": 3915,
+          "sha256": "5fa9c02f0ee9cdaae9ce70cd62db18508b0741e63ba3625f7d864f9870d513b2"
+        }
+      },
+      "configSha256": "e596f92209a59737175a85c2cde836fa34cbcd555051c7152b3cf622e2f2aa1b",
+      "reportSha256": "36b5d43e97360007b54ad132e3c9f5e1272e26a4949fb30d53bbcae19c764946"
+    },
+    "after": {
+      "tasks": {
+        "task_mvx81szo_ad06ce93/evidence.head.json": {
+          "size": 187,
+          "sha256": "d51b827424843d3d35bb06504df6233d64f7aca320545b99ad887aa45856e8e2"
+        },
+        "task_mvx81szo_ad06ce93/evidence.jsonl": {
+          "size": 2183,
+          "sha256": "2931af8678137670b65edf816893a9acddc93162e60ce1f257f89d59973fe503"
+        },
+        "task_mvx81szo_ad06ce93/reports/mcp-多算法文件哈希与完整性标识_2026-11-01_02-39-28.md": {
+          "size": 7988,
+          "sha256": "36b5d43e97360007b54ad132e3c9f5e1272e26a4949fb30d53bbcae19c764946"
+        },
+        "task_mvx81szo_ad06ce93/task.json": {
+          "size": 3915,
+          "sha256": "5fa9c02f0ee9cdaae9ce70cd62db18508b0741e63ba3625f7d864f9870d513b2"
+        }
+      },
+      "configSha256": "e596f92209a59737175a85c2cde836fa34cbcd555051c7152b3cf622e2f2aa1b",
+      "reportSha256": "36b5d43e97360007b54ad132e3c9f5e1272e26a4949fb30d53bbcae19c764946"
+    }
+  },
+  "limits": [
+    "Uses one isolated V2.2-format task generated by the unchanged published V2.2.0 package; this is test data, not real user data.",
+    "Rollback proves package-directory reselection and byte integrity, not an OS-integrated product updater.",
+    "Windows ACL evidence covers the current-user SID and blocks broad built-in principals; no second real Windows account was available for an impersonated denial test.",
+    "Candidate remains unsigned for production; builder test-key signature is not a maintainer identity."
+  ],
+  "redactions": [
+    "Local Windows profile and scratch-directory names were removed from command metadata and raw icacls output; captured command-output SHA-256 values and normalized ACL entries are retained."
+  ]
+}

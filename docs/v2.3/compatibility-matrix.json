@@ -1045,10 +1045,18 @@
         "docs/v2.3/evidence/p0-h/github-ci-current-head.json",
         "docs/v2.3/evidence/p0-h/v23-main-gate-ci-attempt.json",
         "docs/v2.3/evidence/p0-h/github-ci-current-head-7bf3078.json",
-        "docs/v2.3/evidence/p0-h/v23-main-gate-ci-attempt-7bf3078.json"
+        "docs/v2.3/evidence/p0-h/v23-main-gate-ci-attempt-7bf3078.json",
+        "docs/v2.3/p0-h-independent-review-packet.md",
+        "docs/v2.3/p0-h-license-inventory.md",
+        "docs/v2.3/release-provenance-protocol.md",
+        "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback.json",
+        "docs/v2.3/evidence/p0-h/npm-package-dry-run.json"
       ],
-      "ci": "CURRENT_PR_HEAD_7bf30788e387d916403f74ba5fc190e2bf9e8a17_V23_PR_RUN_41026982720_PASS_6_OF_6; INHERITED_PR_RUN_41026982814_PASS; DUPLICATE_PUSH_RUNS_41026973927_41026973788_PASS; DEDICATED_MAIN_GATE_PUSH_RUN_41026971941_FAILURE_ZERO_JOBS; WORKFLOW_DISPATCH_422_NOT_ON_MAIN; EXACT_MAIN_NOT_RUN",
-      "limitation": "P0-1 provenance and current exact-head CI pass. P0-3 is blocked because review is same-agent AI rather than independent human security/license review. P0-4 is only a synthetic filesystem/installer-state drill, not real package/profile migration or ACL/principal verification. P0-5 has no successful dedicated main-gate PR run; workflow_dispatch is unavailable because the workflow is absent from default main; branch-protection API returned 403; exact-main, package/SBOM/attestation, package version bump, and maintainer authorization remain open. The active v2.2.0 tag ruleset remains unchanged; its owner bypass is enabled. Release remains NOT_READY."
+      "ci": "LAST_OBSERVED_REMOTE_HEAD_ed3d6f9c0b3c171f74482cf78ed1bcfbc9ec0d07_STANDARD_PR_RUN_41027514948_PASS_AND_INHERITED_CI_41027514842_PASS_HISTORICAL_FOR_LOCAL_SOURCE; DEDICATED_PUSH_RUN_41027505694_FAILURE_ZERO_JOBS; FIXED_WORKFLOW_ACTIONLINT_1_7_12_PASS_LOCAL; NO_SUCCESSFUL_FIXED_DEDICATED_PULL_REQUEST_RUN; EXACT_MAIN_NOT_RUN",
+      "limitation": "P0-1 code protections and negative cases are implemented; final-source rerun is pending. P0-2 report/matrix/threat model have been refreshed from local source 2cb8a3de102870fc54056ace75688cdfd5594bd0, but final evidence commit and remote run are pending. P0-3 remains blocked until an independent human security and license reviewer accepts and retests the exact final source and both distribution paths; developer materials are not independent. Portable candidate P0-4 real package upgrade/read/MCP/ACL/fault/rollback exercise passed on source 34b431931857e786b77ff28c90610857b8c8844c with isolated test data; no real user profile or OS updater was involved. A separate npm pack dry run found 11 M3 fixture paths including two executable fixtures; these require separate redistribution review. P0-5A/B contracts and local S/E/M exercise are implemented; real main CI/attestation and trusted external signatures are absent. P0-5C fixed workflow actionlint passes locally, but a successful exact-head dedicated PR-event run is not yet observed. Exact-current-head standard CI, branch-protection verification, exact-main CI, release artifact/SBOM/attestation bound to main, and maintainer authorization remain open. Active v2.2.0 tag protection is unchanged and owner bypass remains enabled. Release is NOT_READY.",
+      "lastObservedRemoteHead": "ed3d6f9c0b3c171f74482cf78ed1bcfbc9ec0d07",
+      "localSourceCommit": "2cb8a3de102870fc54056ace75688cdfd5594bd0",
+      "releaseReadiness": "NOT_READY"
     }
   ],
   "sourceSupportBaseline": [
