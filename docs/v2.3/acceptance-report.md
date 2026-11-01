@@ -180,3 +180,11 @@ Evidence commit E2 and PR #25 HEAD at this CI capture: `97498e3334dea770c39e6fc6
 These hosted jobs ran the complete test suite and typecheck on their respective matrices. The local Windows test process was interrupted during the pause; no local full-suite pass is claimed. E2's evidence manifest validated 121 files against source S. This next evidence-only commit records E2's runs; it does not change the release source or candidate package.
 
 Release remains `NOT_READY`. Unclosed blockers remain independent human security/license review, second Windows principal/ACL recovery verification, maintainer decision on OS-updater support, branch-protection/required-check confirmation, exact-main build/provenance and production artifact/SBOM/attestation trust, and explicit maintainer release authorization. PR stays Draft; no merge/tag/release occurred.
+
+## 14. E3 npm distribution inventory and package boundary
+
+On exact PR/evidence tree E3=`4fb3de9af5f72d8d328ea442fc09201b690dc5a2`, a real `npm pack --dry-run --json` listed 689 files and 10,221,629 unpacked bytes; its raw JSON SHA-256 is `0c22d6db19069f6d41a23bcc32ed1ab30532ab742624317509dee03f2eff3608`. The inventory is `evidence/p0-h/npm-package-4fb3de9.json`. It contains zero test paths, zero M3 fixture paths, zero executable/library/archive binaries, and excludes its own npm inventory, the acceptance manifest, and portable candidate archive. TypeScript 5.9.3 is declared as a runtime dependency and is not bundled.
+
+The separate 636-file inventory `npm-package-8140c62.json` was captured from source-only S3, before evidence commits E1–E3. It is not the same tree as the PR/tag candidate. E3's evidence documents add 53 paths to that npm package. This supersedes the older unbound narrative count of 686 in the developer-prepared license inventory; the retained historical inventory is not changed. The final release tag's npm contents must be inventoried against that exact tag tree. This developer-prepared inventory is not independent license approval.
+
+At E3, all three PR-event workflows passed on exact SHA as listed in section 13. E4 below records that verified state; a subsequent documentation/evidence-only commit still requires its own exact-head CI before the PR can be considered current.
