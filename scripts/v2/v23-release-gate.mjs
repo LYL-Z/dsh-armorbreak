@@ -170,7 +170,7 @@ function main() {
         blockers: [
           ...(milestone.status === 'COMPLETE' ? [] : ['P0-H closure']),
           ...(pkg.version === '2.3.0' ? [] : [`package version must be 2.3.0, found ${pkg.version}`]),
-          'independent human security and license review', 'real candidate package upgrade/rollback and OS permission drill',
+          'independent human security and license review', 'OS-integrated updater and second-principal permission validation',
           'exact-main CI, immutable package/SBOM hashes and GitHub attestation', 'maintainer release authorization',
         ],
         note: 'PR validation proves the candidate check path only and never grants release approval.',

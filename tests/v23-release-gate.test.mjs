@@ -40,6 +40,15 @@ test('Release contract rejects reverse and partial transitions', () => {
   ]) assert.equal(evaluateReleaseContract(invalid).valid, false)
 })
 
+test('PR readiness keeps remaining installer and second-principal validation distinct from the completed package drill', () => {
+  const result = spawnSync(node, [gateScript, '--check-pr'], { encoding: 'utf8' })
+  assert.equal(result.status, 0)
+  const report = JSON.parse(result.stdout)
+  assert.equal(report.releaseReadiness, 'NOT_READY')
+  assert.ok(report.blockers.includes('OS-integrated updater and second-principal permission validation'))
+  assert.ok(!report.blockers.includes('real candidate package upgrade/rollback and OS permission drill'))
+})
+
 test('Release CLI fails closed while P0-H is open and no signed evidence package exists', () => {
   const result = spawnSync(node, [gateScript, '--release'], { encoding: 'utf8', env: { ...process.env, GITHUB_REF: 'refs/tags/v2.3.0', GITHUB_SHA: SHA } })
   assert.notEqual(result.status, 0)
