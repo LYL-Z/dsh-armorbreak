@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "armorbreak.v2.3-candidate-package-record/v1",
+  "capturedAt": "2026-11-01T03:10:24.929Z",
+  "sourceCommit": "7a78aef15e59f16f71b192089dcb82a81e811fb5",
+  "package": "dsh-armorbreak",
+  "version": "2.3.0",
+  "artifact": {
+    "localPath": "dist/armorbreak-portable-2.3.0.tar.gz",
+    "bytes": 5839316,
+    "sha256": "cb9e9edef5fd677adbdee97e521f09a457505bee805db319719c206c579590fc",
+    "reproducible": true
+  },
+  "completeMemberManifest": {
+    "evidencePath": "docs/v2.3/evidence/p0-h/candidate-package-7a78aef.manifest.json",
+    "sha256": "46b607b92248c4bdab0bcadf25ed5c5b5f58223061eba36a5a34bde21ad7b981",
+    "members": 551,
+    "contentManifestSha256": "dacf07aa532495af0c4c49d1aaded5db13f379382cd8201a477774e112a16023"
+  },
+  "sbom": {
+    "evidencePath": "docs/v2.3/evidence/p0-h/candidate-package-7a78aef.sbom.cdx.json",
+    "sha256": "4579399cf0df2608106cad5ace01aad13e68399c9cc7e94e652bb3416966b886"
+  },
+  "signature": {
+    "productionSigned": false,
+    "algorithm": "ed25519",
+    "testKey": true,
+    "valid": true
+  },
+  "cleanRoom": {
+    "extracted": true,
+    "cliCapabilities": 53,
+    "result": "PASS",
+    "stderr": ""
+  },
+  "memberExtensions": {
+    "gitattributes": 1,
+    "gitignore": 1,
+    "md": 220,
+    "[none]": 2,
+    "mjs": 57,
+    "json": 59,
+    "js": 188,
+    "yml": 1,
+    "png": 6,
+    "webp": 1,
+    "svg": 1,
+    "ps1": 2,
+    "ts": 4,
+    "lock": 3,
+    "py": 2,
+    "java": 1,
+    "html": 1,
+    "css": 1
+  },
+  "packagingRules": {
+    "excludes": [
+      ".github/",
+      "tests/",
+      "fixtures/",
+      "docs/v2.3/evidence/",
+      "dist/"
+    ],
+    "completePathAndSha256ListStored": true
+  },
+  "limits": [
+    "The portable archive is an unsigned test candidate, not a release asset.",
+    "npm package contents and npm dependency licenses require separate review.",
+    "This record binds the local archive and the committed per-member manifest; GitHub attestation and external maintainer signature were not created."
+  ]
+}

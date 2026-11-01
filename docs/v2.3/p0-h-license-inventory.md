@@ -4,16 +4,17 @@ Status: developer-prepared package inventory for independent license review. Thi
 
 ## Observed candidate artifact
 
-The real package drill used an exact, reproducible candidate built on Windows x64 / Node 24.16.0 from source commit `34b431931857e786b77ff28c90610857b8c8844c`:
+The latest isolated real-package drill used an exact, reproducible candidate built on Windows x64 / Node 24.16.0 from source snapshot `7a78aef15e59f16f71b192089dcb82a81e811fb5`:
 
-- Archive: `armorbreak-portable-2.3.0.tar.gz`; SHA-256 `f23b79948faf2d53164dddddeea37a00c0625c758eb02dee9542678cd0ce779d`.
-- SBOM: `armorbreak-portable-2.3.0.tar.gz.sbom.cdx.json`; SHA-256 `2b589cdb4ea50ef3f2859f47a0598ccff57ebca9e62b1eecd1e8d6ebd23e7a7a`.
-- Builder result: 550 committed files, reproducible `true`, clean-room extraction and CLI startup `PASS`, 53 registered capabilities. Production signature: absent. The builder's ephemeral test-key signature is not a publisher identity.
-- This is the package used in the real V2.2-to-V2.3 isolated test; it is a candidate snapshot, not the final main/tag build. The final release artifact and its SBOM must be regenerated from the exact release commit and independently inspected.
+- Archive: local test candidate at `dist/armorbreak-portable-2.3.0.tar.gz`; 5,839,316 bytes; SHA-256 `cb9e9edef5fd677adbdee97e521f09a457505bee805db319719c206c579590fc`.
+- Complete per-member manifest: 551 files, content-manifest SHA-256 `dacf07aa532495af0c4c49d1aaded5db13f379382cd8201a477774e112a16023`; committed snapshot at `evidence/p0-h/candidate-package-7a78aef.manifest.json`, file SHA-256 `46b607b92248c4bdab0bcadf25ed5c5b5f58223061eba36a5a34bde21ad7b981`.
+- CycloneDX 1.5 SBOM SHA-256 `4579399cf0df2608106cad5ace01aad13e68399c9cc7e94e652bb3416966b886`; committed copy at `evidence/p0-h/candidate-package-7a78aef.sbom.cdx.json`.
+- Builder result: reproducible `true`, clean-room extraction and CLI startup `PASS`, 53 registered capabilities. Production signature: absent. The valid Ed25519 signature uses a test key and is not a publisher identity.
+- This is the package used in the latest real V2.2-to-V2.3 isolated test. It is a local unsigned test candidate, not the final main/tag build. The final release artifact/SBOM must be rebuilt from the actual release commit and independently inspected; no GitHub attestation exists.
 
 ## Contents and exclusions observed from the archive manifest
 
-The actual archive inventory contains 550 files: first-party JS/MJS/TS/Java/Python sources, documentation, package manifests, schemas, and plugin metadata. It contains no `.exe`, `.dll`, `.so`, `.dylib`, `.jar`, `.class`, `.zip`, `.7z`, `.bin`, `.wasm`, `.pyc`, or wheel files. `tests/`, `fixtures/`, `node_modules/`, `.github/`, and `docs/v2.3/evidence/` are excluded by the builder. The archive includes JavaScript adapters for optional tools and `scripts/ghidra/ExportSummary.java`; it does not include Ghidra, JDK, Zig, TShark/Wireshark, JADX, Syft, Semgrep, or Trivy binaries.
+The actual archive inventory contains 551 files: first-party JS/MJS/TS/Java/Python sources, documentation, package manifests, schemas, plugin metadata and image assets. It contains no `.exe`, `.dll`, `.so`, `.dylib`, `.jar`, `.class`, `.zip`, `.7z`, `.bin`, `.wasm`, `.pyc`, or wheel files. `tests/`, `fixtures/`, `node_modules/`, `.github/`, and `docs/v2.3/evidence/` are excluded by the builder. The archive includes JavaScript adapters for optional tools and `scripts/ghidra/ExportSummary.java`; it does not include Ghidra, JDK, Zig, TShark/Wireshark, JADX, Syft, Semgrep, or Trivy binaries.
 
 The generated CycloneDX 1.5 SBOM has the application subject bound to the archive SHA-256 and lists 13 internal `@armorbreak/*` package manifests plus included-file inventories. These nested manifests omit their own `license` field; the repository root declares MIT and includes `LICENSE`/`NOTICE`. An independent reviewer must verify that the repository-level MIT grant covers every included first-party file and that all notices are complete.
 
@@ -36,7 +37,7 @@ The root `package.json` pins TypeScript `5.9.3` as a dependency and `package-loc
 
 ## Reproduction and evidence boundary
 
-The observed archive and SBOM hashes, exact source commit, package path inventory, and clean-room result are in the build output `dist/release-build.json` and were checked against the real Windows deployment record `docs/v2.3/evidence/p0-h/real-package-upgrade-rollback.json`. The build output folder is generated and not committed as release evidence. The committed drill evidence retains the archive hash and normalized findings; it does not substitute for an independent content/license review.
+The exact archive, per-member manifest and SBOM hashes, source commit, package path inventory, and clean-room result are recorded in `evidence/p0-h/candidate-package-7a78aef.json`, `candidate-package-7a78aef.manifest.json`, and `candidate-package-7a78aef.sbom.cdx.json`. The actual archive remains locally available at `dist/armorbreak-portable-2.3.0.tar.gz`; its SHA is recorded in both the build record and the real Windows deployment record `evidence/p0-h/real-package-upgrade-rollback.json`. The package is unsigned and no GitHub attestation was created. These developer-prepared inventories do not substitute for independent content/license review.
 
 Useful reproduction commands from a committed source SHA:
 
