@@ -2,7 +2,7 @@
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
   "sourceCommit": "b39f2285f3bc05301d2989d6a66fc1e641af7b96",
-  "generatedAt": "2026-11-01T07:41:46.931Z",
+  "generatedAt": "2026-11-01T07:47:54.561Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     ".github/workflows/ci.yml": {
@@ -22,8 +22,8 @@
       "sha256": "21039ccca6fac1150bf049d5abbc500d3ab668a1e66731b202173547f61422ed"
     },
     "docs/v2.3/acceptance-report.md": {
-      "size": 22806,
-      "sha256": "b34926df0c9c1eea823ec6cb385ab1311ea8a2171acdac1cc14d76cea854c027"
+      "size": 23737,
+      "sha256": "101001a7ac8032e93e11f4bedd714e3e0d22028f2ab45162b0a0400df32b3531"
     },
     "docs/v2.3/architecture.md": {
       "size": 4621,
@@ -34,8 +34,8 @@
       "sha256": "3ecb9f50976afe01747d4f3045a803b1c93ccfcb9a5890cbe955763dff314f15"
     },
     "docs/v2.3/compatibility-matrix.json": {
-      "size": 44873,
-      "sha256": "40a4a28758d55a612b3ad4858de1a8e4bf5ce1730f9df2f4372ff43f144a996c"
+      "size": 45208,
+      "sha256": "2250dc3d1bd3fd52db9e6a05ac151a746789a994b51f1dc49aaf991694fb0c66"
     },
     "docs/v2.3/evidence/m0/current-registry.json": {
       "size": 12385,
@@ -265,6 +265,10 @@
       "size": 6000,
       "sha256": "a106e0ae1b21c58cee2607559826235fe0f9f6bcf0ece2d40f93b08e9a494047"
     },
+    "docs/v2.3/evidence/p0-h/github-ci-run-412859.json": {
+      "size": 3711,
+      "sha256": "92e16aa13cf12356fb4c505ada03bd3873b48c5ab640c53fcf7adea990f065e0"
+    },
     "docs/v2.3/evidence/p0-h/local-docker-l1-e02e7fe.json": {
       "size": 1411,
       "sha256": "6dd77fef96942b62c5446f8dae1cabfce3921f8ebf3c0bfc9617cc8dd9bfaa54"
@@ -297,6 +301,10 @@
       "size": 3420,
       "sha256": "39e5e8cf6e674667d2da01da9b13dfbf21cc0a2f30c2d098b336d36b3e1fa57c"
     },
+    "docs/v2.3/evidence/p0-h/p0-h-reviewer-addendum.md": {
+      "size": 3885,
+      "sha256": "03ea24a2a6f0a6bbe61350fa631809165feabb1e6fab7d8a1ae5d5db43f725c3"
+    },
     "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback.json": {
       "size": 14895,
       "sha256": "663edc1654320ddeb856112d5fadf4bb13cc4adef121fd0721b4a8d08c2e26b8"
@@ -322,8 +330,8 @@
       "sha256": "0061d04cb159fa6496f2c003cd0f4d743343fe4a223990cd859e42b7d0e9c728"
     },
     "docs/v2.3/p0-h-independent-review-packet.md": {
-      "size": 9862,
-      "sha256": "36eb5b9aa1fdee47a1195132b428aff271b64b4625445a3284d5b2de6daa4b81"
+      "size": 9224,
+      "sha256": "b2a7c6fdc30412abf61da9cadd82151818eb491e40b53839668aad24c054f40e"
     },
     "docs/v2.3/p0-h-license-inventory.md": {
       "size": 7105,
