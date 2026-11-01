@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url'
 
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)))
 const candidateVersion = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).version
+const historicalV22CapabilityCount = 46
 const candidateArtifact = join(root, 'dist', `armorbreak-portable-${candidateVersion}.tar.gz`)
 const candidateManifestPath = `${candidateArtifact}.manifest.json`
 const evidencePath = 'docs/v2.3/evidence/p0-h/real-package-upgrade-rollback.json'
@@ -142,6 +143,8 @@ try {
     ARMORBREAK_PRINCIPAL_ID: 'armorbreak-v23-isolated-test-user',
     ARMORBREAK_MCP_AUDIT_LOG: join(stateRoot, 'mcp-audit.jsonl'),
   }
+  const v22CapabilitiesBefore = cli(v22Install, runEnv, 'capabilities', '--json')
+  if (v22CapabilitiesBefore.status !== 0 || JSON.parse(v22CapabilitiesBefore.stdout).length !== historicalV22CapabilityCount) throw new Error(`published V2.2.0 package capability baseline does not match ${historicalV22CapabilityCount}`)
   const v22SeedAnalyzeArgs = ['analyze', '--capability', 'forensics.hash', '--target', sample, '--json']
   const v22Seed = cli(v22Install, runEnv, ...v22SeedAnalyzeArgs)
   if (v22Seed.status !== 0) throw new Error(`V2.2 package could not create the isolated history task: ${v22Seed.stderr}`)
@@ -165,7 +168,7 @@ try {
   assert.equal(injectedFailureRejected, true)
   rmSync(corruptedStage, { recursive: true, force: true })
   const v22AfterFailure = cli(v22Install, runEnv, 'capabilities', '--json')
-  if (v22AfterFailure.status !== 0 || JSON.parse(v22AfterFailure.stdout).length !== 53) throw new Error('failure injection damaged or displaced the previous V2.2 installation')
+  if (v22AfterFailure.status !== 0 || JSON.parse(v22AfterFailure.stdout).length !== historicalV22CapabilityCount) throw new Error('failure injection damaged or displaced the previous V2.2 installation')
 
   // Install and execute the real current V2.3 package archive from the builder.
   const candidateUnpackResult = unpack(candidateArtifact, candidateInstall)
@@ -219,7 +222,7 @@ try {
   const after = { tasks: sha256FileTree(join(workspace, '.armorbreak', 'tasks')), configSha256: fileDigest(configPath), reportSha256: digest(Buffer.from(JSON.parse(rollbackReport.stdout).markdown)) }
   assert.deepEqual(after, before)
   assert.equal(rollbackCapabilities.status, 0)
-  assert.equal(JSON.parse(rollbackCapabilities.stdout).length, 53)
+  assert.equal(JSON.parse(rollbackCapabilities.stdout).length, historicalV22CapabilityCount)
   assert.equal(rollbackTask.status, 0)
   assert.equal(rollbackReport.status, 0)
 
@@ -233,6 +236,7 @@ try {
     candidatePackage: { version: '2.3.0', artifact: relative(root, candidateArtifact).split(sep).join('/'), sha256: candidateSha256, reproducible: candidateManifest.reproducible, cleanRoomCliCapabilities: candidateManifest.cleanRoom.cliCapabilities, productionSigned: false },
     deployment: {
       v22PackageExtractedAndExecuted: true,
+      v22HistoricalCapabilityCount: historicalV22CapabilityCount,
       v22PackageCreatedHistoryTask: { id: taskId, schemaVersion: oldTaskRecord.schemaVersion, taskSha256: digest(Buffer.from(v22Task.stdout)), reportSha256: before.reportSha256 },
       candidateExtractedAndInstalledUnderIsolatedTempRoot: true,
       candidateStartedAndReported53Capabilities: true,
@@ -254,6 +258,7 @@ try {
       summary('icacls.exe', ['isolated temp root', '/inheritance:r', '/grant:r', 'CURRENT_USER_SID:(F)', '/T', '/C'], aclResult),
       summary('icacls.exe', ['isolated temp root', '/grant', 'CURRENT_USER_SID:(OI)(CI)(IO)(F)', '/T', '/C'], aclInheritanceResult),
       summary('powershell.exe', ['-NoProfile', '-NonInteractive', '-File', 'verify-acl.ps1'], aclChecks),
+      summary(process.execPath, ['packages/cli/index.js', 'capabilities', '--json', '(published V2.2.0 baseline)'], v22CapabilitiesBefore),
       summary('tar', ['-xzf', relative(root, candidateArtifact), '-C', 'fault-injected stage'], corruptUnpackResult),
       summary('tar', ['-xzf', relative(root, candidateArtifact), '-C', 'isolated V2.3 install'], candidateUnpackResult),
       summary(process.execPath, ['packages/cli/index.js', 'analyze', '--capability', 'forensics.hash', '--target', '<isolated-workspace>/v22-read-only-sample.txt', '--json'], v22Seed),
