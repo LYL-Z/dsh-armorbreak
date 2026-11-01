@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "armorbreak.v2.3-local-resume-validation/v1",
+  "capturedAt": "2026-11-01T07:41:23.2963588Z",
+  "validatedCommittedHead": "9b7b473beb996610ac17a745f92a3a28534442e7",
+  "sourceCommit": "b39f2285f3bc05301d2989d6a66fc1e641af7b96",
+  "workingTreeScope": "Documentation and evidence changes were present but not committed; untracked dist/ was excluded.",
+  "runtime": {
+    "platform": "Microsoft Windows 10.0.26300",
+    "node": "v24.16.0"
+  },
+  "checks": [
+    {
+      "command": "node scripts/v2/validate-v23-acceptance.mjs",
+      "result": "PASS",
+      "checkedFiles": 91,
+      "releaseReadiness": "NOT_READY"
+    },
+    {
+      "command": "node --test tests/v23-provenance.test.mjs tests/v23-release-gate.test.mjs",
+      "result": "PASS",
+      "passed": 12,
+      "failed": 0
+    },
+    {
+      "command": "node scripts/v2/v23-release-gate.mjs --check-pr",
+      "result": "PASS",
+      "gateConfiguration": "VALIDATED",
+      "releaseReadiness": "NOT_READY",
+      "blockers": [
+        "P0-H closure",
+        "independent human security and license review",
+        "OS-integrated updater and second-principal permission validation",
+        "exact-main CI, immutable package/SBOM hashes and GitHub attestation",
+        "maintainer release authorization"
+      ]
+    },
+    {
+      "command": "node scripts/v2/v23-release-gate.mjs --release",
+      "result": "EXPECTED_BLOCK",
+      "exitCode": 1,
+      "decision": "NOT_READY"
+    },
+    {
+      "command": "node --test tests/docs-consistency.test.mjs",
+      "result": "PASS",
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    }
+  ],
+  "scope": "Local documentation, evidence-integrity, provenance, PR-state and release-state revalidation only; no package build, main merge, tag, release or user-data operation."
+}

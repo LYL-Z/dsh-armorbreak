@@ -1,7 +1,7 @@
 {
   "schemaVersion": "armorbreak.v2.3.compatibility-matrix/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "capturedOn": "2026-10-30",
+  "capturedOn": "2026-11-01",
   "supportLevels": {
     "S0": "safe intake or explicit refusal of unknown input",
     "S1": "identification or inventory with evidence",
@@ -1061,16 +1061,18 @@
         "docs/v2.3/evidence/p0-h/npm-package-dry-run.json",
         "docs/v2.3/evidence/p0-h/github-ci-run-412670.json",
         "docs/v2.3/evidence/p0-h/github-ci-run-412692.json",
+        "docs/v2.3/evidence/p0-h/github-ci-run-412700.json",
         "docs/v2.3/evidence/p0-h/local-validation-7a78aef.json",
         "docs/v2.3/evidence/p0-h/local-validation-e02e7fe.json",
         "docs/v2.3/evidence/p0-h/local-docker-l1-e02e7fe.json",
         "docs/v2.3/evidence/p0-h/candidate-package-7a78aef.json",
         "docs/v2.3/evidence/p0-h/candidate-package-7a78aef.manifest.json",
-        "docs/v2.3/evidence/p0-h/candidate-package-7a78aef.sbom.cdx.json"
+        "docs/v2.3/evidence/p0-h/candidate-package-7a78aef.sbom.cdx.json",
+        "docs/v2.3/evidence/p0-h/local-resume-validation-9b7b473.json"
       ],
-      "ci": "OBSERVED_PR_HEAD_e02e7fe356f0141fb635a2db0af2be962dcec50e; V23_EXACT_HEAD_41269229998_SUCCESS_6_JOBS; DEDICATED_PR_GATE_41269230005_SUCCESS_4_MATRIX_JOBS_MAIN_AND_RELEASE_SKIPPED_BY_PR_EVENT; INHERITED_CI_41269230030_SUCCESS_NODE24_WINDOWS_UBUNTU_L0_AND_DOCKER; PUSH_CI_41269225831_SUCCESS; PUSH_EXACT_HEAD_41269226009_SUCCESS; EXACT_MAIN_NOT_RUN",
-      "limitation": "P0-1 post-source workflow/gate/validator changes remain excluded from evidence-only additions; negative provenance cases pass. The 90-file acceptance manifest binds source b39f2285f3bc05301d2989d6a66fc1e641af7b96 and validates evidence HEAD e02e7fe356f0141fb635a2db0af2be962dcec50e. P0-2 current PR HEAD and three successful PR-event CI runs are recorded in github-ci-run-412692.json; earlier fd0f3fc failures remain historical in github-ci-run-412670.json. P0-3 remains blocked pending independent human security/license review of exact source, package and npm distribution; developer materials are not independent. P0-4 actual candidate package upgrade/read/MCP/ACL/fault/rollback passed on build source 7a78aef15e59f16f71b192089dcb82a81e811fb5, archive SHA-256 cb9e9edef5fd677adbdee97e521f09a457505bee805db319719c206c579590fc, using isolated test data; no real user profile or OS updater was involved. The npm pack dry run found 11 M3 fixture paths including two executable fixtures; redistribution review remains required. P0-5A/B contracts and local S/E/M exercise are implemented; exact-main CI/attestation and trusted external signatures are absent. P0-5C passed the current actual PR event and actionlint; exact-main and repository required-check/branch-protection verification remain open (API returned 403). OS updater/second principal and maintainer authorization remain open. Active v2.2.0 tag protection is unchanged and owner bypass remains enabled. Release is NOT_READY.",
-      "lastObservedRemoteHead": "e02e7fe356f0141fb635a2db0af2be962dcec50e",
+      "ci": "OBSERVED_PR_HEAD_9b7b473beb996610ac17a745f92a3a28534442e7; V23_EXACT_HEAD_41270050323_SUCCESS_6_JOBS; DEDICATED_PR_GATE_41270050295_SUCCESS_4_MATRIX_JOBS_MAIN_AND_RELEASE_SKIPPED_BY_PR_EVENT; INHERITED_CI_41270050351_SUCCESS_NODE24_WINDOWS_UBUNTU_L0_AND_DOCKER; PUSH_CI_AND_EXACT_HEAD_RUNS_RECORDED_SEPARATELY; EXACT_MAIN_NOT_RUN",
+      "limitation": "P0-1 post-source workflow/gate/validator changes remain excluded from evidence-only additions; negative provenance cases pass. The 92-file acceptance manifest binds source b39f2285f3bc05301d2989d6a66fc1e641af7b96 and validates current evidence HEAD 9b7b473beb996610ac17a745f92a3a28534442e7. P0-2 current PR HEAD and three successful PR-event CI runs are recorded in github-ci-run-412700.json; prior passing e02e7fe runs and earlier fd0f3fc failures remain historical in github-ci-run-412692.json and github-ci-run-412670.json. P0-3 remains blocked pending independent human security/license review of exact source, package and npm distribution; developer materials are not independent. P0-4 actual candidate package upgrade/read/MCP/ACL/fault/rollback passed on build source 7a78aef15e59f16f71b192089dcb82a81e811fb5, archive SHA-256 cb9e9edef5fd677adbdee97e521f09a457505bee805db319719c206c579590fc, using isolated test data; no real user profile or OS updater was involved. A local benign pinned BusyBox probe passed (non-root/read-only); this is not hostile-sample isolation certification. The npm pack dry run found 11 M3 fixture paths including two executable fixtures; redistribution review remains required. P0-5A/B contracts and local S/E/M exercise are implemented; exact-main CI/attestation and trusted external signatures are absent. P0-5C passed the current actual PR event and actionlint; exact-main and repository required-check/branch-protection verification remain open (API returned 403). OS updater/second principal and maintainer authorization remain open. Active v2.2.0 tag protection is unchanged and owner bypass remains enabled. Release is NOT_READY.",
+      "lastObservedRemoteHead": "9b7b473beb996610ac17a745f92a3a28534442e7",
       "localSourceCommit": "b39f2285f3bc05301d2989d6a66fc1e641af7b96",
       "releaseReadiness": "NOT_READY",
       "realPackageDrill": {
