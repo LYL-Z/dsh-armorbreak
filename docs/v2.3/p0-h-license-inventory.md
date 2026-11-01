@@ -1,41 +1,51 @@
 # V2.3.0 candidate license and redistribution inventory
 
-Status: developer inventory for independent legal/license review. It is not legal advice, a complete notice audit, or approval to distribute. Final artifact and SBOM have not yet been built for this PR HEAD; package contents and hashes must be recorded from the exact candidate artifact before any release decision.
+Status: developer-prepared package inventory for independent license review. This is not legal advice, complete notice clearance, or permission to distribute. It is not an independent audit. Formal release remains `NOT_READY`.
 
-## Current repository/package declarations
+## Observed candidate artifact
 
-| Component | Observed declaration / source | Intended package status | Required follow-up |
+The real package drill used an exact, reproducible candidate built on Windows x64 / Node 24.16.0 from source commit `34b431931857e786b77ff28c90610857b8c8844c`:
+
+- Archive: `armorbreak-portable-2.3.0.tar.gz`; SHA-256 `f23b79948faf2d53164dddddeea37a00c0625c758eb02dee9542678cd0ce779d`.
+- SBOM: `armorbreak-portable-2.3.0.tar.gz.sbom.cdx.json`; SHA-256 `2b589cdb4ea50ef3f2859f47a0598ccff57ebca9e62b1eecd1e8d6ebd23e7a7a`.
+- Builder result: 550 committed files, reproducible `true`, clean-room extraction and CLI startup `PASS`, 53 registered capabilities. Production signature: absent. The builder's ephemeral test-key signature is not a publisher identity.
+- This is the package used in the real V2.2-to-V2.3 isolated test; it is a candidate snapshot, not the final main/tag build. The final release artifact and its SBOM must be regenerated from the exact release commit and independently inspected.
+
+## Contents and exclusions observed from the archive manifest
+
+The actual archive inventory contains 550 files: first-party JS/MJS/TS/Java/Python sources, documentation, package manifests, schemas, and plugin metadata. It contains no `.exe`, `.dll`, `.so`, `.dylib`, `.jar`, `.class`, `.zip`, `.7z`, `.bin`, `.wasm`, `.pyc`, or wheel files. `tests/`, `fixtures/`, `node_modules/`, `.github/`, and `docs/v2.3/evidence/` are excluded by the builder. The archive includes JavaScript adapters for optional tools and `scripts/ghidra/ExportSummary.java`; it does not include Ghidra, JDK, Zig, TShark/Wireshark, JADX, Syft, Semgrep, or Trivy binaries.
+
+The generated CycloneDX 1.5 SBOM has the application subject bound to the archive SHA-256 and lists 13 internal `@armorbreak/*` package manifests plus included-file inventories. These nested manifests omit their own `license` field; the repository root declares MIT and includes `LICENSE`/`NOTICE`. An independent reviewer must verify that the repository-level MIT grant covers every included first-party file and that all notices are complete.
+
+The root `package.json` pins TypeScript `5.9.3` as a dependency and `package-lock.json` is included. `node_modules/typescript` is not in the portable archive, and the SBOM does not list TypeScript as a bundled component. A user installing through npm resolves this dependency separately; that installation path and its complete transitive notices require a distinct review. The archive clean-room test verifies CLI startup/capability listing, not that `source.symbols` can load TypeScript without dependency installation.
+
+## Declarations and reviewer follow-up
+
+| Component / scope | Observed package status | License source/status | Required independent follow-up |
 |---|---|---|---|
-| ArmorBreak repository code | Root `package.json` declares MIT; `LICENSE` and `NOTICE` are present | First-party program/source intended for distribution | Verify notices/copyright headers and all nested package files against final package inventory |
-| TypeScript | Root dependency and lockfile pin `5.9.3`; package metadata identifies Apache-2.0 | Build/test compiler dependency; not vendored by the deterministic portable builder (`node_modules` is excluded) | Confirm whether npm package installation treats TypeScript as install dependency; settle runtime/dev dependency classification and include Apache NOTICE if redistributed |
-| Ghidra | Optional external analyzer, preliminary SBOM describes Apache-2.0 | Not bundled; user-installed external tool | Verify version-specific upstream license and bundled extension/scripts, if any; never infer license from the product name alone |
-| Eclipse Temurin JDK 21 | Host runtime needed for Ghidra integration | Not bundled | Obtain exact distribution and version license texts; confirm GPL Classpath Exception and third-party notices for the selected archive |
-| Zig | Used to build/derive native test fixtures | Toolchain not bundled in portable product; fixture inclusion must be read from actual artifact | Verify the exact Zig version/license and whether any generated fixture embeds runtime/library code |
-| TShark / Wireshark | Optional external protocol analyzer; `build-sbom.mjs` currently lists GPL-2.0-or-later | Not bundled | Verify exact package license, plugins, and that no redistributed binary/library is present |
-| JADX | Optional Android analyzer; current SBOM helper lists Apache-2.0 | Not bundled | Verify version and notices; inspect final package for bundled output or copied code |
-| Syft | Optional SBOM tool; helper lists Apache-2.0 | Not bundled | Verify version and notices if a distribution ever bundles it |
-| Semgrep | Optional static-analysis tool; helper currently lists LGPL-2.1 | Not bundled | Verify edition/version-specific license; do not rely on a generic project-level identifier |
-| Trivy | Optional scanner; helper lists Apache-2.0 | Not bundled | Verify version and notices if a distribution ever bundles it |
-| Binary test fixtures | `docs/v2.3/fixture-catalog.json` and M3/M5 evidence identify fixture provenance and hashes | The V2 portable builder excludes `fixtures/` and `tests/`; this must be confirmed from actual archive inventory | Reconcile every fixture SHA/source/license. Generated-from-source does not automatically establish permission to redistribute source-derived binary bytes |
-| npm transitive dependencies | `package-lock.json` currently pins the lock graph; runtime `dependencies` lists TypeScript only | Installed through npm in development or host package manager; not vendored into the portable archive | Generate the exact dependency tree/SBOM for the final published format; inspect each package's declared license and bundled notices |
+| ArmorBreak root source | Included | Root `package.json`: MIT; `LICENSE` and `NOTICE` included | Check copyright provenance and whether root MIT grant covers all 13 nested packages and every included file |
+| 13 internal `@armorbreak/*` packages | Package manifests and sources included; manifests omit `license` fields | Repository-level MIT is the only bundled declaration | Confirm rights, author provenance and required notices for each package |
+| TypeScript 5.9.3 | Version and lock entry included; npm dependency; module bytes absent from archive | Upstream package declares Apache-2.0 | Review the npm install distribution path, lock tree and any required Apache NOTICE; verify runtime install instructions match actual behavior |
+| Ghidra and `ExportSummary.java` | Java adapter source included; Ghidra application/binaries absent | Exact adapter source provenance and upstream Ghidra distribution version still need independent confirmation | Inspect source provenance and exact Ghidra/JDK license and third-party notices for the supported host setup |
+| Temurin JDK 21 | Not bundled | Not applicable to archive; external runtime source not fixed by archive | Review the exact downloaded distribution and GPL Classpath Exception / third-party notices before recommending redistribution |
+| Zig | No Zig toolchain or compiled fixture included in archive | Not bundled | Verify exact fixture-generation tool license and whether external derived bytes have any separate obligations; tests/fixtures are excluded |
+| TShark / Wireshark | Adapter source included; binaries/libraries absent | External tool, not bundled | Review exact package and plugin licensing if a future installer bundles it |
+| JADX, Syft, Semgrep, Trivy | Adapter source included; binaries/libraries absent | External tools, not bundled | Check exact versions/editions and notices if future packaging changes include them |
+| Tests and binary fixtures | Excluded from observed portable archive | No fixture bytes redistributed in this archive | Review repository fixture provenance separately for test distribution or future inclusion |
+| npm dependency graph | Root lockfile included, no `node_modules` or bundled npm dependencies | TypeScript is the only root runtime dependency declared in the observed manifest | Produce and review the exact installed npm dependency tree/SBOM and notices; do not infer it from portable archive contents |
 
-## Current packaging observations
+## Reproduction and evidence boundary
 
-- `scripts/v2/build-release.mjs` selects committed Git blobs and excludes `.git`, `node_modules`, `dist`, `.github`, `fixtures/`, `tests/`, `docs/v2.3/evidence/`, and selected historical readiness files.
-- It currently emits a CycloneDX 1.5 SBOM with package/file inventories and the candidate archive digest. Its known external-tool list is not proof that those tools are installed or included.
-- `npm pack --dry-run` is a different package format: root `package.json` has an npm `files` allowlist that includes `docs` and `scripts`, but does not intentionally describe the deterministic portable release format. The result must not be confused with the portable candidate.
-- The current repository `package.json` and `package-lock.json` still need the V2.3 version transition committed before a V2.3 candidate can be named as such.
-- The final reviewed record must enumerate actual files from the built archive and npm package separately, identify every bundled third-party component, link the exact upstream license text/revision, preserve required notices, and attach SHA-256 values for artifact and SBOM.
+The observed archive and SBOM hashes, exact source commit, package path inventory, and clean-room result are in the build output `dist/release-build.json` and were checked against the real Windows deployment record `docs/v2.3/evidence/p0-h/real-package-upgrade-rollback.json`. The build output folder is generated and not committed as release evidence. The committed drill evidence retains the archive hash and normalized findings; it does not substitute for an independent content/license review.
 
-## Final reconciliation commands
-
-After a candidate is produced from a committed exact SHA:
+Useful reproduction commands from a committed source SHA:
 
 ```powershell
 node scripts/v2/build-release.mjs --out dist --evidence dist/release-build.json --no-portable-evidence
 tar -tzf dist/armorbreak-portable-2.3.0.tar.gz
 Get-FileHash dist/armorbreak-portable-2.3.0.tar.gz -Algorithm SHA256
+Get-FileHash dist/armorbreak-portable-2.3.0.tar.gz.sbom.cdx.json -Algorithm SHA256
 npm pack --dry-run --json
 ```
 
-Save command output and exact source SHA as an append-only review fixture. Compare the archive path inventory with the SBOM's included-file inventory; do not treat package manifest or a hand-written external-tool list as a complete bill of materials.
+No independent reviewer has confirmed license scope, copyrights, exception clauses, notices, or npm redistribution obligations. P0-3 therefore remains open.
