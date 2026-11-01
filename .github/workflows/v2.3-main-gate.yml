@@ -36,6 +36,20 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
+      - name: Prepare runner-local temporary directory (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $runtimeTemp = Join-Path $env:RUNNER_TEMP 'armorbreak-v23-ci-tmp'
+          New-Item -ItemType Directory -Force -Path $runtimeTemp | Out-Null
+          [System.IO.File]::AppendAllText($env:GITHUB_ENV, "TEMP=$runtimeTemp`nTMP=$runtimeTemp`n")
+      - name: Prepare runner-local temporary directory (Unix)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          runtime_temp="$RUNNER_TEMP/armorbreak-v23-ci-tmp"
+          mkdir -p "$runtime_temp"
+          printf 'TMPDIR=%s\nTEMP=%s\nTMP=%s\n' "$runtime_temp" "$runtime_temp" "$runtime_temp" >> "$GITHUB_ENV"
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: ${{ matrix.node }}
@@ -80,6 +94,20 @@ jobs:
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
+      - name: Prepare runner-local temporary directory (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $runtimeTemp = Join-Path $env:RUNNER_TEMP 'armorbreak-v23-ci-tmp'
+          New-Item -ItemType Directory -Force -Path $runtimeTemp | Out-Null
+          [System.IO.File]::AppendAllText($env:GITHUB_ENV, "TEMP=$runtimeTemp`nTMP=$runtimeTemp`n")
+      - name: Prepare runner-local temporary directory (Unix)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          runtime_temp="$RUNNER_TEMP/armorbreak-v23-ci-tmp"
+          mkdir -p "$runtime_temp"
+          printf 'TMPDIR=%s\nTEMP=%s\nTMP=%s\n' "$runtime_temp" "$runtime_temp" "$runtime_temp" >> "$GITHUB_ENV"
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: ${{ matrix.node }}
