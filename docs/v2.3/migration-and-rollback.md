@@ -24,3 +24,7 @@ This was a real package archive deployment in an isolated test directory, not a 
 6. Switch only after all copied-profile checks pass; retain the backup until owner acceptance.
 
 The procedure above is operational guidance. The real isolated drill does not certify a future OS-level installer, a second-account security boundary, or arbitrary external user-data compatibility. Release remains `NOT_READY` until all other required gates, independent review, exact CI and maintainer authorization are closed.
+
+## Support-scope decision requested
+
+The tested V2.3 delivery is a portable archive with an explicit post-extraction production dependency install; the repository also contains configuration adapters for registering the MCP server with host applications. The candidate examined here does not establish an OS-integrated installer or system-level automatic updater. This is an evidence statement, not a unilateral removal of any product promise. The maintainer must confirm whether an OS installer/updater is within V2.3's advertised support contract; until then, updater validation is a release blocker and must not be marked `NOT_APPLICABLE`.

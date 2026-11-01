@@ -1,4 +1,4 @@
-# V2.3 threat model and verification boundary
+This model covers historical M1–M6 and the current P0-H source S3 `8140c62f50565a319ba43bfd2a44621777d281ed`. The last remotely verified PR HEAD before S3 was `6b5de2e952b25e5a14877d4179a276be24c9c530`; earlier successful PR checks do not prove S3. S3 separates PR, main-candidate and final-release contracts and records release state structurally. The exact-S3 portable package, npm inventory, real isolated rollback and clean-room parser/workflow evidence are recorded under `evidence/p0-h/`. This is developer-prepared evidence, not an independent human audit, legal opinion, or release authorization. P0-H is `IN_PROGRESS`, release state `NOT_READY`, and no formal tag or publication is authorized.
 
 ## Scope
 
@@ -44,3 +44,28 @@ Target files, archives, parser text, source comments, documentation, SARIF/SBOM 
 4. Independent human security and license review; the developer packet and candidate inventory are not substitutes. Review final package/SBOM and npm dependency distribution separately.
 5. The isolated real V2.2-to-V2.3 portable-package drill passed on candidate source `7a78aef…` (archive SHA-256 `cb9e9edef5fd677adbdee97e521f09a457505bee805db319719c206c579590fc`) for copied test data, including rollback hashes, ACL and MCP/session boundaries. It does not verify a shipped OS updater, a second Windows identity, or arbitrary user profiles.
 6. **Branch protection and main/release provenance remain open:** the standard and dedicated V2.3 PR-event checks passed on exact HEAD `14df1d0…`. Verify repository required-check settings through an authorized path; the prior API query returned 403. Exact-main CI, external authorization signatures, package/SBOM/attestation bound to the actual main commit, and explicit maintainer authorization remain required. The `v2.2.0` ruleset was not modified and still allows owner bypass. No formal tag/publication is authorized.
+
+
+## Current candidate security evidence and residual gaps
+
+- Source S changed the V2.3 PR/main/release state contracts and npm packaging rules; validator and workflow were included in S rather than treated as post-source evidence. PR and main candidate modes are separate; main binds exact SHA and does not demand future release evidence; Release mode requires structured READY and the external signed authorization and evidence checks.
+- Exact-S artifact SHA-256 `b038df453eb4ee1683679fb2173dcd7787e7358ba614ee1b8a1cf134d92a43c7` was clean-room extracted and tested after separately installing TypeScript 5.9.3. JavaScript/TypeScript symbol analysis completed on 2/2 sample files. The L0 `CrossLanguageSourceReview` workflow completed and its `source.symbols` step is DONE, although aggregate `stepsDone` reported 0; this mismatch is not counted as a successful aggregate metric.
+- A real isolated Windows package deployment/rollback used the exact S archive and synthetic V2.2-format data from the unchanged published package. It passed task/report reads, configuration and ACL checks, failure injection, and rollback hash comparison. It does not test a second Windows logon or an OS-integrated updater.
+- The current npm dry run is 677 files and excludes test paths, all 11 M3 fixtures and binary executables; historical fixture hashes and repository test provenance remain preserved. The separate npm package inventory and installed TypeScript dependency graph still require independent license review.
+- Remaining security boundaries: independent human review, second-principal isolation, maintainer decision on OS updater support scope, current exact-S hosted PR checks, repository branch-protection/required-check verification, exact-main build/provenance, production attestation/trust keys and maintainer release authorization.
+
+
+## S2 candidate security observations
+
+- The new exact-source archive SHA-256 is `b038df453eb4ee1683679fb2173dcd7787e7358ba614ee1b8a1cf134d92a43c7`. Clean-room extraction plus separate TypeScript 5.9.3 install executed 53 capabilities and parsed both JS and TS inputs. CrossLanguageSourceReview completed with its one L0 source.symbols step marked DONE; the returned aggregate `stepsDone=0` mismatch is recorded and not treated as a successful metric.
+- The real isolated Windows V2.2-to-V2.3 upgrade/rollback was repeated with this exact archive. It used synthetic V2.2-format task/report/config produced by the published V2.2.0 package; rollback hashes matched. It did not touch a formal installation or user profile.
+- npm dry-run file rules exclude the 11 M3 fixtures, test tree, binary test formats, npm inventory self-reference and candidate tar archive. The repo fixtures remain preserved. The clean npm inventory and installed TypeScript dependency graph need independent license review.
+- Still unverified: independent human security/license review; a true second Windows logon and private-task denial; whether OS-integrated update is an advertised V2.3 requirement; exact S2 hosted PR checks; repository branch protection/required-check settings; exact-main provenance, production attestation/trust and maintainer release authorization.
+
+
+## S3 candidate security observations
+
+- The exact-S3 candidate archive is SHA-256 `b038df453eb4ee1683679fb2173dcd7787e7358ba614ee1b8a1cf134d92a43c7`; clean-room extraction plus separate TypeScript 5.9.3 installation executed 53 registered capabilities and parsed JS and TS inputs. CrossLanguageSourceReview completed and its source.symbols step is DONE; aggregate `stepsDone=0` is inconsistent and remains disclosed.
+- The real isolated Windows V2.2-to-V2.3 deployment and rollback used this exact candidate and isolated V2.2-format data; hashes matched. It does not establish second-account ACL isolation or OS updater functionality.
+- npm dry run excludes 11 M3 fixtures, tests, binary files, generated inventory/manifest self-reference and the candidate tar. The test fixtures remain in source evidence.
+- Independent human review, second Windows principal, maintainer support-scope decision for an OS updater, exact hosted PR checks, branch protection, exact-main provenance/attestation/trust and maintainer authorization remain open.

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "armorbreak.v2.3-three-state-gate-validation/v1",
+  "capturedAt": "2026-11-01T08:34:57.8180944Z",
+  "sourceCommit": "8140c62f50565a319ba43bfd2a44621777d281ed",
+  "validatedLocalHead": "8140c62f50565a319ba43bfd2a44621777d281ed",
+  "modes": {
+    "checkPr": {
+      "command": "node scripts/v2/v23-release-gate.mjs --check-pr",
+      "exitCode": 0,
+      "decision": "VALIDATED",
+      "releaseState": "NOT_READY",
+      "futureReleaseBlockersAllowed": true
+    },
+    "checkMain": {
+      "command": "V23_EXPECTED_SHA=<exact local HEAD> node scripts/v2/v23-release-gate.mjs --check-main",
+      "exitCode": 0,
+      "decision": "VALIDATED",
+      "releaseState": "NOT_READY",
+      "exactShaBound": true,
+      "futureReleaseEvidenceRequired": false
+    },
+    "release": {
+      "command": "GITHUB_REF=refs/tags/v2.3.0 GITHUB_SHA=<exact local HEAD> node scripts/v2/v23-release-gate.mjs --release",
+      "exitCode": 1,
+      "decision": "NOT_READY",
+      "failClosedBlocker": "P0-H matrix status is not COMPLETE; structured releaseState is not READY",
+      "signedClaimsEvaluated": false
+    }
+  },
+  "tests": {
+    "command": "node --test tests/v23-release-gate.test.mjs",
+    "passed": 10,
+    "failed": 0,
+    "includesPositiveTransition": true,
+    "includesNegativeMissingRequiredClaimCases": true,
+    "includesStructuredStateHistoricalMarkdownIndependence": true
+  },
+  "workflow": {
+    "path": ".github/workflows/v2.3-main-gate.yml",
+    "lintCommand": "docker run --rm -v <repo>:/repo:ro rhysd/actionlint@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667 /repo/.github/workflows/v2.3-main-gate.yml",
+    "exitCode": 0,
+    "mainCandidateCalls": "--check-main",
+    "prCandidateCalls": "--check-pr"
+  },
+  "notes": [
+    "Local contract and mode simulation only; not hosted main CI or release authorization.",
+    "Historical NOT_READY wording and CI evidence were retained.",
+    "No GitHub PR-event run exists for source S3 yet."
+  ]
+}

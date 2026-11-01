@@ -1,8 +1,8 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "b39f2285f3bc05301d2989d6a66fc1e641af7b96",
-  "generatedAt": "2026-11-01T07:53:20.370Z",
+  "sourceCommit": "8140c62f50565a319ba43bfd2a44621777d281ed",
+  "generatedAt": "2026-11-01T08:44:03.600Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     ".github/workflows/ci.yml": {
@@ -10,8 +10,8 @@
       "sha256": "e0b752f0da9445a2a9a5a62c1962798d62741881be08dc0be698287078689237"
     },
     ".github/workflows/v2.3-main-gate.yml": {
-      "size": 9758,
-      "sha256": "0d3f6d6d66efa739eb95e56a1d5bb072fd2f5790a519feb8b49df5ee54aff022"
+      "size": 9760,
+      "sha256": "7405284690ecb85ba2cc89929166602f7f675575a442601baf03e8934e91342a"
     },
     ".github/workflows/v2.3-validation.yml": {
       "size": 4700,
@@ -22,8 +22,8 @@
       "sha256": "21039ccca6fac1150bf049d5abbc500d3ab668a1e66731b202173547f61422ed"
     },
     "docs/v2.3/acceptance-report.md": {
-      "size": 24143,
-      "sha256": "0948e914c456b446c676b1758a52d81a9e01fe6df3b1652c7ca5ae6b6da27f0a"
+      "size": 31258,
+      "sha256": "d40d6ef089880d3dbd82b88f004e79d62fac129fb972477930eb5a93e1ff63a8"
     },
     "docs/v2.3/architecture.md": {
       "size": 4621,
@@ -34,8 +34,8 @@
       "sha256": "3ecb9f50976afe01747d4f3045a803b1c93ccfcb9a5890cbe955763dff314f15"
     },
     "docs/v2.3/compatibility-matrix.json": {
-      "size": 45378,
-      "sha256": "0e23124480d7fcd3e4f5c2fcb77b3f5ca7dccf37984f214f7fa19dcff98d197b"
+      "size": 47296,
+      "sha256": "47cca097d0cf88f0cf9beac499cfe1e548aa534a0da97f92fc64b7825b5943f3"
     },
     "docs/v2.3/evidence/m0/current-registry.json": {
       "size": 12385,
@@ -68,6 +68,10 @@
     "docs/v2.3/evidence/m2/test-results.json": {
       "size": 6970,
       "sha256": "df95cdd259212f63e6108eba3062b856fe47082e310a1b8b41d26700495d5cd7"
+    },
+    "docs/v2.3/evidence/m3/fixtures/.npmignore": {
+      "size": 13,
+      "sha256": "daf96009981e97241c38d83e821ebe83f93c76d3ac862236342f3722d7f00303"
     },
     "docs/v2.3/evidence/m3/fixtures/malformed_elf.bin": {
       "size": 20,
@@ -217,9 +221,37 @@
       "size": 57,
       "sha256": "6e71d9aff12155eb945012759d7d5c3a324746c7941e729bcdc11a66772e21c7"
     },
+    "docs/v2.3/evidence/p0-h/.npmignore": {
+      "size": 72,
+      "sha256": "cb9e79117402245e4c519709076ca3ba2620ba2b79e9424665079764e99744bf"
+    },
     "docs/v2.3/evidence/p0-h/benchmark-results.json": {
       "size": 4588,
       "sha256": "3b418fdc2af0f76145579b029c0a05a3a34fc7a1c636f55b8d2973d723849dbf"
+    },
+    "docs/v2.3/evidence/p0-h/candidate-package-5fdedae.json": {
+      "size": 91089,
+      "sha256": "4c24743abea2a9ef02fca5e444a2026f51b218a166c647d20b02b431cea2d17c"
+    },
+    "docs/v2.3/evidence/p0-h/candidate-package-5fdedae.manifest.json": {
+      "size": 91089,
+      "sha256": "4c24743abea2a9ef02fca5e444a2026f51b218a166c647d20b02b431cea2d17c"
+    },
+    "docs/v2.3/evidence/p0-h/candidate-package-5fdedae.sbom.cdx.json": {
+      "size": 94668,
+      "sha256": "7999a94f7dca1340f7f0d7021a9b3242acfb6edcea107260449596d7e4a7cdda"
+    },
+    "docs/v2.3/evidence/p0-h/candidate-package-66b28af.json": {
+      "size": 91089,
+      "sha256": "466ddf894ba853ccac03da9ddeb5ccbb313b2d1267a638fe7b80238456033e5c"
+    },
+    "docs/v2.3/evidence/p0-h/candidate-package-66b28af.manifest.json": {
+      "size": 91089,
+      "sha256": "466ddf894ba853ccac03da9ddeb5ccbb313b2d1267a638fe7b80238456033e5c"
+    },
+    "docs/v2.3/evidence/p0-h/candidate-package-66b28af.sbom.cdx.json": {
+      "size": 94668,
+      "sha256": "7999a94f7dca1340f7f0d7021a9b3242acfb6edcea107260449596d7e4a7cdda"
     },
     "docs/v2.3/evidence/p0-h/candidate-package-7a78aef.json": {
       "size": 2002,
@@ -232,6 +264,18 @@
     "docs/v2.3/evidence/p0-h/candidate-package-7a78aef.sbom.cdx.json": {
       "size": 94529,
       "sha256": "4579399cf0df2608106cad5ace01aad13e68399c9cc7e94e652bb3416966b886"
+    },
+    "docs/v2.3/evidence/p0-h/candidate-package-8140c62.json": {
+      "size": 91089,
+      "sha256": "df390655874e9f77d263946e87e2e6d5af6dcbd813e163ebefa420adeaaacd74"
+    },
+    "docs/v2.3/evidence/p0-h/candidate-package-8140c62.manifest.json": {
+      "size": 91089,
+      "sha256": "df390655874e9f77d263946e87e2e6d5af6dcbd813e163ebefa420adeaaacd74"
+    },
+    "docs/v2.3/evidence/p0-h/candidate-package-8140c62.sbom.cdx.json": {
+      "size": 94668,
+      "sha256": "7999a94f7dca1340f7f0d7021a9b3242acfb6edcea107260449596d7e4a7cdda"
     },
     "docs/v2.3/evidence/p0-h/github-ci-current-head.json": {
       "size": 11992,
@@ -273,6 +317,18 @@
       "size": 4905,
       "sha256": "cd390967b844aed4805f36ba612e31b9cc66520bdb352675ca3a3f362d354466"
     },
+    "docs/v2.3/evidence/p0-h/independent-review-handoff-5fdedae.md": {
+      "size": 6688,
+      "sha256": "6d15bd0ee5f2702bedee24ccd9b8d7564355854e8f1cb9632c30402f8b45c3f5"
+    },
+    "docs/v2.3/evidence/p0-h/independent-review-handoff-66b28af.md": {
+      "size": 6686,
+      "sha256": "c84e1c51410891e426954786ad66d528cdebb81ff7f0ab7b95a5c38feb0d2bbc"
+    },
+    "docs/v2.3/evidence/p0-h/independent-review-handoff-8140c62.md": {
+      "size": 6721,
+      "sha256": "ec0ed03a9dbc196e110b0392358b1750297e9036b138020e0268b4069e587e3e"
+    },
     "docs/v2.3/evidence/p0-h/local-docker-l1-e02e7fe.json": {
       "size": 1411,
       "sha256": "6dd77fef96942b62c5446f8dae1cabfce3921f8ebf3c0bfc9617cc8dd9bfaa54"
@@ -305,6 +361,18 @@
       "size": 625,
       "sha256": "04b2e362f335e29d9d9aaa4e457a66de1661b68159148ff95998f532210242ad"
     },
+    "docs/v2.3/evidence/p0-h/npm-package-5fdedae.json": {
+      "size": 70521,
+      "sha256": "7ebd703619e95e7e30b4b155940cb5997ae894094c4238cb9456e2b7033e1f0d"
+    },
+    "docs/v2.3/evidence/p0-h/npm-package-66b28af.json": {
+      "size": 69901,
+      "sha256": "492af9cb6dceadb4d74dacc2df32746a1bb38542b0944c960a05beb9c666decc"
+    },
+    "docs/v2.3/evidence/p0-h/npm-package-8140c62.json": {
+      "size": 65365,
+      "sha256": "12a24fef7f260e740aec880b3bcb568516800b777ae4b60bda812fc07b4119b2"
+    },
     "docs/v2.3/evidence/p0-h/npm-package-dry-run.json": {
       "size": 3420,
       "sha256": "39e5e8cf6e674667d2da01da9b13dfbf21cc0a2f30c2d098b336d36b3e1fa57c"
@@ -313,9 +381,37 @@
       "size": 4115,
       "sha256": "32517f948dc7741d87857c83dd4b8156ca6cf678c8b19dcc84f0bdfa079a4da7"
     },
+    "docs/v2.3/evidence/p0-h/portable-cleanroom-5fdedae.json": {
+      "size": 3540,
+      "sha256": "a02464b88b0558d4440a977db33ed6109273afc8bb38f679232a466dd6571a2b"
+    },
+    "docs/v2.3/evidence/p0-h/portable-cleanroom-66b28af.json": {
+      "size": 3856,
+      "sha256": "870d75e4fb016f96a163db1075ed7fe1367cf7733e74a28a820b36010848b2cc"
+    },
+    "docs/v2.3/evidence/p0-h/portable-cleanroom-8140c62.json": {
+      "size": 3003,
+      "sha256": "d195973f862897d5f86f3e36abee12f2999ba9b17ce1b422127dd2a188986aa6"
+    },
+    "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-5fdedae.json": {
+      "size": 14895,
+      "sha256": "0ddc03081124df5b5f705712907b690b71379cab138c6d00a48811b0bc1b17a1"
+    },
+    "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-66b28af.json": {
+      "size": 14895,
+      "sha256": "31dff1f529fb54ee009647bd6e6fe05d847d7d703bcc33c73fed03e1bbb9a598"
+    },
+    "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-8140c62.json": {
+      "size": 14895,
+      "sha256": "cea2391c8dcea497b3e3cb22404c2cba90d000cff69cd51ec78328e3f2fb4433"
+    },
     "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback.json": {
       "size": 14895,
       "sha256": "663edc1654320ddeb856112d5fadf4bb13cc4adef121fd0721b4a8d08c2e26b8"
+    },
+    "docs/v2.3/evidence/p0-h/release-gate-three-state-8140c62.json": {
+      "size": 1992,
+      "sha256": "3db019dbe5d50b0155e570760a085414b444dbdd20015d0bfc94561b5619fdf4"
     },
     "docs/v2.3/evidence/p0-h/security-license-review-preliminary.json": {
       "size": 8266,
@@ -334,16 +430,16 @@
       "sha256": "b0e571fcf5f9953d5a02e04b4652b38d6cbaea6196d6c952459cbb5ca64a2b3e"
     },
     "docs/v2.3/migration-and-rollback.md": {
-      "size": 3278,
-      "sha256": "0061d04cb159fa6496f2c003cd0f4d743343fe4a223990cd859e42b7d0e9c728"
+      "size": 3922,
+      "sha256": "08bbcaad19751b9c4bf30e20143d0eed0067b7fd8506261bc4103114f2fde86e"
     },
     "docs/v2.3/p0-h-independent-review-packet.md": {
-      "size": 9224,
-      "sha256": "b2a7c6fdc30412abf61da9cadd82151818eb491e40b53839668aad24c054f40e"
+      "size": 9401,
+      "sha256": "a39cdfa46ceb7833deb4952d7a908a5e05187f868901fff55919ba1e3243ca70"
     },
     "docs/v2.3/p0-h-license-inventory.md": {
-      "size": 7105,
-      "sha256": "2692cf1ba10d11cd5cde3ad06dbee2381f6d3332cc60687a75c3e492f2a1c300"
+      "size": 7936,
+      "sha256": "25bf5a5ba57d2d172314492019336148ca014a9a71302d9981b944512a882f8b"
     },
     "docs/v2.3/performance-report.md": {
       "size": 3590,
@@ -354,8 +450,8 @@
       "sha256": "f58ad6263155e5eb7fc694db8e7f5d5012c19afd49dc66d8df878ef6b84bb238"
     },
     "docs/v2.3/threat-model.md": {
-      "size": 8090,
-      "sha256": "6572a08ef2a9af5a7cff52c17860e8398374444056ba4ee09b5673819703517a"
+      "size": 12977,
+      "sha256": "194e4dc69b87584a79dedd7696da445ab912ebef9892f59f74721fb9c796b08b"
     },
     "scripts/v2/release-gates.mjs": {
       "size": 3087,
@@ -370,8 +466,8 @@
       "sha256": "1ad0dad2ea0e6e80ad15dd0462c3cb8adeda8f885cb565d73b9da09787af47d0"
     },
     "scripts/v2/v23-release-gate.mjs": {
-      "size": 15210,
-      "sha256": "46ec07ed29c1ab2fa1d2a7e3fac2eff176600a9037463a05ec7ceec12c4ed625"
+      "size": 17133,
+      "sha256": "6012d7e84238f7b88cd386ee5365e5c39e66810b5e7c8f3ba2dea4ec9e361a18"
     },
     "scripts/v2/v23-upgrade-rollback-drill.mjs": {
       "size": 7931,
@@ -386,8 +482,8 @@
       "sha256": "9bbd218f677256f69adf4018401736e161b1c4a38bea85eee1ea89f72076da93"
     },
     "tests/v23-release-gate.test.mjs": {
-      "size": 4961,
-      "sha256": "3c7d816ff87ef4689e41a046748a9c1401e3f03d949624c602016340e42d625b"
+      "size": 7216,
+      "sha256": "7754d8aab05f137a5a2d95f6e79b090e89e103f2a7e50763a7de3ccdfedc2c6d"
     }
   }
 }
