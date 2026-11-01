@@ -6,7 +6,7 @@ Status: developer-prepared material for an independent reviewer. This is not an 
 
 Resolve `sourceCommit` and `baselineSha` from `acceptance-manifest.json` at the time of review. The source snapshot is the code under review; compare it with the frozen V2.2 baseline. Separately inspect the source-to-evidence commit range at the current PR head. Reject any post-source path outside `scripts/v2/v23-provenance.mjs`'s evidence-only allowlist. Use the live PR HEAD and exact PR-event runs; do not treat this addendum's historical run IDs as current evidence.
 
-The previously successful snapshot was PR HEAD `9b7b473beb996610ac17a745f92a3a28534442e7` (runs `41270050323`, `41270050295`, `41270050351`). Interim evidence commit `39de997c0732953d7462a4b44e4ecd0f549402c0` failed PR CI because a change to `docs/v2.3/p0-h-independent-review-packet.md` escaped the evidence-only allowlist. The failure record is `github-ci-run-412859.json`. Verify the corrective commit and its latest exact-head results independently.
+An earlier successful snapshot was PR HEAD `9b7b473beb996610ac17a745f92a3a28534442e7` (runs `41270050323`, `41270050295`, `41270050351`). Interim evidence commit `39de997c0732953d7462a4b44e4ecd0f549402c0` failed PR CI because a change to `docs/v2.3/p0-h-independent-review-packet.md` escaped the evidence-only allowlist. The failure record is `github-ci-run-412859.json`. The corrective commit restored that packet path; current passing PR HEAD at this addendum revision is `14df1d05c6397a25cfffd4903d00c9df3f697c61` (runs `41286249061`, `41286249033`, `41286249199`), recorded in `github-ci-run-412862.json`. A reviewer must still verify live HEAD and current checks independently.
 
 ## Required review scope
 
