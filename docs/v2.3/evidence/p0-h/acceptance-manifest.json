@@ -2,7 +2,7 @@
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
   "sourceCommit": "8140c62f50565a319ba43bfd2a44621777d281ed",
-  "generatedAt": "2026-11-01T15:34:35.803Z",
+  "generatedAt": "2026-11-01T15:39:37.898Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     ".github/workflows/ci.yml": {
@@ -22,8 +22,8 @@
       "sha256": "21039ccca6fac1150bf049d5abbc500d3ab668a1e66731b202173547f61422ed"
     },
     "docs/v2.3/acceptance-report.md": {
-      "size": 36423,
-      "sha256": "01f14666cbe50bba5a44f6ba52b0eaf406e266c47ccd78d556102748999adf03"
+      "size": 37940,
+      "sha256": "2a4e25dbddbbf086f9ecc66ef0cb191ba88e06aa78faf0f90460460fbcea4e8f"
     },
     "docs/v2.3/architecture.md": {
       "size": 4621,
@@ -34,8 +34,8 @@
       "sha256": "3ecb9f50976afe01747d4f3045a803b1c93ccfcb9a5890cbe955763dff314f15"
     },
     "docs/v2.3/compatibility-matrix.json": {
-      "size": 48253,
-      "sha256": "ee542a82c8831b6b2259a66aeecfcbc04a69a1ec99fe4405d8da3fce5054b0f0"
+      "size": 48381,
+      "sha256": "087945ae0124aac4879874647db3bde9e04c9c9f5511a5b98a520b9ff59563a4"
     },
     "docs/v2.3/evidence/m0/current-registry.json": {
       "size": 12385,
@@ -285,6 +285,10 @@
       "size": 5027,
       "sha256": "2fa1582a8a7809ed8354a1e5ebd1f93f6fe79bb391a6e305f5f6feb58a775751"
     },
+    "docs/v2.3/evidence/p0-h/github-ci-evidence-86f09e8.json": {
+      "size": 5091,
+      "sha256": "1076aa3ad9e5a3f2b424467b4f679fb708d345b9574a0c50293d79287f12fe7c"
+    },
     "docs/v2.3/evidence/p0-h/github-ci-evidence-97498e3.json": {
       "size": 5091,
       "sha256": "c4cf78be8d4033f18415ca179d64a5b70d40abf1c9c61ff278c62360aafe64b8"
@@ -385,6 +389,10 @@
       "size": 65365,
       "sha256": "12a24fef7f260e740aec880b3bcb568516800b777ae4b60bda812fc07b4119b2"
     },
+    "docs/v2.3/evidence/p0-h/npm-package-86f09e8.json": {
+      "size": 72130,
+      "sha256": "2b0d11507902d4e8d1996a2e1105cd0afb2d8613e30fcbc4267b63fd50930efe"
+    },
     "docs/v2.3/evidence/p0-h/npm-package-dry-run.json": {
       "size": 3420,
       "sha256": "39e5e8cf6e674667d2da01da9b13dfbf21cc0a2f30c2d098b336d36b3e1fa57c"
@@ -462,8 +470,8 @@
       "sha256": "f58ad6263155e5eb7fc694db8e7f5d5012c19afd49dc66d8df878ef6b84bb238"
     },
     "docs/v2.3/threat-model.md": {
-      "size": 13393,
-      "sha256": "8ae92552b5a7e9063dfad39ec34a7b8a27057d995d8e0f043be4be15276f2045"
+      "size": 13392,
+      "sha256": "6e9ab552fe29219b3f15963a0542888b72f3ac54e7819bd898b122f12fa183b5"
     },
     "scripts/v2/release-gates.mjs": {
       "size": 3087,
