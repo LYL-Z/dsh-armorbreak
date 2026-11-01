@@ -1,0 +1,160 @@
+{
+  "schemaVersion": "armorbreak.v2.3-pr-ci-evidence/v1",
+  "capturedAt": "2026-11-01T15:24:10.4791297Z",
+  "repository": "LYL-Z/dsh-armorbreak",
+  "pullRequest": 25,
+  "headSha": "3f61c939c816473515e3ad457d50ab0e1136e230",
+  "sourceCommit": "8140c62f50565a319ba43bfd2a44621777d281ed",
+  "prState": "OPEN",
+  "isDraft": true,
+  "runs": [
+    {
+      "runId": 41290136914,
+      "headSha": "3f61c939c816473515e3ad457d50ab0e1136e230",
+      "event": "pull_request",
+      "headBranch": "feature/v2.3-universal-program-intelligence",
+      "status": "completed",
+      "conclusion": "success",
+      "workflow": "V2.3 exact-head validation",
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41290136914",
+      "jobs": [
+        {
+          "jobId": 124799495925,
+          "name": "V2.3 evidence integrity (exact PR head)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "jobId": 124799496165,
+          "name": "Node 24 / windows-latest (PR head)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "jobId": 124799496172,
+          "name": "Benign L1 container-path verification (exact PR head)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "jobId": 124799496192,
+          "name": "Node 24 / ubuntu-latest (PR head)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "jobId": 124799496196,
+          "name": "Node 22 / ubuntu-latest (PR head)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "jobId": 124799496259,
+          "name": "Node 22 / windows-latest (PR head)",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "runId": 41290136931,
+      "headSha": "3f61c939c816473515e3ad457d50ab0e1136e230",
+      "event": "pull_request",
+      "headBranch": "feature/v2.3-universal-program-intelligence",
+      "status": "completed",
+      "conclusion": "success",
+      "workflow": "CI",
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41290136931",
+      "jobs": [
+        {
+          "jobId": 124799495741,
+          "name": "L0 offline boundary (static gate)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "jobId": 124799495997,
+          "name": "Node 24 on ubuntu-latest",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "jobId": 124799496045,
+          "name": "Node 24 on windows-latest",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "jobId": 124799496093,
+          "name": "L1 Docker integration (real daemon)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "jobId": 124799496830,
+          "name": "Release evidence checks (commit-bound)",
+          "status": "completed",
+          "conclusion": "skipped"
+        }
+      ]
+    },
+    {
+      "runId": 41290136915,
+      "headSha": "3f61c939c816473515e3ad457d50ab0e1136e230",
+      "event": "pull_request",
+      "headBranch": "feature/v2.3-universal-program-intelligence",
+      "status": "completed",
+      "conclusion": "success",
+      "workflow": "V2.3 main and release gate",
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41290136915",
+      "jobs": [
+        {
+          "jobId": 124799495971,
+          "name": "Node 24 / windows-latest",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "jobId": 124799496112,
+          "name": "Node 22 / ubuntu-latest",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "jobId": 124799496138,
+          "name": "Node 22 / windows-latest",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "jobId": 124799496210,
+          "name": "Node 24 / ubuntu-latest",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "jobId": 124799496855,
+          "name": "V2.3 main candidate build and provenance",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "jobId": 124799496874,
+          "name": "Node ${{ matrix.node }} / ${{ matrix.os }}",
+          "status": "completed",
+          "conclusion": "skipped"
+        },
+        {
+          "jobId": 124799497091,
+          "name": "V2.3.0 release verification",
+          "status": "completed",
+          "conclusion": "skipped"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "All run records are pull_request events bound to E1. Main candidate build/provenance and Release verification jobs were skipped by their expected event conditions.",
+    "This CI evidence does not close independent human review, second-principal or maintainer authorization blockers."
+  ]
+}
