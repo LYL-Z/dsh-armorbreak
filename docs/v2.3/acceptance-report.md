@@ -168,3 +168,15 @@ Source S remains `8140c62f50565a319ba43bfd2a44621777d281ed`; evidence commit E1 
 The full test suite and typecheck ran successfully in these exact-head hosted jobs. A separate local clean-worktree `npm test` was interrupted during the user-requested pause; its partial log is not treated as a local pass. The earlier S-only local run is a historical 664/665 diagnostic caused by validating the source snapshot before its S→E manifest existed; it is not evidence against the exact E1 CI result.
 
 P0-H remains `IN_PROGRESS`; structured release readiness remains `NOT_READY`. Remaining blockers: independent human security and license review; real second Windows principal isolation and ACL recovery; maintainer decision on OS-integrated updater support; branch-protection/required-check owner confirmation; exact-main candidate build/provenance; production artifact/SBOM/attestation and trusted key custody; explicit maintainer release authorization. No merge, V2.3 tag, or release was performed.
+
+## 13. Evidence commit E2 — current verified PR-event workflows
+
+Evidence commit E2 and PR #25 HEAD at this CI capture: `97498e3334dea770c39e6fc6cfd7e4d1ee3d1662` (OPEN / Draft). All three PR-event workflows completed successfully on this exact SHA:
+
+- [Inherited CI `41321124390`](https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41321124390): Windows Node 24, Ubuntu Node 24, L0 static boundary and Docker L1 jobs passed; release-evidence job skipped by event condition.
+- [V2.3 exact-head validation `41321124400`](https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41321124400): evidence integrity, Node 22 and Node 24 on Windows and Ubuntu, and benign L1 container verification passed.
+- [V2.3 main and release gate `41321124442`](https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41321124442): all four PR-candidate Node/OS matrix jobs passed; main candidate build/provenance and tag Release verification were skipped as designed on pull_request.
+
+These hosted jobs ran the complete test suite and typecheck on their respective matrices. The local Windows test process was interrupted during the pause; no local full-suite pass is claimed. E2's evidence manifest validated 121 files against source S. This next evidence-only commit records E2's runs; it does not change the release source or candidate package.
+
+Release remains `NOT_READY`. Unclosed blockers remain independent human security/license review, second Windows principal/ACL recovery verification, maintainer decision on OS-updater support, branch-protection/required-check confirmation, exact-main build/provenance and production artifact/SBOM/attestation trust, and explicit maintainer release authorization. PR stays Draft; no merge/tag/release occurred.

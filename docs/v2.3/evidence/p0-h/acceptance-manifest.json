@@ -2,7 +2,7 @@
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
   "sourceCommit": "8140c62f50565a319ba43bfd2a44621777d281ed",
-  "generatedAt": "2026-11-01T15:24:52.488Z",
+  "generatedAt": "2026-11-01T15:28:53.412Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     ".github/workflows/ci.yml": {
@@ -22,8 +22,8 @@
       "sha256": "21039ccca6fac1150bf049d5abbc500d3ab668a1e66731b202173547f61422ed"
     },
     "docs/v2.3/acceptance-report.md": {
-      "size": 33268,
-      "sha256": "07bacd58644f0e7464c2ea8c3264bf428bffe2008f6da14d3ac3f701caf3aa8f"
+      "size": 35007,
+      "sha256": "7e51738ab6742c7a4011e65d0d566e11604ceb1b3a2f91f9246829a7be910eda"
     },
     "docs/v2.3/architecture.md": {
       "size": 4621,
@@ -34,8 +34,8 @@
       "sha256": "3ecb9f50976afe01747d4f3045a803b1c93ccfcb9a5890cbe955763dff314f15"
     },
     "docs/v2.3/compatibility-matrix.json": {
-      "size": 47566,
-      "sha256": "561216c849f3f37ab6b3eb858ff4d945884324a6b63b9c8eaa509c1ec8adb0c4"
+      "size": 47656,
+      "sha256": "cdd1351015e0238e4ef80d33e3ec49fe3d0ed4044770e94d330248567a9428c6"
     },
     "docs/v2.3/evidence/m0/current-registry.json": {
       "size": 12385,
@@ -285,6 +285,10 @@
       "size": 5027,
       "sha256": "2fa1582a8a7809ed8354a1e5ebd1f93f6fe79bb391a6e305f5f6feb58a775751"
     },
+    "docs/v2.3/evidence/p0-h/github-ci-evidence-97498e3.json": {
+      "size": 5091,
+      "sha256": "c4cf78be8d4033f18415ca179d64a5b70d40abf1c9c61ff278c62360aafe64b8"
+    },
     "docs/v2.3/evidence/p0-h/github-ci-run-40994705723.json": {
       "size": 2880,
       "sha256": "25c0831bb4ffa7ba264e17f421fcfbc094624a42bef7cdc645cf882de6e400f7"
@@ -454,8 +458,8 @@
       "sha256": "f58ad6263155e5eb7fc694db8e7f5d5012c19afd49dc66d8df878ef6b84bb238"
     },
     "docs/v2.3/threat-model.md": {
-      "size": 12977,
-      "sha256": "194e4dc69b87584a79dedd7696da445ab912ebef9892f59f74721fb9c796b08b"
+      "size": 13371,
+      "sha256": "f06a585bd04b857eae00cb57ee73a1bba592732f72f196815b7ccc72bb7c6c69"
     },
     "scripts/v2/release-gates.mjs": {
       "size": 3087,
