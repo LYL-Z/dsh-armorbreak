@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "armorbreak.v2.3-local-validation/v1",
+  "observedAt": "2026-11-01T03:36:08.6150167Z",
+  "evidenceHead": "e02e7fe356f0141fb635a2db0af2be962dcec50e",
+  "sourceCommit": "b39f2285f3bc05301d2989d6a66fc1e641af7b96",
+  "host": {
+    "os": "Windows 11",
+    "build": "26300",
+    "architecture": "x64",
+    "node": "v24.16.0",
+    "gitRuntime": "git version 2.53.0.windows.3"
+  },
+  "fullSuite": {
+    "command": "node --test --test-concurrency=1",
+    "status": "PASS",
+    "passed": 662,
+    "failed": 0,
+    "skipped": 0,
+    "logSha256": "a27972000a36e3369a997876ec5ccba8a4d8b2472ce109eb13aa07cbdcd5ccb7",
+    "tempRoot": "external per-runner temp outside the checkout",
+    "gitPathPrepended": true
+  },
+  "typecheck": {
+    "command": "npm run typecheck",
+    "exitCode": 0
+  },
+  "docsConsistency": {
+    "command": "node scripts/v2/check-docs-consistency.mjs",
+    "status": "PASS"
+  },
+  "prGate": {
+    "command": "node scripts/v2/v23-release-gate.mjs --check-pr",
+    "status": "VALIDATED",
+    "releaseReadiness": "NOT_READY",
+    "blockers": [
+      "independent human security and license review",
+      "OS-integrated updater and second-principal permission validation",
+      "exact-main CI, immutable package/SBOM hashes and GitHub attestation",
+      "maintainer release authorization"
+    ]
+  },
+  "notes": [
+    "The system Git 2.54.0 generated-docs clone attempt exited 3221225477 (0xC0000005); the accepted full suite used runtime Git 2.53.0.windows.3.",
+    "A diagnostic TEMP rooted inside the checkout caused the portable test to resolve the checkout dev TypeScript package; the accepted run used an external TEMP root matching GitHub runner isolation. These failed diagnostic attempts are not counted as passing runs."
+  ]
+}
