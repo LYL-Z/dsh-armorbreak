@@ -204,11 +204,12 @@ try {
   const report = frames.find((frame) => frame.id === 3)
   const maliciousPrincipal = frames.find((frame) => frame.id === 4)
   const listedTasks = JSON.parse(taskList.result.content[0].text)
-  const mcpReport = JSON.parse(report.result.content[0].text)
   assert.equal(initialize.result.serverInfo.name, 'armorbreak')
   assert.equal(initialize.result.protocolVersion, '2025-06-18')
-  assert.ok(listedTasks.tasks.some((task) => task.id === taskId))
-  assert.equal(digest(Buffer.from(mcpReport.markdown)), before.reportSha256)
+  assert.equal(taskList.result.isError, false)
+  assert.ok(!listedTasks.tasks.some((task) => task.id === taskId), 'a new MCP session must not inherit visibility into the historical CLI session task')
+  assert.equal(report.result.isError, true)
+  assert.match(report.result.content[0].text, /outside the authorized principal, session, or workspace/)
   assert.equal(maliciousPrincipal.result.isError, true)
   assert.match(maliciousPrincipal.result.content[0].text, /unsupported armorbreak_workflow argument: principal/)
 
@@ -243,7 +244,8 @@ try {
       candidateReadHistoricalTaskAndReport: true,
       candidateHostConfigDoctorStatus: JSON.parse(hostConfig.stdout).status,
       mcpInitializeProtocol: initialize.result.protocolVersion,
-      mcpReadHistoricalTaskAndReport: true,
+      mcpHistoricalCliTaskHiddenFromNewMcpSession: !listedTasks.tasks.some((task) => task.id === taskId),
+      mcpReportDeniedForForeignCliSessionTask: report.result.isError,
       trustedPrincipal: { configuredByHostEnvironment: true, callerPrincipalOverrideRejected: true, windowsSidSha256: digest(Buffer.from(sid)), aclRestrictedToCurrentUser: true, aclEntries: aclEntries.map((entry) => ({ ...entry, path: entry.path === workspace ? '<isolated-workspace>' : entry.path === configDir ? '<isolated-workspace>/.armorbreak' : '<isolated-workspace>/.armorbreak/mcp-host-config.json', sid: 'CURRENT_USER_SID' })), icaclsOutput: safeAcl(`${workspaceAcl}\n${configAcl}`), aclCommandOutputSha256: digest(Buffer.from(`${aclResult.stdout}\n${aclInheritanceResult.stdout}`)), aclInspectionOutputSha256: digest(Buffer.from(aclChecks.stdout)) },
       workspaceBoundary: { outsideTargetRejected: true, stderrSha256: digest(Buffer.from(outOfWorkspace.stderr)) },
       failureInjection: { candidateStageEntry: 'index.js', corruptedEntrySha256: corruptedHash, rejectedBeforeCandidateStartup: injectedFailureRejected, v22PackageStillStartedAfterFault: true },
