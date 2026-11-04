@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto'
 import { execFileSync, spawnSync } from 'node:child_process'
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
+import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { verifyV23PortableManifest } from './verify-v23-portable-manifest.mjs'
 
@@ -79,10 +79,10 @@ try {
     sourceCommit,
     environment: { platform: process.platform, arch: process.arch, node: process.version, npm: npmVersion, developmentWorktreeNodeModulesUsed: false },
     artifact: {
-      path: artifact,
+      path: basename(artifact),
       bytes: artifactBytes.length,
       sha256: artifactSha256,
-      manifestPath,
+      manifestPath: basename(manifestPath),
       manifestSha256,
       manifestCommit: manifest.commit,
       sbomSha256: manifest.sbomSha256,
