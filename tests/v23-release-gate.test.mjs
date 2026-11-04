@@ -52,8 +52,10 @@ test('PR readiness identifies self-review and one-principal release requirements
   assert.equal(result.status, 0)
   const report = JSON.parse(result.stdout)
   assert.equal(report.releaseReadiness, 'NOT_READY')
-  assert.ok(report.blockers.includes('owner-approved self-review evidence and risk acceptance'))
-  assert.ok(report.blockers.includes('single-principal configuration verification'))
+  assert.ok(!report.blockers.includes('owner-approved self-review evidence and risk acceptance'))
+  assert.ok(!report.blockers.includes('single-principal configuration verification'))
+  assert.ok(report.blockers.includes('exact-main CI, immutable package/SBOM hashes and GitHub attestation'))
+  assert.ok(report.blockers.includes('owner-authorized exact-tag release event and detached authorization envelope'))
   assert.ok(!report.blockers.includes('real candidate package upgrade/rollback and OS permission drill'))
 })
 

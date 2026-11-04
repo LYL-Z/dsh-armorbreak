@@ -218,8 +218,8 @@ function main() {
         blockers: [
           ...(milestone.status === 'COMPLETE' ? [] : ['P0-H closure']),
           ...(pkg.version === '2.3.0' ? [] : [`package version must be 2.3.0, found ${pkg.version}`]),
-          'owner-approved self-review evidence and risk acceptance', 'single-principal configuration verification',
-          'exact-main CI, immutable package/SBOM hashes and GitHub attestation', 'maintainer release authorization',
+          'exact-main CI, immutable package/SBOM hashes and GitHub attestation',
+          'owner-authorized exact-tag release event and detached authorization envelope',
         ],
         note: 'PR validation proves the candidate check path only and never grants release approval.',
       }
