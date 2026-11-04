@@ -53,6 +53,7 @@ const claims = {
   },
   portableCleanroom: {
     status: portable.status, sourceCommit: portable.sourceCommit, artifactSha256: portable.artifact?.sha256,
+    manifestCommit: portable.artifact?.manifestCommit, manifestSha256: portable.artifact?.manifestSha256,
     evidencePath: portablePath, evidenceSha256: hash(portablePath),
   },
   upgradeRollback: {

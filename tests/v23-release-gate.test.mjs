@@ -80,13 +80,14 @@ test('owner self-review claims require truthful reviewer type, owner event, exac
   const base = {
     decision: 'READY', releaseModel: 'OWNER_APPROVED_SELF_REVIEW',
     securityReview: { ...review }, licenseReview: { ...review },
-    portableCleanroom: { status: 'PASS_ACTUAL_CLEANROOM_ARCHIVE_EXECUTION', sourceCommit: SHA, artifactSha256: digest, evidencePath: 'portable.json', evidenceSha256: digest },
+    portableCleanroom: { status: 'PASS_ACTUAL_CLEANROOM_ARCHIVE_EXECUTION', sourceCommit: SHA, artifactSha256: digest, manifestCommit: SHA, manifestSha256: digest, evidencePath: 'portable.json', evidenceSha256: digest },
     upgradeRollback: { kind: 'REAL_CANDIDATE_PACKAGE', rollbackVerified: true, permissionsVerified: true, evidencePath: 'rollback.json', evidenceSha256: digest, artifactSha256: digest },
     artifact: { path: 'artifact.tgz', sha256: digest }, sbom: { path: 'sbom.json', sha256: digest },
     mainCi: { commit: SHA, runId: '12345' }, attestation: { kind: 'GITHUB_OIDC_BUILD_PROVENANCE', evidencePath: 'attestation.json', evidenceSha256: digest },
     maintainerAuthorization: { authorized: true, method: 'OWNER_TAG_EVENT', actorId: '250811935', eventSenderId: '250811935' },
   }
   assert.deepEqual(validateOwnerSelfReviewClaims(base, SHA), { valid: true, blockers: [] })
+  assert.ok(validateOwnerSelfReviewClaims({ ...base, portableCleanroom: { ...base.portableCleanroom, manifestCommit: 'b'.repeat(40) } }, SHA).blockers.some((item) => item.includes('portable package manifest')))
   assert.equal(validateOwnerSelfReviewClaims({ ...base, securityReview: { ...review, reviewerType: 'INDEPENDENT_HUMAN' } }, SHA).valid, false)
   assert.equal(validateOwnerSelfReviewClaims({ ...base, licenseReview: { ...review, independentHumanReview: 'PASS' } }, SHA).valid, false)
   assert.equal(validateOwnerSelfReviewClaims({ ...base, maintainerAuthorization: { ...base.maintainerAuthorization, eventSenderId: '1' } }, SHA).valid, false)

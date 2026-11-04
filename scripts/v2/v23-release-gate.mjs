@@ -39,6 +39,7 @@ export function validateOwnerSelfReviewClaims(claims, expectedSha) {
   if (claims.attestation.kind !== 'GITHUB_OIDC_BUILD_PROVENANCE' || !/^[a-f0-9]{64}$/i.test(claims.attestation.evidenceSha256 ?? '')) blockers.push('GitHub build provenance evidence is missing')
   if (claims.portableCleanroom.status !== 'PASS_ACTUAL_CLEANROOM_ARCHIVE_EXECUTION' || claims.portableCleanroom.sourceCommit !== expectedSha
     || claims.portableCleanroom.artifactSha256 !== claims.artifact.sha256 || !/^[a-f0-9]{64}$/i.test(claims.portableCleanroom.evidenceSha256 ?? '')) blockers.push('exact-main portable clean-room execution evidence is missing or mismatched')
+  if (claims.portableCleanroom.manifestCommit !== expectedSha || !/^[a-f0-9]{64}$/i.test(claims.portableCleanroom.manifestSha256 ?? '')) blockers.push('portable package manifest is not bound to the exact main SHA')
   if (!/^[a-f0-9]{64}$/i.test(claims.artifact.sha256 ?? '') || !/^[a-f0-9]{64}$/i.test(claims.sbom.sha256 ?? '')) blockers.push('artifact or SBOM digest is malformed')
   return { valid: blockers.length === 0, blockers }
 }
@@ -154,10 +155,25 @@ function verifyExternalAuthorization({ expectedSha, sourceCommit, pkg }) {
   ]) {
     verifyDigest(part.evidencePath, part.evidenceSha256, key)
   }
+  const portable = readJson(claims.portableCleanroom.evidencePath)
+  if (portable.schemaVersion !== 'armorbreak.v2.3-portable-cleanroom/v1'
+    || portable.status !== 'PASS_ACTUAL_CLEANROOM_ARCHIVE_EXECUTION'
+    || portable.sourceCommit !== expectedSha
+    || portable.artifact?.sha256 !== claims.artifact.sha256
+    || portable.artifact?.manifestCommit !== expectedSha
+    || portable.artifact?.manifestSha256 !== claims.portableCleanroom.manifestSha256
+    || portable.checks?.sourceSymbolsJavaScriptAndTypeScript?.taskAndReportRead !== true
+    || portable.checks?.l0Workflow?.taskAndReportRead !== true) throw new Error('clean-room execution record does not bind exact main source, archive manifest, JS/TS and L0 task/report results')
   const artifact = claims.artifact
   const sbom = claims.sbom
   verifyDigest(artifact.path, artifact.sha256, 'candidate artifact')
   verifyDigest(sbom.path, sbom.sha256, 'SBOM')
+  const packageManifestPath = `${artifact.path}.manifest.json`
+  verifyDigest(packageManifestPath, claims.portableCleanroom.manifestSha256, 'portable package manifest')
+  const packageManifest = readJson(packageManifestPath)
+  if (packageManifest.schemaVersion !== 'armorbreak.release-build/v1' || packageManifest.commit !== expectedSha
+    || packageManifest.version !== pkg.version || packageManifest.reproducible !== true
+    || packageManifest.sha256 !== artifact.sha256) throw new Error('portable package manifest does not match the exact tag source and artifact')
   const sbomDocument = readJson(sbom.path)
   const subject = sbomDocument.metadata?.component
   if (subject?.name !== pkg.name || subject?.version !== pkg.version || !subject.hashes?.some((item) => item.alg === 'SHA-256' && item.content === artifact.sha256)) throw new Error('CycloneDX SBOM subject/version/digest does not match the candidate artifact')
