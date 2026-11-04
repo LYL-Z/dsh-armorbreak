@@ -27,4 +27,4 @@ The procedure above is operational guidance. The real isolated drill does not ce
 
 ## Support-scope decision requested
 
-The tested V2.3 delivery is a portable archive with an explicit post-extraction production dependency install; the repository also contains configuration adapters for registering the MCP server with host applications. The candidate examined here does not establish an OS-integrated installer or system-level automatic updater. This is an evidence statement, not a unilateral removal of any product promise. The maintainer must confirm whether an OS installer/updater is within V2.3's advertised support contract; until then, updater validation is a release blocker and must not be marked `NOT_APPLICABLE`.
+The V2.3.0 Stable support contract is Portable/manual or npm installation with the documented production-dependency step. OS-integrated installation and automatic updating are explicitly out of scope under the owner-approved release policy in `release-review-policy.md`; they are not claimed as supported or passed. This boundary does not alter the historical V2.2.0 installation contract.

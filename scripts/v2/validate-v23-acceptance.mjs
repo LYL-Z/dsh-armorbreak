@@ -31,17 +31,23 @@ function trackedEvidencePaths() {
       'docs/v2.3/compatibility-matrix.json',
       'docs/v2.3/fixture-catalog.json',
       'docs/v2.3/release-provenance-protocol.md',
+      'docs/v2.3/release-review-policy.md',
       'docs/v2.3/p0-h-independent-review-packet.md',
       'docs/v2.3/p0-h-license-inventory.md',
       'docs/releases/v2.3.0.md',
       'scripts/v2/validate-v23-acceptance.mjs',
       'scripts/v2/v23-provenance.mjs',
       'scripts/v2/v23-release-gate.mjs',
+      'scripts/v2/create-v23-release-envelope.mjs',
+      'scripts/v2/v23-portable-cleanroom.mjs',
       'scripts/v2/v23-upgrade-rollback-drill.mjs',
       'scripts/v2/v23-real-package-drill.mjs',
       'scripts/v2/release-gates.mjs',
       'tests/v23-provenance.test.mjs',
       'tests/v23-release-gate.test.mjs',
+      'tests/external-adapters-v2.test.mjs',
+      'tests/program-intelligence-source.test.mjs',
+      'tests/task-step-stats.test.mjs',
       '.github/workflows/ci.yml',
       '.github/workflows/v2.3-validation.yml',
       '.github/workflows/v2.3-main-gate.yml',
@@ -109,6 +115,7 @@ if (process.argv.includes('--generate') || process.argv.includes('--regenerate')
 }
 
 let manifest
+let structuredReleaseState = null
 try {
   manifest = JSON.parse(regularFile(manifestPath).toString('utf8'))
 } catch (error) {
@@ -172,13 +179,12 @@ try {
   const milestone = (id) => matrix.milestones.find((item) => item.id === id)
   if (milestone('M5')?.status !== 'PARTIAL_LOCAL_TESTED' || milestone('M6')?.status !== 'PARTIAL_LOCAL_TESTED') fail('M5/M6 matrix status is missing or inconsistent')
   if (!['IN_PROGRESS', 'COMPLETE'].includes(milestone('P0-H')?.status)) fail('P0-H status must be IN_PROGRESS or COMPLETE')
-  const report = regularFile('docs/v2.3/acceptance-report.md').toString('utf8')
-  const readinessSection = report.split(/\n## /).find((section) => /^8\. RELEASE READINESS\b/i.test(section)) ?? ''
-  const saysNotReady = /\bNOT_READY\b/.test(readinessSection)
-  const saysReady = /(?:^|[^A-Z_])READY(?:[^A-Z_]|$)/.test(readinessSection)
-  if (!readinessSection || (!saysReady && !saysNotReady)) fail('acceptance report must state READY or NOT_READY in the RELEASE READINESS section')
-  if (milestone('P0-H')?.status === 'IN_PROGRESS' && !saysNotReady) fail('an IN_PROGRESS P0-H milestone requires release status NOT_READY')
-  if (milestone('P0-H')?.status === 'COMPLETE' && saysNotReady && !/P0-H blocker/i.test(readinessSection)) fail('a COMPLETE P0-H milestone may retain NOT_READY only when the remaining P0-H blocker is explicitly named')
+  const p0h = milestone('P0-H')
+  structuredReleaseState = p0h?.releaseState ?? null
+  if (!['IN_PROGRESS', 'COMPLETE'].includes(p0h?.status)) fail('P0-H milestone status must be IN_PROGRESS or COMPLETE')
+  if (p0h?.releaseState !== 'NOT_READY') fail('frozen PR/main evidence releaseState must remain NOT_READY; release readiness is external')
+  // Historical Markdown can retain prior READY/NOT_READY and failed-run text.
+  // The machine contract is the structured matrix field above.
   const m6 = JSON.parse(regularFile('docs/v2.3/evidence/m6/m6-validation.json').toString('utf8'))
   if (m6.sourceCommit !== '965fbe4fa9abd2af73644865a56d8db64c8a6089' || m6.tests?.full?.passed !== 647 || m6.tests?.full?.failed !== 0 || m6.tests?.focused?.passed !== 24 || m6.tests?.typecheck?.exitCode !== 0) {
     fail('M6 exact-source evidence does not match its recorded test results')
@@ -195,7 +201,7 @@ if (!process.exitCode) {
     evidenceSourceCommit: manifest.sourceCommit,
     validatedHead: head,
     checkedFiles: Object.keys(records ?? {}).length,
-    releaseReadiness: 'NOT_READY',
+    releaseReadiness: structuredReleaseState ?? 'NOT_READY',
     limitations: ['This validates hashes and recorded milestone boundaries; it is not the Stable release gate.'],
   }, null, 2))
 }

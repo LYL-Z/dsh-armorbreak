@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
-import { evaluateMainContract, evaluatePrContract, evaluateReleaseContract, missingRequiredReleaseClaims } from '../scripts/v2/v23-release-gate.mjs'
+import { evaluateMainContract, evaluatePrContract, evaluateReleaseContract, missingRequiredReleaseClaims, validateOwnerSelfReviewClaims } from '../scripts/v2/v23-release-gate.mjs'
 
 const node = process.execPath
 const gateScript = 'scripts/v2/v23-release-gate.mjs'
@@ -21,48 +21,50 @@ test('PR contract ignores historical Markdown wording and rejects contradictory 
   assert.equal(evaluatePrContract({ packageName: 'dsh-armorbreak', status: 'BLOCKED', releaseState: 'NOT_READY' }).valid, false)
 })
 
-test('main candidate contract accepts NOT_READY without future release evidence and binds exact SHA', () => {
-  assert.deepEqual(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'IN_PROGRESS', releaseState: 'NOT_READY', expectedSha: SHA, head: SHA }), {
+test('main candidate contract requires completed engineering while retaining NOT_READY until tag evidence exists', () => {
+  assert.deepEqual(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', releaseState: 'NOT_READY', expectedSha: SHA, head: SHA }), {
     valid: true, releaseReadiness: 'NOT_READY', blockers: [],
   })
-  assert.equal(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'IN_PROGRESS', releaseState: 'NOT_READY', expectedSha: SHA, head: 'b'.repeat(40) }).valid, false)
+  assert.equal(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', releaseState: 'NOT_READY', expectedSha: SHA, head: 'b'.repeat(40) }).valid, false)
+  assert.equal(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'IN_PROGRESS', releaseState: 'NOT_READY', expectedSha: SHA, head: SHA }).valid, false)
   assert.equal(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'IN_PROGRESS', releaseState: 'READY', expectedSha: SHA, head: SHA }).valid, false)
 })
 
-test('Release contract transitions to READY only for complete P0-H, structured READY, exact tag and SHA', () => {
-  assert.deepEqual(evaluateReleaseContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', releaseState: 'READY', tag: 'refs/tags/v2.3.0', expectedSha: SHA }), {
+test('Release contract transitions to READY only from COMPLETE frozen tree plus exact external tag authorization input', () => {
+  assert.deepEqual(evaluateReleaseContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', releaseState: 'NOT_READY', tag: 'refs/tags/v2.3.0', expectedSha: SHA }), {
     valid: true, blockers: [],
   })
 })
 
 test('Release contract rejects reverse and partial transitions', () => {
-  const base = { packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', releaseState: 'READY', tag: 'refs/tags/v2.3.0', expectedSha: SHA }
+  const base = { packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', releaseState: 'NOT_READY', tag: 'refs/tags/v2.3.0', expectedSha: SHA }
   for (const invalid of [
     { ...base, status: 'IN_PROGRESS' },
-    { ...base, releaseState: 'NOT_READY' },
+    { ...base, releaseState: 'READY' },
     { ...base, packageVersion: '2.2.0' },
     { ...base, tag: 'refs/tags/v2.3.1' },
     { ...base, expectedSha: 'HEAD' },
   ]) assert.equal(evaluateReleaseContract(invalid).valid, false)
 })
 
-test('PR readiness keeps remaining installer and second-principal validation distinct from the completed package drill', () => {
+test('PR readiness identifies self-review and one-principal release requirements separately from the completed package drill', () => {
   const result = spawnSync(node, [gateScript, '--check-pr'], { encoding: 'utf8' })
   assert.equal(result.status, 0)
   const report = JSON.parse(result.stdout)
   assert.equal(report.releaseReadiness, 'NOT_READY')
-  assert.ok(report.blockers.includes('OS-integrated updater and second-principal permission validation'))
+  assert.ok(report.blockers.includes('owner-approved self-review evidence and risk acceptance'))
+  assert.ok(report.blockers.includes('single-principal configuration verification'))
   assert.ok(!report.blockers.includes('real candidate package upgrade/rollback and OS permission drill'))
 })
 
 test('PR, main-candidate and release modes follow a monotonic simulated transition', () => {
   assert.equal(evaluatePrContract({ packageName: 'dsh-armorbreak', status: 'IN_PROGRESS', releaseState: 'NOT_READY' }).valid, true)
-  assert.equal(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'IN_PROGRESS', releaseState: 'NOT_READY', expectedSha: SHA, head: SHA }).valid, true)
-  assert.equal(evaluateReleaseContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', releaseState: 'READY', tag: 'refs/tags/v2.3.0', expectedSha: SHA }).valid, true)
+  assert.equal(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', releaseState: 'NOT_READY', expectedSha: SHA, head: SHA }).valid, true)
+  assert.equal(evaluateReleaseContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', releaseState: 'NOT_READY', tag: 'refs/tags/v2.3.0', expectedSha: SHA }).valid, true)
 })
 
 test('every absent mandatory release claim is rejected before release authorization can proceed', () => {
-  const required = ['securityReview', 'licenseReview', 'upgradeRollback', 'artifact', 'sbom', 'mainCi', 'attestation', 'maintainerAuthorization']
+  const required = ['securityReview', 'licenseReview', 'portableCleanroom', 'upgradeRollback', 'artifact', 'sbom', 'mainCi', 'attestation', 'maintainerAuthorization']
   const claims = Object.fromEntries(required.map((key) => [key, { status: 'PASS', evidencePath: `evidence/${key}.json`, evidenceSha256: '0'.repeat(64) }]))
   assert.deepEqual(missingRequiredReleaseClaims(claims), [])
   for (const key of required) {
@@ -70,6 +72,26 @@ test('every absent mandatory release claim is rejected before release authorizat
     assert.deepEqual(missingRequiredReleaseClaims(incomplete), [key])
   }
   assert.deepEqual(missingRequiredReleaseClaims({ ...claims, artifact: 'PASS' }), ['artifact'])
+})
+
+test('owner self-review claims require truthful reviewer type, owner event, exact main and bound rollback', () => {
+  const digest = 'a'.repeat(64)
+  const review = { reviewerType: 'IMPLEMENTER_AI_SELF_REVIEW', independentHumanReview: 'NOT_PERFORMED', conclusion: 'OWNER_ACCEPTED_RISK', evidencePath: 'review.json', evidenceSha256: digest }
+  const base = {
+    decision: 'READY', releaseModel: 'OWNER_APPROVED_SELF_REVIEW',
+    securityReview: { ...review }, licenseReview: { ...review },
+    portableCleanroom: { status: 'PASS_ACTUAL_CLEANROOM_ARCHIVE_EXECUTION', sourceCommit: SHA, artifactSha256: digest, evidencePath: 'portable.json', evidenceSha256: digest },
+    upgradeRollback: { kind: 'REAL_CANDIDATE_PACKAGE', rollbackVerified: true, permissionsVerified: true, evidencePath: 'rollback.json', evidenceSha256: digest, artifactSha256: digest },
+    artifact: { path: 'artifact.tgz', sha256: digest }, sbom: { path: 'sbom.json', sha256: digest },
+    mainCi: { commit: SHA, runId: '12345' }, attestation: { kind: 'GITHUB_OIDC_BUILD_PROVENANCE', evidencePath: 'attestation.json', evidenceSha256: digest },
+    maintainerAuthorization: { authorized: true, method: 'OWNER_TAG_EVENT', actorId: '250811935', eventSenderId: '250811935' },
+  }
+  assert.deepEqual(validateOwnerSelfReviewClaims(base, SHA), { valid: true, blockers: [] })
+  assert.equal(validateOwnerSelfReviewClaims({ ...base, securityReview: { ...review, reviewerType: 'INDEPENDENT_HUMAN' } }, SHA).valid, false)
+  assert.equal(validateOwnerSelfReviewClaims({ ...base, licenseReview: { ...review, independentHumanReview: 'PASS' } }, SHA).valid, false)
+  assert.equal(validateOwnerSelfReviewClaims({ ...base, maintainerAuthorization: { ...base.maintainerAuthorization, eventSenderId: '1' } }, SHA).valid, false)
+  assert.equal(validateOwnerSelfReviewClaims({ ...base, upgradeRollback: { ...base.upgradeRollback, artifactSha256: 'b'.repeat(64) } }, SHA).valid, false)
+  assert.equal(validateOwnerSelfReviewClaims({ ...base, mainCi: { ...base.mainCi, commit: 'b'.repeat(40) } }, SHA).valid, false)
 })
 
 test('Release CLI fails closed while P0-H is open and no signed evidence package exists', () => {

@@ -64,7 +64,12 @@ export async function createMcpHttpServer({
   if (tls && (!tls.key || !tls.cert)) throw new Error('tls requires key and cert')
   if (typeof allowUnauthenticatedLoopback !== 'boolean') throw new Error('allowUnauthenticatedLoopback must be a boolean')
   if (!Number.isInteger(sessionTtlMs) || sessionTtlMs < 1000) throw new Error('sessionTtlMs must be >= 1000')
-  const knownPrincipals = Array.isArray(principals) && principals.length > 0 ? principals : [principal]
+  // V2.3 HTTP transport is a single-principal local service. A multi-user
+  // deployment needs a separately reviewed identity and OS isolation model.
+  if (principals !== null && (!Array.isArray(principals) || principals.length !== 1 || principals[0]?.id !== principal.id)) {
+    throw new Error('MCP HTTP supports one configured principal per process; multi-principal service mode is unsupported')
+  }
+  const knownPrincipals = [principal]
   const defaultIdentity = { principal, workspaceId }
   const identities = new Map()
   const normalizeIdentity = (value) => {
@@ -72,6 +77,7 @@ export async function createMcpHttpServer({
     const nextWorkspace = typeof value === 'object' && value?.workspaceId ? String(value.workspaceId) : workspaceId
     const found = knownPrincipals.find((item) => item.id === principalId)
     if (!found) throw new Error(`token maps to an unknown principal: ${String(principalId)}`)
+    if (nextWorkspace !== workspaceId) throw new Error('MCP HTTP token cannot override the configured workspace')
     return { principal: found, workspaceId: nextWorkspace }
   }
   if (tokens) {

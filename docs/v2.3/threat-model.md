@@ -38,12 +38,18 @@ Target files, archives, parser text, source comments, documentation, SARIF/SBOM 
 
 ## Required follow-up before any Stable publication
 
+> Historical snapshot: the prior sections describe earlier V2.3 snapshots and their then-open requirements. They are retained as records; current release policy and evidence are in `release-review-policy.md` and the newest dated acceptance report section. The owner selected `OWNER_APPROVED_SELF_REVIEW` on 2026-11-04. This changes the review model only; it does not convert unverified tests or findings into PASS.
+
 1. **PR-head CI:** at evidence capture, exact PR HEAD `14df1d05c6397a25cfffd4903d00c9df3f697c61` passed exact-head validation `41286249061`, dedicated V2.3 gate `41286249033`, and inherited CI `41286249199`. These successful PR-event runs close the interim evidence-path CI failure at `39de997…`. Re-run after any later source change; exact-main CI remains pending because the PR is unmerged.
 2. Fresh authorization, rejection, cancellation, timeout, redaction, archive-boundary and old-report compatibility checks on the exact candidate.
 3. The local Docker daemon is reachable again: `evidence/p0-h/local-docker-l1-e02e7fe.json` records a real pinned BusyBox benign run as uid 65534 with a read-only sample mount. This does not establish hostile-sample isolation; do not analyze hostile samples without separately authorized safe fixtures and per-task approval.
 4. Independent human security and license review; the developer packet and candidate inventory are not substitutes. Review final package/SBOM and npm dependency distribution separately.
 5. The isolated real V2.2-to-V2.3 portable-package drill passed on candidate source `7a78aef…` (archive SHA-256 `cb9e9edef5fd677adbdee97e521f09a457505bee805db319719c206c579590fc`) for copied test data, including rollback hashes, ACL and MCP/session boundaries. It does not verify a shipped OS updater, a second Windows identity, or arbitrary user profiles.
 6. **Branch protection and main/release provenance remain open:** the standard and dedicated V2.3 PR-event checks passed on exact HEAD `14df1d0…`. Verify repository required-check settings through an authorized path; the prior API query returned 403. Exact-main CI, external authorization signatures, package/SBOM/attestation bound to the actual main commit, and explicit maintainer authorization remain required. The `v2.2.0` ruleset was not modified and still allows owner bypass. No formal tag/publication is authorized.
+
+## Current self-review boundary (2026-11-04)
+
+The current owner-approved policy supersedes independent-human-review prerequisites for V2.3 only. The implementation agent must preserve an honest `IMPLEMENTER_AI_SELF_REVIEW` / `NOT_PERFORMED` distinction, and tag CI must still verify the owner identity, exact-main provenance, self-review/license/rollback evidence and hashes. Previous findings about unsupported multi-principal service deployment are addressed by refusing multi-principal HTTP MCP configuration and pinning tokens to the single configured workspace; this does not prove isolation between separate Windows logons or OS ACLs. Ghidra and the native Program IR route now require per-task L1 approval because an external native parser processes untrusted binary input without a host sandbox. Hostile parser fuzzing, second-account Windows testing, and independent human audit remain unverified/unsupported. These limits remain visible in the release notes and final report.
 
 
 ## Current candidate security evidence and residual gaps

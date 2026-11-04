@@ -1,6 +1,10 @@
 # P0-H independent security review packet
 
-Status: prepared for an independent reviewer; **not an independent audit**. The implementation agent authored this packet. No reviewer has accepted it and no AI output is represented as human certification. Release remains `NOT_READY`.
+Status: prepared as optional independent reviewer material; **not an independent audit**. The implementation agent authored this packet. No reviewer has accepted it and no AI output is represented as human certification. On 2026-11-04 the owner selected the separately documented `OWNER_APPROVED_SELF_REVIEW` release policy. This packet remains useful for later independent review but is no longer represented as a mandatory V2.3 release prerequisite.
+
+## Owner-approved self-review policy decision
+
+The repository owner authorized the implementing AI to perform a strict security and license self-review, explicitly accepted the lower assurance level, and directed publication of that policy change. The self-reviewer must be recorded as `IMPLEMENTER_AI_SELF_REVIEW`; independent human review remains `NOT_PERFORMED`. The release workflow instead requires the exact owner GitHub tag event, external OIDC-attested release envelope, source/evidence hashes, exact-main checks, final artifact/SBOM attestation, and an exact-main Windows rollback run. This does not claim a third-party audit, human signature, or independent certification.
 
 ## Scope and materials
 

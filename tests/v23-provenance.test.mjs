@@ -1,8 +1,8 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { generateKeyPairSync, sign, verify } from 'node:crypto'
+import { createHash } from 'node:crypto'
 import { execFileSync } from 'node:child_process'
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { POST_SOURCE_FILES, findForbiddenPostSourcePaths, isFullCommitSha } from '../scripts/v2/v23-provenance.mjs'
@@ -71,13 +71,13 @@ test('temporary source/evidence commits and detached authorization bind without 
   git('add', 'source.js')
   git('commit', '-m', 'source S')
   const sourceCommit = git('rev-parse', 'HEAD')
-  mkdirSync(join(repo, 'docs'))
-  writeFileSync(join(repo, 'docs', 'review.json'), '{"testRecord":true}\n')
-  git('add', 'docs/review.json')
+  mkdirSync(join(repo, 'docs', 'v2.3', 'evidence', 'p0-h'), { recursive: true })
+  writeFileSync(join(repo, 'docs', 'v2.3', 'evidence', 'p0-h', 'review.json'), '{"testRecord":true}\n')
+  git('add', 'docs/v2.3/evidence/p0-h/review.json')
   git('commit', '-m', 'evidence E')
   const evidenceCommit = git('rev-parse', 'HEAD')
   assert.equal(git('merge-base', '--is-ancestor', sourceCommit, evidenceCommit) || '', '')
-  assert.equal(git('diff', '--name-only', `${sourceCommit}..${evidenceCommit}`), 'docs/review.json')
+  assert.equal(git('diff', '--name-only', `${sourceCommit}..${evidenceCommit}`), 'docs/v2.3/evidence/p0-h/review.json')
   git('checkout', '-b', 'main', baseCommit)
   git('merge', '--no-ff', 'candidate', '-m', 'temporary main merge M')
   const tagCommit = git('rev-parse', 'HEAD')
@@ -86,12 +86,27 @@ test('temporary source/evidence commits and detached authorization bind without 
   assert.equal(git('merge-base', '--is-ancestor', evidenceCommit, tagCommit) || '', '')
   assert.equal(git('rev-parse', `${evidenceCommit}^{tree}`), git('rev-parse', `${tagCommit}^{tree}`))
 
-  const claims = { schemaVersion: 'armorbreak.v2.3-external-release-authorization/v1', sourceCommit, evidenceCommit, tagCommit, tag: 'test-v2.3.0' }
-  const { privateKey, publicKey } = generateKeyPairSync('ed25519')
-  const canonical = JSON.stringify(Object.fromEntries(Object.entries(claims).sort(([a], [b]) => a.localeCompare(b))))
-  const signature = sign(null, Buffer.from(canonical), privateKey)
-  assert.equal(verify(null, Buffer.from(canonical), publicKey, signature), true)
-  const staleClaims = { ...claims, evidenceCommit: baseCommit }
-  const staleCanonical = JSON.stringify(Object.fromEntries(Object.entries(staleClaims).sort(([a], [b]) => a.localeCompare(b))))
-  assert.equal(verify(null, Buffer.from(staleCanonical), publicKey, signature), false)
+  const claims = { schemaVersion: 'armorbreak.v2.3-external-release-authorization/v2', decision: 'TEST_ONLY_DO_NOT_PUBLISH', sourceCommit, evidenceCommit, tagCommit, tag: 'test-v2.3.0' }
+  const envelopePath = join(repo, 'detached-test-envelope.json')
+  writeFileSync(envelopePath, `${JSON.stringify({ claims }, null, 2)}\n`)
+  const envelopeSha = createHash('sha256').update(readFileSync(envelopePath)).digest('hex')
+  const testEnvelope = JSON.parse(readFileSync(envelopePath, 'utf8'))
+  assert.equal(testEnvelope.claims.sourceCommit, sourceCommit)
+  assert.equal(testEnvelope.claims.evidenceCommit, evidenceCommit)
+  assert.equal(testEnvelope.claims.tagCommit, tagCommit)
+  assert.equal(testEnvelope.claims.decision, 'TEST_ONLY_DO_NOT_PUBLISH')
+  assert.equal(Object.hasOwn(testEnvelope, 'signature'), false, 'the local test does not invent a GitHub/OIDC signature')
+  assert.equal(createHash('sha256').update(readFileSync(envelopePath)).digest('hex'), envelopeSha)
+
+  const staleEnvelopePath = join(repo, 'stale-test-envelope.json')
+  writeFileSync(staleEnvelopePath, `${JSON.stringify({ claims: { ...claims, evidenceCommit: baseCommit } }, null, 2)}\n`)
+  assert.throws(() => git('merge-base', '--is-ancestor', sourceCommit, baseCommit))
+
+  git('checkout', 'candidate')
+  mkdirSync(join(repo, '.github', 'workflows'), { recursive: true })
+  writeFileSync(join(repo, '.github', 'workflows', 'v2.3-main-gate.yml'), 'changed after source\n')
+  git('add', '.github/workflows/v2.3-main-gate.yml')
+  git('commit', '-m', 'forbidden workflow tamper')
+  const forbidden = git('diff', '--name-only', `${sourceCommit}..HEAD`).split('\n').filter(Boolean)
+  assert.deepEqual(findForbiddenPostSourcePaths(forbidden), ['.github/workflows/v2.3-main-gate.yml'])
 })

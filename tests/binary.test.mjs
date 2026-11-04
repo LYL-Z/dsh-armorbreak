@@ -473,7 +473,7 @@ test('binary manifest: shape, ids, risk levels and params schema follow CONTRACT
     assert.match(cap.id, /^binary\.[a-z0-9_-]+$/);
     assert.ok(typeof cap.title === 'string' && cap.title.length > 0);
     assert.ok(typeof cap.description === 'string' && cap.description.length > 20);
-    assert.equal(cap.riskLevel, 'L0');
+    assert.equal(cap.riskLevel, cap.id === 'binary.ghidra' ? 'L1' : 'L0');
     assert.equal(typeof cap.run, 'function');
     assert.ok(cap.params && cap.params.type === 'object');
     assert.equal(cap.params.additionalProperties, false);
@@ -832,15 +832,12 @@ test('M3 binary.program_ir normalizes PE, ELF and Mach-O symbol and stripped fix
   assert.equal(corrupt.data.analysis.status, 'UNSUPPORTED');
   assert.equal(corrupt.data.analysis.inputExecuted, false);
 
-  const truncated = await runCap('binary.program_ir', inputFor(
+  await assert.rejects(() => runCap('binary.program_ir', inputFor(
     buildPe(),
     { includeGhidra: true },
     {},
     { targetSize: buildPe().length + 1, targetTruncated: true, execExternal: async () => { throw new Error('should not launch Ghidra') } },
-  ));
-  assert.equal(truncated.data.ghidra.status, 'INPUT_TRUNCATED');
-  assert.equal(truncated.data.analysis.truncated, true);
-  assert.match(truncated.data.analysis.reason, /输入不完整/);
+  )), /request binary\.ghidra separately through L1 approval/);
 });
 
 test('M3 NativeProgramIRReview is registered and binary.program_ir runs through Runner and PolicyGateway', async () => {

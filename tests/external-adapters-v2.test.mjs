@@ -197,13 +197,14 @@ test('ghidra: parses bounded function summary and flags sensitive names as hypot
   const exactInput = Buffer.from('authorized exact Ghidra fixture bytes', 'utf8')
   let importedTempPath = null
   const result = await ghidraCapability.run({
-    targetPath: process.execPath,
+    targetPath: 'C:\\authorized\\sample & echo injected.bin',
     buffer: exactInput,
     options: { maxFunctions: 10 },
     limits: { timeoutMs: 5000 },
     env: envWith(async (command, args) => {
       importedTempPath = args[args.indexOf('-import') + 1]
       assert.notEqual(importedTempPath, process.execPath)
+      assert.equal(importedTempPath.endsWith('input.bin'), true, 'untrusted source basename must not reach cmd.exe arguments')
       assert.deepEqual(readFileSync(importedTempPath), exactInput)
       const output = args[args.indexOf('ExportSummary.java') + 1]
       writeFileSync(output, raw)
@@ -214,6 +215,7 @@ test('ghidra: parses bounded function summary and flags sensitive names as hypot
   assert.equal(result.data.emitted, 2)
   assert.equal(result.meta.inputBytes, exactInput.length)
   assert.equal(existsSync(importedTempPath), false, 'temporary sample copy is removed after analysis')
+  await assert.rejects(() => ghidraCapability.run({ targetPath: process.execPath }), /requires Core-authorized bounded input bytes/)
   await assert.rejects(() => ghidraCapability.run({
     targetPath: process.execPath,
     buffer: exactInput,

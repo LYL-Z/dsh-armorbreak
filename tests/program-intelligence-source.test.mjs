@@ -118,6 +118,16 @@ test('M2 reports syntax errors for five invalid fixtures in each supported langu
   }
 })
 
+test('M2 bounds adversarially deep AST traversal and reports partial output', () => {
+  const depth = 300
+  const text = `function nested() { ${'{'.repeat(depth)} return 1; ${'}'.repeat(depth)} }`
+  const file = parseOne('untrusted/deep.js', text).files[0]
+  assert.equal(file.status, 'PARTIAL')
+  assert.match(file.astLimit, /nesting depth exceeded/)
+  assert.equal(file.symbols.length, 0)
+  assert.ok(file.path && file.syntaxErrorCount >= 0)
+})
+
 test('M2 marks macros and unsupported languages unsupported instead of inferring symbols', () => {
   for (const path of ['main.c', 'header.h', 'main.cpp', 'App.java', 'main.rs', 'module.py']) {
     assert.equal(sourceLanguageForPath(path), null, `${path} must not be advertised as an implemented parser`)
