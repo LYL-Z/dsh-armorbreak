@@ -1,8 +1,8 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "8140c62f50565a319ba43bfd2a44621777d281ed",
-  "generatedAt": "2026-11-01T15:44:09.176Z",
+  "sourceCommit": "73741e494f78e8eef49e9498e6528dbe6d8cf8ee",
+  "generatedAt": "2026-11-04T16:15:27.861Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     ".github/workflows/ci.yml": {
@@ -10,20 +10,20 @@
       "sha256": "e0b752f0da9445a2a9a5a62c1962798d62741881be08dc0be698287078689237"
     },
     ".github/workflows/v2.3-main-gate.yml": {
-      "size": 9760,
-      "sha256": "7405284690ecb85ba2cc89929166602f7f675575a442601baf03e8934e91342a"
+      "size": 14579,
+      "sha256": "9b619c794a0425d1ceec41ccb893ce91a7457d198d4dce15ef4cf1e307899041"
     },
     ".github/workflows/v2.3-validation.yml": {
       "size": 4700,
       "sha256": "a504409fbc62398fa4e40c2cb20aa19a40e4b9d06706efa703ba0153d4b52a2e"
     },
     "docs/releases/v2.3.0.md": {
-      "size": 1992,
-      "sha256": "21039ccca6fac1150bf049d5abbc500d3ab668a1e66731b202173547f61422ed"
+      "size": 2852,
+      "sha256": "55aadb943ebec730bb9c10011c7a98966e5ba47ec97ff70e76a3f33662af1f8f"
     },
     "docs/v2.3/acceptance-report.md": {
-      "size": 39304,
-      "sha256": "6443f87106a2ab0eb30e23aca08a965e3c0792d063ddccf08d158d1e5b809d90"
+      "size": 44497,
+      "sha256": "23878aad87963c602eefa793cd924312a2a0959d8def136fa64a4f09bc2b4cc0"
     },
     "docs/v2.3/architecture.md": {
       "size": 4621,
@@ -34,8 +34,8 @@
       "sha256": "3ecb9f50976afe01747d4f3045a803b1c93ccfcb9a5890cbe955763dff314f15"
     },
     "docs/v2.3/compatibility-matrix.json": {
-      "size": 48438,
-      "sha256": "d1213e2b6818d737289843067c66067820ae4a2758944e4cf1a3ad7a13665d0b"
+      "size": 47987,
+      "sha256": "f86ed05aa4893831f77b73f9620d0902d5c33d02b2265da9211a8b651ed2de3f"
     },
     "docs/v2.3/evidence/m0/current-registry.json": {
       "size": 12385,
@@ -253,6 +253,18 @@
       "size": 94668,
       "sha256": "7999a94f7dca1340f7f0d7021a9b3242acfb6edcea107260449596d7e4a7cdda"
     },
+    "docs/v2.3/evidence/p0-h/candidate-package-73741e4.json": {
+      "size": 91783,
+      "sha256": "01eb72b86a88baf295ce0b81975f253492a997f1e0425ae7f3d5c6d62c84d10e"
+    },
+    "docs/v2.3/evidence/p0-h/candidate-package-73741e4.manifest.json": {
+      "size": 91783,
+      "sha256": "01eb72b86a88baf295ce0b81975f253492a997f1e0425ae7f3d5c6d62c84d10e"
+    },
+    "docs/v2.3/evidence/p0-h/candidate-package-73741e4.sbom.cdx.json": {
+      "size": 95266,
+      "sha256": "0c97f4053abd7d5c3c617dc9c641b4cd55158360cb998fdc004b020997c75f16"
+    },
     "docs/v2.3/evidence/p0-h/candidate-package-7a78aef.json": {
       "size": 2002,
       "sha256": "6b08f83ed06c7273c31a27ec7d25aee819ecddc9befd029e7dd082de8a8bb3a6"
@@ -276,6 +288,18 @@
     "docs/v2.3/evidence/p0-h/candidate-package-8140c62.sbom.cdx.json": {
       "size": 94668,
       "sha256": "7999a94f7dca1340f7f0d7021a9b3242acfb6edcea107260449596d7e4a7cdda"
+    },
+    "docs/v2.3/evidence/p0-h/candidate-package-8f4bbb7.json": {
+      "size": 91783,
+      "sha256": "c1206456e28d30bc2b5480a63f5dfe6f865ef557ec3de8594642efa5c33100f9"
+    },
+    "docs/v2.3/evidence/p0-h/candidate-package-8f4bbb7.manifest.json": {
+      "size": 91783,
+      "sha256": "c1206456e28d30bc2b5480a63f5dfe6f865ef557ec3de8594642efa5c33100f9"
+    },
+    "docs/v2.3/evidence/p0-h/candidate-package-8f4bbb7.sbom.cdx.json": {
+      "size": 95266,
+      "sha256": "45e392fd432199d1787a334d6c458185d41d93b839498370c33c395b5f453ca6"
     },
     "docs/v2.3/evidence/p0-h/github-ci-current-head.json": {
       "size": 11992,
@@ -345,6 +369,14 @@
       "size": 6721,
       "sha256": "ec0ed03a9dbc196e110b0392358b1750297e9036b138020e0268b4069e587e3e"
     },
+    "docs/v2.3/evidence/p0-h/license-review-8f4bbb7.json": {
+      "size": 5713,
+      "sha256": "2526286714e4a4b3777dfb33102973189ce495c1a95a4b7f699df47117c89ba0"
+    },
+    "docs/v2.3/evidence/p0-h/license-review-final.json": {
+      "size": 6004,
+      "sha256": "b173dff9649fdf8a9c8b8b1c8af0e810a653dc7e48502f4c99f10943d824e290"
+    },
     "docs/v2.3/evidence/p0-h/local-docker-l1-e02e7fe.json": {
       "size": 1411,
       "sha256": "6dd77fef96942b62c5446f8dae1cabfce3921f8ebf3c0bfc9617cc8dd9bfaa54"
@@ -389,6 +421,10 @@
       "size": 69901,
       "sha256": "492af9cb6dceadb4d74dacc2df32746a1bb38542b0944c960a05beb9c666decc"
     },
+    "docs/v2.3/evidence/p0-h/npm-package-73741e4.json": {
+      "size": 69109,
+      "sha256": "e6adf74a9fc0439a6d04e9761d80cbf20ad42ecee5a88854c5eeacf733a6d394"
+    },
     "docs/v2.3/evidence/p0-h/npm-package-8140c62.json": {
       "size": 65365,
       "sha256": "12a24fef7f260e740aec880b3bcb568516800b777ae4b60bda812fc07b4119b2"
@@ -396,6 +432,10 @@
     "docs/v2.3/evidence/p0-h/npm-package-86f09e8.json": {
       "size": 72130,
       "sha256": "2b0d11507902d4e8d1996a2e1105cd0afb2d8613e30fcbc4267b63fd50930efe"
+    },
+    "docs/v2.3/evidence/p0-h/npm-package-8f4bbb7.json": {
+      "size": 69109,
+      "sha256": "1f4ceba0c05ab115bc4e8b255f9be11d763bc0ea0f56d2e187382d45eb13010c"
     },
     "docs/v2.3/evidence/p0-h/npm-package-9a9c3c5.json": {
       "size": 72219,
@@ -417,9 +457,17 @@
       "size": 3856,
       "sha256": "870d75e4fb016f96a163db1075ed7fe1367cf7733e74a28a820b36010848b2cc"
     },
+    "docs/v2.3/evidence/p0-h/portable-cleanroom-73741e4.json": {
+      "size": 2434,
+      "sha256": "326928074f30f047b39e4a5b109273e46fc998fd003605ee4b5ad72953b95638"
+    },
     "docs/v2.3/evidence/p0-h/portable-cleanroom-8140c62.json": {
       "size": 3003,
       "sha256": "d195973f862897d5f86f3e36abee12f2999ba9b17ce1b422127dd2a188986aa6"
+    },
+    "docs/v2.3/evidence/p0-h/portable-cleanroom-8f4bbb7.json": {
+      "size": 2434,
+      "sha256": "25c918e6c78d7016530686787034a961bb48093d556f64aa89e015f372149890"
     },
     "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-5fdedae.json": {
       "size": 14895,
@@ -429,13 +477,21 @@
       "size": 14895,
       "sha256": "31dff1f529fb54ee009647bd6e6fe05d847d7d703bcc33c73fed03e1bbb9a598"
     },
+    "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-73741e4.json": {
+      "size": 14895,
+      "sha256": "6778a945faf289ef3cd75a9f183856cdf4399c6b2157ee291bef8bdc860e9456"
+    },
     "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-8140c62.json": {
       "size": 14895,
       "sha256": "cea2391c8dcea497b3e3cb22404c2cba90d000cff69cd51ec78328e3f2fb4433"
     },
+    "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-8f4bbb7.json": {
+      "size": 14895,
+      "sha256": "c5d1d9b49425d062d0fe5dcf332a97593d3878afe57f3137e057353e351af9fd"
+    },
     "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback.json": {
       "size": 14895,
-      "sha256": "663edc1654320ddeb856112d5fadf4bb13cc4adef121fd0721b4a8d08c2e26b8"
+      "sha256": "6778a945faf289ef3cd75a9f183856cdf4399c6b2157ee291bef8bdc860e9456"
     },
     "docs/v2.3/evidence/p0-h/release-gate-three-state-8140c62.json": {
       "size": 1992,
@@ -444,6 +500,14 @@
     "docs/v2.3/evidence/p0-h/security-license-review-preliminary.json": {
       "size": 8266,
       "sha256": "058efcf0a4f230f43674339c1c6780530a1a360f57a0237716a0c6c277055e9a"
+    },
+    "docs/v2.3/evidence/p0-h/self-review-8f4bbb7.json": {
+      "size": 9833,
+      "sha256": "eccf15979d7e1648879c7e8215790deaad6ae7e4075bd68f413eb615ba3e5842"
+    },
+    "docs/v2.3/evidence/p0-h/self-review-final.json": {
+      "size": 10728,
+      "sha256": "6a381353b597375ab2a467e4133462d743d307bfc90e51b7faa59cbd55e33a27"
     },
     "docs/v2.3/evidence/p0-h/upgrade-rollback-drill.json": {
       "size": 2833,
@@ -458,32 +522,44 @@
       "sha256": "b0e571fcf5f9953d5a02e04b4652b38d6cbaea6196d6c952459cbb5ca64a2b3e"
     },
     "docs/v2.3/migration-and-rollback.md": {
-      "size": 3922,
-      "sha256": "08bbcaad19751b9c4bf30e20143d0eed0067b7fd8506261bc4103114f2fde86e"
+      "size": 3706,
+      "sha256": "abed9f72d36c67b2bc4ed5a58344691c0dec6f62c1607b543328a18b0661380f"
     },
     "docs/v2.3/p0-h-independent-review-packet.md": {
-      "size": 9401,
-      "sha256": "a39cdfa46ceb7833deb4952d7a908a5e05187f868901fff55919ba1e3243ca70"
+      "size": 10301,
+      "sha256": "4c46c2e9cced64a0486333597a450bd3ab1f8d2af2d445ce54b73d6dadc62453"
     },
     "docs/v2.3/p0-h-license-inventory.md": {
-      "size": 7936,
-      "sha256": "25bf5a5ba57d2d172314492019336148ca014a9a71302d9981b944512a882f8b"
+      "size": 12776,
+      "sha256": "d60cd29d6ceb4b955b1ecc79ace5b230ba46968c70e2a3d9df35527ec02d9ce2"
     },
     "docs/v2.3/performance-report.md": {
       "size": 3590,
       "sha256": "1bd9b4723d7281dcf1a86e66a42bd1bd1559e919592d5ad2e70553e767030b8a"
     },
     "docs/v2.3/release-provenance-protocol.md": {
-      "size": 7500,
-      "sha256": "f58ad6263155e5eb7fc694db8e7f5d5012c19afd49dc66d8df878ef6b84bb238"
+      "size": 7716,
+      "sha256": "bc9680b2243e436e0790c34b4747787d55fe4cb9c0e6f016a290c6b02c0a94c6"
+    },
+    "docs/v2.3/release-review-policy.md": {
+      "size": 2955,
+      "sha256": "3b63081e79f2188fab7e3a3ef4ef1befaa377078622be2c80bf99e1a21861170"
     },
     "docs/v2.3/threat-model.md": {
-      "size": 13392,
-      "sha256": "6e9ab552fe29219b3f15963a0542888b72f3ac54e7819bd898b122f12fa183b5"
+      "size": 14795,
+      "sha256": "08450f0a964ac743629083ecad3956cd4dcc684e6f313ee4e08a83d1c8aa898d"
+    },
+    "scripts/v2/create-v23-release-envelope.mjs": {
+      "size": 4645,
+      "sha256": "8f646996245671fc6dfebb7b7420ceeb6a59c22c29378ca34b57f7df3ac37985"
     },
     "scripts/v2/release-gates.mjs": {
       "size": 3087,
       "sha256": "ed4496cab8022f5747a9b8ffdb2baf1a45b7799bab53948875b621f46ac10293"
+    },
+    "scripts/v2/v23-portable-cleanroom.mjs": {
+      "size": 7715,
+      "sha256": "21a535d7dee7467761b7d46c5ba6505e6434f0e32b6937a3c2d51ea7b75f1b24"
     },
     "scripts/v2/v23-provenance.mjs": {
       "size": 789,
@@ -494,24 +570,44 @@
       "sha256": "1ad0dad2ea0e6e80ad15dd0462c3cb8adeda8f885cb565d73b9da09787af47d0"
     },
     "scripts/v2/v23-release-gate.mjs": {
-      "size": 17133,
-      "sha256": "6012d7e84238f7b88cd386ee5365e5c39e66810b5e7c8f3ba2dea4ec9e361a18"
+      "size": 20172,
+      "sha256": "08466abb115a9b3d04bd0c1a7c9aa903a5a1a94791dc6e0ce725c50e603142c1"
     },
     "scripts/v2/v23-upgrade-rollback-drill.mjs": {
       "size": 7931,
       "sha256": "feefd1bee1c52a51eaa57050775d5d6193018b62bd3dc13cb5cf4510eab21bd5"
     },
     "scripts/v2/validate-v23-acceptance.mjs": {
-      "size": 10502,
-      "sha256": "da922f1badddc17425e13c31dc106eb62ace3065e344d22d3cb45f5044551115"
+      "size": 10587,
+      "sha256": "b49412857705f619253dadc969a43a792885b280711b049fd64d234e9a01e296"
+    },
+    "scripts/v2/verify-v23-portable-manifest.mjs": {
+      "size": 1128,
+      "sha256": "5e8622e963120c16460699cb8e9128aeb5b67868b0ec4de8587cad5c5edcba0b"
+    },
+    "tests/external-adapters-v2.test.mjs": {
+      "size": 10611,
+      "sha256": "99400ae9573fdda120a5bb672fbd0f5ffdb66dce1a6dbd0dc6c5c00831e87bd0"
+    },
+    "tests/program-intelligence-source.test.mjs": {
+      "size": 15518,
+      "sha256": "0b1489f482ec53df65e4e8f10af98440fc8de8dc644fff99bd3eeb88074688f9"
+    },
+    "tests/task-step-stats.test.mjs": {
+      "size": 1268,
+      "sha256": "a56994e3cf32851c1533fb5d2857fa3cb12d810ef82c66f5f3f500827f3266ad"
+    },
+    "tests/v23-portable-manifest.test.mjs": {
+      "size": 2551,
+      "sha256": "f33b8239d790ec2232460f38afc40fc31e5d470fef0ff39358d0138557ef088a"
     },
     "tests/v23-provenance.test.mjs": {
-      "size": 4965,
-      "sha256": "9bbd218f677256f69adf4018401736e161b1c4a38bea85eee1ea89f72076da93"
+      "size": 6060,
+      "sha256": "a282727dd9a4b0e828f4845983ec80d2457f3797de9b4a1fc7a681d9c14dbc96"
     },
     "tests/v23-release-gate.test.mjs": {
-      "size": 7216,
-      "sha256": "7754d8aab05f137a5a2d95f6e79b090e89e103f2a7e50763a7de3ccdfedc2c6d"
+      "size": 10116,
+      "sha256": "4a4bd3b9d839565a154d2b6690888fce5a168a1885402205d608a9529db8b78b"
     }
   }
 }

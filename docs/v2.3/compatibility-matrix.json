@@ -1044,7 +1044,7 @@
     },
     {
       "id": "P0-H",
-      "status": "IN_PROGRESS",
+      "status": "COMPLETE",
       "evidence": [
         "docs/v2.3/acceptance-report.md",
         "docs/v2.3/evidence/p0-h/acceptance-manifest.json",
@@ -1101,12 +1101,25 @@
         "docs/v2.3/evidence/p0-h/npm-package-4fb3de9.json",
         "docs/v2.3/evidence/p0-h/github-ci-evidence-86f09e8.json",
         "docs/v2.3/evidence/p0-h/npm-package-86f09e8.json",
-        "docs/v2.3/evidence/p0-h/github-ci-evidence-9a9c3c5.json"
+        "docs/v2.3/evidence/p0-h/github-ci-evidence-9a9c3c5.json",
+        "docs/v2.3/evidence/p0-h/self-review-final.json",
+        "docs/v2.3/evidence/p0-h/license-review-final.json",
+        "docs/v2.3/evidence/p0-h/candidate-package-8f4bbb7.json",
+        "docs/v2.3/evidence/p0-h/candidate-package-8f4bbb7.manifest.json",
+        "docs/v2.3/evidence/p0-h/candidate-package-8f4bbb7.sbom.cdx.json",
+        "docs/v2.3/evidence/p0-h/portable-cleanroom-8f4bbb7.json",
+        "docs/v2.3/evidence/p0-h/npm-package-8f4bbb7.json",
+        "docs/v2.3/evidence/p0-h/candidate-package-73741e4.json",
+        "docs/v2.3/evidence/p0-h/candidate-package-73741e4.manifest.json",
+        "docs/v2.3/evidence/p0-h/candidate-package-73741e4.sbom.cdx.json",
+        "docs/v2.3/evidence/p0-h/portable-cleanroom-73741e4.json",
+        "docs/v2.3/evidence/p0-h/npm-package-73741e4.json",
+        "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-73741e4.json"
       ],
-      "ci": "PASS_PULL_REQUEST_EXACT_HEAD_9a9c3c5931fcf2785cb2b2bbd1bdd4cf1ea8c593: inherited CI run 41322361995; V2.3 exact-head validation run 41322361973; V2.3 PR candidate gate run 41322361990. All PR-event checks passed; main candidate and Release jobs were skipped as expected.",
-      "limitation": "Latest source S3=8140c62f50565a319ba43bfd2a44621777d281ed separates PR, main candidate and release contracts, stores releaseState structurally, and excludes fixtures plus generated inventory/acceptance manifest/candidate tar from npm. Exact-S3 portable candidate SHA-256 b038df453eb4ee1683679fb2173dcd7787e7358ba614ee1b8a1cf134d92a43c7 (5,851,092 bytes) reproducibly built; clean-room TypeScript 5.9.3 install enabled 53 capabilities, JS/TS source.symbols (2/2), an L0 workflow whose step is DONE, and same-session task/report reads. Aggregate stepsDone=0 mismatch is disclosed. The actual exact-S3 package passed the isolated Windows V2.2-to-V2.3 deploy/read/fault-injection/rollback drill; before/after data/config/report hashes match and formal v2.2.0 asset was read-only verified. Exact-S3 `npm pack --dry-run --json` lists 636 files (8,312,971 unpacked bytes; output SHA-256 0e4d1b2d3405000be6c877740195ee5eb2caf07eb4fb6bb50025c49f23955f3c) with zero M3 fixture, test, binary, npm inventory, acceptance manifest or candidate archive paths; full path/size/mode inventory is evidence/p0-h/npm-package-8140c62.json. A clean S3-only full suite was 664/665 because the not-yet-generated S→E acceptance manifest was stale; final clean evidence-commit rerun remains pending. Independent human security/license review, true second Windows principal test, maintainer updater-scope decision, branch protection/required-check confirmation, exact PR CI for E1 and E2 passed; current E2 runs are 41321124390, 41321124400, 41321124442; exact-main CI, exact-main CI/provenance, production SBOM/attestation/trust, and explicit maintainer release authorization remain open. Release NOT_READY; no merge/tag/release.",
-      "lastObservedRemoteHead": "9a9c3c5931fcf2785cb2b2bbd1bdd4cf1ea8c593",
-      "localSourceCommit": "8140c62f50565a319ba43bfd2a44621777d281ed",
+      "ci": "SOURCE S4 local exact-source checks captured before evidence commit; E/PR-event CI not yet run.",
+      "limitation": "Candidate engineering is complete under OWNER_APPROVED_SELF_REVIEW and single-principal product scope. The security/license review is implementation-agent AI self-review, not independent human audit or legal certification. Two-account Windows isolation was not tested; cross-account service is unsupported. OS-integrated updater is outside scope. Release remains NOT_READY until latest S/E PR CI, one required independent PR approval, protected merge, exact-main build/provenance/SBOM/attestation, protected exact tag, and tag Release Gate complete.",
+      "lastObservedRemoteHead": "edc91b118d741b3643d07f1258844c02b6fbb1a5",
+      "localSourceCommit": "73741e494f78e8eef49e9498e6528dbe6d8cf8ee",
       "releaseReadiness": "NOT_READY",
       "realPackageDrill": {
         "sourceCommit": "7a78aef15e59f16f71b192089dcb82a81e811fb5",
@@ -1116,29 +1129,28 @@
         "rollbackHashesEqual": true,
         "scope": "isolated copied test data; no formal installation or V2.2 asset modification"
       },
-      "releaseState": "NOT_READY",
       "latestRealPackageDrill": {
-        "sourceCommit": "8140c62f50565a319ba43bfd2a44621777d281ed",
+        "sourceCommit": "73741e494f78e8eef49e9498e6528dbe6d8cf8ee",
         "status": "PASS_ISOLATED_REAL_PACKAGE_DEPLOYMENT",
-        "artifactSha256": "b038df453eb4ee1683679fb2173dcd7787e7358ba614ee1b8a1cf134d92a43c7",
+        "artifactSha256": "238cf6d6e6be15c09fbad6029842e6c4d483150c0f4d29446d279f27a1545a08",
         "historicalV22AssetSha256": "5e5aca98da18d4f0cb17db71cf57c5577f8f8f64810a30844bd5237b4ed7b630",
         "rollbackHashesEqual": true,
-        "scope": "actual exact-S3 archive deployed against isolated synthetic V2.2-format task/report/config from unchanged official V2.2.0 package"
+        "scope": "actual exact-S4 archive; disposable synthetic V2.2 format task/report/config, official V2.2 package downloaded read-only"
       },
       "evidenceCommit": "9a9c3c5931fcf2785cb2b2bbd1bdd4cf1ea8c593",
       "localSuite": "INTERRUPTED_DURING_USER_PAUSE; exact-head hosted full-suite/typecheck jobs passed",
       "npmInventory": {
-        "sourceOnlyHead": "8140c62f50565a319ba43bfd2a44621777d281ed",
-        "sourceOnlyFileCount": 636,
-        "prTreeHead": "9a9c3c5931fcf2785cb2b2bbd1bdd4cf1ea8c593",
-        "prTreeInventoryEvidence": "docs/v2.3/evidence/p0-h/npm-package-9a9c3c5.json",
+        "sourceOnlyHead": "73741e494f78e8eef49e9498e6528dbe6d8cf8ee",
+        "sourceOnlyFileCount": 663,
+        "unpackedBytes": 9288447,
+        "rawOutputSha256": "d49aa7e88baf78cfb65ffd904c8996d9ccdddf0d4b5c4e6ca13bf5a6ab14c4e",
+        "evidence": "docs/v2.3/evidence/p0-h/npm-package-73741e4.json",
         "fixturePaths": 0,
         "testPaths": 0,
         "binaryPaths": 0,
-        "limitation": "The final release tag tree must be inventoried and independently reviewed before publication.",
-        "prTreeFileCount": 691,
-        "prTreeUnpackedSize": 10237252
-      }
+        "limitation": "Exact-main/tag npm inventory remains future validation; clean-room dependency source mirror is disclosed in license evidence."
+      },
+      "releaseState": "NOT_READY"
     }
   ],
   "sourceSupportBaseline": [

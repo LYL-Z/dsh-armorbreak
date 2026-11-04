@@ -1,8 +1,8 @@
 {
   "schemaVersion": "armorbreak.v2.3-real-package-upgrade-rollback/v1",
   "status": "PASS_ISOLATED_REAL_PACKAGE_DEPLOYMENT",
-  "capturedAt": "2026-11-01T03:10:51.448Z",
-  "sourceCommit": "7a78aef15e59f16f71b192089dcb82a81e811fb5",
+  "capturedAt": "2026-11-04T16:11:35.329Z",
+  "sourceCommit": "73741e494f78e8eef49e9498e6528dbe6d8cf8ee",
   "platform": {
     "os": "win32",
     "arch": "x64",
@@ -19,7 +19,7 @@
   "candidatePackage": {
     "version": "2.3.0",
     "artifact": "dist/armorbreak-portable-2.3.0.tar.gz",
-    "sha256": "cb9e9edef5fd677adbdee97e521f09a457505bee805db319719c206c579590fc",
+    "sha256": "238cf6d6e6be15c09fbad6029842e6c4d483150c0f4d29446d279f27a1545a08",
     "reproducible": true,
     "cleanRoomCliCapabilities": 53,
     "productionSigned": false
@@ -28,10 +28,10 @@
     "v22PackageExtractedAndExecuted": true,
     "v22HistoricalCapabilityCount": 46,
     "v22PackageCreatedHistoryTask": {
-      "id": "task_mvx962ze_9056dd4b",
+      "id": "task_mw2bdewn_62edd8fb",
       "schemaVersion": "armorbreak/v2",
-      "taskSha256": "f02e524540bd7b558abd939a9d73b5aa844ead34326e8ff0337e0bf2be64a163",
-      "reportSha256": "9d3de5eeb6cf2ae5b1848bac9a7cf5eca7a94b31bd75b0d2785b11a4a3fe2f7d"
+      "taskSha256": "042233883f01707ae13c0bac2f1d3b621eda78594c2dd754f865f3dca1e8b628",
+      "reportSha256": "efeabc167a3c5db1f743891fdd56edb90b95cd66f579194034e16b26454215b2"
     },
     "candidateExtractedAndInstalledUnderIsolatedTempRoot": true,
     "candidateStartedAndReported53Capabilities": true,
@@ -69,8 +69,8 @@
         }
       ],
       "rawIcaclsAccountOutput": "redacted; normalized ACL entries and command-output SHA-256 are retained",
-      "aclCommandOutputSha256": "cce2667142643eb5d82a7c851c85b58b30e08d4a55d4275c6dc40b340681df61",
-      "aclInspectionOutputSha256": "6c5f502425a3fe925515439cac92a81b5d3cf96477c3d9edd5140c2485ee7ff1"
+      "aclCommandOutputSha256": "1479b77cdf39738e23712ed3daca2004ed619a22bd9fed4b0bdbae633d139c3d",
+      "aclInspectionOutputSha256": "02221c2e0ac642e861763e573f9b24c34761af128774969d0c807d2488e34433"
     },
     "workspaceBoundary": {
       "outsideTargetRejected": true,
@@ -86,10 +86,10 @@
       "selectedPreviousVersion": "2.2.0",
       "previousPackageRestarted": true,
       "taskTreeHashesBeforeAndAfterEqual": true,
-      "configHashBefore": "b5fbe34971f839aad8312bb24fbff3933a5c48f8ca4611affe84b8f9eefb7c44",
-      "configHashAfter": "b5fbe34971f839aad8312bb24fbff3933a5c48f8ca4611affe84b8f9eefb7c44",
-      "reportHashBefore": "9d3de5eeb6cf2ae5b1848bac9a7cf5eca7a94b31bd75b0d2785b11a4a3fe2f7d",
-      "reportHashAfter": "9d3de5eeb6cf2ae5b1848bac9a7cf5eca7a94b31bd75b0d2785b11a4a3fe2f7d"
+      "configHashBefore": "584a3145859bd3533b5b8bce6e258f70426daad18774d063587b0b13f871c685",
+      "configHashAfter": "584a3145859bd3533b5b8bce6e258f70426daad18774d063587b0b13f871c685",
+      "reportHashBefore": "efeabc167a3c5db1f743891fdd56edb90b95cd66f579194034e16b26454215b2",
+      "reportHashAfter": "efeabc167a3c5db1f743891fdd56edb90b95cd66f579194034e16b26454215b2"
     },
     "packageInstallMechanism": "Candidate tarball was extracted and executed from an isolated version directory; rollback selected and restarted the preserved V2.2 package. Project does not yet ship an OS-integrated updater/installer.",
     "noFormalInstallOrV2_2AssetModified": true,
@@ -139,7 +139,7 @@
         "/C"
       ],
       "exitCode": 0,
-      "stdoutSha256": "849d0cbdb6152e24a4ae25960612dbcd440a9166629cd60df78fe2339a48cdf2",
+      "stdoutSha256": "b8e68c8eff5dce15f83f2400442dd93d145cfe666e6a16e5d07353768bc27263",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "error": null
     },
@@ -153,7 +153,7 @@
         "/C"
       ],
       "exitCode": 0,
-      "stdoutSha256": "849d0cbdb6152e24a4ae25960612dbcd440a9166629cd60df78fe2339a48cdf2",
+      "stdoutSha256": "b8e68c8eff5dce15f83f2400442dd93d145cfe666e6a16e5d07353768bc27263",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "error": null
     },
@@ -166,7 +166,7 @@
         "verify-acl.ps1"
       ],
       "exitCode": 0,
-      "stdoutSha256": "6c5f502425a3fe925515439cac92a81b5d3cf96477c3d9edd5140c2485ee7ff1",
+      "stdoutSha256": "02221c2e0ac642e861763e573f9b24c34761af128774969d0c807d2488e34433",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "error": null
     },
@@ -221,7 +221,7 @@
         "--json"
       ],
       "exitCode": 0,
-      "stdoutSha256": "33589ed600a71b72163d36851eb9bfbd5346cbf696e04a14291bc11b338e496b",
+      "stdoutSha256": "b02caa8ec16d8f0b61099ed8a307accdfe70a8e0cf56ebc9324a7c29e302bad1",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "error": null
     },
@@ -233,7 +233,7 @@
         "--json"
       ],
       "exitCode": 0,
-      "stdoutSha256": "8cb1430189cbcf3572062de67cdd4fac02bf7d803b2eaeec4f906debff9bfd0c",
+      "stdoutSha256": "9ba2b8bd8434959a50dd38ae3ea27a24533fc842a3a6cf1966761accd7afc34d",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "error": null
     },
@@ -243,11 +243,11 @@
         "packages/cli/index.js",
         "task",
         "status",
-        "task_mvx962ze_9056dd4b",
+        "task_mw2bdewn_62edd8fb",
         "--json"
       ],
       "exitCode": 0,
-      "stdoutSha256": "f02e524540bd7b558abd939a9d73b5aa844ead34326e8ff0337e0bf2be64a163",
+      "stdoutSha256": "042233883f01707ae13c0bac2f1d3b621eda78594c2dd754f865f3dca1e8b628",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "error": null
     },
@@ -256,11 +256,11 @@
         "C:\\Program Files\\nodejs\\node.exe",
         "packages/cli/index.js",
         "report",
-        "task_mvx962ze_9056dd4b",
+        "task_mw2bdewn_62edd8fb",
         "--json"
       ],
       "exitCode": 0,
-      "stdoutSha256": "bcff1d23146169f83308dea0ac72b419f5fc6141f874b8899d479b0af8e5e212",
+      "stdoutSha256": "c59262ed1da532ca6b19612f6414c83180b41791bd924784c8d74e3037974873",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "error": null
     },
@@ -302,7 +302,7 @@
         "--json"
       ],
       "exitCode": 0,
-      "stdoutSha256": "d17216290123c384813e82839daf08a3441f6a7dcb9274ee670803b8e1702ad3",
+      "stdoutSha256": "0157415ed39c9caab3d4b39560cad8d8ae7ceaaddf913afea4fffc127988d1ae",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "error": null
     },
@@ -325,12 +325,12 @@
         "packages/cli/index.js",
         "task",
         "status",
-        "task_mvx962ze_9056dd4b",
+        "task_mw2bdewn_62edd8fb",
         "--json",
         "(V2.2 rollback selection)"
       ],
       "exitCode": 0,
-      "stdoutSha256": "f02e524540bd7b558abd939a9d73b5aa844ead34326e8ff0337e0bf2be64a163",
+      "stdoutSha256": "042233883f01707ae13c0bac2f1d3b621eda78594c2dd754f865f3dca1e8b628",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "error": null
     },
@@ -339,12 +339,12 @@
         "C:\\Program Files\\nodejs\\node.exe",
         "packages/cli/index.js",
         "report",
-        "task_mvx962ze_9056dd4b",
+        "task_mw2bdewn_62edd8fb",
         "--json",
         "(V2.2 rollback selection)"
       ],
       "exitCode": 0,
-      "stdoutSha256": "bcff1d23146169f83308dea0ac72b419f5fc6141f874b8899d479b0af8e5e212",
+      "stdoutSha256": "c59262ed1da532ca6b19612f6414c83180b41791bd924784c8d74e3037974873",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "error": null
     },
@@ -357,7 +357,7 @@
         "/C"
       ],
       "exitCode": 0,
-      "stdoutSha256": "6edd608ff272f7102d52750bfa96e618cf72f01a0d0b58eadbfcfcadeb2cd434",
+      "stdoutSha256": "ccb20088b0f4e09cdcd2d3ffdf050359e742d70a8e94afe0fe14586622ca27d8",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "error": null
     }
@@ -365,47 +365,47 @@
   "dataHashes": {
     "before": {
       "tasks": {
-        "task_mvx962ze_9056dd4b/evidence.head.json": {
+        "task_mw2bdewn_62edd8fb/evidence.head.json": {
           "size": 187,
-          "sha256": "eb7b8ad97e9c0dc7ba17413f49a291254c19b765a849951698592ef0d1020c70"
+          "sha256": "70d162312f1580e4d4e584f51e9a19edc55f93907087eb2f5832fc54c6832669"
         },
-        "task_mvx962ze_9056dd4b/evidence.jsonl": {
+        "task_mw2bdewn_62edd8fb/evidence.jsonl": {
           "size": 2183,
-          "sha256": "49588729b709ca209f945abb87e3dc8c4482fd160378f1511ea1852299f95ff9"
+          "sha256": "25c7a1238019f6a2d7dde0594278f92b4537db433ba2928e546ad28c75f3fefc"
         },
-        "task_mvx962ze_9056dd4b/reports/mcp-多算法文件哈希与完整性标识_2026-11-01_03-10-47.md": {
-          "size": 7988,
-          "sha256": "9d3de5eeb6cf2ae5b1848bac9a7cf5eca7a94b31bd75b0d2785b11a4a3fe2f7d"
+        "task_mw2bdewn_62edd8fb/reports/mcp-多算法文件哈希与完整性标识_2026-11-04_16-11-20.md": {
+          "size": 8024,
+          "sha256": "efeabc167a3c5db1f743891fdd56edb90b95cd66f579194034e16b26454215b2"
         },
-        "task_mvx962ze_9056dd4b/task.json": {
+        "task_mw2bdewn_62edd8fb/task.json": {
           "size": 3915,
-          "sha256": "f02e524540bd7b558abd939a9d73b5aa844ead34326e8ff0337e0bf2be64a163"
+          "sha256": "042233883f01707ae13c0bac2f1d3b621eda78594c2dd754f865f3dca1e8b628"
         }
       },
-      "configSha256": "b5fbe34971f839aad8312bb24fbff3933a5c48f8ca4611affe84b8f9eefb7c44",
-      "reportSha256": "9d3de5eeb6cf2ae5b1848bac9a7cf5eca7a94b31bd75b0d2785b11a4a3fe2f7d"
+      "configSha256": "584a3145859bd3533b5b8bce6e258f70426daad18774d063587b0b13f871c685",
+      "reportSha256": "efeabc167a3c5db1f743891fdd56edb90b95cd66f579194034e16b26454215b2"
     },
     "after": {
       "tasks": {
-        "task_mvx962ze_9056dd4b/evidence.head.json": {
+        "task_mw2bdewn_62edd8fb/evidence.head.json": {
           "size": 187,
-          "sha256": "eb7b8ad97e9c0dc7ba17413f49a291254c19b765a849951698592ef0d1020c70"
+          "sha256": "70d162312f1580e4d4e584f51e9a19edc55f93907087eb2f5832fc54c6832669"
         },
-        "task_mvx962ze_9056dd4b/evidence.jsonl": {
+        "task_mw2bdewn_62edd8fb/evidence.jsonl": {
           "size": 2183,
-          "sha256": "49588729b709ca209f945abb87e3dc8c4482fd160378f1511ea1852299f95ff9"
+          "sha256": "25c7a1238019f6a2d7dde0594278f92b4537db433ba2928e546ad28c75f3fefc"
         },
-        "task_mvx962ze_9056dd4b/reports/mcp-多算法文件哈希与完整性标识_2026-11-01_03-10-47.md": {
-          "size": 7988,
-          "sha256": "9d3de5eeb6cf2ae5b1848bac9a7cf5eca7a94b31bd75b0d2785b11a4a3fe2f7d"
+        "task_mw2bdewn_62edd8fb/reports/mcp-多算法文件哈希与完整性标识_2026-11-04_16-11-20.md": {
+          "size": 8024,
+          "sha256": "efeabc167a3c5db1f743891fdd56edb90b95cd66f579194034e16b26454215b2"
         },
-        "task_mvx962ze_9056dd4b/task.json": {
+        "task_mw2bdewn_62edd8fb/task.json": {
           "size": 3915,
-          "sha256": "f02e524540bd7b558abd939a9d73b5aa844ead34326e8ff0337e0bf2be64a163"
+          "sha256": "042233883f01707ae13c0bac2f1d3b621eda78594c2dd754f865f3dca1e8b628"
         }
       },
-      "configSha256": "b5fbe34971f839aad8312bb24fbff3933a5c48f8ca4611affe84b8f9eefb7c44",
-      "reportSha256": "9d3de5eeb6cf2ae5b1848bac9a7cf5eca7a94b31bd75b0d2785b11a4a3fe2f7d"
+      "configSha256": "584a3145859bd3533b5b8bce6e258f70426daad18774d063587b0b13f871c685",
+      "reportSha256": "efeabc167a3c5db1f743891fdd56edb90b95cd66f579194034e16b26454215b2"
     }
   },
   "limits": [

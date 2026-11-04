@@ -1,0 +1,133 @@
+{
+  "schemaVersion": "armorbreak.v2.3-owner-approved-self-review/v1",
+  "releaseModel": "OWNER_APPROVED_SELF_REVIEW",
+  "reviewStatus": "IMPLEMENTER_SELF_REVIEW_COMPLETE_WITH_DISCLOSED_RESIDUALS",
+  "reviewer": {
+    "reviewerType": "IMPLEMENTER_AI_SELF_REVIEW",
+    "identity": "Codex GPT-6 Luna implementation agent",
+    "sameAgentAsImplementer": true,
+    "independentHumanReview": "NOT_PERFORMED",
+    "humanCertification": false,
+    "ownerRiskAcceptance": "Authorized in the owner-provided V2.3.0 release execution order; this record is not a signature."
+  },
+  "sourceCommitReviewed": "8f4bbb752f12310ce9accb3120f9c11ddc15d3ba",
+  "reviewedAt": "2026-11-04",
+  "environment": {
+    "platform": "Windows x64",
+    "node": "v24.16.0",
+    "npm": "11.13.0",
+    "candidateArchiveSha256": "0b95d7f58dddd49a2f2e0ccc3a05606cd96a3b863dc59bedbac2523c991809f7",
+    "portableCleanroomEvidence": "docs/v2.3/evidence/p0-h/portable-cleanroom-8f4bbb7.json",
+    "realPackageDrillEvidence": "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback.json"
+  },
+  "method": {
+    "type": "source-and-package-implementation-agent-review",
+    "commands": [
+      "node --test tests/program-intelligence-artifact.test.mjs tests/program-intelligence-source.test.mjs tests/external-adapters-v2.test.mjs tests/mcp-http.test.mjs tests/evidence-redaction.test.mjs tests/v23-provenance.test.mjs tests/v23-release-gate.test.mjs tests/v23-portable-manifest.test.mjs",
+      "npm run typecheck",
+      "npm audit --json --registry=https://registry.npmjs.org",
+      "npm ls --all --json",
+      "npm pack --dry-run --json",
+      "node scripts/v2/build-release.mjs --out <isolated-output> --evidence <isolated-output>/release-build.json --no-portable-evidence",
+      "node scripts/v2/v23-portable-cleanroom.mjs",
+      "node scripts/v2/v23-real-package-drill.mjs",
+      "node scripts/v2/validate-v23-acceptance.mjs"
+    ],
+    "reviewScope": [
+      "Untrusted ZIP/TAR member names, absolute/traversal paths, links/reparse points, collisions, malformed records, expansion limits, in-memory indexing, and non-extraction behavior.",
+      "JavaScript/TypeScript parser resource bounds, malformed syntax, TypeScript 5.9.3 runtime dependency, and clean-room execution.",
+      "Ghidra executable resolution, argument construction, fixed temporary input name, Core-authorized bytes, L1 approval boundary, environment, timeout, output cap, cancellation, and temporary cleanup.",
+      "MCP principal and session binding, single-principal mode, token workspace override, workspace boundary, approval levels, report/task access, and output redaction tests.",
+      "Caller-supplied behavioral-comparison data and its explicit non-authentication/non-execution claims.",
+      "S-to-E acceptance manifest, allowlist, old-source reuse, workflow/security-gate tamper tests, release gate states, and portable artifact manifest/source binding.",
+      "Actual portable archive and Windows upgrade/read/fault-injection/rollback package drills."
+    ],
+    "limitations": [
+      "This is not an independent audit, penetration test, legal opinion, or human certification.",
+      "No hostile external binary was submitted to Ghidra; Ghidra is a native parser and is not sandboxed by ArmorBreak.",
+      "Only one Windows OS principal was available for the package drill. Cross-account isolation is outside the declared single-principal product scope and remains unverified.",
+      "The npm lockfile resolves TypeScript through registry.npmmirror.com with a pinned integrity value; the clean-room command requested registry.npmjs.org. The source discrepancy is disclosed in the package/license inventory.",
+      "No final exact-main build, production OIDC attestation, Tag workflow, or public Release exists in this report."
+    ]
+  },
+  "coverage": [
+    {
+      "area": "Untrusted archives and path boundaries",
+      "status": "LOCAL_TESTED_LIMITED",
+      "observations": ["ZIP/TAR entries are indexed in memory and not extracted by artifact intake.", "Tests cover absolute and parent paths, backslash traversal, ADS/device names, links/reparse points, collisions, zip bombs, malformed records, and TAR metadata/link rejection."],
+      "remaining": "No independent archive fuzzing or external hostile corpus was run."
+    },
+    {
+      "area": "JavaScript/TypeScript parsing",
+      "status": "LOCAL_TESTED_LIMITED",
+      "observations": ["Uses the pinned TypeScript Compiler API; AST depth is capped at 256 and nodes at 50,000 per file.", "Over-budget inputs produce PARTIAL results and warnings; no emit, tsconfig loading, cross-file resolution, data flow, or target execution is claimed.", "Actual clean-room archive parsed one JavaScript and one TypeScript input and returned both task/report records."],
+      "remaining": "No large-scale parser fuzzing; semantics and cross-file resolution are unsupported."
+    },
+    {
+      "area": "Ghidra external process",
+      "status": "L1_BOUNDED_HOST_EXECUTION_ONLY",
+      "observations": ["Ghidra 12.1.4/JDK 21 are resolved from configured/trusted host locations; target bytes originate from Core authorization and are copied to a fixed input.bin path.", "Arguments use execFile without shell expansion; timeout is capped at 600 seconds and captured output at 32 MiB; the report is bounded and temp directories are removed in finally."],
+      "remaining": "Native Ghidra remains attackable by hostile samples; no sandbox/hostile-sample containment is claimed. Use only authorized data and hosts."
+    },
+    {
+      "area": "Sensitive-information redaction",
+      "status": "TESTED_WITH_BOUNDED_COVERAGE",
+      "observations": ["Evidence and audit serializers call redactText/redactDeep; tests cover credential-like values, secrets, and bounded excerpts.", "Portable evidence path fields now use archive basenames rather than machine absolute paths."],
+      "remaining": "No exhaustive manual review of every third-party tool output and every serializer was performed."
+    },
+    {
+      "area": "MCP identity, session and permissions",
+      "status": "SINGLE_PRINCIPAL_ONLY",
+      "observations": ["HTTP mode rejects multiple principals and workspace overrides; sessions bind to the configured identity.", "The Windows package drill verified current-user ACLs, denied broad built-in principals, rejected out-of-workspace targets, checked host config, and denied a foreign CLI task/report to a separate MCP session."],
+      "remaining": "Two distinct Windows accounts and cross-account private evidence access were not tested; shared/multi-user service is unsupported."
+    },
+    {
+      "area": "Behavior-comparison input trust",
+      "status": "BOUNDED_BY_DESIGN",
+      "observations": ["The comparator compares supplied finite JSON results; ArmorBreak does not execute either implementation.", "Result provenance is caller_supplied_unverified_observations and bounded matches do not claim global equivalence."],
+      "remaining": "Evidence references and certainty labels are not authenticated."
+    },
+    {
+      "area": "Evidence integrity and CI self-validation",
+      "status": "SOURCE_NEGATIVE_TESTS_ADDED; EXACT_HEAD_CI_PENDING",
+      "observations": ["The validator/workflow/gate are source-bound; the evidence-only allowlist excludes code and workflow paths.", "Negative tests reject validator, workflow and gate tampering, allowlist expansion and stale source reuse.", "Portable release validation checks archive bytes against an exact-source build manifest and verifies that the manifest/evidence bind to exact main."],
+      "remaining": "S3 has not yet run its new hosted PR-event CI at this snapshot; post-merge exact-main and Tag attestation remain future gates."
+    }
+  ],
+  "findings": [
+    {
+      "id": "V23-SEC-001",
+      "severity": "P1_RESIDUAL_RISK_OWNER_ACCEPTED",
+      "title": "Ghidra is not a hostile-input sandbox",
+      "disposition": "Ghidra is separate L1, requires per-task authorization, uses bounded process/output settings and an exact temporary copy. The product will not claim safe sandboxing of hostile binaries.",
+      "fixCommit": "fdbf9f8dc9be6dbbf249d7e12a7790e38a8f292d",
+      "retest": "Source and existing adapter tests inspected; only authored fixture validation is available. Hostile-sample containment remains unverified."
+    },
+    {
+      "id": "V23-SEC-002",
+      "severity": "P1_SCOPE_LIMITATION",
+      "title": "No two-account Windows isolation result",
+      "disposition": "V2.3 HTTP service is explicitly single-principal and rejects multi-principal configuration. Cross-account service mode is outside supported scope; no two-account test is claimed.",
+      "fixCommit": "fdbf9f8dc9be6dbbf249d7e12a7790e38a8f292d",
+      "retest": "Actual isolated package drill passed ACL/workspace/session checks under one Windows SID. A second SID test remains unverified."
+    },
+    {
+      "id": "V23-SEC-003",
+      "severity": "P2_LIMITATION",
+      "title": "Behavior comparison depends on caller-supplied observations",
+      "disposition": "No execution or global equivalence claim is made; the contract labels unverified caller provenance.",
+      "fixCommit": null,
+      "retest": "Bounded design and test source reviewed; authentication of external observation sources remains outside scope."
+    },
+    {
+      "id": "V23-SEC-004",
+      "severity": "P2_REVIEW_LIMITATION",
+      "title": "Review is not exhaustive across serializers and hostile corpora",
+      "disposition": "Retain explicit disclosure; independent human review was not performed by owner choice.",
+      "fixCommit": null,
+      "retest": "Owner accepted the stated risk; no human or third-party certification is claimed."
+    }
+  ],
+  "decision": "OWNER_APPROVED_SELF_REVIEW_RECORDED; FORMAL_RELEASE_STILL_NOT_READY",
+  "releaseReadiness": "NOT_READY"
+}
