@@ -1125,7 +1125,9 @@
         "docs/v2.3/evidence/p0-h/npm-test-c085bba-e1.log",
         "docs/v2.3/evidence/p0-h/main-run-5a5f516.json",
         "docs/v2.3/evidence/p0-h/npm-test-dirty-worktree-053e3b5.log",
-        "docs/v2.3/evidence/p0-h/npm-test-dirty-worktree-053e3b5.json"
+        "docs/v2.3/evidence/p0-h/npm-test-dirty-worktree-053e3b5.json",
+        "docs/v2.3/evidence/p0-h/npm-test-clean-c956d23.log",
+        "docs/v2.3/evidence/p0-h/npm-test-clean-c956d23.json"
       ],
       "ci": "Clean S5/E1 Windows x64 Node 24.16.0 full suite 672/672 PASS, typecheck/docs/acceptance/PR-gate PASS. Exact E1 GitHub PR-event CI pending.",
       "limitation": "OWNER_APPROVED_SELF_REVIEW accepted by owner; no independent human security or legal review. Two-account Windows isolation remains unverified and cross-account service is unsupported; OS updater is outside scope. Exact S5/E1 PR CI and subsequent protected merge, exact-main build/provenance/SBOM/attestation, protected exact tag and Tag Gate remain required. Latest branch-protection API listed required status checks and no required review count; recheck before merge.",
@@ -1149,7 +1151,7 @@
         "scope": "actual exact-S5 archive; isolated synthetic V2.2-format task/report/config; published V2.2 package downloaded read-only"
       },
       "evidenceCommit": "ee99433b441e59ddffe8b24403ac27f5e40e9dc2",
-      "localSuite": "PASS: clean E1 tree, fresh npm ci, npm test 672/672 exit 0; local-validation-c085bba-e1.json and npm-test-c085bba-e1.log. E0 one-failure gate issue preserved and fixed in S5.",
+      "localSuite": "PASS: clean detached E0 worktree, fresh npm ci, npm test 672/672 exit 0; raw npm-test-clean-c956d23.log/.json. Initial dirty worktree 671/672 failure is preserved and attributed to pre-existing untracked dist/ plus in-progress docs.",
       "npmInventory": {
         "sourceOnlyHead": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
         "sourceOnlyFileCount": 677,
