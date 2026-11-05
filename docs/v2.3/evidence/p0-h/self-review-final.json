@@ -34,7 +34,10 @@
       "node scripts/v2/v23-portable-cleanroom.mjs",
       "node scripts/v2/v23-real-package-drill.mjs",
       "node --test tests/v23-provenance.test.mjs tests/v23-release-gate.test.mjs (16/16 PASS on S5)",
-      "node scripts/v2/v23-release-gate.mjs --check-pr (VALIDATED; NOT_READY)"
+      "node scripts/v2/v23-release-gate.mjs --check-pr (VALIDATED; NOT_READY)",
+      "npm test (clean E1 Windows x64 / Node 24.16.0, 672/672 passed; log SHA-256 84c0b74d06b97db0c832e65d37713b6cca8a99e08182f4e32179f0f441b27530)",
+      "npm run typecheck (E1 PASS)",
+      "node scripts/v2/check-docs-consistency.mjs (E1 PASS)"
     ],
     "reviewScope": [
       "Untrusted ZIP/TAR member names, absolute/traversal paths, links/reparse points, collisions, malformed records, expansion limits, in-memory indexing, and non-extraction behavior.",
@@ -178,7 +181,7 @@
       "title": "Post-source evidence allowlist omitted the V2.3 release notes and license inventory",
       "disposition": "Added only the two exact V2.3 documentation paths to the explicit source-to-evidence allowlist; code, workflow, validator, and adjacent V2.2/independent-audit paths remain rejected.",
       "fixCommit": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
-      "retest": "16 provenance and release-gate unit tests passed; --check-pr returned VALIDATED with releaseReadiness NOT_READY."
+      "retest": "16 focused tests and full clean E1 npm test 672/672 passed; E1 PR gate and acceptance validator passed with release NOT_READY."
     },
     {
       "id": "V23-PKG-001",

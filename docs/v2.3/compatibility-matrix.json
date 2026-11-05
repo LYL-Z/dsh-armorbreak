@@ -1120,9 +1120,11 @@
         "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-c085bba.json",
         "docs/v2.3/evidence/p0-h/npm-package-c085bba.json",
         "docs/v2.3/evidence/p0-h/self-review-73741e4.json",
-        "docs/v2.3/evidence/p0-h/license-review-73741e4.json"
+        "docs/v2.3/evidence/p0-h/license-review-73741e4.json",
+        "docs/v2.3/evidence/p0-h/local-validation-c085bba-e1.json",
+        "docs/v2.3/evidence/p0-h/npm-test-c085bba-e1.log"
       ],
-      "ci": "S5 local source tests: provenance/release-gate 16/16 PASS; typecheck and docs consistency PASS. Full S5/E1 suite and exact S5/E1 PR-event CI are pending.",
+      "ci": "Clean S5/E1 Windows x64 Node 24.16.0 full suite 672/672 PASS, typecheck/docs/acceptance/PR-gate PASS. Exact E1 GitHub PR-event CI pending.",
       "limitation": "OWNER_APPROVED_SELF_REVIEW accepted by owner; no independent human security or legal review. Two-account Windows isolation remains unverified and cross-account service is unsupported; OS updater is outside scope. Exact S5/E1 PR CI and subsequent protected merge, exact-main build/provenance/SBOM/attestation, protected exact tag and Tag Gate remain required. Latest branch-protection API listed required status checks and no required review count; recheck before merge.",
       "lastObservedRemoteHead": "edc91b118d741b3643d07f1258844c02b6fbb1a5",
       "localSourceCommit": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
@@ -1143,8 +1145,8 @@
         "rollbackHashesEqual": true,
         "scope": "actual exact-S5 archive; isolated synthetic V2.2-format task/report/config; published V2.2 package downloaded read-only"
       },
-      "evidenceCommit": "9a9c3c5931fcf2785cb2b2bbd1bdd4cf1ea8c593",
-      "localSuite": "E0 full suite exited 1 for the post-source allowlist defect; fixed in S5. Focused S5 16/16 passed. Full S5/E1 suite pending.",
+      "evidenceCommit": "ee99433b441e59ddffe8b24403ac27f5e40e9dc2",
+      "localSuite": "PASS: clean E1 tree, fresh npm ci, npm test 672/672 exit 0; local-validation-c085bba-e1.json and npm-test-c085bba-e1.log. E0 one-failure gate issue preserved and fixed in S5.",
       "npmInventory": {
         "sourceOnlyHead": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
         "sourceOnlyFileCount": 677,
@@ -1157,7 +1159,9 @@
         "p0hEvidencePaths": 64,
         "limitation": "npm pack includes P0-H documentation/evidence; lockfile registry mirror and legal chain-of-title limitations are disclosed; exact-main/tag inventory remains future validation"
       },
-      "releaseState": "NOT_READY"
+      "releaseState": "NOT_READY",
+      "mainGateProbe": "NOT_READY: exact main SHA required; pre-merge PR candidate only.",
+      "releaseGateProbe": "NOT_READY: exact v2.3.0 tag required; no tag or release created."
     }
   ],
   "sourceSupportBaseline": [
