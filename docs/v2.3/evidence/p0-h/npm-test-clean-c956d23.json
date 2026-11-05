@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "armorbreak.v2.3-local-test-attempt/v1",
+  "sourceCommit": "053e3b509a09772169e678d35441f4dc1c52570a",
+  "testedCommit": "c956d23f44181b06eb96ab53b0b0c68092474002",
+  "command": "npm test",
+  "environment": {
+    "os": "Windows",
+    "node": "v24.16.0",
+    "npmInstall": "npm ci --no-audit --no-fund",
+    "worktree": "fresh detached Git worktree under .runtime",
+    "existingProjectNodeModulesUsed": false
+  },
+  "exitCode": 0,
+  "tests": 672,
+  "passed": 672,
+  "failed": 0,
+  "skipped": 0,
+  "durationMs": 143148.0151,
+  "rawLog": "docs/v2.3/evidence/p0-h/npm-test-clean-c956d23.log",
+  "rawLogSha256": "82533940bf85fa2c9e63fd32dd7cd25aef5a1604ffdee6b840085ba22607cd52",
+  "decision": "PASS"
+}

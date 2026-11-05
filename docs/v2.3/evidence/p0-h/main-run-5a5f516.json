@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "armorbreak.v2.3-exact-main-evidence/v1",
+  "sourceCommit": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
+  "evidenceCommit": "ee99433b441e59ddffe8b24403ac27f5e40e9dc2",
+  "mainCommit": "5a5f5165acd829a181a43f6de01e4687328aa629",
+  "mainTree": "3603dd748233aff0f464fbdb44bdac99cedaa2d4",
+  "pr": {"number": 25, "state": "MERGED", "url": "https://github.com/LYL-Z/dsh-armorbreak/pull/25"},
+  "runs": {
+    "exactMainGate": {"runId": "41955141920", "event": "push", "conclusion": "success", "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41955141920", "requiredMatrix": ["Node 22 / ubuntu-latest", "Node 24 / ubuntu-latest", "Node 22 / windows-latest", "Node 24 / windows-latest"]},
+    "candidateBuild": {"runId": "41955141920", "jobId": "127008937514", "conclusion": "success", "artifactId": "13381834431", "artifactName": "v23-main-candidate-5a5f5165acd829a181a43f6de01e4687328aa629"},
+    "inheritedCi": {"runId": "41955141947", "conclusion": "failure", "requiredJob": "Release evidence checks (commit-bound)", "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41955141947", "failure": "V2.2 evidence validator used base c1ce751b965c76ae134dd67501d07ae7f02c0a96 and rejected V2.3 source/evidence changes; this context is required by main branch protection."},
+    "legacyAttestation": {"runId": "41955141991", "conclusion": "failure", "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41955141991", "failure": "Legacy V2.2 release-input validation failed; no artifact attestation was produced by this legacy workflow."}
+  },
+  "candidate": {
+    "archive": {"name": "armorbreak-portable-2.3.0.tar.gz", "sizeBytes": 5919705, "sha256": "09f19ca1031850257791a04e0c13a3789647314347c8a640ded8cd06d583a23e"},
+    "packageManifest": {"name": "armorbreak-portable-2.3.0.tar.gz.manifest.json", "sizeBytes": 91793, "sha256": "32565ea43bca6055b0cc411565291eddc0573a8033f392e2837169423d13efa0", "commit": "5a5f5165acd829a181a43f6de01e4687328aa629", "reproducible": true, "cleanRoom": "PASS"},
+    "sbom": {"name": "armorbreak-portable-2.3.0.tar.gz.sbom.cdx.json", "sizeBytes": 95267, "sha256": "0d4f1f7c04ed92610143c23e1ff6ad5577f0b8018b1bf3557fc0212d5dda9625", "format": "CycloneDX", "subjectSha256": "09f19ca1031850257791a04e0c13a3789647314347c8a640ded8cd06d583a23e", "components": 13},
+    "attestationVerification": {"file": "attestation-verification.json", "workflow": ".github/workflows/v2.3-main-gate.yml", "workflowRef": "refs/heads/main", "sourceCommit": "5a5f5165acd829a181a43f6de01e4687328aa629", "artifactSha256": "09f19ca1031850257791a04e0c13a3789647314347c8a640ded8cd06d583a23e", "ghAttestationVerifyExitCode": 0}
+  },
+  "releaseReadiness": "NOT_READY",
+  "tagCreated": false,
+  "publicReleaseCreated": false
+}

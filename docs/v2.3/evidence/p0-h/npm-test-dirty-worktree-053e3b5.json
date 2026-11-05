@@ -1,0 +1,16 @@
+{
+  "schemaVersion":"armorbreak.v2.3-local-test-attempt/v1",
+  "sourceCommit":"053e3b509a09772169e678d35441f4dc1c52570a",
+  "command":"npm test",
+  "environment":"Windows PowerShell, Node v24.16.0, existing authorized V2.3 worktree",
+  "exitCode":1,
+  "tests":672,
+  "passed":671,
+  "failed":1,
+  "skipped":0,
+  "failedTest":"tests/release-build.test.mjs: release build is reproducible, hashed, SBOM-backed and test-signature verifiable",
+  "cause":"The release-build test correctly refused to run with dirty source and untracked dist/ assets. The source tree contained the in-progress acceptance report/matrix edits and the pre-existing untracked dist/ files; no tracked source or dist file was modified by this attempt.",
+  "preservedLog":"docs/v2.3/evidence/p0-h/npm-test-dirty-worktree-053e3b5.log",
+  "logSha256":"eb6e81caa7dcf17afab699ec4ecb46927edee3ca648558b61f6f46b0b7206bbc",
+  "interpretation":"This is a failed dirty-worktree attempt, not a code pass. A fresh isolated clean Git worktree rerun is required."
+}
