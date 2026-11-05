@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "armorbreak.v2.3-local-resume-validation/v1",
+  "capturedAt": "2026-11-01T07:51:46.9743566Z",
+  "validatedCommittedHead": "14df1d05c6397a25cfffd4903d00c9df3f697c61",
+  "sourceCommit": "b39f2285f3bc05301d2989d6a66fc1e641af7b96",
+  "runtime": {
+    "platform": "Microsoft Windows 10.0.26300",
+    "node": "v24.16.0"
+  },
+  "checks": [
+    {
+      "command": "node scripts/v2/validate-v23-acceptance.mjs",
+      "result": "PASS",
+      "checkedFiles": 94,
+      "releaseReadiness": "NOT_READY"
+    },
+    {
+      "command": "node --test tests/v23-provenance.test.mjs tests/v23-release-gate.test.mjs tests/docs-consistency.test.mjs",
+      "result": "PASS",
+      "passed": 14,
+      "failed": 0
+    },
+    {
+      "command": "node scripts/v2/v23-release-gate.mjs --check-pr",
+      "result": "PASS",
+      "gateConfiguration": "VALIDATED",
+      "releaseReadiness": "NOT_READY"
+    },
+    {
+      "command": "node scripts/v2/v23-release-gate.mjs --release",
+      "result": "EXPECTED_BLOCK",
+      "exitCode": 1,
+      "decision": "NOT_READY"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    }
+  ],
+  "scope": "Local exact-HEAD evidence integrity, targeted provenance/state/doc tests, PR-gate and fail-closed release-gate checks. Full suite and platform matrix are separately evidenced by exact-SHA GitHub PR runs."
+}

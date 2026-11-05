@@ -1,0 +1,555 @@
+{
+  "generatedOn": "2026-10-26",
+  "sourceSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
+  "packageVersion": "2.2.0",
+  "coreVersion": "0.1.0-p1",
+  "protocolVersion": "1.0.0",
+  "platform": "win32",
+  "node": "v24.16.0",
+  "capabilityCount": 46,
+  "domainCount": 8,
+  "capabilitiesByRisk": {
+    "L0": 44,
+    "L1": 1,
+    "L2": 1
+  },
+  "capabilitiesByDomain": {
+    "android": 6,
+    "binary": 7,
+    "ctf": 5,
+    "forensics": 6,
+    "live": 2,
+    "network": 8,
+    "sast": 8,
+    "web": 4
+  },
+  "capabilities": [
+    {
+      "id": "android.apk_structure",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "android.dex",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "android.findings",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "android.jadx",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "android.manifest",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "android.signing",
+      "domain": "android",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "binary.behavior",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "binary.entropy",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "binary.ghidra",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "binary.headers",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "binary.identify",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "binary.strings",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "binary.structure",
+      "domain": "binary",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.classify",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.crypto_basics",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.decode",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.flag_scan",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.hash_id",
+      "domain": "ctf",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.filetype",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.hash",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.ioc",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.metadata",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.timeline",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.yara_lite",
+      "domain": "forensics",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "live.container_exec",
+      "domain": "live",
+      "riskLevel": "L1",
+      "targetKind": "file",
+      "externalTools": [
+        "docker"
+      ]
+    },
+    {
+      "id": "live.http_probe",
+      "domain": "live",
+      "riskLevel": "L2",
+      "targetKind": "network",
+      "externalTools": []
+    },
+    {
+      "id": "network.anomalies",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "network.dns",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "network.flows",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "network.http",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "network.iocs",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "network.pcap_overview",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "network.tls",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "network.tshark",
+      "domain": "network",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "sast.deps",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "externalTools": []
+    },
+    {
+      "id": "sast.patch_suggestion",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "sast.sbom",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "externalTools": []
+    },
+    {
+      "id": "sast.scan",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "externalTools": []
+    },
+    {
+      "id": "sast.secrets",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "externalTools": []
+    },
+    {
+      "id": "sast.semgrep",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "externalTools": [
+        "semgrep"
+      ]
+    },
+    {
+      "id": "sast.syft",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "externalTools": []
+    },
+    {
+      "id": "sast.trivy",
+      "domain": "sast",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "externalTools": [
+        "trivy"
+      ]
+    },
+    {
+      "id": "web.har",
+      "domain": "web",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "web.headers",
+      "domain": "web",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "web.http_message",
+      "domain": "web",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "web.openapi",
+      "domain": "web",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    }
+  ],
+  "workflows": [
+    {
+      "id": "BinaryStaticAnalysis",
+      "title": "二进制静态分析",
+      "targetKind": "file",
+      "steps": 7
+    },
+    {
+      "id": "AndroidAPKReview",
+      "title": "Android APK 安全审计",
+      "targetKind": "file",
+      "steps": 5
+    },
+    {
+      "id": "WebCodeSecurityReview",
+      "title": "Web/源码安全审计",
+      "targetKind": "directory",
+      "steps": 4
+    },
+    {
+      "id": "PCAPInvestigation",
+      "title": "PCAP 流量取证分析",
+      "targetKind": "file",
+      "steps": 7
+    },
+    {
+      "id": "DependencyAudit",
+      "title": "依赖与供应链审计",
+      "targetKind": "directory",
+      "steps": 3
+    },
+    {
+      "id": "CTFArtifactAnalysis",
+      "title": "CTF 题目产物分析",
+      "targetKind": "file",
+      "steps": 4
+    },
+    {
+      "id": "ForensicFileReview",
+      "title": "数字取证文件审查",
+      "targetKind": "file",
+      "steps": 6
+    },
+    {
+      "id": "WebAPIReview",
+      "title": "Web API 规范审计",
+      "targetKind": "file",
+      "steps": 2
+    },
+    {
+      "id": "SecurityReportGeneration",
+      "title": "安全研究报告生成",
+      "targetKind": "none",
+      "steps": 0
+    }
+  ],
+  "mcpToolCount": 7,
+  "mcpTools": [
+    "armorbreak_health",
+    "armorbreak_capabilities",
+    "armorbreak_analyze",
+    "armorbreak_task_get",
+    "armorbreak_evidence",
+    "armorbreak_report",
+    "armorbreak_task_list"
+  ],
+  "dshModelToolCount": 10,
+  "dshModelTools": [
+    "armorbreak_health",
+    "armorbreak_capabilities",
+    "armorbreak_scope",
+    "armorbreak_files",
+    "armorbreak_task",
+    "armorbreak_analyze",
+    "armorbreak_workflow",
+    "armorbreak_evidence",
+    "armorbreak_report",
+    "armorbreak_environment"
+  ],
+  "skillCount": 7,
+  "skillDirectories": [
+    "armorbreak-ai-eval",
+    "armorbreak-android",
+    "armorbreak-binary",
+    "armorbreak-pcap",
+    "armorbreak-report",
+    "armorbreak-sast",
+    "armorbreak-triage"
+  ],
+  "adapterCapabilities": [
+    {
+      "capability": "binary.ghidra",
+      "tool": "ghidra",
+      "externalToolsDeclared": false
+    },
+    {
+      "capability": "android.jadx",
+      "tool": "jadx",
+      "externalToolsDeclared": false
+    },
+    {
+      "capability": "sast.semgrep",
+      "tool": "semgrep",
+      "externalToolsDeclared": true
+    },
+    {
+      "capability": "sast.trivy",
+      "tool": "trivy",
+      "externalToolsDeclared": true
+    },
+    {
+      "capability": "sast.syft",
+      "tool": "syft",
+      "externalToolsDeclared": false
+    },
+    {
+      "capability": "network.tshark",
+      "tool": "tshark",
+      "externalToolsDeclared": false
+    },
+    {
+      "capability": "live.container_exec",
+      "tool": "docker",
+      "externalToolsDeclared": true
+    }
+  ],
+  "externalToolsDeclaredByCapabilities": [
+    "docker",
+    "semgrep",
+    "trivy"
+  ],
+  "adapterDependencyDeclarationGaps": [
+    "binary.ghidra",
+    "android.jadx",
+    "sast.syft",
+    "network.tshark"
+  ],
+  "externalToolProbes": [
+    {
+      "id": "ghidra",
+      "name": "Ghidra",
+      "status": "DETECTED",
+      "version": "12.1.4 (install directory)",
+      "versionEvidence": "analyzeHeadless -help returned usage; version not independently printed",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "jadx",
+      "name": "JADX",
+      "status": "DETECTED",
+      "version": "1.5.6",
+      "versionEvidence": "PowerShell jadx --version exited 0; Core Health execFile probe returned spawn EINVAL",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "semgrep",
+      "name": "Semgrep",
+      "status": "DETECTED",
+      "version": "1.181.0",
+      "versionEvidence": "PowerShell semgrep --version exited 0; Core Health execFile probe failed; no sample scan run",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "trivy",
+      "name": "Trivy",
+      "status": "DETECTED",
+      "version": "0.76.0",
+      "versionEvidence": "PowerShell trivy --version exited 0; local vulnerability DB reported present",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "syft",
+      "name": "Syft",
+      "status": "DETECTED",
+      "version": "1.54.1",
+      "versionEvidence": "PowerShell syft version exited 0",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "tshark",
+      "name": "TShark",
+      "status": "DETECTED",
+      "version": "4.6.9",
+      "versionEvidence": "PowerShell tshark -v exited 0",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    }
+  ],
+  "l1Isolation": {
+    "status": "BLOCKED",
+    "dockerVersion": "29.8.1",
+    "reason": "Docker CLI exists; Docker Linux engine pipe is unavailable; HealthService isolation.available=false"
+  },
+  "registryDiagnostics": []
+}

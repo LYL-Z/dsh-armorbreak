@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/LYL-Z/dsh-armorbreak/blob/main/docs/v2.3/schemas/behavior-contract-source-v1.schema.json",
+  "title": "ArmorBreak Behavior Contract Source Bundle v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "artifact", "observations"],
+  "properties": {
+    "schema": { "const": "armorbreak.behavior-contract-source/v1" },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sha256"],
+      "properties": { "sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" } }
+    },
+    "observations": {
+      "type": "array",
+      "maxItems": 300,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "statement", "certainty", "evidenceRefs"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1, "maxLength": 120 },
+          "kind": { "enum": ["signature", "api", "cli", "test", "state-transition", "error", "constraint"] },
+          "statement": { "type": "string", "minLength": 1, "maxLength": 2000 },
+          "certainty": { "enum": ["observed", "inferred", "unknown"] },
+          "evidenceRefs": { "type": "array", "minItems": 1, "maxItems": 20, "items": { "type": "string", "minLength": 1, "maxLength": 200 } },
+          "preconditions": { "type": "array", "maxItems": 50, "items": { "type": "string", "maxLength": 500 } },
+          "inputs": { "type": "array", "maxItems": 50, "items": { "type": "string", "maxLength": 500 } },
+          "outputs": { "type": "array", "maxItems": 50, "items": { "type": "string", "maxLength": 500 } },
+          "errors": { "type": "array", "maxItems": 50, "items": { "type": "string", "maxLength": 500 } },
+          "sideEffects": { "type": "array", "maxItems": 50, "items": { "type": "string", "maxLength": 500 } }
+        }
+      }
+    }
+  }
+}

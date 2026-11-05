@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://armorbreak.dev/schemas/v2.3/native-program-ir.schema.json",
+  "title": "ArmorBreak Native Program IR v1",
+  "type": "object",
+  "required": ["schemaVersion", "analysis", "artifact", "program", "symbols", "functionCount", "emittedFunctions", "functions", "callEdgeCount", "callEdges", "basicBlockCount", "basicBlocks", "functionHashes", "ghidra", "limitations"],
+  "properties": {
+    "schemaVersion": { "const": "armorbreak.native-program-ir/v1" },
+    "analysis": {
+      "type": "object",
+      "required": ["level", "status", "inputExecuted", "backend", "parserWarnings", "truncated"],
+      "properties": {
+        "level": { "enum": ["S0", "S2"] },
+        "status": { "enum": ["PARTIAL", "UNSUPPORTED"] },
+        "reason": { "type": ["string", "null"] },
+        "inputExecuted": { "const": false },
+        "backend": { "type": "string", "minLength": 1 },
+        "backendVersion": { "type": ["string", "null"] },
+        "parserWarnings": { "type": "array", "items": { "type": "string" } },
+        "truncated": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "artifact": {
+      "type": "object",
+      "required": ["format", "container", "fileSize", "analyzedBytes", "sha256", "truncated"],
+      "properties": {
+        "format": { "enum": ["pe", "elf", "macho", "unknown", "other"] },
+        "container": { "type": ["string", "null"] },
+        "fileSize": { "type": ["integer", "null"], "minimum": 0 },
+        "analyzedBytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "type": ["string", "null"], "pattern": "^[a-fA-F0-9]{64}$" },
+        "truncated": { "type": ["boolean", "null"] }
+      },
+      "additionalProperties": true
+    },
+    "program": { "type": ["object", "null"], "additionalProperties": true },
+    "symbols": { "type": ["object", "null"], "additionalProperties": true },
+    "functionCount": { "type": "integer", "minimum": 0 },
+    "emittedFunctions": { "type": "integer", "minimum": 0 },
+    "functions": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "callEdgeCount": { "type": "integer", "minimum": 0 },
+    "callEdges": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "basicBlockCount": { "type": "integer", "minimum": 0 },
+    "basicBlocks": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "functionHashes": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "ghidra": {
+      "type": "object",
+      "required": ["status", "reason", "toolVersion"],
+      "properties": {
+        "status": { "enum": ["ANALYZED", "DISABLED", "UNAVAILABLE", "INPUT_TRUNCATED", "TIMED_OUT", "ERROR"] },
+        "reason": { "type": ["string", "null"] },
+        "toolVersion": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "limitations": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

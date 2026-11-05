@@ -1,0 +1,231 @@
+{
+  "summary": "Ghidra 12.1.4：native_fixture_i386.elf，函数 3 个（输出 1），基本块 2 个、调用边 0 条；敏感名称 0 类。",
+  "findings": [
+    {
+      "title": "Ghidra 枚举 3 个内部函数、0 个外部函数（输出 1）",
+      "severity": "info",
+      "description": "函数与调用者计数来自 Ghidra 自动分析；调用边/基本块只覆盖输出函数范围并受显式上限约束。结果受加载器、符号与自动分析质量影响，不是反编译源码。",
+      "verification": "observed",
+      "method": "Ghidra analyzeHeadless ExportSummary.java",
+      "cwe": null,
+      "cvss": null,
+      "remediation": "无需处理；用于函数级导航和后续人工复核。",
+      "target": null,
+      "evidence": [
+        {
+          "title": "函数统计",
+          "kind": "ghidra-summary",
+          "excerpt": "{\"functionCount\":3,\"internalFunctionCount\":3,\"externalFunctionCount\":0,\"emitted\":1,\"language\":\"x86:LE:32:default\",\"imageBase\":\"08048000\"}",
+          "meta": {}
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "title": "Ghidra 函数与调用摘要",
+      "kind": "ghidra-summary",
+      "excerpt": "{\"toolVersion\":\"12.1.4\",\"functionCount\":3,\"internalFunctionCount\":3,\"externalFunctionCount\":0,\"emitted\":1,\"callEdgeCount\":0,\"basicBlockCount\":2,\"names\":[]}",
+      "meta": {}
+    }
+  ],
+  "data": {
+    "program": "native_fixture_i386.elf",
+    "executableFormat": "Executable and Linking Format (ELF)",
+    "processor": "x86",
+    "language": "x86:LE:32:default",
+    "endianness": "little",
+    "imageBase": "08048000",
+    "toolVersion": "12.1.4",
+    "functionCount": 3,
+    "internalFunctionCount": 3,
+    "externalFunctionCount": 0,
+    "emitted": 1,
+    "truncated": true,
+    "functionScopeTruncated": true,
+    "functions": [
+      {
+        "name": "helper",
+        "entry": "08049000",
+        "relativeAddress": "0x1000",
+        "fileOffset": "0x1000",
+        "end": "08049013",
+        "size": 20,
+        "external": false,
+        "thunk": false,
+        "callingConvention": "unknown",
+        "callers": 0,
+        "byteHashSha256": "5abe6afd012d13c350f389c42f75c9cf9d993695e76602be36da4ed01c80f861",
+        "byteHashBytes": 20,
+        "byteHashStatus": "COMPLETE"
+      }
+    ],
+    "callEdgeCount": 0,
+    "callEdgesTruncated": true,
+    "callEdgeCountComplete": false,
+    "callEdges": [],
+    "basicBlockCount": 2,
+    "basicBlocksTruncated": true,
+    "basicBlockCountComplete": false,
+    "basicBlocks": [
+      {
+        "functionEntry": "08049000",
+        "start": "08049000",
+        "end": "08049013",
+        "fileOffset": "0x1000",
+        "size": 20,
+        "flowType": "TERMINATOR"
+      }
+    ],
+    "segments": [
+      {
+        "name": "segment_0.1",
+        "start": "08048000",
+        "end": "080480f3",
+        "fileOffset": "0x0",
+        "size": 244,
+        "initialized": true,
+        "read": true,
+        "write": false,
+        "execute": false,
+        "overlay": false
+      },
+      {
+        "name": ".note.gnu.build-id",
+        "start": "080480f4",
+        "end": "08048117",
+        "fileOffset": "0xf4",
+        "size": 36,
+        "initialized": true,
+        "read": true,
+        "write": false,
+        "execute": false,
+        "overlay": false
+      },
+      {
+        "name": ".text",
+        "start": "08049000",
+        "end": "08049034",
+        "fileOffset": "0x1000",
+        "size": 53,
+        "initialized": true,
+        "read": true,
+        "write": false,
+        "execute": true,
+        "overlay": false
+      },
+      {
+        "name": ".eh_frame",
+        "start": "0804a000",
+        "end": "0804a077",
+        "fileOffset": "0x2000",
+        "size": 120,
+        "initialized": true,
+        "read": true,
+        "write": false,
+        "execute": false,
+        "overlay": false
+      },
+      {
+        "name": ".data",
+        "start": "0804b000",
+        "end": "0804b003",
+        "fileOffset": "0x3000",
+        "size": 4,
+        "initialized": true,
+        "read": true,
+        "write": true,
+        "execute": false,
+        "overlay": false
+      },
+      {
+        "name": ".comment",
+        "start": ".comment::00000000",
+        "end": ".comment::00000025",
+        "fileOffset": null,
+        "size": 38,
+        "initialized": true,
+        "read": false,
+        "write": false,
+        "execute": false,
+        "overlay": true
+      },
+      {
+        "name": ".shstrtab",
+        "start": ".shstrtab::00000000",
+        "end": ".shstrtab::0000004c",
+        "fileOffset": null,
+        "size": 77,
+        "initialized": true,
+        "read": false,
+        "write": false,
+        "execute": false,
+        "overlay": true
+      },
+      {
+        "name": ".strtab",
+        "start": ".strtab::00000000",
+        "end": ".strtab::0000004a",
+        "fileOffset": null,
+        "size": 75,
+        "initialized": true,
+        "read": false,
+        "write": false,
+        "execute": false,
+        "overlay": true
+      },
+      {
+        "name": ".symtab",
+        "start": ".symtab::00000000",
+        "end": ".symtab::0000008f",
+        "fileOffset": null,
+        "size": 144,
+        "initialized": true,
+        "read": false,
+        "write": false,
+        "execute": false,
+        "overlay": true
+      },
+      {
+        "name": "_elfSectionHeaders",
+        "start": "_elfSectionHeaders::00000000",
+        "end": "_elfSectionHeaders::00000167",
+        "fileOffset": null,
+        "size": 360,
+        "initialized": true,
+        "read": false,
+        "write": false,
+        "execute": false,
+        "overlay": true
+      }
+    ],
+    "symbols": [
+      {
+        "name": "helper",
+        "address": "08049000",
+        "fileOffset": "0x1000",
+        "type": "Function",
+        "source": "IMPORTED",
+        "external": false
+      }
+    ],
+    "symbolCount": 2,
+    "segmentsTruncated": false,
+    "symbolsTruncated": true,
+    "suspiciousNames": {},
+    "verificationDefault": "hypothesis",
+    "tool": "ghidra"
+  },
+  "meta": {
+    "domain": "binary",
+    "capability": "binary.ghidra",
+    "tool": "ghidra",
+    "target": "docs/v2.3/evidence/m3/fixtures/native_fixture_i386.elf",
+    "toolVersion": "12.1.4",
+    "inputBytes": 12988,
+    "emitted": 1,
+    "functionCount": 3,
+    "callEdgeCount": 0,
+    "basicBlockCount": 2
+  }
+}

@@ -8,6 +8,7 @@ import { mkdir, lstat, open, readFile, realpath, rename, stat, writeFile } from 
 import { constants } from 'node:fs'
 import { dirname, isAbsolute, join, normalize, relative, resolve, sep } from 'node:path'
 import { homedir } from 'node:os'
+import { isFilesystemPathWithin, sameFilesystemPath } from '../../../lib/core/pathBoundary.js'
 
 /** Minutes in ms. */
 export const MINUTE = 60_000
@@ -202,10 +203,7 @@ export async function readBounded(file, maxBytes, options = {}) {
       throw error
     }
     if (decision.resolved) {
-      const authorizedPath = resolve(decision.resolved)
-      const sameAuthorizedPath = process.platform === 'win32'
-        ? authorizedPath.toLowerCase() === canonicalPath.toLowerCase()
-        : authorizedPath === canonicalPath
+      const sameAuthorizedPath = sameFilesystemPath(decision.resolved, canonicalPath)
       if (!sameAuthorizedPath) {
         const error = new Error('file resolved to a different path than the one authorized')
         error.code = 'PATH_CHANGED'
@@ -226,9 +224,7 @@ export async function readBounded(file, maxBytes, options = {}) {
       throw new Error('file identity changed while opening the path')
     }
     const currentCanonicalPath = await realpath(targetPath)
-    const sameCanonicalPath = process.platform === 'win32'
-      ? currentCanonicalPath.toLowerCase() === canonicalPath.toLowerCase()
-      : currentCanonicalPath === canonicalPath
+    const sameCanonicalPath = sameFilesystemPath(currentCanonicalPath, canonicalPath)
     if (!sameCanonicalPath) throw new Error('path resolved to a different file after opening')
     const currentPathEntry = await stat(canonicalPath, { bigint: true })
     if (currentPathEntry.dev !== opened.dev || currentPathEntry.ino !== opened.ino) {
@@ -281,10 +277,7 @@ export function resolvePath(input, base = process.cwd()) {
  * @returns {boolean}
  */
 export function isPathInside(parent, child) {
-  const rel = relative(normalize(parent), normalize(child))
-  if (rel === '') return true
-  if (rel.startsWith('..')) return false
-  return !isAbsolute(rel) && !rel.split(/[\\/]/).includes('..')
+  return isFilesystemPathWithin(parent, child)
 }
 
 /**

@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "armorbreak.v2.3-local-validation/v1",
+  "sourceCommit": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
+  "testedTreeCommit": "ee99433b441e59ddffe8b24403ac27f5e40e9dc2",
+  "capturedAt": "2026-11-05T02:19:22Z",
+  "environment": {
+    "os": "Windows",
+    "arch": "x64",
+    "node": "v24.16.0",
+    "npm": "11.13.0",
+    "freshWorktree": true,
+    "freshNpmCi": true
+  },
+  "npmTest": {
+    "command": "npm test",
+    "exitCode": 0,
+    "tests": 672,
+    "passed": 672,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "durationMs": 150160.2858,
+    "log": "docs/v2.3/evidence/p0-h/npm-test-c085bba-e1.log",
+    "logSha256": "84c0b74d06b97db0c832e65d37713b6cca8a99e08182f4e32179f0f441b27530"
+  },
+  "typecheck": {
+    "command": "npm run typecheck",
+    "exitCode": 0,
+    "status": "PASS"
+  },
+  "docsConsistency": {
+    "command": "node scripts/v2/check-docs-consistency.mjs",
+    "exitCode": 0,
+    "status": "PASS"
+  },
+  "acceptanceIntegrity": {
+    "command": "node scripts/v2/validate-v23-acceptance.mjs",
+    "exitCode": 0,
+    "checkedFiles": 159,
+    "sourceCommit": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
+    "validatedHead": "ee99433b441e59ddffe8b24403ac27f5e40e9dc2",
+    "releaseReadiness": "NOT_READY"
+  },
+  "prGate": {
+    "command": "node scripts/v2/v23-release-gate.mjs --check-pr",
+    "exitCode": 0,
+    "gateConfiguration": "VALIDATED",
+    "releaseReadiness": "NOT_READY",
+    "blockers": [
+      "exact-main CI, immutable package/SBOM hashes and GitHub attestation",
+      "owner-authorized exact-tag release event and detached authorization envelope"
+    ]
+  },
+  "focusedTests": {
+    "command": "node --test tests/v23-provenance.test.mjs tests/v23-release-gate.test.mjs",
+    "exitCode": 0,
+    "tests": 16,
+    "passed": 16,
+    "failed": 0
+  },
+  "previousFailure": {
+    "tree": "E0 1bfa9467fb0c7690985c73a0807babc373116fce",
+    "exitCode": 1,
+    "failedTests": 1,
+    "cause": "post-source evidence allowlist omitted exact V2.3 release notes and P0-H license inventory",
+    "fixedBy": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
+    "status": "preserved as historical failure; S5/E1 full suite passed"
+  },
+  "notRun": [
+    "GitHub PR-event CI for E1",
+    "exact-main build/provenance/SBOM/attestation",
+    "protected merge",
+    "tag Release Gate",
+    "public Release/download verification"
+  ],
+  "mainGateProbe": {
+    "command": "node scripts/v2/v23-release-gate.mjs --check-main",
+    "exitCode": 1,
+    "decision": "NOT_READY",
+    "blocker": "exact main candidate SHA is required",
+    "interpretation": "Expected fail-closed on pre-merge PR candidate; not exact-main evidence."
+  },
+  "releaseGateProbe": {
+    "command": "node scripts/v2/v23-release-gate.mjs --release",
+    "exitCode": 1,
+    "decision": "NOT_READY",
+    "blocker": "release gate only accepts the exact v2.3.0 tag; exact release commit SHA is required",
+    "interpretation": "Expected fail-closed before tag creation; no tag/release was created."
+  }
+}

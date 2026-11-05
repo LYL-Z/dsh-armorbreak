@@ -1,0 +1,104 @@
+{
+  "schema": "armorbreak.v2.3.m4-validation/v1",
+  "phase": "M4",
+  "status": "PARTIAL_LOCAL_TESTED",
+  "verifiedCommit": "23af85c900e54a2ac0f6bdf93ce2aad34b65d263",
+  "branch": "feature/v2.3-universal-program-intelligence",
+  "platform": {
+    "os": "Windows",
+    "node": "v24.16.0",
+    "dockerDesktop": "4.93.0",
+    "dockerEngine": "29.8.1 linux/amd64"
+  },
+  "worktreeCleanAtFullSuiteStart": true,
+  "registry": {
+    "capabilities": 51,
+    "domains": 11,
+    "workflows": 13,
+    "capabilitiesByRisk": {
+      "L0": 49,
+      "L1": 1,
+      "L2": 1
+    },
+    "diagnostics": 0
+  },
+  "tests": {
+    "focused": {
+      "command": "node --test --test-concurrency=1 tests/security-correlator.test.mjs",
+      "passed": 7,
+      "failed": 0,
+      "exitCode": 0,
+      "log": "focused-tests.log",
+      "sha256": "03f2b398a3358c484a2a5c3737cb13f1372a85fe32747866731c712ebcf0fc84"
+    },
+    "typecheck": {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "log": "typecheck.log",
+      "sha256": "01fd10a92d49508e4846c6d1a910a5a52a72348348f59d2896960745119ec41c"
+    },
+    "fullSuite": {
+      "command": "npm test",
+      "passed": 642,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "log": "full-test.log",
+      "sha256": "be6752be877730821d8a6c2c66d9f00c11f5ac4a4f99ebf3a62c32632618f886",
+      "durationMs": 133056.892
+    }
+  },
+  "releaseBuild": {
+    "command": "node --test --test-concurrency=1 tests/release-build.test.mjs",
+    "passed": 1,
+    "failed": 0,
+    "exitCode": 0,
+    "verifiedCommit": "23af85c900e54a2ac0f6bdf93ce2aad34b65d263",
+    "includedInFullSuite": true
+  },
+  "corpus": {
+    "sourceCommit": "23af85c900e54a2ac0f6bdf93ce2aad34b65d263",
+    "fixture": {
+      "path": "tests/fixtures/m4/vulnerability-contrast-corpus.mjs",
+      "sha256": "0e07d0d5758a15bee8004b7801d74df38fbe5f70cfb5ce12534e9e9ff5f512ca",
+      "groups": 20,
+      "categories": [
+        "CWE-22",
+        "CWE-78",
+        "CWE-89",
+        "CWE-918",
+        "CWE-95"
+      ],
+      "samples": 60,
+      "samplesExecuted": false
+    },
+    "metrics": {
+      "tp": 20,
+      "fp": 20,
+      "fn": 0,
+      "tn": 20,
+      "samples": 60,
+      "precision": 0.5,
+      "recall": 1,
+      "falsePositiveRate": 0.5
+    },
+    "applicability": "Metrics describe only 60 authored single-line snippets across CWE-78, CWE-89, CWE-22, CWE-918 and CWE-95. Lookalikes are in constant-false branches, so this measures the scanner line-regex reachability false positives on this corpus; it is not a real-world prevalence or detection-rate estimate and does not constitute exploit reproduction.",
+    "networkAccess": "none",
+    "samplesExecuted": false,
+    "reportSha256": "0e78b7ab8f0cdb0e6c75f701431736d94aa41c042729afefa47d0982a592477c"
+  },
+  "environmentEvidence": {
+    "l1Isolation": "REAL_LOCAL_VERIFIED",
+    "path": "../../../../acceptance/l1-docker-verification.json",
+    "taskId": "task_mvtp9hb3_fa92f1dc",
+    "analyzedProgramExecuted": false
+  },
+  "limitations": [
+    "GitHub CI has not run on this branch or exact commit.",
+    "Ubuntu/macOS runtime and cross-platform archive compatibility were not verified.",
+    "No independent test proved any vulnerability confirmed or refuted; all correlation results remain not_tested.",
+    "The capability consumes prepared evidence and does not execute Semgrep, Trivy, Syft, or OSV matching.",
+    "Corpus is 60 authored single-line samples; precision 0.50 and false-positive rate 0.50 apply only to that corpus and are not real-world estimates."
+  ],
+  "releaseAuthorization": "No tag, publish, merge, or formal release performed."
+}

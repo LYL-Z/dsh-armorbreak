@@ -1,0 +1,247 @@
+{
+  "schemaVersion": "armorbreak.v2.3.baseline-evidence/v1",
+  "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
+  "capturedOn": "2026-10-26",
+  "environment": {
+    "os": "Windows 11 build 26300",
+    "node": "v24.16.0",
+    "npm": "11.13.0",
+    "packageVersion": "2.2.0",
+    "lockfileVersion": 3,
+    "typescript": "5.9.3"
+  },
+  "commands": [
+    {
+      "command": "npm ci",
+      "status": "PASS",
+      "exitCode": 0,
+      "note": "Clean lockfile install."
+    },
+    {
+      "command": "npm test",
+      "status": "ENVIRONMENT_FAILURE",
+      "exitCode": 1,
+      "tests": {
+        "total": 530,
+        "passed": 524,
+        "failed": 6
+      },
+      "note": "Default TEMP was on C: while worktree was on D:. Six safe-file/hard-link cases failed on cross-volume temp handling (EVIDENCE_PATH_UNSAFE/EXDEV)."
+    },
+    {
+      "command": "same-volume targeted rerun for affected tests",
+      "status": "PASS",
+      "exitCode": 0,
+      "tests": {
+        "total": 14,
+        "passed": 14,
+        "failed": 0
+      },
+      "note": "TEMP/TMP pointed to an ignored directory on the worktree volume."
+    },
+    {
+      "command": "npm run typecheck",
+      "status": "PASS",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run bench",
+      "status": "PASS",
+      "exitCode": 0,
+      "note": "Generated tracked benchmark result was restored to its baseline blob before the final full test."
+    },
+    {
+      "command": "npm test (same-volume TEMP/TMP; benchmark output restored)",
+      "status": "PASS",
+      "exitCode": 0,
+      "tests": {
+        "total": 530,
+        "passed": 530,
+        "failed": 0,
+        "skipped": 0
+      },
+      "durationMs": 136743
+    }
+  ],
+  "benchmark": {
+    "status": "PASS",
+    "coldStartMs": 92.7,
+    "registry": {
+      "capabilities": 46,
+      "domains": 8
+    },
+    "peakMemory": "NOT_MEASURED",
+    "metrics": [
+      {
+        "id": "binary.identify",
+        "p50Ms": 1.812,
+        "p95Ms": 2.572
+      },
+      {
+        "id": "binary.strings",
+        "p50Ms": 1.779,
+        "p95Ms": 3.088
+      },
+      {
+        "id": "forensics.hash.parser",
+        "p50Ms": 0.953,
+        "p95Ms": 1.067
+      },
+      {
+        "id": "binary.entropy",
+        "p50Ms": 2.961,
+        "p95Ms": 3.328
+      },
+      {
+        "id": "forensics.hash.runner",
+        "p50Ms": 110.86,
+        "p95Ms": 117.24
+      },
+      {
+        "id": "network.pcap_overview",
+        "p50Ms": 8.179,
+        "p95Ms": 14.068
+      },
+      {
+        "id": "network.flows",
+        "p50Ms": 10.123,
+        "p95Ms": 11.515
+      },
+      {
+        "id": "sast.scan",
+        "p50Ms": 380.38,
+        "p95Ms": 425.469
+      },
+      {
+        "id": "report.markdown",
+        "p50Ms": 13.824,
+        "p95Ms": 15.034
+      },
+      {
+        "id": "report.html",
+        "p50Ms": 13.49,
+        "p95Ms": 19.794
+      },
+      {
+        "id": "report.sarif",
+        "p50Ms": 14.186,
+        "p95Ms": 15.622
+      },
+      {
+        "id": "workflow.BinaryStaticAnalysis",
+        "p50Ms": 1276.771,
+        "p95Ms": 1331.449
+      }
+    ]
+  },
+  "toolStatus": [
+    {
+      "id": "ghidra",
+      "name": "Ghidra",
+      "status": "DETECTED",
+      "version": "12.1.4 (install directory)",
+      "versionEvidence": "analyzeHeadless -help returned usage; version not independently printed",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "jadx",
+      "name": "JADX",
+      "status": "DETECTED",
+      "version": "1.5.6",
+      "versionEvidence": "PowerShell jadx --version exited 0; Core Health execFile probe returned spawn EINVAL",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "semgrep",
+      "name": "Semgrep",
+      "status": "DETECTED",
+      "version": "1.181.0",
+      "versionEvidence": "PowerShell semgrep --version exited 0; Core Health execFile probe failed; no sample scan run",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "trivy",
+      "name": "Trivy",
+      "status": "DETECTED",
+      "version": "0.76.0",
+      "versionEvidence": "PowerShell trivy --version exited 0; local vulnerability DB reported present",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "syft",
+      "name": "Syft",
+      "status": "DETECTED",
+      "version": "1.54.1",
+      "versionEvidence": "PowerShell syft version exited 0",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "tshark",
+      "name": "TShark",
+      "status": "DETECTED",
+      "version": "4.6.9",
+      "versionEvidence": "PowerShell tshark -v exited 0",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    }
+  ],
+  "isolation": {
+    "status": "BLOCKED",
+    "dockerVersion": "29.8.1",
+    "reason": "Docker CLI exists; Docker Linux engine pipe is unavailable; HealthService isolation.available=false"
+  },
+  "adapterDependencyDeclarationGaps": [
+    "binary.ghidra",
+    "android.jadx",
+    "sast.syft",
+    "network.tshark"
+  ],
+  "evidence": {
+    "current-registry.json": {
+      "path": "docs/v2.3/evidence/m0/current-registry.json",
+      "sha256": "1bc28424f130840cb75de4e9abeea0d776374fa28dea2fcca7381aac56047131",
+      "committed": true
+    },
+    "npm-ci.log": {
+      "path": "docs/v2.3/evidence/m0/npm-ci.log",
+      "sha256": "f2a59920b7bb73f83ad4f8b1d8a245309cae6f3b4fcf1650759b421d16c7b6f6",
+      "committed": false
+    },
+    "npm-test.log": {
+      "path": "docs/v2.3/evidence/m0/npm-test.log",
+      "sha256": "eb09f6e422ae183ec6124c5ca95c6e19ddbd14b7ac32640d6f625c96e7c5a39b",
+      "committed": false
+    },
+    "same-volume-targeted-tests.log": {
+      "path": "docs/v2.3/evidence/m0/same-volume-targeted-tests.log",
+      "sha256": "6eaf9933a84c9b880b3f00c0015fde1c9a617e13f61786c1002fb369f0c8f3ff",
+      "committed": false
+    },
+    "npm-typecheck.log": {
+      "path": "docs/v2.3/evidence/m0/npm-typecheck.log",
+      "sha256": "be1de938e1878b0f813efa18e6f85d5b2d36dd2e33247901bdb91d5ad6c92d45",
+      "committed": false
+    },
+    "npm-bench.log": {
+      "path": "docs/v2.3/evidence/m0/npm-bench.log",
+      "sha256": "66d92ae6ee28ae2919e9c88fc16c6aa917488c8cf9412af6e7486f210e227ad2",
+      "committed": false
+    },
+    "npm-test-final-baseline.log": {
+      "path": "docs/v2.3/evidence/m0/npm-test-final-baseline.log",
+      "sha256": "bcbafe65868ced28cec4fb9e761ab8d58b3e983b0f6bd1c457ece7a88510b4d7",
+      "committed": false
+    }
+  },
+  "notes": [
+    "The initial cross-volume failure is retained and not classified as a product PASS.",
+    "Unit tests for external adapters use injected executors/canned output; no real sample-analysis E2E was run for Ghidra, JADX, Semgrep, Trivy, Syft, or TShark.",
+    "Docker CLI was detected but the Docker Linux engine was unavailable; L1 isolation is blocked.",
+    "Registry snapshot contains only sanitized version/status data and no absolute host paths."
+  ]
+}

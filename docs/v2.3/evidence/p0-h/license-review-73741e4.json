@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "armorbreak.v2.3-owner-approved-license-self-review/v1",
+  "releaseModel": "OWNER_APPROVED_SELF_REVIEW",
+  "reviewStatus": "IMPLEMENTER_LICENSE_INVENTORY_COMPLETE_WITH_DISCLOSED_SCOPE_LIMITS",
+  "reviewerType": "IMPLEMENTER_AI_SELF_REVIEW",
+  "independentHumanReview": "NOT_PERFORMED",
+  "legalOpinion": false,
+  "sourceCommitReviewed": "73741e494f78e8eef49e9498e6528dbe6d8cf8ee",
+  "reviewedAt": "2026-11-04",
+  "packageEvidence": {
+    "portableArchive": {
+      "name": "armorbreak-portable-2.3.0.tar.gz",
+      "sourceCommit": "73741e494f78e8eef49e9498e6528dbe6d8cf8ee",
+      "bytes": 5904345,
+      "sha256": "238cf6d6e6be15c09fbad6029842e6c4d483150c0f4d29446d279f27a1545a08",
+      "manifest": "docs/v2.3/evidence/p0-h/candidate-package-73741e4.manifest.json",
+      "sbom": "docs/v2.3/evidence/p0-h/candidate-package-73741e4.sbom.cdx.json"
+    },
+    "npmPackage": {
+      "name": "dsh-armorbreak@2.3.0",
+      "dryRunInventory": "docs/v2.3/evidence/p0-h/npm-package-73741e4.json",
+      "fileCount": 663,
+      "unpackedBytes": 9288447,
+      "testPaths": 0,
+      "m3BinaryFixturePaths": 0,
+      "binaryPaths": 0
+    }
+  },
+  "licenseSources": [
+    {
+      "component": "ArmorBreak root source and included internal @armorbreak packages",
+      "declaredLicense": "MIT",
+      "source": "LICENSE, NOTICE, root package.json",
+      "status": "repository declares MIT; internal package manifests omit explicit SPDX fields"
+    },
+    {
+      "component": "TypeScript",
+      "version": "5.9.3",
+      "declaredLicense": "Apache-2.0",
+      "source": "installed node_modules/typescript/package.json and package-lock integrity",
+      "distribution": "not bundled in portable archive or npm tarball; installed as root runtime dependency",
+      "status": "clean-room install succeeded; lock URL resolves via registry.npmmirror.com and integrity is pinned"
+    },
+    {
+      "component": "Node.js runtime",
+      "declaredLicense": "MIT with bundled third-party notices",
+      "source": "external platform installation; not included in either package",
+      "status": "not redistributed by this package"
+    },
+    {
+      "component": "Ghidra 12.1.4 and JDK 21",
+      "declaredLicense": "external upstream distributions; not bundled",
+      "source": "adapter version gate and host install guidance",
+      "status": "not redistributed; exact host download provenance/notice review is outside this package"
+    },
+    {
+      "component": "Zig, TShark/Wireshark, JADX, Syft, Semgrep, Trivy",
+      "declaredLicense": "external optional tools; not bundled",
+      "source": "adapter/install guidance and portable archive file inventory",
+      "status": "not redistributed; do not bundle without a separate version-specific license review"
+    },
+    {
+      "component": "M3 binary test fixtures",
+      "declaredLicense": "repository test materials; not included in npm or portable package",
+      "source": "npm dry-run inventory and portable archive content manifest",
+      "status": "source repository fixture provenance remains a separate test-repository review scope"
+    }
+  ],
+  "verification": {
+    "commands": [
+      "npm audit --json --registry=https://registry.npmjs.org",
+      "npm ls --all --json",
+      "npm pack --dry-run --json",
+      "node scripts/v2/build-release.mjs --out <isolated-output> --evidence <isolated-output>/release-build.json --no-portable-evidence",
+      "node scripts/v2/v23-portable-cleanroom.mjs",
+      "tar -tzf <candidate-archive>"
+    ],
+    "npmAuditVulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "npmRuntimeDependencyCount": 1,
+    "typescriptIntegrityPinned": true,
+    "typescriptInstalledAndExecutedInCleanRoom": true,
+    "portableArchiveContainsNodeModules": false,
+    "portableInstallContractRequiresProductionDependencyInstall": true,
+    "npmPackageContainsTests": false,
+    "npmPackageContainsM3BinaryFixtures": false,
+    "npmPackageContainsBinaryToolPayloads": false,
+    "npmPackageContainsItsOwnInventory": false
+  },
+  "findings": [
+    {
+      "id": "V23-LIC-001",
+      "severity": "P2_METADATA_GAP",
+      "title": "Internal @armorbreak package manifests do not each declare SPDX license",
+      "disposition": "Root MIT LICENSE and NOTICE are included. No contradictory license was observed in the package contents; per-package metadata provenance was not independently certified.",
+      "fixCommit": null,
+      "retest": "Exact npm and portable inventories were captured; adding per-package SPDX metadata is a future metadata improvement, not represented as completed."
+    },
+    {
+      "id": "V23-LIC-002",
+      "severity": "P2_SUPPLY_CHAIN_TRANSPARENCY",
+      "title": "TypeScript lockfile URL uses a registry mirror",
+      "disposition": "The lockfile pins the official TypeScript 5.9.3 package integrity; clean-room npm install succeeded. Audit used registry.npmjs.org. The mirror URL and actual registry discrepancy are disclosed; no advisory was reported.",
+      "fixCommit": null,
+      "retest": "Verified package metadata declares Apache-2.0 and lock integrity is present."
+    },
+    {
+      "id": "V23-LIC-003",
+      "severity": "P2_UNVERIFIED_CHAIN_OF_TITLE",
+      "title": "Repository-level MIT declaration does not independently prove authorship or third-party rights for every source file",
+      "disposition": "The release includes only repository files selected by the builder, with LICENSE and NOTICE. This self-review cannot certify chain of title; owner accepts the implementation-agent review path but no independent legal review is claimed.",
+      "fixCommit": null,
+      "retest": "No conflicting license text was identified in the reviewed distribution inventory; human legal/copyright certification remains unperformed."
+    }
+  ],
+  "decision": "OWNER_APPROVED_LICENSE_SELF_REVIEW_WITH_DISCLOSED_RESIDUALS; NO_LEGAL_CERTIFICATION",
+  "releaseReadiness": "NOT_READY"
+}

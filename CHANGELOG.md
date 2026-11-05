@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2.3.0 — unpublished Stable candidate (PR #25)
+
+- Candidate adds bounded artifact inventory, JavaScript/TypeScript local symbol records, PE/ELF/Mach-O Program IR, evidence correlation, finite caller-supplied behavior comparison, and a fixed L0 MCP workflow route.
+- Ghidra is an optional external native parser over untrusted files and requires L1 approval; the project does not claim to sandbox it. MCP HTTP supports one configured principal and workspace per process.
+- Portable archives require a separate `npm install --omit=dev --ignore-scripts --no-audit --no-fund` step to provide TypeScript 5.9.3. This candidate is not a self-contained runtime.
+- Review policy: owner-approved implementation-agent self-review; no independent human security or license audit is claimed. Publication remains pending exact-main and tag gates.
+
 ## 2.2.0 — V2.2 Stable: Verified Core / Experimental Provider Integrations
 
 - Define a narrower, versioned Stable release contract for the verified Universal Core, MCP, Skills, Offline Golden, local-model checks, and evidenced host/install paths.

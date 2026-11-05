@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "armorbreak.v2.3.milestone-validation/v1",
+  "milestone": "M6",
+  "status": "PARTIAL_LOCAL_TESTED",
+  "sourceCommit": "965fbe4fa9abd2af73644865a56d8db64c8a6089",
+  "capturedOn": "2026-10-29",
+  "environment": {
+    "os": "Windows x64",
+    "node": "v24.16.0",
+    "python": "Python 3.13.13",
+    "dockerEngine": "29.8.1 linux/amd64"
+  },
+  "runtime": {
+    "capabilityCount": 53,
+    "domainCount": 12,
+    "capabilitiesByRisk": {
+      "L0": 51,
+      "L1": 1,
+      "L2": 1
+    },
+    "workflowCount": 14,
+    "dshModelToolCount": 10,
+    "mcpToolCount": 8,
+    "skillCount": 7,
+    "registryDiagnostics": []
+  },
+  "tests": {
+    "focused": {
+      "command": "node --test --test-concurrency=1 tests/mcp-server.test.mjs tests/cli-mcp-process.test.mjs tests/ui-api.test.mjs tests/mcp-audit.test.mjs",
+      "passed": 24,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 23585.2448,
+      "exitCode": 0
+    },
+    "full": {
+      "command": "npm test",
+      "passed": 647,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 363637.4342,
+      "exitCode": 0
+    },
+    "typecheck": {
+      "command": "npm run typecheck",
+      "exitCode": 0
+    }
+  },
+  "mcpWorkflow": {
+    "toolCount": 8,
+    "priorSevenPreserved": true,
+    "newTool": "armorbreak_workflow",
+    "supportedActions": [
+      "list",
+      "start"
+    ],
+    "startRiskLimit": "all registered steps must be L0",
+    "customStepsAccepted": false,
+    "modelPrincipalOrApprovalAccepted": false
+  },
+  "statusContract": {
+    "fields": [
+      "supportedLevels",
+      "engine",
+      "backendVersion",
+      "status",
+      "reason",
+      "limitations"
+    ],
+    "catalogStatus": "REGISTERED_NOT_EXECUTED",
+    "workbenchApiTested": true,
+    "visualUiTested": false
+  },
+  "logHashes": {
+    "docs/v2.3/evidence/m6/full-test.log": "2d3eace5bed883e702f488badb6758ba208331312ab14a611d8d87b4eae4f3b1",
+    "docs/v2.3/evidence/m6/focused-tests.log": "98cba0441deb3eb70d90090de856dfe331b4a42579bc44fb4052608a5ed92bc9",
+    "docs/v2.3/evidence/m6/typecheck.log": "6e71d9aff12155eb945012759d7d5c3a324746c7941e729bcdc11a66772e21c7"
+  },
+  "limitations": [
+    "Local Windows evidence only; GitHub exact-SHA CI and Ubuntu/macOS are not verified.",
+    "Registry status describes registration, not target execution or backend readiness.",
+    "Only seven implemented Universal Program Intelligence capabilities have support-level metadata; source.flows and bytecode.inspect remain unimplemented.",
+    "Workbench API exposes status metadata; the separate browser dashboard UI was not changed or visually accepted."
+  ]
+}

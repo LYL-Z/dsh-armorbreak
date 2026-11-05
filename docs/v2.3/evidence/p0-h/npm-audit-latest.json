@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "armorbreak.v2.3-p0h-npm-audit/v1",
+  "sourceCommit": "26a3e8edc81bf950cc7cdde37e027607121e207b",
+  "executedAt": "2026-10-30T08:17:48.4994545Z",
+  "command": "npm audit --registry=https://registry.npmjs.org --json",
+  "registry": "https://registry.npmjs.org",
+  "lockfileSha256": "1d6bf239cb2958f8945c0226aa5cd6907f4c9bc1ddd20a119e547a91c43d3371",
+  "node": "v24.16.0",
+  "npm": "11.13.0",
+  "exitCode": 0,
+  "result": {
+    "auditReportVersion": 2,
+    "vulnerabilities": {},
+    "metadata": {
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      },
+      "dependencies": {
+        "prod": 2,
+        "dev": 0,
+        "optional": 0,
+        "peer": 0,
+        "peerOptional": 0,
+        "total": 1
+      }
+    }
+  }
+}

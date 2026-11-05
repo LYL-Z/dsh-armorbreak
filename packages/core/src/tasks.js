@@ -176,6 +176,12 @@ export class TaskStore {
     return withFileMutex(this.taskFile(task.id), async () => {
       task.updatedAt = nowIso()
       if (!task.schemaVersion) task.schemaVersion = 'armorbreak/v2'
+      // Steps may be marked directly by a workflow executor before save().
+      // Derive counters from the persisted state so they cannot drift or count
+      // retries twice.
+      task.stats ??= { evidence: 0, findings: 0 }
+      task.stats.stepsDone = task.steps.filter((step) => step.status === 'DONE').length
+      task.stats.stepsFailed = task.steps.filter((step) => step.status === 'FAILED').length
       await ensureDir(this.taskDir(task.id))
       await writeJsonAtomic(this.taskFile(task.id), task)
       return task
@@ -237,8 +243,6 @@ export class TaskStore {
     const step = task.steps.find((item) => item.id === stepId)
     if (!step) throw new Error(`step not found: ${stepId}`)
     Object.assign(step, patch)
-    if (patch.status === 'DONE') task.stats.stepsDone += 1
-    if (patch.status === 'FAILED') task.stats.stepsFailed += 1
     await this.save(task)
     return step
   }
@@ -347,6 +351,8 @@ export class TaskStore {
     const { findings } = await store.readFindings()
     task.stats.evidence = evidence.length
     task.stats.findings = findings.length
+    task.stats.stepsDone = task.steps.filter((step) => step.status === 'DONE').length
+    task.stats.stepsFailed = task.steps.filter((step) => step.status === 'FAILED').length
     await this.save(task)
     return task
   }

@@ -1,0 +1,187 @@
+{
+  "schemaVersion": "armorbreak.v2.3.performance-benchmark/v1",
+  "sourceCommit": "965fbe4fa9abd2af73644865a56d8db64c8a6089",
+  "capturedAt": "2026-10-29",
+  "command": "node benchmarks/bench.mjs --sample <local-fixture-path> --out .runtime/p0-h-benchmark.json",
+  "environment": {
+    "node": "v24.16.0",
+    "platform": "win32",
+    "arch": "x64",
+    "cpus": 24,
+    "cpu": "Intel(R) Core(TM) Ultra 9 290HX Plus",
+    "totalMemGiB": 63.68,
+    "capabilityCount": 53,
+    "domainCount": 12
+  },
+  "input": {
+    "source": "external local fixture from the primary checkout; absolute path redacted",
+    "sha256": "468ffe129c395abf6b21a09efdf261910a95fb98aa982ead73caa7b2b684577e",
+    "sizeBytes": 360448
+  },
+  "workload": {
+    "pcapBytes": 700024,
+    "pcapPackets": 5000,
+    "sastFiles": 200,
+    "reportFindings": 50,
+    "reportEvidence": 100
+  },
+  "results": [
+    {
+      "name": "registry-cold-start",
+      "iterations": 1,
+      "totalMs": 102.7,
+      "meanMs": 102.7,
+      "p50Ms": 102.7,
+      "p95Ms": 102.7,
+      "p99Ms": 102.7,
+      "opsPerSec": 9.74,
+      "capabilityCount": 53,
+      "domainCount": 12
+    },
+    {
+      "name": "binary.identify (parser)",
+      "iterations": 60,
+      "totalMs": 103.95,
+      "meanMs": 1.732,
+      "p50Ms": 1.625,
+      "p95Ms": 2.242,
+      "p99Ms": 2.606,
+      "opsPerSec": 577.2,
+      "mode": "parser",
+      "capability": "binary.identify"
+    },
+    {
+      "name": "binary.strings (parser)",
+      "iterations": 60,
+      "totalMs": 117.78,
+      "meanMs": 1.963,
+      "p50Ms": 1.746,
+      "p95Ms": 2.892,
+      "p99Ms": 5.7,
+      "opsPerSec": 509.4,
+      "mode": "parser",
+      "capability": "binary.strings"
+    },
+    {
+      "name": "forensics.hash (parser)",
+      "iterations": 80,
+      "totalMs": 67.72,
+      "meanMs": 0.847,
+      "p50Ms": 0.814,
+      "p95Ms": 0.942,
+      "p99Ms": 1.792,
+      "opsPerSec": 1181.3,
+      "mode": "parser",
+      "capability": "forensics.hash"
+    },
+    {
+      "name": "binary.entropy (parser)",
+      "iterations": 60,
+      "totalMs": 152.91,
+      "meanMs": 2.549,
+      "p50Ms": 2.503,
+      "p95Ms": 2.723,
+      "p99Ms": 3.275,
+      "opsPerSec": 392.4,
+      "mode": "parser",
+      "capability": "binary.entropy"
+    },
+    {
+      "name": "forensics.hash (through runner)",
+      "iterations": 20,
+      "totalMs": 1798.5,
+      "meanMs": 89.925,
+      "p50Ms": 87.323,
+      "p95Ms": 97.155,
+      "p99Ms": 98.432,
+      "opsPerSec": 11.1,
+      "mode": "runner",
+      "capability": "forensics.hash"
+    },
+    {
+      "name": "network.pcap_overview (parser)",
+      "iterations": 30,
+      "totalMs": 249.73,
+      "meanMs": 8.324,
+      "p50Ms": 7.781,
+      "p95Ms": 12.641,
+      "p99Ms": 13.523,
+      "opsPerSec": 120.1,
+      "mode": "parser",
+      "capability": "network.pcap_overview"
+    },
+    {
+      "name": "network.flows (parser)",
+      "iterations": 30,
+      "totalMs": 342.19,
+      "meanMs": 11.406,
+      "p50Ms": 10.943,
+      "p95Ms": 14.196,
+      "p99Ms": 15.964,
+      "opsPerSec": 87.7,
+      "mode": "parser",
+      "capability": "network.flows"
+    },
+    {
+      "name": "sast.scan (parser)",
+      "iterations": 10,
+      "totalMs": 5187.2,
+      "meanMs": 518.72,
+      "p50Ms": 524.107,
+      "p95Ms": 554.438,
+      "p99Ms": 554.438,
+      "opsPerSec": 1.9,
+      "mode": "parser",
+      "capability": "sast.scan"
+    },
+    {
+      "name": "report-markdown",
+      "iterations": 20,
+      "totalMs": 290.75,
+      "meanMs": 14.537,
+      "p50Ms": 14.153,
+      "p95Ms": 15.955,
+      "p99Ms": 16.815,
+      "opsPerSec": 68.8
+    },
+    {
+      "name": "report-html",
+      "iterations": 20,
+      "totalMs": 321.61,
+      "meanMs": 16.08,
+      "p50Ms": 15.289,
+      "p95Ms": 18.219,
+      "p99Ms": 23.914,
+      "opsPerSec": 62.2
+    },
+    {
+      "name": "report-sarif",
+      "iterations": 20,
+      "totalMs": 283.43,
+      "meanMs": 14.172,
+      "p50Ms": 14.263,
+      "p95Ms": 15.579,
+      "p99Ms": 18.944,
+      "opsPerSec": 70.6
+    },
+    {
+      "name": "BinaryStaticAnalysis-workflow",
+      "iterations": 5,
+      "totalMs": 6350.48,
+      "meanMs": 1270.096,
+      "p50Ms": 1267.052,
+      "p95Ms": 1322.097,
+      "p99Ms": 1322.097,
+      "opsPerSec": 0.8
+    }
+  ],
+  "memory": {
+    "rssMiB": 341.8,
+    "heapUsedMiB": 49.2
+  },
+  "limitations": [
+    "The result records end-of-process RSS and heap only, not peak memory.",
+    "The baseline record does not capture CPU model; hardware equivalence is not proven.",
+    "Single local run; not a controlled or cross-host performance result."
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "armorbreak.v2.3.m3-toolchain-evidence/v1",
+  "observedOn": "2026-10-29",
+  "host": "Windows x64",
+  "compiler": {
+    "name": "Zig",
+    "version": "0.17.0",
+    "frontend": "clang 22.1.8",
+    "target": "x86_64-macos",
+    "packageUrl": "https://ziglang.org/download/0.17.0/zig-x86_64-windows-0.17.0.zip",
+    "officialIndexUrl": "https://ziglang.org/download/index.json",
+    "archiveBytes": 100268137,
+    "archiveSha256": "b5663f69581dcf391293fbf16c06cb80d81d806545ce618b4d0bab7f0eb8c428",
+    "indexSha256MatchedArchive": true
+  },
+  "source": {
+    "path": "docs/v2.3/evidence/m3/fixtures/native_fixture.c",
+    "sha256": "2bb6f4d242cbf4e578c416532cb202a8c64a4fb9f664f59c5fd802b9509a130e",
+    "bytes": 232
+  },
+  "checkedInOutputs": [
+    {
+      "path": "docs/v2.3/evidence/m3/fixtures/native_fixture_x86_64_macho.macho",
+      "sha256": "02edb976b622c349337f53429a424ae853f0b0a86d0fa73a80a709571ed302de",
+      "bytes": 17222,
+      "format": "Mach-O 64-bit x86-64 executable",
+      "executed": false
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/fixtures/native_fixture_x86_64_macho_stripped.macho",
+      "sha256": "78255a8f267a4ba7ea62ff2d5f75528c24fc062c2dd8954cc9f3ea8ab866e38b",
+      "bytes": 16572,
+      "format": "Mach-O 64-bit x86-64 executable with symbol-table load commands removed",
+      "executed": false
+    }
+  ],
+  "limits": [
+    "Cross-compilation on Windows is not a macOS host/runtime test.",
+    "No Apple toolchain or Apple strip utility was used.",
+    "The checked-in artifact hashes, not an unverified fresh rebuild, identify the exact E2E inputs."
+  ]
+}

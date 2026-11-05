@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "armorbreak.v2.3-local-validation/v1",
+  "capturedAt": "2026-11-01T03:10:31.225Z",
+  "sourceCommit": "7a78aef15e59f16f71b192089dcb82a81e811fb5",
+  "platform": {
+    "os": "win32",
+    "arch": "x64",
+    "node": "v24.16.0"
+  },
+  "runs": {
+    "fullSuite": {
+      "command": "npm test",
+      "firstAttempt": {
+        "exitCode": 1,
+        "passed": 661,
+        "failed": 1,
+        "failure": "generated-docs fixture git clone process exited 0xC0000005 using default Windows Git PATH",
+        "logSha256": "e457784bccefa01ae8023d8eb02aa7542d255d73c7e6481969c3b5d97eb0268b"
+      },
+      "retry": {
+        "command": "prepend Codex runtime Git 2.53.0 to PATH; npm test",
+        "exitCode": 0,
+        "passed": 662,
+        "failed": 0,
+        "skipped": 0,
+        "logSha256": "81908c32509fd311cb77f55bd2c83ef55f0afe880e26c8d163b225e4ae365a18"
+      }
+    },
+    "typecheck": {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "logSha256": "a208cfdc3262ba476e0f68438ca87a17c09b88e4348a45d74ca7c60875447c74"
+    },
+    "evidenceIntegrity": {
+      "command": "node scripts/v2/validate-v23-acceptance.mjs",
+      "exitCode": 0,
+      "checkedFiles": 83,
+      "sourceCommit": "7a78aef15e59f16f71b192089dcb82a81e811fb5"
+    },
+    "prGate": {
+      "command": "node scripts/v2/v23-release-gate.mjs --check-pr",
+      "exitCode": 0,
+      "gateConfiguration": "VALIDATED",
+      "releaseReadiness": "NOT_READY",
+      "blockers": [
+        "P0-H closure",
+        "independent human security and license review",
+        "OS-integrated updater and second-principal permission validation",
+        "exact-main CI, immutable package/SBOM hashes and GitHub attestation",
+        "maintainer release authorization"
+      ]
+    },
+    "actionlint": {
+      "command": "docker run rhysd/actionlint@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667 .github/workflows/v2.3-main-gate.yml",
+      "exitCode": 0
+    },
+    "finalFocused": {
+      "command": "node --test tests/docs-consistency.test.mjs tests/v23-provenance.test.mjs tests/v23-release-gate.test.mjs",
+      "exitCode": 0,
+      "passed": 14,
+      "failed": 0,
+      "logSha256": "6148cae98b017bf03d4045dfa5b4ac799e3f34541a6da157cb66a525a80949ac"
+    },
+    "finalEvidenceIntegrity": {
+      "command": "node scripts/v2/validate-v23-acceptance.mjs",
+      "exitCode": 0,
+      "checkedFiles": 87,
+      "sourceCommit": "7a78aef15e59f16f71b192089dcb82a81e811fb5",
+      "logSha256": "abdd999d9a13696d2876e82431d2f0b59ee6b7975c3ebc93e7fbfddce5a9f696"
+    },
+    "finalPrGate": {
+      "command": "node scripts/v2/v23-release-gate.mjs --check-pr",
+      "exitCode": 0,
+      "gateConfiguration": "VALIDATED",
+      "releaseReadiness": "NOT_READY",
+      "logSha256": "c3a9ce7063cf190b1cb255b27c861920ead5e66d86ec91d26e2550c82f4293de"
+    },
+    "docsConsistency": {
+      "command": "node scripts/v2/check-docs-consistency.mjs",
+      "exitCode": 0,
+      "logSha256": "826298919a4cdf0dce96944fe3d1755c8aabeb107c36b7e16f74b2e81580c080"
+    },
+    "realPackageDrill": {
+      "command": "node scripts/v2/v23-real-package-drill.mjs",
+      "exitCode": 0,
+      "status": "PASS_ISOLATED_REAL_PACKAGE_DEPLOYMENT",
+      "sourceCommit": "7a78aef15e59f16f71b192089dcb82a81e811fb5",
+      "candidateArchiveSha256": "cb9e9edef5fd677adbdee97e521f09a457505bee805db319719c206c579590fc",
+      "historicalV22AssetSha256": "5e5aca98da18d4f0cb17db71cf57c5577f8f8f64810a30844bd5237b4ed7b630",
+      "rollbackHashesEqual": true
+    }
+  },
+  "candidatePackage": {
+    "sourceCommit": "7a78aef15e59f16f71b192089dcb82a81e811fb5",
+    "version": "2.3.0",
+    "archiveSha256": "cb9e9edef5fd677adbdee97e521f09a457505bee805db319719c206c579590fc",
+    "memberManifestSha256": "46b607b92248c4bdab0bcadf25ed5c5b5f58223061eba36a5a34bde21ad7b981",
+    "sbomSha256": "4579399cf0df2608106cad5ace01aad13e68399c9cc7e94e652bb3416966b886",
+    "productionSigned": false
+  }
+}

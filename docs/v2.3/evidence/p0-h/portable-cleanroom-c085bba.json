@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "armorbreak.v2.3-portable-cleanroom/v1",
+  "status": "PASS_ACTUAL_CLEANROOM_ARCHIVE_EXECUTION",
+  "sourceCommit": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v24.16.0",
+    "npm": "11.13.0",
+    "developmentWorktreeNodeModulesUsed": false
+  },
+  "artifact": {
+    "path": "armorbreak-portable-2.3.0.tar.gz",
+    "bytes": 5913561,
+    "sha256": "d3fca8f98217d6043075007ddb834078457bbf8d3b21d6ad662076f6393bc096",
+    "manifestPath": "armorbreak-portable-2.3.0.tar.gz.manifest.json",
+    "manifestSha256": "2642e397abc75790901baf2b783bc174af1f2921453e19cda2263975008b888a",
+    "manifestCommit": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
+    "sbomSha256": "b346a93d66f9808b2bb8f84a8a33560ae81bdc1a7ed898f2d1bbe7d72877df66"
+  },
+  "runtimeDependency": {
+    "package": "typescript",
+    "version": "5.9.3",
+    "license": "Apache-2.0",
+    "install": [
+      "npm",
+      "install",
+      "--omit=dev",
+      "--ignore-scripts",
+      "--no-audit",
+      "--no-fund",
+      "--registry",
+      "https://registry.npmjs.org"
+    ],
+    "result": {
+      "exitCode": 0,
+      "stdoutSha256": "2ccbb04ac55c9a1531902efeaa0258157cda7dcac81718372e4de004936a2a6b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "checks": {
+    "capabilities": {
+      "count": 53,
+      "result": {
+        "exitCode": 0,
+        "stdoutSha256": "9ba2b8bd8434959a50dd38ae3ea27a24533fc842a3a6cf1966761accd7afc34d",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "sourceSymbolsJavaScriptAndTypeScript": {
+      "taskId": "task_mw2wq6cn_a2cc450b",
+      "state": "COMPLETED",
+      "summary": "S2 解析 2/2 个 JS/TS 候选文件，得到 6 个符号、3 个同文件引用；状态 COMPLETE。",
+      "reportSha256": "37bd09a1d19223aebbc82361657fdf9aaaf3b861a1d471b28e75734d73b9a377",
+      "taskAndReportRead": true
+    },
+    "l0Workflow": {
+      "workflow": "CrossLanguageSourceReview",
+      "taskId": "task_mw2wq70v_ed941705",
+      "state": "COMPLETED",
+      "stepStatus": "DONE",
+      "stats": {
+        "evidence": 2,
+        "findings": 0,
+        "stepsDone": 1,
+        "stepsFailed": 0
+      },
+      "reportSha256": "569b8a7a491eb73ad8cdb53431263a829f4029d4e30d3c3769b3562bd7441aca",
+      "taskAndReportRead": true
+    }
+  }
+}

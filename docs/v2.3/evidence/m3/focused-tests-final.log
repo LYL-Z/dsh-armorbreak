@@ -1,0 +1,36 @@
+✔ binary manifest: shape, ids, risk levels and params schema follow CONTRACT (1.248ms)
+✔ binary.identify: PE32+ fields, imports, exports, overlay, hashes (4.4716ms)
+✔ binary.identify: ELF fields, build-id, dynamic imports (2.0255ms)
+✔ binary.identify: thin Mach-O, fat/java detection and unknown input (1.2817ms)
+✔ binary.identify: malformed/truncated PE and ELF return structured results without crashing (2.0825ms)
+✔ binary.identify: empty inputs throw actionable Errors (0.3927ms)
+✔ binary.identify: deterministic output (same input -> identical JSON) (0.6435ms)
+✔ binary.strings: ASCII/UTF-16 extraction and categorization (3.7473ms)
+✔ binary.strings: shell command and persistence strings produce hypothesis findings (0.2909ms)
+✔ binary.entropy: zero buffer, high-entropy buffer and bounded block map (1.8887ms)
+✔ binary.headers: PE optional header, directories, hardening flags (0.6658ms)
+✔ binary.headers: ELF program headers and Mach-O load commands (0.7295ms)
+✔ binary.structure: ELF symbols, PE exports and Mach-O function starts (1.156ms)
+✔ binary.structure: PE exception directory is summarized when present (0.3021ms)
+✔ M3 binary.program_ir normalizes PE, ELF and Mach-O symbol and stripped fixtures and rejects corruption (3.9945ms)
+✔ M3 NativeProgramIRReview is registered and binary.program_ir runs through Runner and PolicyGateway (196.8829ms)
+✔ binary: long loops cooperate with AbortSignal (0.5841ms)
+✔ binary: helper parsers agree with container detection and never throw on garbage (0.6639ms)
+✔ binary.behavior: aggregates suspicious API categories and stays hypothesis-level (0.7533ms)
+✔ tshark: parses packet JSON into observed HTTP/DNS summary and hypothesis-safe findings (1.2572ms)
+✔ tshark capability calls argv seam and returns bounded data; missing target rejects (2.0426ms)
+✔ syft: normalizes CycloneDX, flags missing versions without CVE claims (0.2868ms)
+✔ syft capability uses dir: argv with seam and never claims CVE (0.5567ms)
+✔ jadx: indexes sources/APIs without returning source, and seam writes temp output (5.0538ms)
+✔ ghidra: parses bounded function summary and flags sensitive names as hypothesis (6.2881ms)
+✔ M3 compiled PE/ELF fixtures preserve identity, symbol presence, and strip evidence (16.6637ms)
+✔ M3 compiled Mach-O fixture preserves native identity, stripped-symbol state, and truncation evidence (3.0776ms)
+✔ M3 corrupted PE/ELF/Mach-O fixtures return bounded structured partial or unsupported results (2.2569ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 356.4402

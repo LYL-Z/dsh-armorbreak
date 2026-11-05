@@ -1,0 +1,857 @@
+{
+  "schemaVersion": "armorbreak.v2.3.runtime-snapshot/v1",
+  "generatedAt": "2026-10-26T15:52:39.428Z",
+  "sourceCommit": "3135688b3a5cbea89798bc0c61a2a45abfa38312",
+  "branch": "feature/v2.3-universal-program-intelligence",
+  "packageVersion": "2.2.0",
+  "coreVersion": "0.1.0-p1",
+  "protocolVersion": "1.0.0",
+  "platform": "win32",
+  "node": "v24.16.0",
+  "capabilityCount": 48,
+  "domainCount": 9,
+  "capabilitiesByRisk": {
+    "L0": 46,
+    "L1": 1,
+    "L2": 1
+  },
+  "capabilitiesByDomain": {
+    "android": 6,
+    "artifact": 2,
+    "binary": 7,
+    "ctf": 5,
+    "forensics": 6,
+    "live": 2,
+    "network": 8,
+    "sast": 8,
+    "web": 4
+  },
+  "capabilities": [
+    {
+      "id": "android.apk_structure",
+      "domain": "android",
+      "title": "APK/ZIP 容器结构分析",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "android.dex",
+      "domain": "android",
+      "title": "DEX 结构与字符串摘要",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "android.findings",
+      "domain": "android",
+      "title": "Android 配置风险与加固迹象汇总",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "android.jadx",
+      "domain": "android",
+      "title": "JADX 反编译索引（外部工具）",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "android.manifest",
+      "domain": "android",
+      "title": "AndroidManifest.xml 解析",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "android.signing",
+      "domain": "android",
+      "title": "APK 签名方案与证书摘要",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "artifact.identify",
+      "domain": "artifact",
+      "title": "通用产物识别",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "artifact.inventory",
+      "domain": "artifact",
+      "title": "递归产物清单与归档索引",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "externalTools": []
+    },
+    {
+      "id": "binary.behavior",
+      "domain": "binary",
+      "title": "行为级导入/结构启发式评分",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "binary.entropy",
+      "domain": "binary",
+      "title": "整体/分块/分节熵计算与压缩加密提示",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "binary.ghidra",
+      "domain": "binary",
+      "title": "Ghidra 深度函数分析（外部工具）",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "binary.headers",
+      "domain": "binary",
+      "title": "PE/ELF/Mach-O 头部结构转储",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "binary.identify",
+      "domain": "binary",
+      "title": "可执行文件类型与架构识别",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "binary.strings",
+      "domain": "binary",
+      "title": "ASCII / UTF-16LE 字符串提取与分类",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "binary.structure",
+      "domain": "binary",
+      "title": "符号/函数结构启发式提取",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.classify",
+      "domain": "ctf",
+      "title": "多层编码与文件格式识别",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.crypto_basics",
+      "domain": "ctf",
+      "title": "古典密码启发式分析",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.decode",
+      "domain": "ctf",
+      "title": "指定编码链解码",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.flag_scan",
+      "domain": "ctf",
+      "title": "flag 与高熵字符串扫描",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "ctf.hash_id",
+      "domain": "ctf",
+      "title": "哈希与摘要格式识别",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.filetype",
+      "domain": "forensics",
+      "title": "文件类型识别（魔数与内容特征）",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.hash",
+      "domain": "forensics",
+      "title": "多算法文件哈希与完整性标识",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.ioc",
+      "domain": "forensics",
+      "title": "IOC 指标提取（IP/域名/URL/邮箱/哈希/注册表/路径）",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.metadata",
+      "domain": "forensics",
+      "title": "文件格式元数据提取",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.timeline",
+      "domain": "forensics",
+      "title": "文件内结构时间线提取",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "forensics.yara_lite",
+      "domain": "forensics",
+      "title": "启发式规则匹配（yara_lite 内置规则集）",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "live.container_exec",
+      "domain": "live",
+      "title": "隔离容器内受控执行（L1）",
+      "riskLevel": "L1",
+      "targetKind": "file",
+      "externalTools": [
+        "docker"
+      ]
+    },
+    {
+      "id": "live.http_probe",
+      "domain": "live",
+      "title": "授权目标 HTTP 探测（L2）",
+      "riskLevel": "L2",
+      "targetKind": "network",
+      "externalTools": []
+    },
+    {
+      "id": "network.anomalies",
+      "domain": "network",
+      "title": "网络异常启发式检测",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "network.dns",
+      "domain": "network",
+      "title": "DNS 查询/响应分析",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "network.flows",
+      "domain": "network",
+      "title": "TCP/UDP 会话流重建",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "network.http",
+      "domain": "network",
+      "title": "明文 HTTP 请求/响应分析",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "network.iocs",
+      "domain": "network",
+      "title": "网络 IOC 线索提取",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "network.pcap_overview",
+      "domain": "network",
+      "title": "抓包文件概览",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "network.tls",
+      "domain": "network",
+      "title": "TLS 握手与 SNI 分析",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "network.tshark",
+      "domain": "network",
+      "title": "TShark 抓包解析（外部工具）",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "sast.deps",
+      "domain": "sast",
+      "title": "依赖清单与供应链启发式审计",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "externalTools": []
+    },
+    {
+      "id": "sast.patch_suggestion",
+      "domain": "sast",
+      "title": "生成修复补丁与回归测试建议",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "sast.sbom",
+      "domain": "sast",
+      "title": "生成 CycloneDX 1.5 SBOM",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "externalTools": []
+    },
+    {
+      "id": "sast.scan",
+      "domain": "sast",
+      "title": "多语言源码危险 API 扫描",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "externalTools": []
+    },
+    {
+      "id": "sast.secrets",
+      "domain": "sast",
+      "title": "硬编码凭据与密钥检测",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "externalTools": []
+    },
+    {
+      "id": "sast.semgrep",
+      "domain": "sast",
+      "title": "Semgrep 外部规则扫描（JSON 归一化，L0）",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "externalTools": [
+        "semgrep"
+      ]
+    },
+    {
+      "id": "sast.syft",
+      "domain": "sast",
+      "title": "Syft SBOM 盘点（外部工具）",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "externalTools": []
+    },
+    {
+      "id": "sast.trivy",
+      "domain": "sast",
+      "title": "Trivy 文件系统/依赖扫描（JSON 归一化，L0）",
+      "riskLevel": "L0",
+      "targetKind": "directory",
+      "externalTools": [
+        "trivy"
+      ]
+    },
+    {
+      "id": "web.har",
+      "domain": "web",
+      "title": "HAR 流量安全审计",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "web.headers",
+      "domain": "web",
+      "title": "HTTP 响应头安全审计",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "web.http_message",
+      "domain": "web",
+      "title": "原始 HTTP 报文解析与检查",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    },
+    {
+      "id": "web.openapi",
+      "domain": "web",
+      "title": "OpenAPI 规范安全审查",
+      "riskLevel": "L0",
+      "targetKind": "file",
+      "externalTools": []
+    }
+  ],
+  "workflowCount": 10,
+  "workflows": [
+    {
+      "id": "UniversalArtifactTriage",
+      "title": "通用产物清点与归档索引",
+      "description": "对授权的本地项目目录做有界文件清单、格式候选识别与 ZIP/TAR/GZIP 内嵌关系索引；成员只在内存中读取，不执行或写出样本。",
+      "targetKind": "directory",
+      "steps": [
+        {
+          "id": "inventory",
+          "title": "产物识别与递归清单",
+          "capabilityId": "artifact.inventory"
+        }
+      ]
+    },
+    {
+      "id": "BinaryStaticAnalysis",
+      "title": "二进制静态分析",
+      "description": "对 PE/ELF/Mach-O 样本做格式识别、结构、函数/符号、字符串、熵、哈希与 IOC 关联，全程离线、不执行样本。",
+      "targetKind": "file",
+      "steps": [
+        {
+          "id": "identify",
+          "title": "格式与架构识别",
+          "capabilityId": "binary.identify"
+        },
+        {
+          "id": "headers",
+          "title": "头/节/加载命令解析",
+          "capabilityId": "binary.headers"
+        },
+        {
+          "id": "structure",
+          "title": "符号、导入导出与函数线索",
+          "capabilityId": "binary.structure"
+        },
+        {
+          "id": "strings",
+          "title": "字符串提取与分类",
+          "capabilityId": "binary.strings"
+        },
+        {
+          "id": "entropy",
+          "title": "熵与加壳/加密线索",
+          "capabilityId": "binary.entropy"
+        },
+        {
+          "id": "hash",
+          "title": "哈希与文件指纹",
+          "capabilityId": "forensics.hash"
+        },
+        {
+          "id": "ioc",
+          "title": "IOC 提取",
+          "capabilityId": "forensics.ioc"
+        }
+      ]
+    },
+    {
+      "id": "AndroidAPKReview",
+      "title": "Android APK 安全审计",
+      "description": "APK 结构、二进制 Manifest、DEX、签名与权限/组件暴露审计，全程离线。",
+      "targetKind": "file",
+      "steps": [
+        {
+          "id": "structure",
+          "title": "APK 包结构",
+          "capabilityId": "android.apk_structure"
+        },
+        {
+          "id": "manifest",
+          "title": "Manifest 与组件审计",
+          "capabilityId": "android.manifest"
+        },
+        {
+          "id": "dex",
+          "title": "DEX 概况",
+          "capabilityId": "android.dex"
+        },
+        {
+          "id": "signing",
+          "title": "签名信息",
+          "capabilityId": "android.signing"
+        },
+        {
+          "id": "findings",
+          "title": "安全发现汇总",
+          "capabilityId": "android.findings"
+        }
+      ]
+    },
+    {
+      "id": "WebCodeSecurityReview",
+      "title": "Web/源码安全审计",
+      "description": "对本地代码目录做危险调用、敏感信息、依赖与供应链审计，产出 CWE 映射与修复建议。",
+      "targetKind": "directory",
+      "steps": [
+        {
+          "id": "scan",
+          "title": "危险调用与污点线索扫描",
+          "capabilityId": "sast.scan",
+          "failurePolicy": "continue-independent"
+        },
+        {
+          "id": "secrets",
+          "title": "硬编码密钥检测",
+          "capabilityId": "sast.secrets",
+          "dependsOn": []
+        },
+        {
+          "id": "deps",
+          "title": "依赖清单审计",
+          "capabilityId": "sast.deps",
+          "dependsOn": []
+        },
+        {
+          "id": "sbom",
+          "title": "SBOM 生成",
+          "capabilityId": "sast.sbom",
+          "dependsOn": [
+            "deps"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PCAPInvestigation",
+      "title": "PCAP 流量取证分析",
+      "description": "离线解析 PCAP/PCAPNG：会话、DNS、TLS 元数据、HTTP、IOC 与异常模式。",
+      "targetKind": "file",
+      "steps": [
+        {
+          "id": "overview",
+          "title": "抓包总览",
+          "capabilityId": "network.pcap_overview"
+        },
+        {
+          "id": "flows",
+          "title": "会话重建",
+          "capabilityId": "network.flows"
+        },
+        {
+          "id": "dns",
+          "title": "DNS 分析",
+          "capabilityId": "network.dns"
+        },
+        {
+          "id": "tls",
+          "title": "TLS 元数据",
+          "capabilityId": "network.tls"
+        },
+        {
+          "id": "http",
+          "title": "HTTP 明文分析",
+          "capabilityId": "network.http"
+        },
+        {
+          "id": "iocs",
+          "title": "IOC 提取",
+          "capabilityId": "network.iocs"
+        },
+        {
+          "id": "anomalies",
+          "title": "异常通信模式",
+          "capabilityId": "network.anomalies"
+        }
+      ]
+    },
+    {
+      "id": "DependencyAudit",
+      "title": "依赖与供应链审计",
+      "description": "对代码目录的依赖清单做盘点、SBOM 生成与密钥泄漏检查；缺少漏洞库时不伪造 CVE 结论。",
+      "targetKind": "directory",
+      "steps": [
+        {
+          "id": "deps",
+          "title": "依赖盘点与启发式",
+          "capabilityId": "sast.deps"
+        },
+        {
+          "id": "sbom",
+          "title": "CycloneDX SBOM",
+          "capabilityId": "sast.sbom"
+        },
+        {
+          "id": "secrets",
+          "title": "密钥泄漏检查",
+          "capabilityId": "sast.secrets"
+        }
+      ]
+    },
+    {
+      "id": "CTFArtifactAnalysis",
+      "title": "CTF 题目产物分析",
+      "description": "题目文件分类、哈希识别、编码/古典密码启发式与 flag 模式扫描；仅用于本地题目与靶场。",
+      "targetKind": "file",
+      "steps": [
+        {
+          "id": "classify",
+          "title": "文件/编码分类",
+          "capabilityId": "ctf.classify"
+        },
+        {
+          "id": "hash",
+          "title": "哈希识别",
+          "capabilityId": "ctf.hash_id"
+        },
+        {
+          "id": "crypto",
+          "title": "古典密码分析",
+          "capabilityId": "ctf.crypto_basics"
+        },
+        {
+          "id": "flag",
+          "title": "Flag 模式扫描",
+          "capabilityId": "ctf.flag_scan"
+        }
+      ]
+    },
+    {
+      "id": "ForensicFileReview",
+      "title": "数字取证文件审查",
+      "description": "文件类型、哈希、元数据、时间线、IOC 与规则匹配，形成可复核证据链。",
+      "targetKind": "file",
+      "steps": [
+        {
+          "id": "filetype",
+          "title": "文件类型",
+          "capabilityId": "forensics.filetype"
+        },
+        {
+          "id": "hash",
+          "title": "哈希",
+          "capabilityId": "forensics.hash"
+        },
+        {
+          "id": "metadata",
+          "title": "元数据",
+          "capabilityId": "forensics.metadata"
+        },
+        {
+          "id": "timeline",
+          "title": "时间线",
+          "capabilityId": "forensics.timeline"
+        },
+        {
+          "id": "ioc",
+          "title": "IOC",
+          "capabilityId": "forensics.ioc"
+        },
+        {
+          "id": "yara",
+          "title": "规则匹配（启发式）",
+          "capabilityId": "forensics.yara_lite"
+        }
+      ]
+    },
+    {
+      "id": "WebAPIReview",
+      "title": "Web API 规范审计",
+      "description": "审计 OpenAPI 规范与 HAR 记录：认证/授权、安全响应头、Cookie、CORS、敏感参数。",
+      "targetKind": "file",
+      "steps": [
+        {
+          "id": "openapi",
+          "title": "OpenAPI 规范审计",
+          "capabilityId": "web.openapi"
+        },
+        {
+          "id": "har",
+          "title": "HAR 记录审计",
+          "capabilityId": "web.har"
+        }
+      ]
+    },
+    {
+      "id": "SecurityReportGeneration",
+      "title": "安全研究报告生成",
+      "description": "不执行分析，仅从任务已有证据/发现生成报告（Markdown/HTML/JSON/SARIF/PDF）。",
+      "targetKind": "none",
+      "steps": []
+    }
+  ],
+  "dshModelToolCount": 10,
+  "dshModelTools": [
+    "armorbreak_health",
+    "armorbreak_capabilities",
+    "armorbreak_scope",
+    "armorbreak_files",
+    "armorbreak_task",
+    "armorbreak_analyze",
+    "armorbreak_workflow",
+    "armorbreak_evidence",
+    "armorbreak_report",
+    "armorbreak_environment"
+  ],
+  "mcpToolCount": 7,
+  "mcpTools": [
+    "armorbreak_health",
+    "armorbreak_capabilities",
+    "armorbreak_analyze",
+    "armorbreak_task_get",
+    "armorbreak_evidence",
+    "armorbreak_report",
+    "armorbreak_task_list"
+  ],
+  "skillCount": 7,
+  "skillDirectories": [
+    "armorbreak-ai-eval",
+    "armorbreak-android",
+    "armorbreak-binary",
+    "armorbreak-pcap",
+    "armorbreak-report",
+    "armorbreak-sast",
+    "armorbreak-triage"
+  ],
+  "adapterCapabilities": [
+    {
+      "capability": "binary.ghidra",
+      "tool": "ghidra",
+      "externalToolsDeclared": false
+    },
+    {
+      "capability": "android.jadx",
+      "tool": "jadx",
+      "externalToolsDeclared": false
+    },
+    {
+      "capability": "sast.semgrep",
+      "tool": "semgrep",
+      "externalToolsDeclared": true
+    },
+    {
+      "capability": "sast.trivy",
+      "tool": "trivy",
+      "externalToolsDeclared": true
+    },
+    {
+      "capability": "sast.syft",
+      "tool": "syft",
+      "externalToolsDeclared": false
+    },
+    {
+      "capability": "network.tshark",
+      "tool": "tshark",
+      "externalToolsDeclared": false
+    },
+    {
+      "capability": "live.container_exec",
+      "tool": "docker",
+      "externalToolsDeclared": true
+    }
+  ],
+  "externalToolProbes": [
+    {
+      "id": "ghidra",
+      "name": "Ghidra",
+      "status": "DETECTED",
+      "version": "12.1.4 (install directory)",
+      "versionEvidence": "analyzeHeadless -help returned usage; version not independently printed",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "jadx",
+      "name": "JADX",
+      "status": "DETECTED",
+      "version": "1.5.6",
+      "versionEvidence": "PowerShell jadx --version exited 0; Core Health execFile probe returned spawn EINVAL",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "semgrep",
+      "name": "Semgrep",
+      "status": "DETECTED",
+      "version": "1.181.0",
+      "versionEvidence": "PowerShell semgrep --version exited 0; Core Health execFile probe failed; no sample scan run",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "trivy",
+      "name": "Trivy",
+      "status": "DETECTED",
+      "version": "0.76.0",
+      "versionEvidence": "PowerShell trivy --version exited 0; local vulnerability DB reported present",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "syft",
+      "name": "Syft",
+      "status": "DETECTED",
+      "version": "1.54.1",
+      "versionEvidence": "PowerShell syft version exited 0",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    },
+    {
+      "id": "tshark",
+      "name": "TShark",
+      "status": "DETECTED",
+      "version": "4.6.9",
+      "versionEvidence": "PowerShell tshark -v exited 0",
+      "analysisStatus": "NOT_RUN",
+      "adapterTestStatus": "MOCK_ONLY"
+    }
+  ],
+  "isolationDiagnostic": {
+    "state": "DaemonReady",
+    "available": false,
+    "provider": "docker",
+    "reason": "守护进程可用，但尚未执行隔离自检；L1 仍需通过 runner 的隔离门与平台审批",
+    "verified": false
+  },
+  "registryDiagnostics": {
+    "loaded": true,
+    "capabilities": 48,
+    "domains": [
+      "android",
+      "artifact",
+      "binary",
+      "ctf",
+      "forensics",
+      "live",
+      "network",
+      "sast",
+      "web"
+    ],
+    "diagnostics": []
+  },
+  "provenance": {
+    "adapterStatusesInheritedFrom": "docs/v2.3/evidence/m0/current-registry.json",
+    "note": "The M1 code adds no external adapters; direct M0 tool probes remain the latest direct sample-analysis probe set. Docker self-test evidence is separate under evidence/m0/post-baseline-environment.json."
+  }
+}

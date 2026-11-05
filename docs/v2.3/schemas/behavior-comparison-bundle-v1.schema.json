@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/LYL-Z/dsh-armorbreak/blob/main/docs/v2.3/schemas/behavior-comparison-bundle-v1.schema.json",
+  "title": "ArmorBreak Behavior Comparison Bundle v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "artifact", "implementations", "coverageScope", "cases"],
+  "properties": {
+    "schema": { "const": "armorbreak.behavior-comparison-bundle/v1" },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sha256"],
+      "properties": { "sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" } }
+    },
+    "implementations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference", "candidate"],
+      "properties": {
+        "reference": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "candidate": { "type": "string", "minLength": 1, "maxLength": 120 }
+      }
+    },
+    "coverageScope": { "type": "string", "minLength": 1, "maxLength": 1000 },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 300,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "inputSha256", "reference", "candidate"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1, "maxLength": 120 },
+          "inputSha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+          "environmentComparable": { "type": "boolean" },
+          "reference": { "$ref": "#/$defs/result" },
+          "candidate": { "$ref": "#/$defs/result" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "evidenceRefs"],
+      "properties": {
+        "status": { "enum": ["complete", "timeout", "nondeterministic", "unavailable", "inconclusive"] },
+        "value": {},
+        "evidenceRefs": { "type": "array", "maxItems": 20, "items": { "type": "string", "minLength": 1, "maxLength": 200 } }
+      }
+    }
+  }
+}

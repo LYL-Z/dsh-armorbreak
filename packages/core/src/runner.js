@@ -457,7 +457,7 @@ export class ExecutionRunner {
       if (!['EXECUTING', 'COLLECTING_EVIDENCE'].includes(task.state)) {
         await this.prepareTask(task, {
           requestApproval: request.requestApproval,
-          approvalTarget: request.targetPath ?? this.networkTargetOf(capability, request.options ?? {}),
+          approvalTarget: request.targetPath ?? task.targetPath ?? this.networkTargetOf(capability, request.options ?? {}),
           signal: request.signal,
         })
       }

@@ -1,0 +1,32 @@
+✔ CLI capabilities, analyze and task status work without DSH (9378.4791ms)
+✔ MCP server process emits only JSON-RPC frames on stdout (701.9895ms)
+✔ MCP audit log records host clientInfo and tool calls without arguments (2223.8337ms)
+✔ MCP initialize, tools/list and tools/call capabilities (212.5603ms)
+✔ MCP fails closed before initialize, on unknown tools and parse errors (22.9655ms)
+✔ MCP starts the fixed L0 behavior workflow without accepting caller-supplied steps (1634.0952ms)
+✔ MCP armorbreak_analyze performs a real L0 task and report (2036.7941ms)
+✔ MCP armorbreak_analyze executes rebuild.contract on an authorized workspace file (2021.6312ms)
+✔ MCP exposes the seven Agent Skills with digests and readable SKILL.md (94.3976ms)
+✔ MCP isolates engine failures at the JSON-RPC boundary and stdio stays available (236.1923ms)
+✔ MCP skill reads reject junction escapes and hard links without listing their contents (43.7545ms)
+✔ isolation labels never claim verified isolation without a self-test (0.6ms)
+✔ L2 label reports authorization count instead of a misleading zero (0.479ms)
+✔ task and tool presentations expose bounded, secret-free metadata (0.8106ms)
+✔ task and tool routes return read-only JSON for loopback callers (0.8398ms)
+✔ live tool status exposes supported levels without implying execution or backend verification (1068.2101ms)
+✔ all workbench routes enforce loopback, GET/HEAD and reject workspace enumeration (0.7686ms)
+✔ workbench create action is loopback-only and requires the local UI header (6.8403ms)
+✔ workbench creates an L0 task, exposes evidence, previews report and cancels (2375.9107ms)
+✔ workbench rejects unknown workflows with an actionable error (24.5896ms)
+✔ state route binds a known session to its recorded workspace without directory enumeration (1.5977ms)
+✔ workbench routes enforce same-origin and reject foreign/null origins (0.8829ms)
+✔ workbench creates a mock evaluation and exposes evaluations/knowledge/catalog read-only (35.3865ms)
+✔ workbench can prepare an installation but approval requires the trusted host surface (568.8289ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 23585.2448

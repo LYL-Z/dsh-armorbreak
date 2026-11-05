@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://armorbreak.dev/schemas/v2.3/artifact-identification.schema.json",
+  "title": "ArmorBreak Artifact Identification v1",
+  "type": "object",
+  "required": ["schemaVersion", "detector", "sha256", "bytes", "format", "category", "confidence", "candidates", "structuralFacts", "status", "inputCompleteness", "hashScope", "analysis"],
+  "properties": {
+    "schemaVersion": { "const": "armorbreak.artifact-identification/v1" },
+    "detector": { "type": "string", "minLength": 1 },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "bytes": { "type": "integer", "minimum": 0 },
+    "format": { "type": "string", "minLength": 1 },
+    "category": { "enum": ["native", "archive", "document", "image", "database", "bytecode", "application-package", "source", "text", "unknown"] },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "category", "confidence", "reason"],
+        "properties": {
+          "type": { "type": "string" },
+          "category": { "type": "string" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+          "reason": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "structuralFacts": {
+      "type": "object",
+      "required": ["analyzedBytes", "zeroByteRatio", "printableRatio", "uniqueByteCount", "printableFragmentCount", "truncatedStructuralScan"],
+      "properties": {
+        "analyzedBytes": { "type": "integer", "minimum": 0 },
+        "zeroByteRatio": { "type": "number", "minimum": 0, "maximum": 1 },
+        "printableRatio": { "type": "number", "minimum": 0, "maximum": 1 },
+        "uniqueByteCount": { "type": "integer", "minimum": 0, "maximum": 256 },
+        "printableFragmentCount": { "type": "integer", "minimum": 0 },
+        "truncatedStructuralScan": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "status": { "enum": ["IDENTIFIED", "UNKNOWN"] },
+    "inputCompleteness": { "enum": ["as_supplied", "truncated"] },
+    "hashScope": { "enum": ["supplied_bytes", "observed_bytes_only"] },
+    "analysis": {
+      "type": "object",
+      "required": ["level", "status", "warnings", "limitsApplied"],
+      "properties": {
+        "level": { "const": "S1" },
+        "status": { "enum": ["COMPLETE", "UNSUPPORTED"] },
+        "warnings": { "type": "array", "items": { "type": "string" } },
+        "limitsApplied": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

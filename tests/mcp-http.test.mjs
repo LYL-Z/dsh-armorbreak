@@ -40,7 +40,7 @@ test('MCP HTTP test mode serves initialize and tools over loopback with explicit
     assert.ok(list.body.result.tools.some((tool) => tool.name === 'armorbreak_analyze'))
     const call = await rpc(server.url, 4, 'tools/call', { name: 'armorbreak_capabilities', arguments: {} }, undefined, sessionId)
     assert.equal(call.status, 200)
-    assert.equal(JSON.parse(call.body.result.content[0].text).length, 46)
+    assert.equal(JSON.parse(call.body.result.content[0].text).length, 53)
     const health = await fetch(`http://${server.host}:${server.port}/health`)
     assert.equal(health.status, 200)
   } finally {
@@ -49,45 +49,21 @@ test('MCP HTTP test mode serves initialize and tools over loopback with explicit
   }
 })
 
-test('MCP HTTP recovers persisted sessions and isolates token identities', async () => {
+test('MCP HTTP refuses multi-principal service configuration', async () => {
   const stateRoot = await mkdtemp(join(tmpdir(), 'abm-http-state-'))
   const workspace = await mkdtemp(join(tmpdir(), 'abm-http-ws-'))
   const alice = { id: 'alice', kind: 'local-user', workspaces: [workspace] }
   const bob = { id: 'bob', kind: 'local-user', workspaces: [workspace] }
   const engine = await createEngine({ stateRoot, principals: [alice, bob] })
-  const options = {
+  await assert.rejects(() => createMcpHttpServer({
     engine, principal: alice, principals: [alice, bob], workspaceId: workspace, stateRoot,
     tokens: { 'alice-token': { principalId: 'alice' }, 'bob-token': { principalId: 'bob' } },
-  }
-  const first = await createMcpHttpServer(options)
-  let aliceSession
-  let bobSession
-  try {
-    const a = await rpc(first.url, 1, 'initialize', undefined, 'alice-token')
-    const b = await rpc(first.url, 2, 'initialize', undefined, 'bob-token')
-    assert.equal(a.status, 200)
-    assert.equal(b.status, 200)
-    aliceSession = a.headers.get('mcp-session-id')
-    bobSession = b.headers.get('mcp-session-id')
-    assert.ok(aliceSession)
-    assert.ok(bobSession)
-    assert.notEqual(aliceSession, bobSession)
-  } finally {
-    await first.close()
-  }
-  const second = await createMcpHttpServer(options)
-  try {
-    const recovered = await rpc(second.url, 3, 'tools/list', undefined, 'alice-token', aliceSession)
-    assert.equal(recovered.status, 200)
-    assert.ok(recovered.body.result.tools.some((tool) => tool.name === 'armorbreak_health'))
-    const mismatch = await rpc(second.url, 4, 'tools/list', undefined, 'bob-token', aliceSession)
-    assert.equal(mismatch.status, 403)
-    const unknown = await rpc(second.url, 5, 'tools/list', undefined, 'alice-token', '00000000-0000-4000-8000-000000000000')
-    assert.equal(unknown.status, 404)
-  } finally {
-    await second.close()
-    await engine.close()
-  }
+  }), /one configured principal/)
+  await assert.rejects(() => createMcpHttpServer({
+    engine, principal: alice, workspaceId: workspace, stateRoot,
+    tokens: { 'alice-token': { principalId: 'alice', workspaceId: 'other-workspace' } },
+  }), /cannot override the configured workspace/)
+  await engine.close()
 })
 
 test('MCP HTTP rejects non-loopback binding and enforces configured bearer token', async () => {

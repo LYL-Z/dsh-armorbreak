@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "armorbreak.v2.3-npm-pack-dry-run/v1",
+  "capturedAt": "2026-11-01T02:50:31.2472612Z",
+  "package": {
+    "name": "dsh-armorbreak",
+    "version": "2.3.0",
+    "fileCount": 664,
+    "unpackedSize": 9185551,
+    "bundledDependencies": [],
+    "dryRunOutputSha256": "514f4ce6c6814e58141d1cfbe7c658147ac14790bc2e22992146d726bc84c960"
+  },
+  "findings": {
+    "m3FixturePathCount": 11,
+    "fixtureExtensions": [
+      {
+        "extension": ".bin",
+        "count": 3
+      },
+      {
+        "extension": ".c",
+        "count": 1
+      },
+      {
+        "extension": ".elf",
+        "count": 2
+      },
+      {
+        "extension": ".exe",
+        "count": 2
+      },
+      {
+        "extension": ".macho",
+        "count": 3
+      }
+    ],
+    "compiledExecutableFixtureCount": 2,
+    "portableCandidateContainsFixtures": false,
+    "licenseReviewMustCoverNpmPackageSeparately": true
+  },
+  "fixtures": [
+    {
+      "path": "docs/v2.3/evidence/m3/fixtures/malformed_elf.bin",
+      "size": 20,
+      "sha256": "d3ca3eba3e339c880980803fbfe417a10a82480be5876bb0d63b0f0663688f6a"
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/fixtures/malformed_macho.bin",
+      "size": 4,
+      "sha256": "d2238b6d7c34ad608a5f6caddf95928d741307fea41f0336302e390109311d72"
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/fixtures/malformed_pe.bin",
+      "size": 152,
+      "sha256": "cc0bf0e0d268d42e726bec5233c94644343486ef22394fc12539a89590ecc7db"
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/fixtures/native_fixture_i386_stripped.elf",
+      "size": 12672,
+      "sha256": "794c04178d7040da2c5f2cb13788077fa3ad42b273197854b4b5feed2867b721"
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/fixtures/native_fixture_i386.elf",
+      "size": 12988,
+      "sha256": "e3cbff8a06da61abdabd33cd7ad006493012257656f07737af687687bb546275"
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/fixtures/native_fixture_x64_stripped.exe",
+      "size": 18958,
+      "sha256": "2e6796990252f35235fda836bf9420571b8735b0963a4276de9d75e839d54e9f"
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/fixtures/native_fixture_x64.exe",
+      "size": 54360,
+      "sha256": "917d56c8bd8c542094018fa2c091205652bcd7918b9bf7fae3399ffa9ea8c7b3"
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/fixtures/native_fixture_x86_64_macho_stripped.macho",
+      "size": 16572,
+      "sha256": "78255a8f267a4ba7ea62ff2d5f75528c24fc062c2dd8954cc9f3ea8ab866e38b"
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/fixtures/native_fixture_x86_64_macho_truncated.macho",
+      "size": 512,
+      "sha256": "b92165f70fa9aa4503f1e42d25603ecfb1efbe15f809afd9d167658896e31195"
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/fixtures/native_fixture_x86_64_macho.macho",
+      "size": 17222,
+      "sha256": "02edb976b622c349337f53429a424ae853f0b0a86d0fa73a80a709571ed302de"
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/fixtures/native_fixture.c",
+      "size": 232,
+      "sha256": "2bb6f4d242cbf4e578c416532cb202a8c64a4fb9f664f59c5fd802b9509a130e"
+    }
+  ],
+  "command": "npm pack --dry-run --json",
+  "limitations": [
+    "Dry-run inspected the local npm package file list; it did not publish a package or resolve/transmit dependencies.",
+    "The portable release archive is a separate packaging path and was independently inspected in the P0-4 candidate record.",
+    "No independent security or license review has been performed."
+  ]
+}

@@ -1,0 +1,359 @@
+{
+  "schemaVersion": "armorbreak.v2.3-ci-observation/v1",
+  "observations": [
+    {
+      "schemaVersion": "armorbreak.v2.3-ci-observation/v1",
+      "capturedAt": "2026-10-30T08:26:43Z",
+      "exactHead": "c1c109453b12493b3ae9b8a76be4f271a820f835",
+      "manifestSourceCommit": "bf7d3d4d590d7ba2cc7d53edf548b1afc78687fd",
+      "evidenceSourceCommit": "bf7d3d4d590d7ba2cc7d53edf548b1afc78687fd",
+      "observedBy": "Codex GitHub integration; observation summary, not an independent audit",
+      "runs": [
+        {
+          "id": 41026010595,
+          "name": "V2.3 exact-head validation",
+          "event": "pull_request",
+          "status": "completed",
+          "conclusion": "success",
+          "jobs": [
+            {
+              "id": 123964294505,
+              "name": "Node 24 / ubuntu-latest (PR head)",
+              "conclusion": "success",
+              "fullTestSuite": "success",
+              "typecheck": "success"
+            },
+            {
+              "id": 123964294752,
+              "name": "Node 22 / ubuntu-latest (PR head)",
+              "conclusion": "success",
+              "fullTestSuite": "success",
+              "typecheck": "success"
+            },
+            {
+              "id": 123964294832,
+              "name": "Node 24 / windows-latest (PR head)",
+              "conclusion": "success",
+              "fullTestSuite": "success",
+              "typecheck": "success"
+            },
+            {
+              "id": 123964294877,
+              "name": "Node 22 / windows-latest (PR head)",
+              "conclusion": "success",
+              "fullTestSuite": "success",
+              "typecheck": "success"
+            },
+            {
+              "id": 123964294836,
+              "name": "V2.3 evidence integrity (exact PR head)",
+              "conclusion": "success"
+            },
+            {
+              "id": 123964294837,
+              "name": "Benign L1 container-path verification (exact PR head)",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 41026010642,
+          "name": "CI",
+          "event": "pull_request",
+          "status": "completed",
+          "conclusion": "success",
+          "jobs": [
+            {
+              "id": 123964356239,
+              "name": "L0 offline boundary (static gate)",
+              "conclusion": "success"
+            },
+            {
+              "id": 123964356403,
+              "name": "Node 24 on ubuntu-latest",
+              "conclusion": "success",
+              "fullTestSuite": "success"
+            },
+            {
+              "id": 123964356850,
+              "name": "Node 24 on windows-latest",
+              "conclusion": "success",
+              "fullTestSuite": "success"
+            },
+            {
+              "id": 123964356534,
+              "name": "L1 Docker integration (real daemon)",
+              "conclusion": "success"
+            },
+            {
+              "id": 123964357709,
+              "name": "Release evidence checks (commit-bound)",
+              "conclusion": "skipped"
+            }
+          ]
+        },
+        {
+          "id": 41026004259,
+          "name": "V2.3 exact-head validation",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "success",
+          "jobs": [
+            {
+              "id": 123964409661,
+              "name": "V2.3 evidence integrity (exact PR head)",
+              "conclusion": "success"
+            },
+            {
+              "id": 123964409893,
+              "name": "Benign L1 container-path verification (exact PR head)",
+              "conclusion": "success"
+            },
+            {
+              "id": 123964409908,
+              "name": "Node 22 / ubuntu-latest (PR head)",
+              "conclusion": "success",
+              "fullTestSuite": "success",
+              "typecheck": "success"
+            },
+            {
+              "id": 123964409981,
+              "name": "Node 22 / windows-latest (PR head)",
+              "conclusion": "success",
+              "fullTestSuite": "success",
+              "typecheck": "success"
+            },
+            {
+              "id": 123964410008,
+              "name": "Node 24 / ubuntu-latest (PR head)",
+              "conclusion": "success",
+              "fullTestSuite": "success",
+              "typecheck": "success"
+            },
+            {
+              "id": 123964410080,
+              "name": "Node 24 / windows-latest (PR head)",
+              "conclusion": "success",
+              "fullTestSuite": "success",
+              "typecheck": "success"
+            }
+          ]
+        },
+        {
+          "id": 41026004165,
+          "name": "CI",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "success",
+          "jobs": [
+            {
+              "id": 123964229194,
+              "name": "L0 offline boundary (static gate)",
+              "conclusion": "success"
+            },
+            {
+              "id": 123964229479,
+              "name": "Node 24 on ubuntu-latest",
+              "conclusion": "success",
+              "fullTestSuite": "success"
+            },
+            {
+              "id": 123964229455,
+              "name": "Node 24 on windows-latest",
+              "conclusion": "success",
+              "fullTestSuite": "success"
+            },
+            {
+              "id": 123964229427,
+              "name": "L1 Docker integration (real daemon)",
+              "conclusion": "success"
+            },
+            {
+              "id": 123964230830,
+              "name": "Release evidence checks (commit-bound)",
+              "conclusion": "skipped"
+            }
+          ]
+        }
+      ],
+      "interpretation": "All listed runs target exact PR head c1c109453b12493b3ae9b8a76be4f271a820f835. A report-only commit after this observation requires fresh exact-head checks. Skipped release evidence is not release approval. Hosted Docker success is hosted-runner evidence only."
+    },
+    {
+      "schemaVersion": "armorbreak.v2.3-ci-observation/v1",
+      "capturedAt": "2026-10-30T08:34:08Z",
+      "exactHead": "7bf30788e387d916403f74ba5fc190e2bf9e8a17",
+      "manifestSourceCommit": "bf7d3d4d590d7ba2cc7d53edf548b1afc78687fd",
+      "evidenceSourceCommit": "bf7d3d4d590d7ba2cc7d53edf548b1afc78687fd",
+      "observedBy": "Codex GitHub integration; observation summary, not an independent audit",
+      "runs": [
+        {
+          "id": 41026982720,
+          "name": "V2.3 exact-head validation",
+          "event": "pull_request",
+          "status": "completed",
+          "conclusion": "success",
+          "jobs": [
+            {
+              "id": 123967309742,
+              "name": "Node 24 / ubuntu-latest (PR head)",
+              "conclusion": "success",
+              "fullTestSuite": "success",
+              "typecheck": "success"
+            },
+            {
+              "id": 123967309877,
+              "name": "Node 22 / ubuntu-latest (PR head)",
+              "conclusion": "success",
+              "fullTestSuite": "success",
+              "typecheck": "success"
+            },
+            {
+              "id": 123967309983,
+              "name": "Node 24 / windows-latest (PR head)",
+              "conclusion": "success",
+              "fullTestSuite": "success",
+              "typecheck": "success"
+            },
+            {
+              "id": 123967309749,
+              "name": "Node 22 / windows-latest (PR head)",
+              "conclusion": "success",
+              "fullTestSuite": "success",
+              "typecheck": "success"
+            },
+            {
+              "id": 123967309764,
+              "name": "V2.3 evidence integrity (exact PR head)",
+              "conclusion": "success"
+            },
+            {
+              "id": 123967309895,
+              "name": "Benign L1 container-path verification (exact PR head)",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 41026982814,
+          "name": "CI",
+          "event": "pull_request",
+          "status": "completed",
+          "conclusion": "success",
+          "jobs": [
+            {
+              "id": 123967309916,
+              "name": "L0 offline boundary (static gate)",
+              "conclusion": "success"
+            },
+            {
+              "id": 123967310267,
+              "name": "Node 24 on ubuntu-latest",
+              "conclusion": "success",
+              "fullTestSuite": "success"
+            },
+            {
+              "id": 123967310078,
+              "name": "Node 24 on windows-latest",
+              "conclusion": "success",
+              "fullTestSuite": "success"
+            },
+            {
+              "id": 123967310251,
+              "name": "L1 Docker integration (real daemon)",
+              "conclusion": "success"
+            },
+            {
+              "id": 123967311648,
+              "name": "Release evidence checks (commit-bound)",
+              "conclusion": "skipped"
+            }
+          ]
+        },
+        {
+          "id": 41026973927,
+          "name": "V2.3 exact-head validation",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "success",
+          "jobs": [
+            {
+              "id": 123967281782,
+              "name": "V2.3 evidence integrity (exact PR head)",
+              "conclusion": "success"
+            },
+            {
+              "id": 123967281344,
+              "name": "Benign L1 container-path verification (exact PR head)",
+              "conclusion": "success"
+            },
+            {
+              "id": 123967281746,
+              "name": "Node 22 / ubuntu-latest (PR head)",
+              "conclusion": "success",
+              "fullTestSuite": "success",
+              "typecheck": "success"
+            },
+            {
+              "id": 123967281667,
+              "name": "Node 24 / ubuntu-latest (PR head)",
+              "conclusion": "success",
+              "fullTestSuite": "success",
+              "typecheck": "success"
+            },
+            {
+              "id": 123967281769,
+              "name": "Node 22 / windows-latest (PR head)",
+              "conclusion": "success",
+              "fullTestSuite": "success",
+              "typecheck": "success"
+            },
+            {
+              "id": 123967282665,
+              "name": "Node 24 / windows-latest (PR head)",
+              "conclusion": "success",
+              "fullTestSuite": "success",
+              "typecheck": "success"
+            }
+          ]
+        },
+        {
+          "id": 41026973788,
+          "name": "CI",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "success",
+          "jobs": [
+            {
+              "id": 123967281030,
+              "name": "L0 offline boundary (static gate)",
+              "conclusion": "success"
+            },
+            {
+              "id": 123967281376,
+              "name": "Node 24 on ubuntu-latest",
+              "conclusion": "success",
+              "fullTestSuite": "success"
+            },
+            {
+              "id": 123967281374,
+              "name": "Node 24 on windows-latest",
+              "conclusion": "success",
+              "fullTestSuite": "success"
+            },
+            {
+              "id": 123967281296,
+              "name": "L1 Docker integration (real daemon)",
+              "conclusion": "success"
+            },
+            {
+              "id": 123967282670,
+              "name": "Release evidence checks (commit-bound)",
+              "conclusion": "skipped"
+            }
+          ]
+        }
+      ],
+      "interpretation": "All listed jobs are successful except the intentionally skipped inherited release-evidence jobs, which are not release approval. Exact PR checks validate 7bf30788e387d916403f74ba5fc190e2bf9e8a17 and the 76-file evidence inventory at that commit."
+    }
+  ]
+}

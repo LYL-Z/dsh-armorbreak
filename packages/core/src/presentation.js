@@ -79,7 +79,20 @@ export function toolsPresentation(capabilities = [], isolation = null) {
   for (const capability of capabilities) {
     const domain = capability.domain ?? 'unknown'
     domains[domain] ??= { domain, capabilities: [], externalTools: new Set() }
-    domains[domain].capabilities.push({ id: capability.id, title: capability.title, riskLevel: capability.riskLevel, targetKind: capability.targetKind })
+    domains[domain].capabilities.push({
+      id: capability.id,
+      title: capability.title,
+      riskLevel: capability.riskLevel,
+      targetKind: capability.targetKind,
+      ...(capability.supportedLevels ? {
+        supportedLevels: capability.supportedLevels,
+        engine: capability.engine,
+        backendVersion: capability.backendVersion,
+        status: capability.status,
+        reason: capability.reason,
+        limitations: capability.limitations,
+      } : {}),
+    })
     for (const tool of capability.externalTools ?? []) domains[domain].externalTools.add(tool)
   }
   return {

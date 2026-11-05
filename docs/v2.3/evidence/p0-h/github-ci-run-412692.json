@@ -1,0 +1,238 @@
+{
+  "schemaVersion": "armorbreak.v2.3-github-ci-snapshot/v1",
+  "capturedAt": "2026-11-01T03:34:43.3608572Z",
+  "pullRequest": {
+    "number": 25,
+    "state": "OPEN",
+    "isDraft": true,
+    "headSha": "e02e7fe356f0141fb635a2db0af2be962dcec50e",
+    "url": "https://github.com/LYL-Z/dsh-armorbreak/pull/25"
+  },
+  "runs": [
+    {
+      "databaseId": 41269229998,
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "e02e7fe356f0141fb635a2db0af2be962dcec50e",
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269229998",
+      "jobs": [
+        {
+          "databaseId": 124738356262,
+          "name": "Benign L1 container-path verification (exact PR head)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269229998/job/124738356262"
+        },
+        {
+          "databaseId": 124738356426,
+          "name": "Node 22 / ubuntu-latest (PR head)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269229998/job/124738356426"
+        },
+        {
+          "databaseId": 124738356449,
+          "name": "Node 24 / windows-latest (PR head)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269229998/job/124738356449"
+        },
+        {
+          "databaseId": 124738356454,
+          "name": "Node 22 / windows-latest (PR head)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269229998/job/124738356454"
+        },
+        {
+          "databaseId": 124738356464,
+          "name": "Node 24 / ubuntu-latest (PR head)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269229998/job/124738356464"
+        },
+        {
+          "databaseId": 124738356503,
+          "name": "V2.3 evidence integrity (exact PR head)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269229998/job/124738356503"
+        }
+      ]
+    },
+    {
+      "databaseId": 41269230005,
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "e02e7fe356f0141fb635a2db0af2be962dcec50e",
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269230005",
+      "jobs": [
+        {
+          "databaseId": 124738356153,
+          "name": "Node 24 / windows-latest",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269230005/job/124738356153"
+        },
+        {
+          "databaseId": 124738356345,
+          "name": "Node 24 / ubuntu-latest",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269230005/job/124738356345"
+        },
+        {
+          "databaseId": 124738356377,
+          "name": "Node 22 / ubuntu-latest",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269230005/job/124738356377"
+        },
+        {
+          "databaseId": 124738356378,
+          "name": "Node 22 / windows-latest",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269230005/job/124738356378"
+        },
+        {
+          "databaseId": 124738357338,
+          "name": "Node ${{ matrix.node }} / ${{ matrix.os }}",
+          "conclusion": "skipped",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269230005/job/124738357338"
+        },
+        {
+          "databaseId": 124738357398,
+          "name": "V2.3 main candidate build and provenance",
+          "conclusion": "skipped",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269230005/job/124738357398"
+        },
+        {
+          "databaseId": 124738357443,
+          "name": "V2.3.0 release verification",
+          "conclusion": "skipped",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269230005/job/124738357443"
+        }
+      ]
+    },
+    {
+      "databaseId": 41269230030,
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "e02e7fe356f0141fb635a2db0af2be962dcec50e",
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269230030",
+      "jobs": [
+        {
+          "databaseId": 124738356303,
+          "name": "Node 24 on ubuntu-latest",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269230030/job/124738356303"
+        },
+        {
+          "databaseId": 124738356389,
+          "name": "L0 offline boundary (static gate)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269230030/job/124738356389"
+        },
+        {
+          "databaseId": 124738356500,
+          "name": "L1 Docker integration (real daemon)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269230030/job/124738356500"
+        },
+        {
+          "databaseId": 124738356579,
+          "name": "Node 24 on windows-latest",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269230030/job/124738356579"
+        },
+        {
+          "databaseId": 124738357366,
+          "name": "Release evidence checks (commit-bound)",
+          "conclusion": "skipped",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269230030/job/124738357366"
+        }
+      ]
+    },
+    {
+      "databaseId": 41269226009,
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "e02e7fe356f0141fb635a2db0af2be962dcec50e",
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269226009",
+      "jobs": [
+        {
+          "databaseId": 124738345075,
+          "name": "Node 22 / windows-latest (PR head)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269226009/job/124738345075"
+        },
+        {
+          "databaseId": 124738345179,
+          "name": "Node 24 / ubuntu-latest (PR head)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269226009/job/124738345179"
+        },
+        {
+          "databaseId": 124738345212,
+          "name": "V2.3 evidence integrity (exact PR head)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269226009/job/124738345212"
+        },
+        {
+          "databaseId": 124738345237,
+          "name": "Benign L1 container-path verification (exact PR head)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269226009/job/124738345237"
+        },
+        {
+          "databaseId": 124738345264,
+          "name": "Node 24 / windows-latest (PR head)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269226009/job/124738345264"
+        },
+        {
+          "databaseId": 124738345314,
+          "name": "Node 22 / ubuntu-latest (PR head)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269226009/job/124738345314"
+        }
+      ]
+    },
+    {
+      "databaseId": 41269225831,
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "e02e7fe356f0141fb635a2db0af2be962dcec50e",
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269225831",
+      "jobs": [
+        {
+          "databaseId": 124738344512,
+          "name": "Node 24 on windows-latest",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269225831/job/124738344512"
+        },
+        {
+          "databaseId": 124738344569,
+          "name": "L0 offline boundary (static gate)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269225831/job/124738344569"
+        },
+        {
+          "databaseId": 124738344581,
+          "name": "L1 Docker integration (real daemon)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269225831/job/124738344581"
+        },
+        {
+          "databaseId": 124738344703,
+          "name": "Node 24 on ubuntu-latest",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269225831/job/124738344703"
+        },
+        {
+          "databaseId": 124738345383,
+          "name": "Release evidence checks (commit-bound)",
+          "conclusion": "skipped",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41269225831/job/124738345383"
+        }
+      ]
+    }
+  ],
+  "interpretation": "All three pull_request workflows passed on exact HEAD e02e7fe356f0141fb635a2db0af2be962dcec50e. Main/release-only jobs are intentionally skipped for pull_request. Push duplicates are recorded as corroborating CI only."
+}

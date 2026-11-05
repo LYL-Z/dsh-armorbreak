@@ -1,0 +1,116 @@
+{
+  "interpretation": "The full test suite failed its P0-5 PR-readiness case because the committed packet edit produced a post-source diff outside the evidence-only allowlist: docs/v2.3/p0-h-independent-review-packet.md. Local reproduction at this exact commit returned that path from the validator. Source and workflow files were unchanged. This is a real failure, retained as historical evidence; correction and fresh exact-head CI are required.",
+  "schemaVersion": "armorbreak.v2.3-github-ci-failure-snapshot/v1",
+  "runs": [
+    {
+      "event": "pull_request",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "name": "Node 24 on ubuntu-latest",
+          "conclusion": "failure"
+        },
+        {
+          "name": "Node 24 on windows-latest",
+          "conclusion": "failure"
+        },
+        {
+          "name": "L1 Docker integration (real daemon)",
+          "conclusion": "success"
+        },
+        {
+          "name": "L0 offline boundary (static gate)",
+          "conclusion": "success"
+        },
+        {
+          "name": "Release evidence checks (commit-bound)",
+          "conclusion": "skipped"
+        }
+      ],
+      "databaseId": 41285923958,
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41285923958",
+      "headSha": "39de997c0732953d7462a4b44e4ecd0f549402c0",
+      "name": "CI",
+      "status": "completed"
+    },
+    {
+      "event": "pull_request",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "name": "Benign L1 container-path verification (exact PR head)",
+          "conclusion": "success"
+        },
+        {
+          "name": "Node 22 / windows-latest (PR head)",
+          "conclusion": "failure"
+        },
+        {
+          "name": "Node 24 / windows-latest (PR head)",
+          "conclusion": "failure"
+        },
+        {
+          "name": "V2.3 evidence integrity (exact PR head)",
+          "conclusion": "failure"
+        },
+        {
+          "name": "Node 22 / ubuntu-latest (PR head)",
+          "conclusion": "failure"
+        },
+        {
+          "name": "Node 24 / ubuntu-latest (PR head)",
+          "conclusion": "failure"
+        }
+      ],
+      "databaseId": 41285923965,
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41285923965",
+      "headSha": "39de997c0732953d7462a4b44e4ecd0f549402c0",
+      "name": "V2.3 exact-head validation",
+      "status": "completed"
+    },
+    {
+      "event": "pull_request",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "name": "Node 24 / ubuntu-latest",
+          "conclusion": "failure"
+        },
+        {
+          "name": "Node 22 / windows-latest",
+          "conclusion": "failure"
+        },
+        {
+          "name": "Node 24 / windows-latest",
+          "conclusion": "failure"
+        },
+        {
+          "name": "Node 22 / ubuntu-latest",
+          "conclusion": "failure"
+        },
+        {
+          "name": "V2.3.0 release verification",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Main candidate build and provenance",
+          "conclusion": "skipped"
+        }
+      ],
+      "databaseId": 41285923977,
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41285923977",
+      "headSha": "39de997c0732953d7462a4b44e4ecd0f549402c0",
+      "name": "V2.3 main and release gate",
+      "status": "completed"
+    }
+  ],
+  "capturedAt": "2026-11-01T07:47:03.3421969Z",
+  "pullRequest": {
+    "headSha": "39de997c0732953d7462a4b44e4ecd0f549402c0",
+    "sourceCommit": "b39f2285f3bc05301d2989d6a66fc1e641af7b96",
+    "number": 25,
+    "url": "https://github.com/LYL-Z/dsh-armorbreak/pull/25",
+    "isDraft": true,
+    "state": "OPEN"
+  }
+}

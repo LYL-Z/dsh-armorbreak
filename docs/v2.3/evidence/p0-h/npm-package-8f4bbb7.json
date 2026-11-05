@@ -1,0 +1,3355 @@
+{
+  "schemaVersion": "armorbreak.v2.3-npm-distribution-inventory/v1",
+  "sourceCommit": "8f4bbb752f12310ce9accb3120f9c11ddc15d3ba",
+  "capturedAt": "2026-11-04T16:03:39.3937348Z",
+  "command": "npm pack --dry-run --json",
+  "rawOutputSha256": "22a5f897c3fde3acb320fd32bc5e9abeec9c24cad5011712e33457decb78c411",
+  "package": {
+    "name": "dsh-armorbreak",
+    "version": "2.3.0",
+    "tarballBytes": 4649472,
+    "unpackedBytes": 9288509,
+    "fileCount": 663,
+    "sha1": "2ded29d03d7f07621ab7eb814e91eb8dea23b0de"
+  },
+  "exclusions": {
+    "testPaths": 0,
+    "m3BinaryFixturePaths": 0,
+    "binaryPaths": 0,
+    "inventorySelfIncluded": 0
+  },
+  "runtimeDependency": {
+    "package": "typescript",
+    "version": "5.9.3",
+    "resolved": "https://registry.npmmirror.com/typescript/-/typescript-5.9.3.tgz",
+    "integrity": "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==",
+    "license": "Apache-2.0",
+    "bundledInPortableArchive": false,
+    "installedSuccessfullyInCleanRoom": true
+  },
+  "npmAudit": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "files": [
+    {
+      "path": "CHANGELOG.md",
+      "size": 23303,
+      "mode": 420
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "size": 3078,
+      "mode": 420
+    },
+    {
+      "path": "LICENSE",
+      "size": 1062,
+      "mode": 420
+    },
+    {
+      "path": "README.md",
+      "size": 12377,
+      "mode": 420
+    },
+    {
+      "path": "README.zh-CN.md",
+      "size": 11395,
+      "mode": 420
+    },
+    {
+      "path": "SECURITY.md",
+      "size": 2785,
+      "mode": 420
+    },
+    {
+      "path": "client.js",
+      "size": 51253,
+      "mode": 420
+    },
+    {
+      "path": "cordis.patch.yml",
+      "size": 6517,
+      "mode": 420
+    },
+    {
+      "path": "docs/acceptance-v1.1.0.md",
+      "size": 12622,
+      "mode": 420
+    },
+    {
+      "path": "docs/acceptance-v1.2.0.md",
+      "size": 965,
+      "mode": 420
+    },
+    {
+      "path": "docs/acceptance.md",
+      "size": 16196,
+      "mode": 420
+    },
+    {
+      "path": "docs/acceptance/adapter-v2-real.json",
+      "size": 1556,
+      "mode": 420
+    },
+    {
+      "path": "docs/acceptance/gate-b-findings.json",
+      "size": 97583,
+      "mode": 420
+    },
+    {
+      "path": "docs/acceptance/gate-b-report.md",
+      "size": 107463,
+      "mode": 420
+    },
+    {
+      "path": "docs/acceptance/gate-b-summary.json",
+      "size": 5038,
+      "mode": 420
+    },
+    {
+      "path": "docs/acceptance/gate-b-task.json",
+      "size": 9160,
+      "mode": 420
+    },
+    {
+      "path": "docs/acceptance/gui-v12-verification.json",
+      "size": 611,
+      "mode": 420
+    },
+    {
+      "path": "docs/acceptance/l1-docker-verification.json",
+      "size": 1411,
+      "mode": 420
+    },
+    {
+      "path": "docs/acceptance/l1-provider.json",
+      "size": 768,
+      "mode": 420
+    },
+    {
+      "path": "docs/acceptance/l2-loopback.json",
+      "size": 319,
+      "mode": 420
+    },
+    {
+      "path": "docs/acceptance/model-e2e-v12.json",
+      "size": 835,
+      "mode": 420
+    },
+    {
+      "path": "docs/acceptance/screenshots/gui-model-e2e.png",
+      "size": 320347,
+      "mode": 420
+    },
+    {
+      "path": "docs/acceptance/screenshots/gui-model-workflow-v12.png",
+      "size": 385593,
+      "mode": 420
+    },
+    {
+      "path": "docs/acceptance/screenshots/gui-status-card.png",
+      "size": 394881,
+      "mode": 420
+    },
+    {
+      "path": "docs/acceptance/screenshots/gui-tool-probe.png",
+      "size": 257301,
+      "mode": 420
+    },
+    {
+      "path": "docs/acceptance/screenshots/gui-v12-workbench.png",
+      "size": 421401,
+      "mode": 420
+    },
+    {
+      "path": "docs/acceptance/v1.1.0-gui-verification.md",
+      "size": 1664,
+      "mode": 420
+    },
+    {
+      "path": "docs/adapter-contract-v2.md",
+      "size": 5658,
+      "mode": 420
+    },
+    {
+      "path": "docs/architecture.md",
+      "size": 8825,
+      "mode": 420
+    },
+    {
+      "path": "docs/audit/environment-audit.md",
+      "size": 11323,
+      "mode": 420
+    },
+    {
+      "path": "docs/benchmarks.md",
+      "size": 7753,
+      "mode": 420
+    },
+    {
+      "path": "docs/compatibility-matrix.md",
+      "size": 5407,
+      "mode": 420
+    },
+    {
+      "path": "docs/CONTRACT.md",
+      "size": 7935,
+      "mode": 420
+    },
+    {
+      "path": "docs/file-changes.md",
+      "size": 16336,
+      "mode": 420
+    },
+    {
+      "path": "docs/installation.md",
+      "size": 4691,
+      "mode": 420
+    },
+    {
+      "path": "docs/isolation-providers.md",
+      "size": 2321,
+      "mode": 420
+    },
+    {
+      "path": "docs/known-issues.md",
+      "size": 1500,
+      "mode": 420
+    },
+    {
+      "path": "docs/marketplace.md",
+      "size": 5589,
+      "mode": 420
+    },
+    {
+      "path": "docs/media/report-deliverables.webp",
+      "size": 125032,
+      "mode": 420
+    },
+    {
+      "path": "docs/media/status-card.png",
+      "size": 96465,
+      "mode": 420
+    },
+    {
+      "path": "docs/migration-v1.0.3-to-v1.1.0.md",
+      "size": 3001,
+      "mode": 420
+    },
+    {
+      "path": "docs/readme-archive-v2.2.md",
+      "size": 62438,
+      "mode": 420
+    },
+    {
+      "path": "docs/readme-audit/ci-record.md",
+      "size": 2573,
+      "mode": 420
+    },
+    {
+      "path": "docs/readme-audit/dx-review.md",
+      "size": 3366,
+      "mode": 420
+    },
+    {
+      "path": "docs/readme-audit/fact-check.md",
+      "size": 3694,
+      "mode": 420
+    },
+    {
+      "path": "docs/readme-audit/link-validation.md",
+      "size": 1665,
+      "mode": 420
+    },
+    {
+      "path": "docs/readme-audit/modification-summary.md",
+      "size": 2147,
+      "mode": 420
+    },
+    {
+      "path": "docs/readme-audit/v2.2.0-release-facts.md",
+      "size": 4414,
+      "mode": 420
+    },
+    {
+      "path": "docs/readme-audit/v3-fact-matrix.md",
+      "size": 4242,
+      "mode": 420
+    },
+    {
+      "path": "docs/readme-audit/v3-smoke.md",
+      "size": 2274,
+      "mode": 420
+    },
+    {
+      "path": "docs/readme-audit/v4-release-smoke.md",
+      "size": 1672,
+      "mode": 420
+    },
+    {
+      "path": "docs/releases/v1.0.0.md",
+      "size": 1884,
+      "mode": 420
+    },
+    {
+      "path": "docs/releases/v1.0.1.md",
+      "size": 1463,
+      "mode": 420
+    },
+    {
+      "path": "docs/releases/v1.0.2.md",
+      "size": 3370,
+      "mode": 420
+    },
+    {
+      "path": "docs/releases/v1.0.3.md",
+      "size": 1765,
+      "mode": 420
+    },
+    {
+      "path": "docs/releases/v1.0.4.md",
+      "size": 2561,
+      "mode": 420
+    },
+    {
+      "path": "docs/releases/v1.1.0.md",
+      "size": 2029,
+      "mode": 420
+    },
+    {
+      "path": "docs/releases/v1.1.1.md",
+      "size": 2478,
+      "mode": 420
+    },
+    {
+      "path": "docs/releases/v1.2.0-alpha.1.md",
+      "size": 1815,
+      "mode": 420
+    },
+    {
+      "path": "docs/releases/v1.2.0.md",
+      "size": 1315,
+      "mode": 420
+    },
+    {
+      "path": "docs/releases/v2.0.0.md",
+      "size": 3087,
+      "mode": 420
+    },
+    {
+      "path": "docs/releases/v2.2.0.md",
+      "size": 2527,
+      "mode": 420
+    },
+    {
+      "path": "docs/releases/v2.3.0.md",
+      "size": 2590,
+      "mode": 420
+    },
+    {
+      "path": "docs/roadmap.md",
+      "size": 2770,
+      "mode": 420
+    },
+    {
+      "path": "docs/security-boundary-review.md",
+      "size": 6464,
+      "mode": 420
+    },
+    {
+      "path": "docs/security-model.md",
+      "size": 5950,
+      "mode": 420
+    },
+    {
+      "path": "docs/usage.md",
+      "size": 4213,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/acceptance-report.md",
+      "size": 39304,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/architecture.md",
+      "size": 4621,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/baseline.md",
+      "size": 6385,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/behavioral-reconstruction.md",
+      "size": 3324,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/capability-status-contract.md",
+      "size": 2915,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/compatibility-matrix.json",
+      "size": 48438,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m0/current-registry.json",
+      "size": 12385,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m0/post-baseline-environment.json",
+      "size": 1091,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m0/test-results.json",
+      "size": 7054,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m1/current-registry.json",
+      "size": 22600,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m1/test-results.json",
+      "size": 3811,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m2/current-registry.json",
+      "size": 11058,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m2/interruption-checkpoint-2026-10-26.md",
+      "size": 5028,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m2/test-results.json",
+      "size": 6970,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/focused-tests-final.log",
+      "size": 2637,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/full-test-default-final.log",
+      "size": 73784,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/ghidra-bounded-scope-i386.json",
+      "size": 6384,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/m3-validation.json",
+      "size": 3535,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/mach-o-toolchain.json",
+      "size": 1620,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/native-ghidra-runner-e2e.json",
+      "size": 128473,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/resume-environment-2026-10-29.json",
+      "size": 1577,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/runner-native-i386.json",
+      "size": 12919,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/runner-native-pe.json",
+      "size": 248616,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/runner-native-stripped-i386-elf.json",
+      "size": 11517,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/runner-native-stripped-pe.json",
+      "size": 206106,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/typecheck-final.log",
+      "size": 57,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m3/windows-temp-volume-diagnostic.md",
+      "size": 1681,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m4/focused-tests.log",
+      "size": 928,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m4/full-test.log",
+      "size": 69523,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m4/m4-validation.json",
+      "size": 3629,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m4/typecheck.log",
+      "size": 126,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m4/vulnerability-corpus-metrics.json",
+      "size": 22122,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m5/focused-tests.log",
+      "size": 336,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m5/full-test.log",
+      "size": 72149,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m5/m5-validation.json",
+      "size": 2532,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m5/typecheck.log",
+      "size": 57,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m6/focused-tests.log",
+      "size": 2255,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m6/full-test.log",
+      "size": 69336,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m6/m6-validation.json",
+      "size": 2621,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/m6/typecheck.log",
+      "size": 57,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/benchmark-results.json",
+      "size": 4588,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/candidate-package-5fdedae.json",
+      "size": 91089,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/candidate-package-5fdedae.manifest.json",
+      "size": 91089,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/candidate-package-5fdedae.sbom.cdx.json",
+      "size": 94668,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/candidate-package-7a78aef.json",
+      "size": 2002,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/candidate-package-7a78aef.manifest.json",
+      "size": 90926,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/candidate-package-7a78aef.sbom.cdx.json",
+      "size": 94529,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/candidate-package-66b28af.json",
+      "size": 91089,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/candidate-package-66b28af.manifest.json",
+      "size": 91089,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/candidate-package-66b28af.sbom.cdx.json",
+      "size": 94668,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/candidate-package-8140c62.json",
+      "size": 91089,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/candidate-package-8140c62.manifest.json",
+      "size": 91089,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/candidate-package-8140c62.sbom.cdx.json",
+      "size": 94668,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/github-ci-current-head.json",
+      "size": 11992,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/github-ci-evidence-3f61c93.json",
+      "size": 5027,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/github-ci-evidence-9a9c3c5.json",
+      "size": 5091,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/github-ci-evidence-86f09e8.json",
+      "size": 5091,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/github-ci-evidence-97498e3.json",
+      "size": 5091,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/github-ci-run-412670.json",
+      "size": 4022,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/github-ci-run-412692.json",
+      "size": 9324,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/github-ci-run-412700.json",
+      "size": 6000,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/github-ci-run-412859.json",
+      "size": 3711,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/github-ci-run-412862.json",
+      "size": 4905,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/github-ci-run-40994705723.json",
+      "size": 2880,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/github-ci-run-40995286248.json",
+      "size": 1583,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/github-ci-run-40995701865.json",
+      "size": 1658,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/github-ci-run-40995701875.json",
+      "size": 2880,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/independent-review-handoff-5fdedae.md",
+      "size": 6688,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/independent-review-handoff-66b28af.md",
+      "size": 6686,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/independent-review-handoff-8140c62.md",
+      "size": 6721,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/local-docker-l1-e02e7fe.json",
+      "size": 1411,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/local-resume-validation-9b7b473.json",
+      "size": 1862,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/local-resume-validation-14df1d0.json",
+      "size": 1364,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/local-validation-7a78aef.json",
+      "size": 3959,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/local-validation-e02e7fe.json",
+      "size": 1765,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/node22-local-validation.json",
+      "size": 2924,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/npm-audit-latest.json",
+      "size": 843,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/npm-audit.json",
+      "size": 625,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/p0-h-reviewer-addendum.md",
+      "size": 4115,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/portable-cleanroom-5fdedae.json",
+      "size": 3540,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/portable-cleanroom-66b28af.json",
+      "size": 3856,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/portable-cleanroom-8140c62.json",
+      "size": 3003,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-5fdedae.json",
+      "size": 14895,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-66b28af.json",
+      "size": 14895,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-8140c62.json",
+      "size": 14895,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback.json",
+      "size": 14895,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/release-gate-three-state-8140c62.json",
+      "size": 1992,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/security-license-review-preliminary.json",
+      "size": 8266,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/upgrade-rollback-drill.json",
+      "size": 2833,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/evidence/p0-h/v23-main-gate-ci-attempt.json",
+      "size": 6301,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/fixture-catalog.json",
+      "size": 5027,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/INTERRUPT_CHECKPOINT.md",
+      "size": 20704,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/m1-artifact-intake.md",
+      "size": 6283,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/m2-source-symbols.md",
+      "size": 6289,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/m3-native-program-ir.md",
+      "size": 7094,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/migration-and-rollback.md",
+      "size": 3706,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/p0-h-independent-review-packet.md",
+      "size": 10301,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/p0-h-license-inventory.md",
+      "size": 7936,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/performance-report.md",
+      "size": 3590,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/portable-install.md",
+      "size": 1214,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/release-provenance-protocol.md",
+      "size": 7716,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/release-review-policy.md",
+      "size": 2955,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/schemas/artifact-graph.schema.json",
+      "size": 3216,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/schemas/artifact-identification.schema.json",
+      "size": 2718,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/schemas/behavior-comparison-bundle-v1.schema.json",
+      "size": 2098,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/schemas/behavior-contract-source-v1.schema.json",
+      "size": 1941,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/schemas/native-program-ir.schema.json",
+      "size": 3064,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/schemas/source-symbol-ir.schema.json",
+      "size": 4364,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/security-evidence-correlation.md",
+      "size": 3715,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2.3/threat-model.md",
+      "size": 14795,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/airgap-container.json",
+      "size": 905,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/antigravity-mcp.json",
+      "size": 849,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/audit-baseline.json",
+      "size": 1620,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/baseline-inventory.json",
+      "size": 20260,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/baseline.json",
+      "size": 10917,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/benchmark-overhead.json",
+      "size": 1324,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/blocker-map.json",
+      "size": 7161,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/claude-mcp.json",
+      "size": 1556,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/claude-plugin-validation.json",
+      "size": 661,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/claude-prep.json",
+      "size": 1525,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/clean-room.json",
+      "size": 609,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/codex-events2.jsonl",
+      "size": 46246,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/codex-l0-report.md",
+      "size": 7794,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/codex-l0.json",
+      "size": 1602,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/codex-l0.txt",
+      "size": 12947,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/codex-mcp.json",
+      "size": 1143,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/compatibility-matrix.json",
+      "size": 10524,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/cursor-mcp.json",
+      "size": 1300,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/desktop-analysis.json",
+      "size": 1720,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/desktop-analysis.webp",
+      "size": 309761,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/desktop-e2e.json",
+      "size": 2734,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/desktop-e2e.md",
+      "size": 1636,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/desktop-health-detail.webp",
+      "size": 145362,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/desktop-health.webp",
+      "size": 217962,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/desktop-l0-report.md",
+      "size": 8270,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/evidence-manifest.json",
+      "size": 18602,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/external-tools-25.json",
+      "size": 3401,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/garak-live.json",
+      "size": 32873,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/gemini-cli-mcp.json",
+      "size": 671,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/github-attestation.json",
+      "size": 14450,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/golden-status.json",
+      "size": 1766,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/hermes-l0-report.md",
+      "size": 7836,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/hermes-l0.json",
+      "size": 1437,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/hermes-l0.txt",
+      "size": 804,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/hermes-mcp.json",
+      "size": 952,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/hermes-model-out.txt",
+      "size": 506,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-audit/antigravity.jsonl",
+      "size": 649,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-audit/claude.jsonl",
+      "size": 1262,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-audit/codex.jsonl",
+      "size": 3401,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-audit/cursor.jsonl",
+      "size": 2796,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-audit/hermes.jsonl",
+      "size": 3315,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-audit/trae.jsonl",
+      "size": 789,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-audit/zcode.jsonl",
+      "size": 2460,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-e2e-2026-10-22.json",
+      "size": 6657,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model-e2e-2026-10-22.json",
+      "size": 4544,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/antigravity/evidence.jsonl",
+      "size": 1988,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/antigravity/l0.json",
+      "size": 796,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/antigravity/report.md",
+      "size": 7654,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/antigravity/task.json",
+      "size": 3346,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/claude-cowork/evidence.jsonl",
+      "size": 2054,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/claude-cowork/l0.json",
+      "size": 1077,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/claude-cowork/report.md",
+      "size": 7855,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/claude-cowork/task.json",
+      "size": 3502,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/cursor-audit.jsonl",
+      "size": 7122,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/cursor-report.md",
+      "size": 25356,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/cursor-task.json",
+      "size": 3799,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/pi/evidence.jsonl",
+      "size": 1988,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/pi/install-uninstall.log",
+      "size": 3910,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/pi/pi-l0.json",
+      "size": 871,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/pi/pi-package-install.json",
+      "size": 1050,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/pi/report.md",
+      "size": 7649,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/pi/task.json",
+      "size": 3337,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/trae-audit.jsonl",
+      "size": 3128,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/trae-report.md",
+      "size": 25367,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/trae-task.json",
+      "size": 3797,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/workbuddy-audit.jsonl",
+      "size": 4826,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/workbuddy-report.md",
+      "size": 33371,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/workbuddy-task.json",
+      "size": 3628,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/zcode/evidence.jsonl",
+      "size": 2846,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/zcode/findings-reviewed.json",
+      "size": 3885,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/zcode/l0.json",
+      "size": 1008,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/zcode/report.md",
+      "size": 11575,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/host-model/zcode/task.json",
+      "size": 3471,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/independent-review-pack.md",
+      "size": 5749,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/intel-live.json",
+      "size": 1911,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/jailbreak-live.json",
+      "size": 1510,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/mcp-inspector.json",
+      "size": 1542,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/mcp-skills-inspector.json",
+      "size": 2425,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/offline-airgap-attempt.json",
+      "size": 439,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/offline-score-v2.json",
+      "size": 1114,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/offline-score.json",
+      "size": 39351,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/old-data-readonly-drill.json",
+      "size": 1838,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/p1-dsh-l0-report.md",
+      "size": 8177,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/p1-dsh-l0.json",
+      "size": 1307,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/p1-dsh-l0.webp",
+      "size": 316940,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/performance-compare.json",
+      "size": 729,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/performance-v2-rerun1.json",
+      "size": 4172,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/performance-v2-rerun2.json",
+      "size": 4175,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/performance-v2.json",
+      "size": 4182,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/performance-v12-now.json",
+      "size": 4190,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/portable-artifact.json",
+      "size": 650,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/provider-live-ollama.json",
+      "size": 2053,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/pyrit-live.json",
+      "size": 601,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/release-build.json",
+      "size": 83769,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/release-gates.json",
+      "size": 5788,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/release-scope.json",
+      "size": 1126,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/release-smoke.json",
+      "size": 1533,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/retest/host-antigravity.json",
+      "size": 659,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/retest/host-claude.json",
+      "size": 659,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/retest/host-zcode.json",
+      "size": 635,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/retest/provider-anthropic.json",
+      "size": 484,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/retest/provider-gemini.json",
+      "size": 464,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/retest/provider-openai-chat.json",
+      "size": 470,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/retest/provider-openai-responses.json",
+      "size": 488,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/signoff-liuyilin.jpg",
+      "size": 23870,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/signoff.json",
+      "size": 760,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/streaming-10gb.json",
+      "size": 493,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/supplychain-e2e.json",
+      "size": 1220,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/supplychain-live.json",
+      "size": 1415,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/test-matrix.md",
+      "size": 1370,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/test-report.json",
+      "size": 667,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/test-report.tap",
+      "size": 130979,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/v2.2-readiness.json",
+      "size": 17200,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/workbench-rendered.html",
+      "size": 20768,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/workbench.html",
+      "size": 4252,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/workbench.png",
+      "size": 182742,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/acceptance/zcode-headless.json",
+      "size": 901,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/adr/0001-stack.md",
+      "size": 1872,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/aisec-threat-map.md",
+      "size": 1248,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/aisec-worker-protocol.md",
+      "size": 757,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/benchmark/core-scenarios.json",
+      "size": 13746,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/bundle.lock.json",
+      "size": 25394,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/core-pack.lock.json",
+      "size": 18223,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/core/public-api.md",
+      "size": 1651,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/generated/api-matrix.md",
+      "size": 435,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/generated/host-matrix.md",
+      "size": 1908,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/generated/release-status.md",
+      "size": 2930,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/generated/skill-list.md",
+      "size": 1009,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/host-generic.md",
+      "size": 1348,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/provider-matrix.md",
+      "size": 2045,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/provider-security.md",
+      "size": 1147,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/release/compatibility-runtime.md",
+      "size": 1434,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/release/docs-only-evidence.md",
+      "size": 5286,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/release/EXTERNAL_GA_AUTHORITY.md",
+      "size": 1443,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/release/external-ga-evidence.md",
+      "size": 4113,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/release/gray-plan.md",
+      "size": 746,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/release/license-audit.md",
+      "size": 819,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/release/plan.md",
+      "size": 2140,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/release/platform-matrix.md",
+      "size": 794,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/release/readiness.json",
+      "size": 5582,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/release/sbom.spdx.json",
+      "size": 53173,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/release/stable-readiness.json",
+      "size": 5577,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/release/upgrade-guide.md",
+      "size": 2480,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/release/user-guide.md",
+      "size": 2535,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/release/v2.2-ga-review.md",
+      "size": 4101,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/release/v2.2-stable-policy-v1.md",
+      "size": 5300,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/release/v2.2-stable-scope-v1.json",
+      "size": 4254,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/release/waivers.json",
+      "size": 631,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/security/p0-security-review.md",
+      "size": 1421,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/security/universal-threat-model.md",
+      "size": 3522,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M1-01.md",
+      "size": 1843,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M1-02.md",
+      "size": 639,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M1-03.md",
+      "size": 2034,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M1-04.md",
+      "size": 1955,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M1-05.md",
+      "size": 1573,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M1-06.md",
+      "size": 1444,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M1-07.md",
+      "size": 1283,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M1-08.md",
+      "size": 1863,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M1-09.md",
+      "size": 1468,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M1-10.md",
+      "size": 1409,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M1-11.md",
+      "size": 1227,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M1-12.md",
+      "size": 510,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M2-01.md",
+      "size": 887,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M2-02.md",
+      "size": 760,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M2-03.md",
+      "size": 811,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M2-04.md",
+      "size": 920,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M2-05.md",
+      "size": 1061,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M2-06.md",
+      "size": 1053,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M2-07.md",
+      "size": 1036,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M2-08.md",
+      "size": 1102,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M2-09.md",
+      "size": 1438,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M2-10.md",
+      "size": 1147,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M2-11.md",
+      "size": 1424,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M2-12.md",
+      "size": 1310,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M2-13.md",
+      "size": 787,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M2-14.md",
+      "size": 913,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M3-01.md",
+      "size": 1162,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M3-02.md",
+      "size": 1311,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M3-03.md",
+      "size": 1675,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M3-04.md",
+      "size": 1199,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M3-05.md",
+      "size": 950,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M3-06.md",
+      "size": 1010,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M3-07.md",
+      "size": 1070,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M3-08.md",
+      "size": 940,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M3-09.md",
+      "size": 961,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M3-10.md",
+      "size": 984,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M3-11.md",
+      "size": 1148,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M3-12.md",
+      "size": 763,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M3-13.md",
+      "size": 824,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M4-01.md",
+      "size": 1455,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M4-02.md",
+      "size": 829,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M4-03.md",
+      "size": 1210,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M4-04.md",
+      "size": 902,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M4-05.md",
+      "size": 1230,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M4-06.md",
+      "size": 1745,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M4-07.md",
+      "size": 622,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M4-08.md",
+      "size": 898,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M4-09.md",
+      "size": 1176,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M4-10.md",
+      "size": 922,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M4-11.md",
+      "size": 1076,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/AB2-M4-12.md",
+      "size": 878,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABA-ISO-01.md",
+      "size": 1352,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-001.md",
+      "size": 980,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-002.md",
+      "size": 690,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-003.md",
+      "size": 848,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-004.md",
+      "size": 845,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-005.md",
+      "size": 595,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-006.md",
+      "size": 618,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-007.md",
+      "size": 761,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-101.md",
+      "size": 1286,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-102.md",
+      "size": 758,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-103.md",
+      "size": 1220,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-104.md",
+      "size": 1216,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-105.md",
+      "size": 785,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-106.md",
+      "size": 1007,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-107.md",
+      "size": 724,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-108.md",
+      "size": 1216,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-109.md",
+      "size": 781,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-201.md",
+      "size": 1221,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-202.md",
+      "size": 778,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-203.md",
+      "size": 1341,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-204.md",
+      "size": 927,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-205.md",
+      "size": 797,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-206.md",
+      "size": 1539,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-207.md",
+      "size": 1618,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-208.md",
+      "size": 1515,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-209.md",
+      "size": 1069,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-210.md",
+      "size": 1343,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-211.md",
+      "size": 877,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-301.md",
+      "size": 1017,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-302.md",
+      "size": 950,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-303.md",
+      "size": 927,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-304.md",
+      "size": 764,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-305.md",
+      "size": 729,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-306.md",
+      "size": 749,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-307.md",
+      "size": 1010,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-308.md",
+      "size": 875,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-309.md",
+      "size": 1287,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-310.md",
+      "size": 960,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-311.md",
+      "size": 1105,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-312.md",
+      "size": 788,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-313.md",
+      "size": 876,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-314.md",
+      "size": 891,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-315.md",
+      "size": 1601,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-316.md",
+      "size": 1180,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-317.md",
+      "size": 844,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-318.md",
+      "size": 1387,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-401.md",
+      "size": 727,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-402.md",
+      "size": 1852,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-403.md",
+      "size": 797,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-404.md",
+      "size": 1114,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-405.md",
+      "size": 1008,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-406.md",
+      "size": 907,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-407.md",
+      "size": 961,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-408.md",
+      "size": 1470,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/tasks/ABU-409.md",
+      "size": 1757,
+      "mode": 420
+    },
+    {
+      "path": "docs/v2/threat-model.md",
+      "size": 4491,
+      "mode": 420
+    },
+    {
+      "path": "docs/workflow-engine-v2.md",
+      "size": 2454,
+      "mode": 420
+    },
+    {
+      "path": "icon.svg",
+      "size": 787,
+      "mode": 420
+    },
+    {
+      "path": "index.js",
+      "size": 28845,
+      "mode": 420
+    },
+    {
+      "path": "lib/aisec/agentDojo.js",
+      "size": 3337,
+      "mode": 420
+    },
+    {
+      "path": "lib/aisec/campaign.js",
+      "size": 4879,
+      "mode": 420
+    },
+    {
+      "path": "lib/aisec/composite.js",
+      "size": 1661,
+      "mode": 420
+    },
+    {
+      "path": "lib/aisec/evaluationStore.js",
+      "size": 671,
+      "mode": 420
+    },
+    {
+      "path": "lib/aisec/evaluator.js",
+      "size": 2909,
+      "mode": 420
+    },
+    {
+      "path": "lib/aisec/garakAdapter.js",
+      "size": 4500,
+      "mode": 420
+    },
+    {
+      "path": "lib/aisec/inspectAdapter.js",
+      "size": 1930,
+      "mode": 420
+    },
+    {
+      "path": "lib/aisec/jailbreakDataset.js",
+      "size": 2262,
+      "mode": 420
+    },
+    {
+      "path": "lib/aisec/judge.js",
+      "size": 3594,
+      "mode": 420
+    },
+    {
+      "path": "lib/aisec/multimodal.js",
+      "size": 1240,
+      "mode": 420
+    },
+    {
+      "path": "lib/aisec/pyritAdapter.js",
+      "size": 2713,
+      "mode": 420
+    },
+    {
+      "path": "lib/aisec/ragGuard.js",
+      "size": 1836,
+      "mode": 420
+    },
+    {
+      "path": "lib/aisec/report.js",
+      "size": 2401,
+      "mode": 420
+    },
+    {
+      "path": "lib/aisec/reportDashboard.js",
+      "size": 1797,
+      "mode": 420
+    },
+    {
+      "path": "lib/aisec/schema.js",
+      "size": 2864,
+      "mode": 420
+    },
+    {
+      "path": "lib/aisec/workerSupervisor.js",
+      "size": 5053,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/android/axml.js",
+      "size": 18654,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/android/dex.js",
+      "size": 12033,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/android/jadx.js",
+      "size": 7290,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/android/manifest.js",
+      "size": 69984,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/android/signature.js",
+      "size": 19901,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/android/util.js",
+      "size": 6534,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/android/zip.js",
+      "size": 14373,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/artifact/intake.js",
+      "size": 43784,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/artifact/manifest.js",
+      "size": 9915,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/binary/behavior.js",
+      "size": 8734,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/binary/elf.js",
+      "size": 24688,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/binary/entropy.js",
+      "size": 6029,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/binary/ghidra.js",
+      "size": 17591,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/binary/identify.js",
+      "size": 23737,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/binary/macho.js",
+      "size": 23829,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/binary/manifest.js",
+      "size": 32382,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/binary/pe.js",
+      "size": 35841,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/binary/programIr.js",
+      "size": 15570,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/binary/strings.js",
+      "size": 8719,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/binary/structure.js",
+      "size": 14619,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/binary/util.js",
+      "size": 15569,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/ctf/common.js",
+      "size": 5732,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/ctf/crypto-basics.js",
+      "size": 13640,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/ctf/encoding.js",
+      "size": 13418,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/ctf/filetype.js",
+      "size": 20490,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/ctf/flagscan.js",
+      "size": 4985,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/ctf/hash_id.js",
+      "size": 10973,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/ctf/manifest.js",
+      "size": 22537,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/forensics/filetype.js",
+      "size": 18532,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/forensics/formats.js",
+      "size": 15383,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/forensics/hashes.js",
+      "size": 2415,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/forensics/ioc.js",
+      "size": 11443,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/forensics/manifest.js",
+      "size": 16029,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/forensics/metadata.js",
+      "size": 21317,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/forensics/timeline.js",
+      "size": 12028,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/forensics/util.js",
+      "size": 6113,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/forensics/yara-lite.js",
+      "size": 11222,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/forensics/zip.js",
+      "size": 12978,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/live/manifest.js",
+      "size": 16398,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/network/anomalies.js",
+      "size": 11829,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/network/capture.js",
+      "size": 6682,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/network/dns.js",
+      "size": 14844,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/network/flows.js",
+      "size": 11619,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/network/http.js",
+      "size": 14696,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/network/manifest.js",
+      "size": 34113,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/network/packets.js",
+      "size": 16313,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/network/pcap.js",
+      "size": 4909,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/network/pcapng.js",
+      "size": 11204,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/network/tls.js",
+      "size": 18058,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/network/tshark.js",
+      "size": 9160,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/network/util.js",
+      "size": 13594,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/rebuild/manifest.js",
+      "size": 16453,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/sast/common.js",
+      "size": 14910,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/sast/deps.js",
+      "size": 26481,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/sast/external-adapters.js",
+      "size": 17726,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/sast/manifest.js",
+      "size": 26431,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/sast/patch.js",
+      "size": 15759,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/sast/rules.js",
+      "size": 19545,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/sast/sbom.js",
+      "size": 5851,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/sast/scanner.js",
+      "size": 6265,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/sast/secrets.js",
+      "size": 13419,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/sast/syft.js",
+      "size": 6046,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/security/correlator.js",
+      "size": 31768,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/security/manifest.js",
+      "size": 1415,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/source/manifest.js",
+      "size": 17675,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/source/symbols.js",
+      "size": 20191,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/web/common.js",
+      "size": 15455,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/web/har.js",
+      "size": 23825,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/web/headers.js",
+      "size": 27955,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/web/httpmsg.js",
+      "size": 15429,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/web/manifest.js",
+      "size": 8035,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/web/openapi.js",
+      "size": 25876,
+      "mode": 420
+    },
+    {
+      "path": "lib/analyzers/web/yaml-lite.js",
+      "size": 17529,
+      "mode": 420
+    },
+    {
+      "path": "lib/catalog/collector.js",
+      "size": 2511,
+      "mode": 420
+    },
+    {
+      "path": "lib/catalog/licenseGate.js",
+      "size": 3763,
+      "mode": 420
+    },
+    {
+      "path": "lib/catalog/rating.js",
+      "size": 2986,
+      "mode": 420
+    },
+    {
+      "path": "lib/connectivity/connectorHealth.js",
+      "size": 3273,
+      "mode": 420
+    },
+    {
+      "path": "lib/connectivity/layeredCache.js",
+      "size": 5013,
+      "mode": 420
+    },
+    {
+      "path": "lib/connectivity/networkState.js",
+      "size": 4731,
+      "mode": 420
+    },
+    {
+      "path": "lib/connectivity/resourceFetcher.js",
+      "size": 4538,
+      "mode": 420
+    },
+    {
+      "path": "lib/connectivity/syncManager.js",
+      "size": 3673,
+      "mode": 420
+    },
+    {
+      "path": "lib/connectivity/versionedIndex.js",
+      "size": 2805,
+      "mode": 420
+    },
+    {
+      "path": "lib/control/approvalAuthority.js",
+      "size": 9986,
+      "mode": 420
+    },
+    {
+      "path": "lib/control/policyGateway.js",
+      "size": 8862,
+      "mode": 420
+    },
+    {
+      "path": "lib/core/audit.js",
+      "size": 217,
+      "mode": 420
+    },
+    {
+      "path": "lib/core/capabilities.js",
+      "size": 231,
+      "mode": 420
+    },
+    {
+      "path": "lib/core/dag.js",
+      "size": 123,
+      "mode": 420
+    },
+    {
+      "path": "lib/core/evidence.js",
+      "size": 223,
+      "mode": 420
+    },
+    {
+      "path": "lib/core/externalTools.js",
+      "size": 133,
+      "mode": 420
+    },
+    {
+      "path": "lib/core/files.js",
+      "size": 125,
+      "mode": 420
+    },
+    {
+      "path": "lib/core/health.js",
+      "size": 219,
+      "mode": 420
+    },
+    {
+      "path": "lib/core/help.js",
+      "size": 215,
+      "mode": 420
+    },
+    {
+      "path": "lib/core/isolation.js",
+      "size": 129,
+      "mode": 420
+    },
+    {
+      "path": "lib/core/pathBoundary.js",
+      "size": 1421,
+      "mode": 420
+    },
+    {
+      "path": "lib/core/presentation.js",
+      "size": 132,
+      "mode": 420
+    },
+    {
+      "path": "lib/core/reports.js",
+      "size": 221,
+      "mode": 420
+    },
+    {
+      "path": "lib/core/runner.js",
+      "size": 219,
+      "mode": 420
+    },
+    {
+      "path": "lib/core/runtime.js",
+      "size": 221,
+      "mode": 420
+    },
+    {
+      "path": "lib/core/scope.js",
+      "size": 217,
+      "mode": 420
+    },
+    {
+      "path": "lib/core/taskQueue.js",
+      "size": 225,
+      "mode": 420
+    },
+    {
+      "path": "lib/core/tasks.js",
+      "size": 217,
+      "mode": 420
+    },
+    {
+      "path": "lib/core/util.js",
+      "size": 124,
+      "mode": 420
+    },
+    {
+      "path": "lib/core/workflows.js",
+      "size": 129,
+      "mode": 420
+    },
+    {
+      "path": "lib/install/installer.js",
+      "size": 12183,
+      "mode": 420
+    },
+    {
+      "path": "lib/intel/normalize.js",
+      "size": 6657,
+      "mode": 420
+    },
+    {
+      "path": "lib/knowledge/guard.js",
+      "size": 2512,
+      "mode": 420
+    },
+    {
+      "path": "lib/knowledge/index.js",
+      "size": 4095,
+      "mode": 420
+    },
+    {
+      "path": "lib/migrations/safe-restore-windows.ps1",
+      "size": 12958,
+      "mode": 420
+    },
+    {
+      "path": "lib/migrations/v1-to-v2.js",
+      "size": 22251,
+      "mode": 420
+    },
+    {
+      "path": "lib/pack/bundleCompiler.js",
+      "size": 4608,
+      "mode": 420
+    },
+    {
+      "path": "lib/pack/corePack.js",
+      "size": 2580,
+      "mode": 420
+    },
+    {
+      "path": "lib/pack/offlinePack.js",
+      "size": 3761,
+      "mode": 420
+    },
+    {
+      "path": "lib/release/artifactAttestation.js",
+      "size": 4879,
+      "mode": 420
+    },
+    {
+      "path": "lib/release/docsConsistency.js",
+      "size": 5198,
+      "mode": 420
+    },
+    {
+      "path": "lib/release/evidenceValidator.js",
+      "size": 27589,
+      "mode": 420
+    },
+    {
+      "path": "lib/release/externalGaEvidence.js",
+      "size": 15828,
+      "mode": 420
+    },
+    {
+      "path": "lib/release/gates.js",
+      "size": 14928,
+      "mode": 420
+    },
+    {
+      "path": "lib/release/githubRulesets.js",
+      "size": 1056,
+      "mode": 420
+    },
+    {
+      "path": "lib/release/gray.js",
+      "size": 691,
+      "mode": 420
+    },
+    {
+      "path": "lib/release/readinessPath.js",
+      "size": 643,
+      "mode": 420
+    },
+    {
+      "path": "lib/release/rollout.js",
+      "size": 2130,
+      "mode": 420
+    },
+    {
+      "path": "lib/release/safe-evidence-write-windows.ps1",
+      "size": 17379,
+      "mode": 420
+    },
+    {
+      "path": "lib/release/safeEvidenceFile.js",
+      "size": 14496,
+      "mode": 420
+    },
+    {
+      "path": "lib/release/stableGate.js",
+      "size": 22206,
+      "mode": 420
+    },
+    {
+      "path": "lib/schemas/v2/index.js",
+      "size": 5070,
+      "mode": 420
+    },
+    {
+      "path": "lib/workers/contentStore.js",
+      "size": 2734,
+      "mode": 420
+    },
+    {
+      "path": "locale/en.json",
+      "size": 228,
+      "mode": 420
+    },
+    {
+      "path": "locale/zh.json",
+      "size": 195,
+      "mode": 420
+    },
+    {
+      "path": "package.json",
+      "size": 1911,
+      "mode": 420
+    },
+    {
+      "path": "scripts/aisec/garak.lock",
+      "size": 251,
+      "mode": 420
+    },
+    {
+      "path": "scripts/aisec/pyrit_local_mock.py",
+      "size": 2355,
+      "mode": 420
+    },
+    {
+      "path": "scripts/aisec/pyrit.lock",
+      "size": 177,
+      "mode": 420
+    },
+    {
+      "path": "scripts/aisec/requirements.lock",
+      "size": 253,
+      "mode": 420
+    },
+    {
+      "path": "scripts/aisec/run-garak-live.mjs",
+      "size": 2565,
+      "mode": 420
+    },
+    {
+      "path": "scripts/aisec/worker.py",
+      "size": 1985,
+      "mode": 420
+    },
+    {
+      "path": "scripts/clean-temp.mjs",
+      "size": 1714,
+      "mode": 420
+    },
+    {
+      "path": "scripts/file-changes.mjs",
+      "size": 6569,
+      "mode": 420
+    },
+    {
+      "path": "scripts/ghidra/ExportSummary.java",
+      "size": 20192,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/artifact-signature.mjs",
+      "size": 726,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/baseline-inventory.mjs",
+      "size": 5986,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/benchmark-overhead.mjs",
+      "size": 5901,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/build-bundle.mjs",
+      "size": 686,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/build-core-pack.mjs",
+      "size": 667,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/build-evidence-manifest.mjs",
+      "size": 2854,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/build-portable-artifact.mjs",
+      "size": 4521,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/build-release.mjs",
+      "size": 14243,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/build-sbom.mjs",
+      "size": 6827,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/check-blocker-map.mjs",
+      "size": 1419,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/check-docs-consistency.mjs",
+      "size": 409,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/check-release.mjs",
+      "size": 8585,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/claude-prep.mjs",
+      "size": 2151,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/compute-offline-score.mjs",
+      "size": 1883,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/core-benchmark.mjs",
+      "size": 18548,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/core-dependency-graph.mjs",
+      "size": 2204,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/create-v23-release-envelope.mjs",
+      "size": 4645,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/derive-m3-macho-fixtures.mjs",
+      "size": 3402,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/deterministic-gzip.mjs",
+      "size": 1516,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/fetch-intel-live.mjs",
+      "size": 3159,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/generate-docs.mjs",
+      "size": 4193,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/generate-sdk-openapi.mjs",
+      "size": 1649,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/generate-sdk-types.mjs",
+      "size": 1568,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/generate-test-evidence.mjs",
+      "size": 2724,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/migrate-fault-child.mjs",
+      "size": 467,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/migrate.mjs",
+      "size": 908,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/old-data-drill.mjs",
+      "size": 2970,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/release-gates.mjs",
+      "size": 3087,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/release-smoke.mjs",
+      "size": 4772,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/retest-real.mjs",
+      "size": 25711,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/rollback-drill.mjs",
+      "size": 2498,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/stable-gate.mjs",
+      "size": 7168,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/supplychain-e2e.mjs",
+      "size": 3745,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/supplychain-live.mjs",
+      "size": 3473,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/v2-readiness.mjs",
+      "size": 7122,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/v23-portable-cleanroom.mjs",
+      "size": 7715,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/v23-provenance.mjs",
+      "size": 789,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/v23-real-package-drill.mjs",
+      "size": 23826,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/v23-release-gate.mjs",
+      "size": 20234,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/v23-upgrade-rollback-drill.mjs",
+      "size": 7931,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/validate-evidence.mjs",
+      "size": 1435,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/validate-jailbreak-dataset.mjs",
+      "size": 3683,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/validate-v23-acceptance.mjs",
+      "size": 10587,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/verify-dsh-desktop.mjs",
+      "size": 1450,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/verify-m3-native-ghidra-e2e.mjs",
+      "size": 7734,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/verify-m4-vulnerability-corpus.mjs",
+      "size": 2296,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/verify-published-stable.mjs",
+      "size": 5589,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/verify-streaming-10gb.mjs",
+      "size": 2729,
+      "mode": 420
+    },
+    {
+      "path": "scripts/v2/verify-v23-portable-manifest.mjs",
+      "size": 1128,
+      "mode": 420
+    },
+    {
+      "path": "scripts/verify-gate-b-v2.mjs",
+      "size": 4896,
+      "mode": 420
+    },
+    {
+      "path": "scripts/verify-gate-b.mjs",
+      "size": 13314,
+      "mode": 420
+    },
+    {
+      "path": "scripts/verify-ghidra.mjs",
+      "size": 1143,
+      "mode": 420
+    },
+    {
+      "path": "scripts/verify-l1-provider.mjs",
+      "size": 2423,
+      "mode": 420
+    },
+    {
+      "path": "scripts/verify-l1.mjs",
+      "size": 4389,
+      "mode": 420
+    },
+    {
+      "path": "scripts/verify-l2-loopback.mjs",
+      "size": 2092,
+      "mode": 420
+    },
+    {
+      "path": "skills.js",
+      "size": 3861,
+      "mode": 420
+    },
+    {
+      "path": "skills/android-apk-audit.md",
+      "size": 1826,
+      "mode": 420
+    },
+    {
+      "path": "skills/armorbreak-ai-eval/SKILL.md",
+      "size": 464,
+      "mode": 420
+    },
+    {
+      "path": "skills/armorbreak-android/SKILL.md",
+      "size": 480,
+      "mode": 420
+    },
+    {
+      "path": "skills/armorbreak-binary/SKILL.md",
+      "size": 479,
+      "mode": 420
+    },
+    {
+      "path": "skills/armorbreak-pcap/SKILL.md",
+      "size": 465,
+      "mode": 420
+    },
+    {
+      "path": "skills/armorbreak-report/SKILL.md",
+      "size": 460,
+      "mode": 420
+    },
+    {
+      "path": "skills/armorbreak-sast/SKILL.md",
+      "size": 471,
+      "mode": 420
+    },
+    {
+      "path": "skills/armorbreak-triage/SKILL.md",
+      "size": 452,
+      "mode": 420
+    },
+    {
+      "path": "skills/binary-static-analysis.md",
+      "size": 2013,
+      "mode": 420
+    },
+    {
+      "path": "skills/ctf-arena.md",
+      "size": 1550,
+      "mode": 420
+    },
+    {
+      "path": "skills/forensics-triage.md",
+      "size": 1371,
+      "mode": 420
+    },
+    {
+      "path": "skills/pcap-investigation.md",
+      "size": 1721,
+      "mode": 420
+    },
+    {
+      "path": "skills/report-writing.md",
+      "size": 1936,
+      "mode": 420
+    },
+    {
+      "path": "skills/sast-code-review.md",
+      "size": 1630,
+      "mode": 420
+    },
+    {
+      "path": "skills/triggers.json",
+      "size": 2028,
+      "mode": 420
+    },
+    {
+      "path": "tools.js",
+      "size": 61862,
+      "mode": 420
+    }
+  ]
+}

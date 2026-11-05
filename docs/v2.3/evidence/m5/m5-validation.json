@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "armorbreak.v2.3.milestone-validation/v1",
+  "milestone": "M5",
+  "status": "PARTIAL_LOCAL_TESTED",
+  "sourceCommit": "7e42b1a5b5f1cf9c8833dd355b6c266cc62b15d3",
+  "capturedOn": "2026-10-29",
+  "environment": {
+    "os": "Windows x64",
+    "node": "v24.16.0",
+    "python": "Python 3.13.13",
+    "dockerEngine": "29.8.1 linux/amd64"
+  },
+  "tests": {
+    "focused": {
+      "command": "node --test --test-concurrency=1 tests/rebuild.test.mjs",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0
+    },
+    "full": {
+      "command": "npm test",
+      "passed": 644,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 132704.6294,
+      "exitCode": 0
+    },
+    "typecheck": {
+      "command": "npm run typecheck",
+      "exitCode": 0
+    }
+  },
+  "behaviorFixture": {
+    "programs": [
+      "account formatter",
+      "arithmetic evaluator",
+      "gated state transition"
+    ],
+    "referenceLanguage": "JavaScript",
+    "candidateLanguage": "Python",
+    "caseCounts": {
+      "total": 11,
+      "executedResultPairs": 8,
+      "passed": 5,
+      "failed": 3,
+      "inconclusive": 3
+    },
+    "inconclusiveCases": [
+      "formatter-timeout-01",
+      "random-output-01",
+      "environment-incomparable-01"
+    ],
+    "timeoutEvidence": "Python child process exceeded a 150 ms timeout; spawnSync returned ETIMEDOUT.",
+    "randomEvidence": "Two independent Python child-process runs returned distinct secrets.token_hex outputs.",
+    "fixtureHashes": {
+      "tests/fixtures/m5/javascript_reference.mjs": "2def714dd7c4d52e994b4652ba890def80daa20b747219ade39c975de4543fc6",
+      "tests/fixtures/m5/python_candidate.py": "543ca8d7583882b7c8fe686294a82d78ca7b31bcbe8242795ed3904ecf3e6bfb"
+    }
+  },
+  "logHashes": {
+    "docs/v2.3/evidence/m5/focused-tests.log": "8f379f0bd00829590b91dbda38ef7954ddc4e94350918a6e963e48b7133405d5",
+    "docs/v2.3/evidence/m5/full-test.log": "b5017c753117909f694ec83963c021add2871deec4a3cfee9f229eb3da738fab",
+    "docs/v2.3/evidence/m5/typecheck.log": "6e71d9aff12155eb945012759d7d5c3a324746c7941e729bcdc11a66772e21c7"
+  },
+  "limitations": [
+    "Local evidence only; CI and Ubuntu/macOS cross-platform runs are not included.",
+    "Behavior fixture programs are self-authored pure functions; no real third-party or production target is covered.",
+    "ArmorBreak itself consumes supplied JSON outcomes and does not execute candidate/reference programs.",
+    "A finite case-set match is not a claim of full program equivalence."
+  ]
+}

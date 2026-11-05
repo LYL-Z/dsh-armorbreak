@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "armorbreak.v2.3-exact-head-ci/v1",
+  "repository": "LYL-Z/dsh-armorbreak",
+  "runId": 40994705723,
+  "runUrl": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/40994705723",
+  "event": "pull_request",
+  "headBranch": "feature/v2.3-universal-program-intelligence",
+  "headSha": "d53146706a760b8789b297f7445838c9b0a0a4c6",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "Node 22 / ubuntu-latest (PR head)",
+      "conclusion": "success",
+      "tests": 649,
+      "passed": 649,
+      "failed": 0,
+      "skipped": 0,
+      "typecheckExitCode": 0,
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/40994705723/job/123865075669"
+    },
+    {
+      "name": "Node 22 / windows-latest (PR head)",
+      "conclusion": "success",
+      "tests": 647,
+      "passed": 647,
+      "failed": 0,
+      "skipped": 0,
+      "typecheckExitCode": 0,
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/40994705723/job/123865075533"
+    },
+    {
+      "name": "Node 24 / ubuntu-latest (PR head)",
+      "conclusion": "success",
+      "tests": 649,
+      "passed": 649,
+      "failed": 0,
+      "skipped": 0,
+      "typecheckExitCode": 0,
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/40994705723/job/123865075330"
+    },
+    {
+      "name": "Node 24 / windows-latest (PR head)",
+      "conclusion": "success",
+      "tests": 647,
+      "passed": 647,
+      "failed": 0,
+      "skipped": 0,
+      "typecheckExitCode": 0,
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/40994705723/job/123865075604"
+    },
+    {
+      "name": "V2.3 evidence integrity (exact PR head)",
+      "conclusion": "success",
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/40994705723/job/123865075600",
+      "boundFiles": 57
+    },
+    {
+      "name": "Benign L1 container-path verification (exact PR head)",
+      "conclusion": "success",
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/40994705723/job/123865075559",
+      "artifact": {
+        "id": 12950618243,
+        "name": "v2.3-l1-docker-verification",
+        "sizeBytes": 823,
+        "sha256": "e762a8530203afa7082dd6f700e1594db7cf87fcf87bc8d85c484e96319df472"
+      }
+    }
+  ],
+  "platformSpecificTests": [
+    {
+      "platform": "linux",
+      "test": "MCP skill read rejects a parent symlink swap at the open boundary",
+      "source": "tests/mcp-server.test.mjs:279"
+    },
+    {
+      "platform": "linux",
+      "test": "Linux migration rollback refuses task paths whose parent another principal can rename",
+      "source": "tests/migration-path-boundary.test.mjs:116"
+    }
+  ],
+  "scope": "Exact PR-head tests, typecheck, evidence integrity and a benign pinned BusyBox container path. This is not exact-main release validation, hostile-sample sandbox certification, or independent security review."
+}

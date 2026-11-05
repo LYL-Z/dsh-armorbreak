@@ -294,6 +294,10 @@ export class EvidenceStore {
       cvss: typeof raw.cvss === 'number' && raw.cvss >= 0 && raw.cvss <= 10 ? raw.cvss : null,
       cwe,
       verification,
+      // Cross-source evidence maturity is separate from vulnerability validation.
+      // Capability imports cannot assert confirmed/refuted; those require an
+      // independent verification flow that is not implemented by this importer.
+      vulnerabilityStatus: ['unverified', 'not_tested'].includes(raw.vulnerabilityStatus) ? raw.vulnerabilityStatus : 'not_tested',
       method: sanitizeText(raw.method ?? context.capabilityId ?? 'static-analysis', 500),
       description: redactText(sanitizeText(raw.description ?? '', 4000)),
       remediation: redactText(sanitizeText(raw.remediation ?? '', 2000)),

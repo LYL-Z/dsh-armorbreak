@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "armorbreak.v2.3-portable-cleanroom-validation/v2",
+  "capturedAt": "2026-11-01T08:26:44.5623434Z",
+  "sourceCommit": "66b28afdbfb988745662b165460a366074ee9120",
+  "environment": {
+    "os": "Windows 11 x64",
+    "node": "v24.16.0",
+    "npm": "11.13.0",
+    "isolatedExtract": true,
+    "developmentWorktreeNodeModulesUsed": false,
+    "nodeModulesPresentInArchive": false
+  },
+  "artifact": {
+    "path": "dist/armorbreak-portable-2.3.0-66b28af.tar.gz",
+    "bytes": 5851092,
+    "sha256": "b038df453eb4ee1683679fb2173dcd7787e7358ba614ee1b8a1cf134d92a43c7",
+    "archiveManifestSha256": "466ddf894ba853ccac03da9ddeb5ccbb313b2d1267a638fe7b80238456033e5c",
+    "sbomSha256": "7999a94f7dca1340f7f0d7021a9b3242acfb6edcea107260449596d7e4a7cdda",
+    "contentFileCount": 552,
+    "contentManifestSha256": "432799f3377bd2d059159f7c52167c682f0ba46008b5ad386e8261a5e32877fa",
+    "reproducible": true
+  },
+  "runtimeDependency": {
+    "package": "typescript",
+    "declaredVersion": "5.9.3",
+    "installedVersion": "5.9.3",
+    "installCommand": "npm install --prefix <extracted> --omit=dev --ignore-scripts --no-audit --no-fund",
+    "installExitCode": 0,
+    "installedInCleanExtraction": true
+  },
+  "checks": {
+    "capabilities": {
+      "command": "node packages/cli/index.js capabilities --json",
+      "exitCode": 0,
+      "capabilityCount": 53
+    },
+    "sourceSymbols": {
+      "command": "node packages/cli/index.js analyze --capability source.symbols --target <isolated-workspace> --json",
+      "taskId": "task_mvxkg4ty_7d59668a",
+      "state": "COMPLETED",
+      "reportSha256": "f150445269daccc840e97859f354653025673ae6413ebce67c73dac63c24fbcb",
+      "result": "S2 parsed 2/2 JS/TS files, 6 symbols, 3 same-file references",
+      "exitCode": 0
+    },
+    "l0Workflow": {
+      "workflow": "CrossLanguageSourceReview",
+      "taskId": "task_mvxkf1ne_1a50adf5",
+      "state": "COMPLETED",
+      "steps": [
+        {
+          "capability": "source.symbols",
+          "id": "symbols",
+          "status": "DONE",
+          "summary": "S2 parsed 2/2 JS/TS candidate files"
+        }
+      ],
+      "reportSha256": "4862749093daa642c9ed5ec347a2d433b1dce513c45e0337c85ad16d46679c98",
+      "taskAndReportReadInSameMcpSession": true,
+      "reportedAggregateStats": {
+        "stepsDone": 0,
+        "stepsFailed": 0
+      },
+      "note": "Task step is DONE and report says completed, but aggregate stepsDone is 0; counter inconsistency is retained as a limitation."
+    },
+    "taskEvidenceAndReportRead": {
+      "sourceSymbolsTask": "task_mvxkg4ty_7d59668a",
+      "taskStatus": "COMPLETED",
+      "reportSha256": "f150445269daccc840e97859f354653025673ae6413ebce67c73dac63c24fbcb",
+      "workflowTask": "task_mvxkf1ne_1a50adf5",
+      "mcpTaskRead": true,
+      "mcpReportRead": true
+    }
+  },
+  "upgradeRollback": {
+    "status": "PASS_ISOLATED_REAL_PACKAGE_DEPLOYMENT",
+    "sourceCommit": "66b28afdbfb988745662b165460a366074ee9120",
+    "candidateArtifactSha256": "b038df453eb4ee1683679fb2173dcd7787e7358ba614ee1b8a1cf134d92a43c7",
+    "historicalV22Sha256": "5e5aca98da18d4f0cb17db71cf57c5577f8f8f64810a30844bd5237b4ed7b630",
+    "rollbackTaskTreeEqual": null,
+    "rollbackConfigHashEqual": true,
+    "rollbackReportHashEqual": true,
+    "scope": "isolated synthetic V2.2-format test task generated and read by unchanged published V2.2.0 package; package deployment used actual V2.3 candidate archive"
+  },
+  "limitations": [
+    "Archive requires installing its declared runtime dependency; it is not zero-install.",
+    "L0 workflow reports a completed DONE step while aggregate stepsDone remains 0.",
+    "Real second Windows principal, OS-integrated updater, and user-profile deployment were not tested.",
+    "Candidate package is unsigned for production; test build signature is not publisher identity."
+  ]
+}

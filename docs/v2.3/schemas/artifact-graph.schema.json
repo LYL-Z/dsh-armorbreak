@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://armorbreak.dev/schemas/v2.3/artifact-graph.schema.json",
+  "title": "ArmorBreak Artifact Graph v1",
+  "type": "object",
+  "required": ["schemaVersion", "detector", "summary", "nodes", "edges", "analysis"],
+  "properties": {
+    "schemaVersion": { "const": "armorbreak.artifact-graph/v1" },
+    "detector": { "type": "string", "minLength": 1 },
+    "summary": {
+      "type": "object",
+      "required": ["filesProvided", "nodes", "edges", "bytesRead", "expandedBytes", "suspiciousEntries", "filesListed", "filesRead", "unreadableFiles", "truncatedOrCappedFiles"],
+      "properties": {
+        "filesProvided": { "type": "integer", "minimum": 0 },
+        "filesListed": { "type": "integer", "minimum": 0 },
+        "filesRead": { "type": "integer", "minimum": 0 },
+        "unreadableFiles": { "type": "integer", "minimum": 0 },
+        "truncatedOrCappedFiles": { "type": "integer", "minimum": 0 },
+        "nodes": { "type": "integer", "minimum": 0 },
+        "edges": { "type": "integer", "minimum": 0 },
+        "bytesRead": { "type": "integer", "minimum": 0 },
+        "expandedBytes": { "type": "integer", "minimum": 0 },
+        "suspiciousEntries": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "path", "sha256", "physicalBytes", "logicalBytes", "status"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "type": { "enum": ["workspace", "artifact", "directory-entry"] },
+          "path": { "type": "string" },
+          "sha256": { "oneOf": [{ "type": "string", "pattern": "^[a-f0-9]{64}$" }, { "type": "null" }] },
+          "physicalBytes": { "oneOf": [{ "type": "integer", "minimum": 0 }, { "type": "null" }] },
+          "logicalBytes": { "oneOf": [{ "type": "integer", "minimum": 0 }, { "type": "null" }] },
+          "status": { "type": "string", "minLength": 1 },
+          "format": { "type": ["string", "null"] },
+          "depth": { "type": "integer", "minimum": 0 }
+        },
+        "additionalProperties": true
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "type"],
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "type": { "enum": ["contains", "derived_from"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "analysis": {
+      "type": "object",
+      "required": ["level", "status", "warnings", "limitsApplied", "coverageNotes", "extraction"],
+      "properties": {
+        "level": { "const": "S1" },
+        "status": { "enum": ["COMPLETE", "PARTIAL"] },
+        "warnings": { "type": "array", "items": { "type": "string" } },
+        "limitsApplied": { "type": "array", "items": { "type": "string" } },
+        "coverageNotes": { "type": "array", "items": { "type": "string" } },
+        "extraction": { "const": "IN_MEMORY_ONLY_NO_FILES_WRITTEN" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

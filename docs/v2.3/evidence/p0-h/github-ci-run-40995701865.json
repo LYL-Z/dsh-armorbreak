@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "armorbreak.v2.3-inherited-ci/v1",
+  "repository": "LYL-Z/dsh-armorbreak",
+  "runId": 40995701865,
+  "runUrl": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/40995701865",
+  "event": "pull_request",
+  "headBranch": "feature/v2.3-universal-program-intelligence",
+  "headSha": "8364343fc2ef75007009d8074341ee5d7bbc6b0d",
+  "conclusion": "success",
+  "jobs": [
+    { "name": "L0 offline boundary (static gate)", "conclusion": "success", "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/40995701865/job/123868195537" },
+    { "name": "Node 24 on ubuntu-latest", "conclusion": "success", "fullSuite": "pass", "coverage": "pass", "microbenchmark": "pass", "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/40995701865/job/123868195737" },
+    { "name": "Node 24 on windows-latest", "conclusion": "success", "fullSuite": "pass", "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/40995701865/job/123868195921" },
+    { "name": "L1 Docker integration (real daemon)", "conclusion": "success", "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/40995701865/job/123868195901", "artifact": { "id": 12951012973, "name": "l1-docker-verification", "sizeBytes": 823, "sha256": "2b4524eb902045d76ef094a0bed8d9119934e44417ab2cac4541a56d6e45dda9" } },
+    { "name": "Release evidence checks (commit-bound)", "conclusion": "skipped", "reason": "V2.3 uses its own exact-head evidence gate; this is not release approval." }
+  ],
+  "scope": "Inherited CI on the exact PR SHA. GitHub runner provided the real Docker daemon; this does not validate the local Docker Desktop daemon or hostile sample execution."
+}

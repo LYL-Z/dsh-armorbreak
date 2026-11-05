@@ -1,0 +1,141 @@
+{
+  "schemaVersion": "armorbreak.v2.3-github-ci-snapshot/v1",
+  "capturedAt": "2026-11-01T07:51:46.9743566Z",
+  "pullRequest": {
+    "number": 25,
+    "state": "OPEN",
+    "isDraft": true,
+    "headSha": "14df1d05c6397a25cfffd4903d00c9df3f697c61",
+    "sourceCommit": "b39f2285f3bc05301d2989d6a66fc1e641af7b96",
+    "url": "https://github.com/LYL-Z/dsh-armorbreak/pull/25"
+  },
+  "runs": [
+    {
+      "databaseId": 41286249061,
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "14df1d05c6397a25cfffd4903d00c9df3f697c61",
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41286249061",
+      "jobs": [
+        {
+          "databaseId": 124788033835,
+          "name": "V2.3 evidence integrity (exact PR head)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41286249061/job/124788033835"
+        },
+        {
+          "databaseId": 124788033999,
+          "name": "Benign L1 container-path verification (exact PR head)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41286249061/job/124788033999"
+        },
+        {
+          "databaseId": 124788034002,
+          "name": "Node 24 / windows-latest (PR head)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41286249061/job/124788034002"
+        },
+        {
+          "databaseId": 124788034007,
+          "name": "Node 22 / ubuntu-latest (PR head)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41286249061/job/124788034007"
+        },
+        {
+          "databaseId": 124788034030,
+          "name": "Node 24 / ubuntu-latest (PR head)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41286249061/job/124788034030"
+        },
+        {
+          "databaseId": 124788034037,
+          "name": "Node 22 / windows-latest (PR head)",
+          "conclusion": "success",
+          "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41286249061/job/124788034037"
+        }
+      ]
+    },
+    {
+      "databaseId": 41286249033,
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "14df1d05c6397a25cfffd4903d00c9df3f697c61",
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41286249033",
+      "jobs": [
+        {
+          "databaseId": 124788033764,
+          "name": "Node 22 / windows-latest",
+          "conclusion": "success"
+        },
+        {
+          "databaseId": 124788033831,
+          "name": "Node 22 / ubuntu-latest",
+          "conclusion": "success"
+        },
+        {
+          "databaseId": 124788033893,
+          "name": "Node 24 / ubuntu-latest",
+          "conclusion": "success"
+        },
+        {
+          "databaseId": 124788033961,
+          "name": "Node 24 / windows-latest",
+          "conclusion": "success"
+        },
+        {
+          "databaseId": 124788034491,
+          "name": "V2.3.0 release verification",
+          "conclusion": "skipped"
+        },
+        {
+          "databaseId": 124788034628,
+          "name": "V2.3 main candidate build and provenance",
+          "conclusion": "skipped"
+        },
+        {
+          "databaseId": 124788034777,
+          "name": "Node matrix main-only",
+          "conclusion": "skipped"
+        }
+      ]
+    },
+    {
+      "databaseId": 41286249199,
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "14df1d05c6397a25cfffd4903d00c9df3f697c61",
+      "url": "https://github.com/LYL-Z/dsh-armorbreak/actions/runs/41286249199",
+      "jobs": [
+        {
+          "databaseId": 124788033915,
+          "name": "Node 24 on ubuntu-latest",
+          "conclusion": "success"
+        },
+        {
+          "databaseId": 124788034101,
+          "name": "L0 offline boundary (static gate)",
+          "conclusion": "success"
+        },
+        {
+          "databaseId": 124788034108,
+          "name": "Node 24 on windows-latest",
+          "conclusion": "success"
+        },
+        {
+          "databaseId": 124788034297,
+          "name": "L1 Docker integration (real daemon)",
+          "conclusion": "success"
+        },
+        {
+          "databaseId": 124788034676,
+          "name": "Release evidence checks (commit-bound)",
+          "conclusion": "skipped"
+        }
+      ]
+    }
+  ],
+  "interpretation": "All three actual pull_request workflows completed successfully on exact HEAD 14df1d05c6397a25cfffd4903d00c9df3f697c61. The four dedicated candidate matrix jobs and exact-head Node22/24 Windows/Ubuntu jobs passed. Main/release-only jobs were skipped by PR-event design. Historical interim CI failures on 39de997 are recorded separately."
+}

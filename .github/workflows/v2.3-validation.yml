@@ -1,0 +1,132 @@
+name: V2.3 exact-head validation
+
+on:
+  push:
+    branches: [feature/v2.3-universal-program-intelligence]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: v23-${{ github.event.pull_request.head.ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  full-suite:
+    name: Node ${{ matrix.node }} / ${{ matrix.os }} (PR head)
+    if: ${{ github.event_name != 'pull_request' || startsWith(github.head_ref, 'feature/v2.3-') }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: ['22', '24']
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      # M5 regression tests run a self-authored Python fixture. Keep that
+      # runtime explicit across Windows and Ubuntu rather than runner-dependent.
+      - uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v5
+        with:
+          python-version: '3.11'
+
+      - name: Prepare runner-local temporary directory (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $runtimeTemp = Join-Path $env:RUNNER_TEMP 'armorbreak-v23-ci-tmp'
+          New-Item -ItemType Directory -Force -Path $runtimeTemp | Out-Null
+          [System.IO.File]::AppendAllText($env:GITHUB_ENV, "TEMP=$runtimeTemp`nTMP=$runtimeTemp`n")
+
+      - name: Prepare runner-local temporary directory (Unix)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          runtime_temp="$RUNNER_TEMP/armorbreak-v23-ci-tmp"
+          mkdir -p "$runtime_temp"
+          printf 'TMPDIR=%s\nTEMP=%s\nTMP=%s\n' "$runtime_temp" "$runtime_temp" "$runtime_temp" >> "$GITHUB_ENV"
+
+      - name: Assert exact PR head
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$EXPECTED_HEAD"
+          node --version
+          node -e "console.log(process.platform, process.arch)"
+
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Full test suite
+        run: node --test --test-concurrency=1
+
+      - name: TypeScript contract check
+        run: npm run typecheck
+
+  evidence:
+    name: V2.3 evidence integrity (exact PR head)
+    if: ${{ github.event_name != 'pull_request' || startsWith(github.head_ref, 'feature/v2.3-') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+
+      - name: Exact-head evidence and documentation gates
+        shell: bash
+        env:
+          V23_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          node scripts/v2/validate-v23-acceptance.mjs
+          node scripts/v2/check-docs-consistency.mjs
+
+  l1-docker:
+    name: Benign L1 container-path verification (exact PR head)
+    if: ${{ github.event_name != 'pull_request' || startsWith(github.head_ref, 'feature/v2.3-') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Verify Docker engine and pull pinned harmless image
+        shell: bash
+        run: |
+          docker info
+          docker pull busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
+
+      - name: Verify hardened container path with a benign fixture
+        run: node scripts/verify-l1.mjs --image busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
+
+      - name: Upload local L1 verification record
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: v2.3-l1-docker-verification
+          path: docs/acceptance/l1-docker-verification.json
+          if-no-files-found: warn
