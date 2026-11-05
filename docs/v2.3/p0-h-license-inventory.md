@@ -81,3 +81,11 @@ The release-gate PR blocker wording changed in source S4, so the candidate packa
 - npm dry-run: 663 files / 9,288,447 unpacked bytes; zero tests, M3 binary fixtures, or binary payloads; complete inventory `npm-package-73741e4.json`.
 
 The lockfile still resolves TypeScript through `registry.npmmirror.com` with the lock integrity pinned, although the clean-room install passed `--registry=https://registry.npmjs.org`. This is transparent in the inventory, not silently treated as an official-registry download. The owner-approved license review is a developer self-review, not an independent legal opinion or chain-of-title certification.
+
+### S5 exact candidate package (2026-11-05 UTC)
+
+- Source commit: `c085bba67618472e1e2f4f8d73ad5b5b2c1f7212`.
+- Portable package SHA-256: `d3fca8f98217d6043075007ddb834078457bbf8d3b21d6ad662076f6393bc096`; manifest SHA-256: `2642e397abc75790901baf2b783bc174af1f2921453e19cda2263975008b888a`; CycloneDX SBOM SHA-256: `b346a93d66f9808b2bb8f84a8a33560ae81bdc1a7ed898f2d1bbe7d72877df66`.
+- Actual npm dry-run inventory: 677 files, 9,922,961 unpacked bytes; no tests, M3 binary fixtures, executable/binary payloads, or inventory self-inclusion. It includes P0-H documentation and evidence JSON; those contain no deliberately retained absolute machine paths, but expanding the public source package with review/evidence details should be considered in the final distribution review.
+- Runtime dependency remains TypeScript 5.9.3, Apache-2.0; lock integrity is pinned, URL points to the disclosed npm mirror. Audit reported zero known advisories at capture time, not a certification.
+- This is an implementation-agent self-review and inventory, not an independent audit or legal opinion. Per-package SPDX metadata and third-party chain-of-title certification remain unresolved.

@@ -10,15 +10,15 @@
     "humanCertification": false,
     "ownerRiskAcceptance": "Authorized in the owner-provided V2.3.0 release execution order; this record is not a signature."
   },
-  "sourceCommitReviewed": "73741e494f78e8eef49e9498e6528dbe6d8cf8ee",
-  "reviewedAt": "2026-11-04",
+  "sourceCommitReviewed": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
+  "reviewedAt": "2026-11-05",
   "environment": {
     "platform": "Windows x64",
     "node": "v24.16.0",
     "npm": "11.13.0",
-    "candidateArchiveSha256": "238cf6d6e6be15c09fbad6029842e6c4d483150c0f4d29446d279f27a1545a08",
-    "portableCleanroomEvidence": "docs/v2.3/evidence/p0-h/portable-cleanroom-73741e4.json",
-    "realPackageDrillEvidence": "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-73741e4.json"
+    "candidateArchiveSha256": "d3fca8f98217d6043075007ddb834078457bbf8d3b21d6ad662076f6393bc096",
+    "portableCleanroomEvidence": "docs/v2.3/evidence/p0-h/portable-cleanroom-c085bba.json",
+    "realPackageDrillEvidence": "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-c085bba.json"
   },
   "method": {
     "type": "source-and-package-implementation-agent-review",
@@ -32,7 +32,9 @@
       "npm pack --dry-run --json",
       "node scripts/v2/build-release.mjs --out <isolated-output> --evidence <isolated-output>/release-build.json --no-portable-evidence",
       "node scripts/v2/v23-portable-cleanroom.mjs",
-      "node scripts/v2/v23-real-package-drill.mjs"
+      "node scripts/v2/v23-real-package-drill.mjs",
+      "node --test tests/v23-provenance.test.mjs tests/v23-release-gate.test.mjs (16/16 PASS on S5)",
+      "node scripts/v2/v23-release-gate.mjs --check-pr (VALIDATED; NOT_READY)"
     ],
     "reviewScope": [
       "Untrusted ZIP/TAR member names, absolute/traversal paths, links/reparse points, collisions, malformed records, expansion limits, in-memory indexing, and non-extraction behavior.",
@@ -126,7 +128,8 @@
         "Focused tests cover DONE, FAILED and restart/rehydration values."
       ],
       "remaining": "No prolonged UI session or human GUI interaction audit."
-    }
+    },
+    "S5 npm tarball inventory contains 64 P0-H evidence/document paths; reviewed exact path/size/mode list, no absolute machine paths, tests, M3 fixtures or binary payloads were included."
   ],
   "findings": [
     {
@@ -168,6 +171,22 @@
       "disposition": "Counters are now derived from persisted step states; no mismatch is accepted as success.",
       "fixCommit": "fdbf9f8dc9be6dbbf249d7e12a7790e38a8f292d",
       "retest": "Focused task-step-stat tests and full suite recorded in the current validation evidence."
+    },
+    {
+      "id": "V23-PROV-001",
+      "severity": "P2_EVIDENCE_ALLOWLIST_DEFECT_FIXED",
+      "title": "Post-source evidence allowlist omitted the V2.3 release notes and license inventory",
+      "disposition": "Added only the two exact V2.3 documentation paths to the explicit source-to-evidence allowlist; code, workflow, validator, and adjacent V2.2/independent-audit paths remain rejected.",
+      "fixCommit": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
+      "retest": "16 provenance and release-gate unit tests passed; --check-pr returned VALIDATED with releaseReadiness NOT_READY."
+    },
+    {
+      "id": "V23-PKG-001",
+      "severity": "P2_DISTRIBUTION_SCOPE",
+      "title": "npm tarball includes P0-H documentation and evidence JSON",
+      "disposition": "Exact S5 inventory contains 64 P0-H evidence/document paths. The inventory was reviewed for absolute machine paths and binary/test payloads; none were present. This broadens public npm package disclosure scope and is recorded for owner review.",
+      "fixCommit": null,
+      "retest": "S5 npm pack inventory captured exact 677 paths and sizes; exact-main/tag packaging must be reviewed again."
     }
   ],
   "decision": "OWNER_APPROVED_SELF_REVIEW_RECORDED; FORMAL_RELEASE_STILL_NOT_READY",

@@ -5,22 +5,22 @@
   "reviewerType": "IMPLEMENTER_AI_SELF_REVIEW",
   "independentHumanReview": "NOT_PERFORMED",
   "legalOpinion": false,
-  "sourceCommitReviewed": "73741e494f78e8eef49e9498e6528dbe6d8cf8ee",
-  "reviewedAt": "2026-11-04",
+  "sourceCommitReviewed": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
+  "reviewedAt": "2026-11-05",
   "packageEvidence": {
     "portableArchive": {
       "name": "armorbreak-portable-2.3.0.tar.gz",
-      "sourceCommit": "73741e494f78e8eef49e9498e6528dbe6d8cf8ee",
-      "bytes": 5904345,
-      "sha256": "238cf6d6e6be15c09fbad6029842e6c4d483150c0f4d29446d279f27a1545a08",
-      "manifest": "docs/v2.3/evidence/p0-h/candidate-package-73741e4.manifest.json",
-      "sbom": "docs/v2.3/evidence/p0-h/candidate-package-73741e4.sbom.cdx.json"
+      "sourceCommit": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
+      "bytes": 5913561,
+      "sha256": "d3fca8f98217d6043075007ddb834078457bbf8d3b21d6ad662076f6393bc096",
+      "manifest": "docs/v2.3/evidence/p0-h/candidate-package-c085bba.manifest.json",
+      "sbom": "docs/v2.3/evidence/p0-h/candidate-package-c085bba.sbom.cdx.json"
     },
     "npmPackage": {
       "name": "dsh-armorbreak@2.3.0",
-      "dryRunInventory": "docs/v2.3/evidence/p0-h/npm-package-73741e4.json",
-      "fileCount": 663,
-      "unpackedBytes": 9288447,
+      "dryRunInventory": "docs/v2.3/evidence/p0-h/npm-package-c085bba.json",
+      "fileCount": 677,
+      "unpackedBytes": 9922961,
       "testPaths": 0,
       "m3BinaryFixturePaths": 0,
       "binaryPaths": 0
@@ -117,6 +117,14 @@
       "disposition": "The release includes only repository files selected by the builder, with LICENSE and NOTICE. This self-review cannot certify chain of title; owner accepts the implementation-agent review path but no independent legal review is claimed.",
       "fixCommit": null,
       "retest": "No conflicting license text was identified in the reviewed distribution inventory; human legal/copyright certification remains unperformed."
+    },
+    {
+      "id": "V23-LIC-004",
+      "severity": "P2_DISTRIBUTION_SCOPE",
+      "title": "npm package includes V2.3 P0-H documentation/evidence JSON",
+      "disposition": "The exact inventory records 64 P0-H paths and no binary/test payloads. This self-inventory is not a legal opinion; the expanded disclosure scope is documented for owner consideration.",
+      "fixCommit": null,
+      "retest": "Full S5 npm path/size/mode inventory and zero audit advisories recorded; re-inventory exact-main/tag before any npm distribution."
     }
   ],
   "decision": "OWNER_APPROVED_LICENSE_SELF_REVIEW_WITH_DISCLOSED_RESIDUALS; NO_LEGAL_CERTIFICATION",

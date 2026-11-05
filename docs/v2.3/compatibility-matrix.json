@@ -1094,8 +1094,6 @@
         "docs/v2.3/evidence/p0-h/independent-review-handoff-8140c62.md",
         "docs/v2.3/evidence/p0-h/npm-package-8140c62.json",
         "docs/v2.3/evidence/p0-h/release-gate-three-state-8140c62.json",
-        "docs/v2.3/evidence/p0-h/npm-package-8140c62.json",
-        "docs/v2.3/evidence/p0-h/release-gate-three-state-8140c62.json",
         "docs/v2.3/evidence/p0-h/github-ci-evidence-3f61c93.json",
         "docs/v2.3/evidence/p0-h/github-ci-evidence-97498e3.json",
         "docs/v2.3/evidence/p0-h/npm-package-4fb3de9.json",
@@ -1114,12 +1112,20 @@
         "docs/v2.3/evidence/p0-h/candidate-package-73741e4.sbom.cdx.json",
         "docs/v2.3/evidence/p0-h/portable-cleanroom-73741e4.json",
         "docs/v2.3/evidence/p0-h/npm-package-73741e4.json",
-        "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-73741e4.json"
+        "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-73741e4.json",
+        "docs/v2.3/evidence/p0-h/candidate-package-c085bba.json",
+        "docs/v2.3/evidence/p0-h/candidate-package-c085bba.manifest.json",
+        "docs/v2.3/evidence/p0-h/candidate-package-c085bba.sbom.cdx.json",
+        "docs/v2.3/evidence/p0-h/portable-cleanroom-c085bba.json",
+        "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-c085bba.json",
+        "docs/v2.3/evidence/p0-h/npm-package-c085bba.json",
+        "docs/v2.3/evidence/p0-h/self-review-73741e4.json",
+        "docs/v2.3/evidence/p0-h/license-review-73741e4.json"
       ],
-      "ci": "SOURCE S4 local exact-source checks captured before evidence commit; E/PR-event CI not yet run.",
-      "limitation": "Candidate engineering is complete under OWNER_APPROVED_SELF_REVIEW and single-principal product scope. The security/license review is implementation-agent AI self-review, not independent human audit or legal certification. Two-account Windows isolation was not tested; cross-account service is unsupported. OS-integrated updater is outside scope. Release remains NOT_READY until latest S/E PR CI, one required independent PR approval, protected merge, exact-main build/provenance/SBOM/attestation, protected exact tag, and tag Release Gate complete.",
+      "ci": "S5 local source tests: provenance/release-gate 16/16 PASS; typecheck and docs consistency PASS. Full S5/E1 suite and exact S5/E1 PR-event CI are pending.",
+      "limitation": "OWNER_APPROVED_SELF_REVIEW accepted by owner; no independent human security or legal review. Two-account Windows isolation remains unverified and cross-account service is unsupported; OS updater is outside scope. Exact S5/E1 PR CI and subsequent protected merge, exact-main build/provenance/SBOM/attestation, protected exact tag and Tag Gate remain required. Latest branch-protection API listed required status checks and no required review count; recheck before merge.",
       "lastObservedRemoteHead": "edc91b118d741b3643d07f1258844c02b6fbb1a5",
-      "localSourceCommit": "73741e494f78e8eef49e9498e6528dbe6d8cf8ee",
+      "localSourceCommit": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
       "releaseReadiness": "NOT_READY",
       "realPackageDrill": {
         "sourceCommit": "7a78aef15e59f16f71b192089dcb82a81e811fb5",
@@ -1130,25 +1136,26 @@
         "scope": "isolated copied test data; no formal installation or V2.2 asset modification"
       },
       "latestRealPackageDrill": {
-        "sourceCommit": "73741e494f78e8eef49e9498e6528dbe6d8cf8ee",
+        "sourceCommit": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
         "status": "PASS_ISOLATED_REAL_PACKAGE_DEPLOYMENT",
-        "artifactSha256": "238cf6d6e6be15c09fbad6029842e6c4d483150c0f4d29446d279f27a1545a08",
-        "historicalV22AssetSha256": "5e5aca98da18d4f0cb17db71cf57c5577f8f8f64810a30844bd5237b4ed7b630",
+        "artifactSha256": "d3fca8f98217d6043075007ddb834078457bbf8d3b21d6ad662076f6393bc096",
+        "historicalV22AssetSha256": "5e5aca98da18d4f0cb17db71cf57c5577f8f64810a30844bd5237b4ed7b630",
         "rollbackHashesEqual": true,
-        "scope": "actual exact-S4 archive; disposable synthetic V2.2 format task/report/config, official V2.2 package downloaded read-only"
+        "scope": "actual exact-S5 archive; isolated synthetic V2.2-format task/report/config; published V2.2 package downloaded read-only"
       },
       "evidenceCommit": "9a9c3c5931fcf2785cb2b2bbd1bdd4cf1ea8c593",
-      "localSuite": "INTERRUPTED_DURING_USER_PAUSE; exact-head hosted full-suite/typecheck jobs passed",
+      "localSuite": "E0 full suite exited 1 for the post-source allowlist defect; fixed in S5. Focused S5 16/16 passed. Full S5/E1 suite pending.",
       "npmInventory": {
-        "sourceOnlyHead": "73741e494f78e8eef49e9498e6528dbe6d8cf8ee",
-        "sourceOnlyFileCount": 663,
-        "unpackedBytes": 9288447,
-        "rawOutputSha256": "d49aa7e88baf78cfb65ffd904c8996d9ccdddf0d4b5c4e6ca13bf5a6ab14c4e",
-        "evidence": "docs/v2.3/evidence/p0-h/npm-package-73741e4.json",
+        "sourceOnlyHead": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
+        "sourceOnlyFileCount": 677,
+        "unpackedBytes": 9922961,
+        "rawOutputSha256": "66ea91a361c621a6c97f06d2d3a166fd5717f819a63534e0a16f8fa057bc6df3",
+        "evidence": "docs/v2.3/evidence/p0-h/npm-package-c085bba.json",
         "fixturePaths": 0,
         "testPaths": 0,
         "binaryPaths": 0,
-        "limitation": "Exact-main/tag npm inventory remains future validation; clean-room dependency source mirror is disclosed in license evidence."
+        "p0hEvidencePaths": 64,
+        "limitation": "npm pack includes P0-H documentation/evidence; lockfile registry mirror and legal chain-of-title limitations are disclosed; exact-main/tag inventory remains future validation"
       },
       "releaseState": "NOT_READY"
     }
