@@ -9,16 +9,29 @@ import { POST_SOURCE_FILES, findForbiddenPostSourcePaths, isFullCommitSha } from
 
 test('post-source allowlist is exact and limited to current evidence documentation', () => {
   assert.deepEqual([...POST_SOURCE_FILES].sort(), [
+    'docs/releases/v2.3.0.md',
     'docs/v2.3/acceptance-report.md',
     'docs/v2.3/compatibility-matrix.json',
     'docs/v2.3/evidence/p0-h/acceptance-manifest.json',
     'docs/v2.3/migration-and-rollback.md',
+    'docs/v2.3/p0-h-license-inventory.md',
     'docs/v2.3/threat-model.md',
   ])
   assert.deepEqual(findForbiddenPostSourcePaths([
     'docs/v2.3/evidence/p0-h/security-review.json',
     'docs/v2.3/acceptance-report.md',
   ]), [])
+  assert.deepEqual(findForbiddenPostSourcePaths([
+    'docs/releases/v2.3.0.md',
+    'docs/v2.3/p0-h-license-inventory.md',
+  ]), [])
+  assert.deepEqual(findForbiddenPostSourcePaths([
+    'docs/releases/v2.2.0.md',
+    'docs/v2.3/independent-audit.json',
+  ]), [
+    'docs/releases/v2.2.0.md',
+    'docs/v2.3/independent-audit.json',
+  ])
 })
 
 test('post-source code changes are rejected, including provenance, workflow and security-gate tampering', () => {

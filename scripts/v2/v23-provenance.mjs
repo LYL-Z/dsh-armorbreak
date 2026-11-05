@@ -4,6 +4,8 @@ export const POST_SOURCE_FILES = Object.freeze([
   'docs/v2.3/threat-model.md',
   'docs/v2.3/compatibility-matrix.json',
   'docs/v2.3/migration-and-rollback.md',
+  'docs/v2.3/p0-h-license-inventory.md',
+  'docs/releases/v2.3.0.md',
   'docs/v2.3/evidence/p0-h/acceptance-manifest.json',
 ])
 
