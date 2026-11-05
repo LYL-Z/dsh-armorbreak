@@ -147,9 +147,9 @@ jobs:
 
   release-evidence:
     name: Release evidence checks (commit-bound)
-    # V2.3 has a separate exact-head acceptance manifest. Preserve the V2.2
-    # release gates for every other branch/tag; do not reinterpret V2.3 source
-    # changes as an evidence-only append to the inherited V2.2 baseline.
+    # V2.3 has a separate exact-head acceptance manifest and three-state gate.
+    # Route exact V2.3 main/tag commits to that contract; retain the inherited
+    # V2.2 checks for every other version/ref.
     if: ${{ !((github.event_name == 'pull_request' && startsWith(github.head_ref, 'feature/v2.3-')) || (github.event_name != 'pull_request' && startsWith(github.ref_name, 'feature/v2.3-'))) }}
     runs-on: ubuntu-latest
     permissions:
@@ -165,36 +165,55 @@ jobs:
         with:
           node-version: 24
 
+      - name: Detect release evidence contract
+        id: release_contract
+        shell: bash
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          if [[ "$version" == "2.3.0" && ( "$GITHUB_REF" == "refs/heads/main" || "$GITHUB_REF" == "refs/tags/v2.3.0" ) ]]; then
+            echo 'v23=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'v23=false' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate V2.3 evidence integrity
+        if: steps.release_contract.outputs.v23 == 'true'
+        run: node scripts/v2/validate-v23-acceptance.mjs
+
+      - name: Validate V2.3 exact-main candidate contract
+        if: steps.release_contract.outputs.v23 == 'true' && github.ref == 'refs/heads/main'
+        run: node scripts/v2/v23-release-gate.mjs --check-main
+
       - name: Docs consistency
         if: github.ref != 'refs/tags/v2.2.0'
         run: node scripts/v2/check-docs-consistency.mjs
 
       - name: Evidence hashes and references
-        if: github.ref != 'refs/tags/v2.2.0'
+        if: github.ref != 'refs/tags/v2.2.0' && steps.release_contract.outputs.v23 != 'true'
         env:
           EVIDENCE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: node scripts/v2/validate-evidence.mjs --allow-docs-only --allow-evidence-only --allow-readiness --require-clean
 
       - name: Evidence-driven release gates
-        if: github.ref != 'refs/tags/v2.2.0'
+        if: github.ref != 'refs/tags/v2.2.0' && steps.release_contract.outputs.v23 != 'true'
         env:
           EVIDENCE_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: node scripts/v2/release-gates.mjs --allow-docs-only --allow-evidence-only --allow-readiness
 
       - name: Check release evidence readiness
-        if: github.ref != 'refs/tags/v2.2.0'
+        if: github.ref != 'refs/tags/v2.2.0' && steps.release_contract.outputs.v23 != 'true'
         run: node scripts/v2/check-release.mjs --check-only
 
       - name: Live pre-release readiness
-        if: github.ref != 'refs/tags/v2.2.0'
+        if: github.ref != 'refs/tags/v2.2.0' && steps.release_contract.outputs.v23 != 'true'
         run: node scripts/v2/v2-readiness.mjs --require-ready --no-waivers
 
       - name: Release evidence smoke
-        if: github.ref != 'refs/tags/v2.2.0'
+        if: github.ref != 'refs/tags/v2.2.0' && steps.release_contract.outputs.v23 != 'true'
         run: node scripts/v2/release-smoke.mjs
 
       - name: GA blocker root-cause map
-        if: github.ref != 'refs/tags/v2.2.0'
+        if: github.ref != 'refs/tags/v2.2.0' && steps.release_contract.outputs.v23 != 'true'
         run: node scripts/v2/check-blocker-map.mjs
 
       - name: Verify owner-published Stable tag and exact-main provenance
