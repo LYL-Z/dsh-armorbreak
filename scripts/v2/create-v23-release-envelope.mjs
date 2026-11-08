@@ -17,12 +17,12 @@ const tagCommit = requiredEnv('GITHUB_SHA')
 const tagRef = requiredEnv('GITHUB_REF')
 const actorId = requiredEnv('V23_EVENT_SENDER_ID')
 const mainRunId = requiredEnv('V23_MAIN_RUN_ID')
-if (tagRef !== 'refs/tags/v2.3.0') throw new Error('release envelope only supports refs/tags/v2.3.0')
+if (tagRef !== 'refs/tags/v2.3.1') throw new Error('release envelope only supports refs/tags/v2.3.1')
 if (actorId !== '250811935') throw new Error('tag event sender is not the repository owner')
 const manifest = JSON.parse(readFileSync(resolve(root, 'docs/v2.3/evidence/p0-h/acceptance-manifest.json'), 'utf8'))
 const evidenceCommit = git(['log', '-1', '--format=%H', '--', 'docs/v2.3/evidence/p0-h/acceptance-manifest.json'])
 if (!/^[a-f0-9]{40}$/i.test(manifest.sourceCommit) || !/^[a-f0-9]{40}$/i.test(evidenceCommit)) throw new Error('source/evidence commit binding is invalid')
-const artifactPath = 'dist/armorbreak-portable-2.3.0.tar.gz'
+const artifactPath = 'dist/armorbreak-portable-2.3.1.tar.gz'
 const sbomPath = `${artifactPath}.sbom.cdx.json`
 const reviewPath = 'docs/v2.3/evidence/p0-h/self-review-final.json'
 const licensePath = 'docs/v2.3/evidence/p0-h/license-review-final.json'
@@ -30,7 +30,7 @@ const portablePath = 'dist/v23-portable-cleanroom.json'
 const rollbackPath = 'dist/latest-release-rollback.json'
 const rollback = JSON.parse(readFileSync(resolve(root, rollbackPath), 'utf8'))
 const portable = JSON.parse(readFileSync(resolve(root, portablePath), 'utf8'))
-if (rollback.status !== 'PASS_ISOLATED_REAL_PACKAGE_DEPLOYMENT' || rollback.candidatePackage?.sha256 !== hash(artifactPath)) {
+if (rollback.status !== 'PASS_ISOLATED_REAL_PACKAGE_DEPLOYMENT' || rollback.sourceCommit !== tagCommit || rollback.candidatePackage?.sha256 !== hash(artifactPath)) {
   throw new Error('tagged exact main artifact lacks a matching real Windows deployment/rollback drill')
 }
 const claims = {
@@ -38,11 +38,11 @@ const claims = {
   decision: 'READY',
   releaseModel: 'OWNER_APPROVED_SELF_REVIEW',
   repository: 'LYL-Z/dsh-armorbreak',
-  tag: 'v2.3.0',
+  tag: 'v2.3.1',
   tagCommit,
   sourceCommit: manifest.sourceCommit,
   evidenceCommit,
-  packageVersion: '2.3.0',
+  packageVersion: '2.3.1',
   securityReview: {
     reviewerType: 'IMPLEMENTER_AI_SELF_REVIEW', independentHumanReview: 'NOT_PERFORMED', conclusion: 'OWNER_ACCEPTED_RISK',
     evidencePath: reviewPath, evidenceSha256: hash(reviewPath),

@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
 
-import { createEngine } from '../packages/engine-node/index.js'
+import { createEngine, readTaskReport } from '../packages/engine-node/index.js'
 
 async function withReportFixture(run) {
   const root = await mkdtemp(join(tmpdir(), 'abm-engine-report-security-'))
@@ -52,6 +52,47 @@ test('getReport rejects a traversal task id before loading another task director
   })
 })
 
+test('getReport accepts a trusted workspace ancestor junction while keeping task reports bound', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'abm-engine-report-alias-'))
+  const workspaceReal = join(root, 'workspace-real')
+  const workspaceAlias = join(root, 'workspace-alias')
+  await mkdir(workspaceReal, { recursive: true })
+  await symlink(workspaceReal, workspaceAlias, process.platform === 'win32' ? 'junction' : 'dir')
+  const engine = await createEngine({
+    stateRoot: join(root, 'state'),
+    principals: [{ id: 'alice', kind: 'local-user', workspaces: [workspaceAlias] }],
+  })
+  const ctx = { principal: { id: 'alice', kind: 'local-user', sessionId: 'report-alias-session' }, workspaceId: workspaceAlias, requestId: 'report-alias-create', traceId: 'report-alias' }
+  try {
+    const task = await engine.createTask(ctx, { title: 'report alias path', targetKind: 'none' })
+    const store = engine.runtime.workspace(workspaceAlias).taskStore
+    const reportsRoot = join(store.taskDir(task.id), 'reports')
+    const reportPath = join(reportsRoot, 'report.md')
+    const content = '# report through trusted workspace alias\n'
+    await mkdir(reportsRoot, { recursive: true })
+    await writeFile(reportPath, content)
+    task.report = { format: 'markdown', path: reportPath, sha256: sha256(content) }
+    await store.save(task)
+    const result = await engine.getReport(ctx, task.id)
+    assert.equal(result.markdown, content)
+  } finally {
+    await engine.close()
+    await rm(root, { recursive: true, force: true })
+  }
+})
+
+test('readTaskReport derives tasks root when an embedding store omits tasksDir', async () => {
+  await withReportFixture(async ({ store, task, reportsRoot }) => {
+    const content = '# report with derived tasks root\n'
+    await mkdir(reportsRoot, { recursive: true })
+    const reportPath = join(reportsRoot, 'report.md')
+    await writeFile(reportPath, content)
+    const minimalStore = { taskDir: store.taskDir.bind(store) }
+    const result = await readTaskReport(minimalStore, { taskId: task.id, path: reportPath, sha256: sha256(content) })
+    assert.equal(result, content)
+  })
+})
+
 test('getReport rejects a task reports root redirected to an outside junction', async () => {
   await withReportFixture(async ({ root, engine, store, task, ctx, reportsRoot }) => {
     const outsideReports = join(root, 'outside-reports')
@@ -65,7 +106,7 @@ test('getReport rejects a task reports root redirected to an outside junction', 
     task.report = { format: 'markdown', path: join(reportsRoot, 'report.md'), sha256: sha256(content) }
     await store.save(task)
 
-    await assert.rejects(() => engine.getReport(ctx, task.id), (error) => error.code === 'POLICY_DENIED')
+    await assert.rejects(() => engine.getReport(ctx, task.id), (error) => error.code === 'POLICY_DENIED' && /reports-root-realpath-changed/.test(error.message))
   })
 })
 

@@ -10,7 +10,10 @@ import { findForbiddenPostSourcePaths, isFullCommitSha } from './v23-provenance.
 export const AUTH_SCHEMA = 'armorbreak.v2.3-external-release-authorization/v2'
 const REPOSITORY = 'LYL-Z/dsh-armorbreak'
 const SIGNER_WORKFLOW = '.github/workflows/v2.3-main-gate.yml'
-const REQUIRED_MAIN_JOBS = ['Node 22 / ubuntu-latest', 'Node 24 / ubuntu-latest', 'Node 22 / windows-latest', 'Node 24 / windows-latest']
+const REQUIRED_MAIN_JOBS = [
+  'Node 22 / ubuntu-latest', 'Node 24 / ubuntu-latest', 'Node 22 / windows-latest', 'Node 24 / windows-latest',
+  'V2.3 main candidate build and provenance', 'Exact main package Windows deployment and rollback',
+]
 const REQUIRED_RELEASE_GATES = ['securityReview', 'licenseReview', 'portableCleanroom', 'upgradeRollback', 'artifact', 'sbom', 'mainCi', 'attestation', 'maintainerAuthorization']
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)))
 const repoRoot = resolve(process.env.V23_REPO_ROOT || process.cwd())
@@ -80,7 +83,7 @@ export function evaluatePrContract({ packageName, status, releaseState }) {
 export function evaluateMainContract({ packageName, packageVersion, status, releaseState, expectedSha, head }) {
   const blockers = []
   if (packageName !== 'dsh-armorbreak') blockers.push('unexpected package identity')
-  if (packageVersion !== '2.3.0') blockers.push(`package version must be 2.3.0, found ${packageVersion}`)
+  if (packageVersion !== '2.3.1') blockers.push(`package version must be 2.3.1, found ${packageVersion}`)
   if (status !== 'COMPLETE') blockers.push('P0-H candidate engineering and evidence must be COMPLETE before main')
   if (releaseState !== 'NOT_READY') blockers.push('frozen main candidate releaseState must remain NOT_READY until external tag authorization')
   if (!isFullCommitSha(expectedSha) || expectedSha !== head) blockers.push('exact main candidate SHA is required')
@@ -90,12 +93,12 @@ export function evaluateMainContract({ packageName, packageVersion, status, rele
 export function evaluateReleaseContract({ packageName, packageVersion, status, releaseState, tag, expectedSha }) {
   const blockers = []
   if (packageName !== 'dsh-armorbreak') blockers.push('unexpected package identity')
-  if (packageVersion !== '2.3.0') blockers.push(`package version must be 2.3.0, found ${packageVersion}`)
+  if (packageVersion !== '2.3.1') blockers.push(`package version must be 2.3.1, found ${packageVersion}`)
   if (status !== 'COMPLETE') blockers.push('P0-H matrix status is not COMPLETE')
   // The source tree is immutable after main CI. Final READY is an external,
   // tag-scoped authorization envelope attested by the actual release workflow.
   if (releaseState !== 'NOT_READY') blockers.push('frozen source tree releaseState must remain NOT_READY; final readiness is external')
-  if (tag !== 'refs/tags/v2.3.0' && tag !== 'v2.3.0') blockers.push('release gate only accepts the exact v2.3.0 tag')
+  if (tag !== 'refs/tags/v2.3.1' && tag !== 'v2.3.1') blockers.push('release gate only accepts the exact v2.3.1 tag')
   if (!isFullCommitSha(expectedSha)) blockers.push('exact release commit SHA is required')
   return { valid: blockers.length === 0, blockers }
 }
@@ -127,10 +130,10 @@ function verifyExternalAuthorization({ expectedSha, sourceCommit, pkg }) {
   const verifyEnvelope = spawnSync('gh', [
     'attestation', 'verify', envelopePath, '--repo', REPOSITORY,
     '--signer-workflow', `${REPOSITORY}/${SIGNER_WORKFLOW}`,
-    '--source-ref', 'refs/tags/v2.3.0', '--source-digest', expectedSha, '--format', 'json',
+    '--source-ref', 'refs/tags/v2.3.1', '--source-digest', expectedSha, '--format', 'json',
   ], { cwd: repoRoot, encoding: 'utf8' })
   if (verifyEnvelope.status !== 0) throw new Error(`GitHub release-authorization attestation verification failed: ${(verifyEnvelope.stderr || verifyEnvelope.stdout).trim()}`)
-  if (claims.repository !== REPOSITORY || claims.tag !== 'v2.3.0') throw new Error('authorization repository or tag scope is incorrect')
+  if (claims.repository !== REPOSITORY || claims.tag !== 'v2.3.1') throw new Error('authorization repository or tag scope is incorrect')
   if (claims.tagCommit !== expectedSha) throw new Error('authorization tagCommit does not match the exact tag commit')
   if (!isFullCommitSha(claims.sourceCommit) || claims.sourceCommit !== sourceCommit) throw new Error('authorization sourceCommit does not match the source commit named by the manifest')
   if (!isFullCommitSha(claims.evidenceCommit)) throw new Error('authorization evidenceCommit is not a full SHA')
@@ -217,7 +220,7 @@ function main() {
         releaseReadiness: 'NOT_READY', sourceCommit: manifest.sourceCommit, head,
         blockers: [
           ...(milestone.status === 'COMPLETE' ? [] : ['P0-H closure']),
-          ...(pkg.version === '2.3.0' ? [] : [`package version must be 2.3.0, found ${pkg.version}`]),
+          ...(pkg.version === '2.3.1' ? [] : [`package version must be 2.3.1, found ${pkg.version}`]),
           'exact-main CI, immutable package/SBOM hashes and GitHub attestation',
           'owner-authorized exact-tag release event and detached authorization envelope',
         ],
@@ -239,9 +242,9 @@ function main() {
     const expectedSha = process.env.GITHUB_SHA ?? process.env.V23_EXPECTED_SHA ?? ''
     const state = evaluateReleaseContract({ packageName: pkg.name, packageVersion: pkg.version, status: milestone?.status, releaseState: milestone?.releaseState ?? milestone?.releaseReadiness, tag, expectedSha })
     if (!state.valid) throw new Error(state.blockers.join('; '))
-    if (git(['rev-parse', 'refs/tags/v2.3.0^{commit}']) !== expectedSha) throw new Error('the exact v2.3.0 tag does not resolve to GITHUB_SHA')
+    if (git(['rev-parse', 'refs/tags/v2.3.1^{commit}']) !== expectedSha) throw new Error('the exact v2.3.1 tag does not resolve to GITHUB_SHA')
     verifyExternalAuthorization({ expectedSha, sourceCommit: manifest.sourceCommit, pkg })
-    console.log(JSON.stringify({ schemaVersion: 'armorbreak.v2.3-release-gate/v3', mode, tag, tagCommit: expectedSha, sourceCommit: manifest.sourceCommit, decision: 'READY', releaseModel: 'OWNER_APPROVED_SELF_REVIEW', verified: ['GitHub-attested detached release envelope sourced from exact v2.3.0 tag', 'source/evidence/tag ancestry and identical evidence/tag tree', 'self-review, license and rollback evidence hashes', 'owner identity on tag event', 'exact-main CI matrix', 'artifact and SBOM hashes', 'GitHub main-build provenance attestation'] }, null, 2))
+    console.log(JSON.stringify({ schemaVersion: 'armorbreak.v2.3-release-gate/v4', mode, tag, tagCommit: expectedSha, sourceCommit: manifest.sourceCommit, decision: 'READY', releaseModel: 'OWNER_APPROVED_SELF_REVIEW', verified: ['GitHub-attested detached release envelope sourced from exact v2.3.1 tag', 'source/evidence/tag ancestry and identical evidence/tag tree', 'self-review, license and rollback evidence hashes', 'owner identity on tag event', 'exact-main CI matrix', 'artifact and SBOM hashes', 'GitHub main-build provenance attestation'] }, null, 2))
   } catch (error) {
     console.log(JSON.stringify({ schemaVersion: mode === 'release' ? 'armorbreak.v2.3-release-gate/v2' : 'armorbreak.v2.3-pr-gate/v2', mode, decision: 'NOT_READY', blockers: [String(error?.message ?? error)] }, null, 2))
     process.exitCode = 1

@@ -1,29 +1,41 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "053e3b509a09772169e678d35441f4dc1c52570a",
-  "generatedAt": "2026-11-08T03:43:58.992Z",
+  "sourceCommit": "3d05d8dc45cfe43be9b2eff281c69face4f5a7ce",
+  "generatedAt": "2026-11-08T06:04:01.865Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     ".github/workflows/ci.yml": {
-      "size": 8439,
-      "sha256": "1dba31c24a11577b49c88a257893cc7993ccd58dd506170cabcd1ba8d1ab85b6"
+      "size": 8437,
+      "sha256": "4076b72c829d4b2006070ea769be658d50e615f78c5babb106de27b3c5660b4d"
     },
     ".github/workflows/v2.3-main-gate.yml": {
-      "size": 14579,
-      "sha256": "9b619c794a0425d1ceec41ccb893ce91a7457d198d4dce15ef4cf1e307899041"
+      "size": 16586,
+      "sha256": "5adccc9c1f927ed825aecce0c9e911a06b4066b69e6d837a989b8188011c2ba3"
     },
     ".github/workflows/v2.3-validation.yml": {
-      "size": 4700,
-      "sha256": "a504409fbc62398fa4e40c2cb20aa19a40e4b9d06706efa703ba0153d4b52a2e"
+      "size": 4697,
+      "sha256": "07988470b622e287de134bf292b5c2798a693393be18c3eff063f9393f9725e5"
+    },
+    "CHANGELOG.md": {
+      "size": 23793,
+      "sha256": "4fbaf9557957909184efa20a3934644bf298fc45e309c9fe34a6af58653921b7"
+    },
+    "README.md": {
+      "size": 12490,
+      "sha256": "39151760506ddf0eaad399cd8b9f25cb0ba393855c031243250167a69d702085"
     },
     "docs/releases/v2.3.0.md": {
       "size": 3394,
       "sha256": "72b765e8fadd11863dd1c362e9e90b4fd0a3d12bae055aa8bb4fbe0971fc474c"
     },
+    "docs/releases/v2.3.1.md": {
+      "size": 2390,
+      "sha256": "1ededbb91891a438be6cdb4dbfffdf46f2e4378088b7334d08c255bf00ab1b01"
+    },
     "docs/v2.3/acceptance-report.md": {
-      "size": 52200,
-      "sha256": "5ad871e12b5c2b1f9eaa7572453f70fb2cf044ba03e16d1ed083cfd8f94abddd"
+      "size": 66801,
+      "sha256": "ff04c3de510bcbbebce76a6b2eeb2f961a8a273eeb9de65824af63e36b050d64"
     },
     "docs/v2.3/architecture.md": {
       "size": 4621,
@@ -34,8 +46,8 @@
       "sha256": "3ecb9f50976afe01747d4f3045a803b1c93ccfcb9a5890cbe955763dff314f15"
     },
     "docs/v2.3/compatibility-matrix.json": {
-      "size": 49892,
-      "sha256": "e977be1c7eeb1295a15752cd24a61206985662259eb2d57e416381898f243d80"
+      "size": 50098,
+      "sha256": "7eac5e3bf0addb302399a6daf477326f328825891d7c4b2f181d0a01a44fa185"
     },
     "docs/v2.3/evidence/m0/current-registry.json": {
       "size": 12385,
@@ -545,6 +557,10 @@
       "size": 14895,
       "sha256": "c5d1d9b49425d062d0fe5dcf332a97593d3878afe57f3137e057353e351af9fd"
     },
+    "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-992751d.json": {
+      "size": 15850,
+      "sha256": "c47cc664e641044800451ac34f978175c5dd51f69e84d6872e5cd379b867a5f4"
+    },
     "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-c085bba.json": {
       "size": 14895,
       "sha256": "35fb4ea56dc2c2b1c6e203f0d36de9da9e06ff261c603b6d20cf8588c598dadb"
@@ -586,8 +602,8 @@
       "sha256": "b0e571fcf5f9953d5a02e04b4652b38d6cbaea6196d6c952459cbb5ca64a2b3e"
     },
     "docs/v2.3/migration-and-rollback.md": {
-      "size": 3706,
-      "sha256": "abed9f72d36c67b2bc4ed5a58344691c0dec6f62c1607b543328a18b0661380f"
+      "size": 3758,
+      "sha256": "4d7d146e7f20f3992b9e7380560e1ed0571ccca59a9994ea716c4aba2ad83248"
     },
     "docs/v2.3/p0-h-independent-review-packet.md": {
       "size": 10301,
@@ -602,60 +618,84 @@
       "sha256": "1bd9b4723d7281dcf1a86e66a42bd1bd1559e919592d5ad2e70553e767030b8a"
     },
     "docs/v2.3/release-provenance-protocol.md": {
-      "size": 7716,
-      "sha256": "bc9680b2243e436e0790c34b4747787d55fe4cb9c0e6f016a290c6b02c0a94c6"
+      "size": 7813,
+      "sha256": "7bd715a62af80a130ba87da2bee9bee46e454e5199627f64c32400cce4df9c11"
     },
     "docs/v2.3/release-review-policy.md": {
-      "size": 2955,
-      "sha256": "3b63081e79f2188fab7e3a3ef4ef1befaa377078622be2c80bf99e1a21861170"
+      "size": 3212,
+      "sha256": "0ed8c58e56116020fbc851573d3a7ce09b9ff146ab6058dc67f27cf6837fa1f8"
     },
     "docs/v2.3/threat-model.md": {
-      "size": 14795,
-      "sha256": "08450f0a964ac743629083ecad3956cd4dcc684e6f313ee4e08a83d1c8aa898d"
+      "size": 15591,
+      "sha256": "32d0b2b6f4c87c3c37057549b4a16fdced7a830e3756e1c4af4535d5a349808f"
+    },
+    "lib/release/docsConsistency.js": {
+      "size": 5198,
+      "sha256": "cb1e0e7b941d7be6943c48544715e040159cfd8e86364786cce78b38b549536a"
+    },
+    "package-lock.json": {
+      "size": 768,
+      "sha256": "a32b8f9c920777422d983a05a1aba14d31f137506c16d783bb9b605a24251f13"
+    },
+    "package.json": {
+      "size": 1911,
+      "sha256": "efbc1ff8fd8f4ec7810ad05219444d2b926190f41ba8f73dc77f5a32c32d3792"
+    },
+    "plugins/claude/.claude-plugin/plugin.json": {
+      "size": 338,
+      "sha256": "dac238fdf05828fdcf12ebc2675947af5a81073e4e2bcee960130dfe73718e72"
+    },
+    "plugins/portable/plugin.json": {
+      "size": 1239,
+      "sha256": "20d0c5354e9633785ba0c2f2e229151c38063e7ebcd623d32bd3053517b09f8e"
     },
     "scripts/v2/create-v23-release-envelope.mjs": {
-      "size": 4645,
-      "sha256": "8f646996245671fc6dfebb7b7420ceeb6a59c22c29378ca34b57f7df3ac37985"
+      "size": 4684,
+      "sha256": "6a6542ffeaec43963b095036d3bf81f4abf79abaf9bf59030723dadfc34ec29a"
     },
     "scripts/v2/release-gates.mjs": {
       "size": 3087,
       "sha256": "ed4496cab8022f5747a9b8ffdb2baf1a45b7799bab53948875b621f46ac10293"
     },
     "scripts/v2/v23-portable-cleanroom.mjs": {
-      "size": 7715,
-      "sha256": "21a535d7dee7467761b7d46c5ba6505e6434f0e32b6937a3c2d51ea7b75f1b24"
+      "size": 8843,
+      "sha256": "a270ac2a33770d6bca31a77252363bc33187fb498c855096919ed848fa09f1d4"
     },
     "scripts/v2/v23-provenance.mjs": {
       "size": 859,
       "sha256": "003e8f05197d49864fd35ff5cd76b538d4e32d9e392be874322da085f498a98e"
     },
     "scripts/v2/v23-real-package-drill.mjs": {
-      "size": 23826,
-      "sha256": "1ad0dad2ea0e6e80ad15dd0462c3cb8adeda8f885cb565d73b9da09787af47d0"
+      "size": 34877,
+      "sha256": "0707ad4d4074011068030d0a01a01500d81a7a186146c462fc0e2afe25bb40c6"
     },
     "scripts/v2/v23-release-gate.mjs": {
-      "size": 20172,
-      "sha256": "08466abb115a9b3d04bd0c1a7c9aa903a5a1a94791dc6e0ce725c50e603142c1"
+      "size": 20277,
+      "sha256": "be2bf96ea8867ae2212f133c486e44a846e5d71a5f3ea442d09aee0c67604675"
     },
     "scripts/v2/v23-upgrade-rollback-drill.mjs": {
       "size": 7931,
-      "sha256": "feefd1bee1c52a51eaa57050775d5d6193018b62bd3dc13cb5cf4510eab21bd5"
+      "sha256": "8a58bf7243b7e08d32d42f636bd4c19d88048e64f61454011d09375016bad6f1"
     },
     "scripts/v2/validate-v23-acceptance.mjs": {
-      "size": 10587,
-      "sha256": "b49412857705f619253dadc969a43a792885b280711b049fd64d234e9a01e296"
+      "size": 10936,
+      "sha256": "22f66a68a96d066ba99645a0d27a788bafa8f75c141ea0edf0c2cae18e9d767a"
     },
     "scripts/v2/verify-v23-portable-manifest.mjs": {
       "size": 1128,
-      "sha256": "5e8622e963120c16460699cb8e9128aeb5b67868b0ec4de8587cad5c5edcba0b"
+      "sha256": "c28166981701cc61deafb4ac3dfbfa074e861d7e08659221c258863b9fcdf582"
+    },
+    "tests/docs-consistency.test.mjs": {
+      "size": 2969,
+      "sha256": "f1d958b93c1e4b777b8d50780c95545ba877cf4f62ddca5606206b12958de72a"
     },
     "tests/external-adapters-v2.test.mjs": {
       "size": 10611,
       "sha256": "99400ae9573fdda120a5bb672fbd0f5ffdb66dce1a6dbd0dc6c5c00831e87bd0"
     },
     "tests/program-intelligence-source.test.mjs": {
-      "size": 15518,
-      "sha256": "0b1489f482ec53df65e4e8f10af98440fc8de8dc644fff99bd3eeb88074688f9"
+      "size": 17219,
+      "sha256": "e774a230035f7dc0a65e34c708373b36f82d4cf24867b7f67173fccd7deb8d4a"
     },
     "tests/task-step-stats.test.mjs": {
       "size": 1268,
@@ -663,15 +703,19 @@
     },
     "tests/v23-portable-manifest.test.mjs": {
       "size": 2551,
-      "sha256": "f33b8239d790ec2232460f38afc40fc31e5d470fef0ff39358d0138557ef088a"
+      "sha256": "c804d7f4191f4320a394baffe07ab92bc7ac966c7c6460297c9fd769a6e4f995"
     },
     "tests/v23-provenance.test.mjs": {
       "size": 6473,
       "sha256": "19e8d19b60675a385959556544d11b20365957614fe730658c12698d0ba1705f"
     },
+    "tests/v23-real-package-drill-contract.test.mjs": {
+      "size": 4008,
+      "sha256": "fcb28d52708ae6af74f09347e4924924ce24ba4d93792201d3432182057bd819"
+    },
     "tests/v23-release-gate.test.mjs": {
-      "size": 10567,
-      "sha256": "7c5f19c383ab7b3bf56fe95ec8cd1ffebb53aa829dab39960c8da74e0f935803"
+      "size": 12007,
+      "sha256": "0e6d17796c954b69e881589aaf779ff31a65f9cb90266dec9d327af66fe32bd6"
     }
   }
 }

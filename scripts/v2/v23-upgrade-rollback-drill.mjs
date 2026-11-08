@@ -68,7 +68,7 @@ try {
   const v22 = await install('2.2.0-fixture', Buffer.from('synthetic-v2.2-package-marker\n'))
   const v22Active = await installer.activate(v22.plan)
   const previousPointer = await readFile(join(installer.root, 'active.json'))
-  const v23 = await install('2.3.0-candidate', Buffer.from(`synthetic-v2.3-candidate:${sourceCommit}\n`))
+  const v23 = await install('2.3.1-candidate', Buffer.from(`synthetic-v2.3-candidate:${sourceCommit}\n`))
 
   // Inject a post-verification staged-artifact change. Activation must refuse it
   // and keep the V2.2 active pointer unchanged. Then restore the expected bytes.

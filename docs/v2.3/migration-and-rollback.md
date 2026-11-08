@@ -27,4 +27,4 @@ The procedure above is operational guidance. The real isolated drill does not ce
 
 ## Support-scope decision requested
 
-The V2.3.0 Stable support contract is Portable/manual or npm installation with the documented production-dependency step. OS-integrated installation and automatic updating are explicitly out of scope under the owner-approved release policy in `release-review-policy.md`; they are not claimed as supported or passed. This boundary does not alter the historical V2.2.0 installation contract.
+The proposed V2.3.1 Stable support contract is Portable/manual or npm installation with the documented production-dependency step. OS-integrated installation and automatic updating are explicitly out of scope under the owner-approved release policy in `release-review-policy.md`; they are not claimed as supported or passed. This boundary does not alter the historical V2.2.0 installation contract or the failed, protected V2.3.0 Tag record.

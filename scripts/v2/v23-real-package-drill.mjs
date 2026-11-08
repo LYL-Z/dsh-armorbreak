@@ -3,9 +3,9 @@
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { execFileSync, spawnSync } from 'node:child_process'
-import { existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
-import { tmpdir } from 'node:os'
-import { dirname, join, relative, resolve, sep } from 'node:path'
+import { existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync, statSync, writeFileSync } from 'node:fs'
+import { release, tmpdir } from 'node:os'
+import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)))
@@ -19,6 +19,36 @@ const V22_ASSET = 'armorbreak-portable-2.2.0.tar.gz'
 const V22_SHA256 = '5e5aca98da18d4f0cb17db71cf57c5577f8f8f64810a30844bd5237b4ed7b630'
 const digest = (bytes) => createHash('sha256').update(bytes).digest('hex')
 const fileDigest = (path) => digest(readFileSync(path))
+const normalizedPath = (path) => resolve(path).replaceAll('\\', '/')
+const samePath = (left, right) => process.platform === 'win32'
+  ? normalizedPath(left).toLowerCase() === normalizedPath(right).toLowerCase()
+  : normalizedPath(left) === normalizedPath(right)
+const isWithinPath = (path, parent) => {
+  const child = normalizedPath(path)
+  const root = normalizedPath(parent).replace(/\/$/, '')
+  return (process.platform === 'win32' ? child.toLowerCase() : child) .startsWith(`${process.platform === 'win32' ? root.toLowerCase() : root}/`)
+}
+const redactDiagnostic = (value, paths = []) => {
+  let text = String(value ?? '').slice(0, 1200)
+  for (const [path, label] of paths) if (path) text = text.split(path).join(label)
+  return text
+    .replace(/file:\/\/\/[A-Za-z]:\/[^\r\n\s"']+/gi, '<redacted-path>')
+    .replace(/(?:[A-Za-z]:\\|\\\\)[^\r\n]*/g, '<redacted-path>')
+    .replace(/(?:\/home\/|\/Users\/)[^/\s]+/g, '<redacted-user-path>')
+    .replace(/\bS-1-\d+(?:-\d+)+\b/g, '<redacted-sid>')
+    .replace(/\b[0-9a-f]{8}-[0-9a-f-]{27,}\b/gi, '<redacted-id>')
+    .replace(/(token|authorization|password|secret)(\s*[:=]\s*)\S+/gi, '$1$2<redacted>')
+}
+const safeStat = (path) => {
+  try {
+    const lexical = lstatSync(path, { bigint: true })
+    const canonical = realpathSync(path)
+    const info = statSync(path, { bigint: true })
+    return { exists: true, type: lexical.isSymbolicLink() ? 'symlink' : lexical.isFile() ? 'file' : lexical.isDirectory() ? 'directory' : 'other', bytes: info.isFile() ? Number(info.size) : null, sha256: info.isFile() ? fileDigest(path) : null, realpathMatchesExpected: samePath(canonical, path), dev: String(info.dev), ino: String(info.ino), nlink: String(info.nlink) }
+  } catch (error) {
+    return { exists: false, errorCode: error?.code ?? 'UNKNOWN' }
+  }
+}
 const sha256FileTree = (dir) => {
   const out = {}
   const visit = (base) => {
@@ -36,11 +66,14 @@ const sha256FileTree = (dir) => {
 }
 const run = (command, args, options = {}) => {
   const result = spawnSync(command, args, { encoding: 'utf8', windowsHide: true, maxBuffer: 12 * 1024 * 1024, timeout: 120_000, ...options })
-  return { status: result.status, stdout: result.stdout ?? '', stderr: result.stderr ?? '', error: result.error?.message ?? null }
+  return { status: result.status, signal: result.signal ?? null, stdout: result.stdout ?? '', stderr: result.stderr ?? '', error: result.error?.message ?? null, errorCode: result.error?.code ?? null }
 }
 function execute(command, args, options = {}) {
   const result = run(command, args, options)
-  if (result.error || result.status !== 0) throw new Error(`${command} ${args.join(' ')} failed (${result.status}): ${result.error ?? result.stderr.slice(0, 1200)}`)
+  if (result.error || result.status !== 0) {
+    const stderrSha256 = digest(Buffer.from(result.stderr))
+    throw new Error(`${command} failed (exit=${result.status ?? 'null'}, signal=${result.signal ?? 'none'}, code=${result.errorCode ?? 'none'}, stderrSha256=${stderrSha256})`)
+  }
   return result
 }
 function summary(command, args, result) {
@@ -62,17 +95,41 @@ function cli(appDir, env, ...args) {
   return run(process.execPath, [join(appDir, 'packages', 'cli', 'index.js'), ...args], { cwd: appDir, env })
 }
 
+const diagnostics = {
+  schemaVersion: 'armorbreak.v23-windows-drill-diagnostics/v1', status: 'IN_PROGRESS', capturedAt: new Date().toISOString(),
+  runner: { platform: process.platform, arch: process.arch, node: process.version, windowsRelease: process.platform === 'win32' ? release() : null, gitVersion: null, tempConfigured: Boolean(process.env.TEMP), tmpConfigured: Boolean(process.env.TMP), tempPathSha256: process.env.TEMP ? digest(Buffer.from(resolve(process.env.TEMP))) : null, tmpPathSha256: process.env.TMP ? digest(Buffer.from(resolve(process.env.TMP))) : null, tempEqualsTmp: Boolean(process.env.TEMP && process.env.TMP && samePath(process.env.TEMP, process.env.TMP)), tempUnderRunnerTemp: Boolean(process.env.TEMP && process.env.RUNNER_TEMP && isWithinPath(process.env.TEMP, process.env.RUNNER_TEMP)), tmpUnderRunnerTemp: Boolean(process.env.TMP && process.env.RUNNER_TEMP && isWithinPath(process.env.TMP, process.env.RUNNER_TEMP)) },
+  steps: {},
+}
+try { diagnostics.runner.gitVersion = run('git', ['--version']).stdout.trim().slice(0, 80) } catch {}
+const diagnosticPath = process.env.V23_DIAGNOSTICS_PATH
+const writeDiagnostics = () => {
+  if (!diagnosticPath) return
+  mkdirSync(dirname(diagnosticPath), { recursive: true })
+  writeFileSync(diagnosticPath, `${JSON.stringify(diagnostics, null, 2)}\n`)
+}
+
 if (process.platform !== 'win32') throw new Error('the real package permission/ACL drill requires a Windows host')
-if (candidateVersion !== '2.3.0') throw new Error(`candidate package version must be 2.3.0 (found ${candidateVersion})`)
+// Use the runner-owned scratch root as TEMP/TMP for every child CLI. The hosted
+// Windows default user Temp path was outside RUNNER_TEMP; preserving the custom
+// default can make historical V2.2 path checks depend on runner path aliases.
+const isolatedTempRoot = resolve(process.env.RUNNER_TEMP || tmpdir())
+process.env.TEMP = isolatedTempRoot
+process.env.TMP = isolatedTempRoot
+diagnostics.runner.tempPathSha256 = digest(Buffer.from(isolatedTempRoot))
+diagnostics.runner.tmpPathSha256 = digest(Buffer.from(isolatedTempRoot))
+diagnostics.runner.tempEqualsTmp = true
+diagnostics.runner.tempUnderRunnerTemp = Boolean(process.env.RUNNER_TEMP && (samePath(isolatedTempRoot, process.env.RUNNER_TEMP) || isWithinPath(isolatedTempRoot, process.env.RUNNER_TEMP)))
+diagnostics.runner.tmpUnderRunnerTemp = diagnostics.runner.tempUnderRunnerTemp
+if (candidateVersion !== '2.3.1') throw new Error(`candidate package version must be 2.3.1 (found ${candidateVersion})`)
 if (!existsSync(candidateArtifact) || !existsSync(candidateManifestPath)) throw new Error('build the committed V2.3 candidate package and manifest before running this drill')
 const head = execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
 const candidateManifest = JSON.parse(readFileSync(candidateManifestPath, 'utf8'))
-if (candidateManifest.commit !== head || candidateManifest.version !== '2.3.0' || candidateManifest.productionSigned !== false) throw new Error('candidate manifest must identify the current exact commit and remain explicitly unsigned')
+if (candidateManifest.commit !== head || candidateManifest.version !== '2.3.1' || candidateManifest.productionSigned !== false) throw new Error('candidate manifest must identify the current exact commit and remain explicitly unsigned')
 const candidateSha256 = fileDigest(candidateArtifact)
 const manifestSha256 = candidateManifest.sha256 ?? candidateManifest.artifact?.sha256
-if (manifestSha256 !== candidateSha256 || candidateManifest.reproducible !== true || candidateManifest.cleanRoom?.result !== 'PASS') throw new Error('candidate artifact digest, reproducibility, or clean-room execution check failed')
+if (manifestSha256 !== candidateSha256 || candidateManifest.version !== '2.3.1' || candidateManifest.reproducible !== true || candidateManifest.cleanRoom?.result !== 'PASS') throw new Error('candidate artifact digest, version, reproducibility, or clean-room execution check failed')
 
-const scratch = mkdtempSync(join(tmpdir(), 'armorbreak-v23-real-deploy-'))
+const scratch = mkdtempSync(join(isolatedTempRoot, 'armorbreak-v23-real-deploy-'))
 try {
   const v22Downloads = join(scratch, 'v22-download')
   mkdirSync(v22Downloads, { recursive: true })
@@ -95,8 +152,8 @@ try {
 
   const installs = join(scratch, 'installed-versions')
   const v22Install = join(installs, '2.2.0')
-  const corruptedStage = join(installs, '2.3.0-staged-fault')
-  const candidateInstall = join(installs, '2.3.0')
+  const corruptedStage = join(installs, '2.3.1-staged-fault')
+  const candidateInstall = join(installs, '2.3.1')
   const workspace = join(scratch, 'isolated-v2.2-test-profile', 'workspace')
   const stateRoot = join(scratch, 'isolated-v2.2-test-profile', 'state')
   const configDir = join(workspace, '.armorbreak')
@@ -126,12 +183,24 @@ try {
   if (!sid) throw new Error('cannot identify the Windows current-user principal SID')
   const aclResult = execute('icacls.exe', [scratch, '/inheritance:r', '/grant:r', `*${sid}:(F)`, '/T', '/C'])
   const aclInheritanceResult = execute('icacls.exe', [scratch, '/grant', `*${sid}:(OI)(CI)(IO)(F)`, '/T', '/C'])
-  const disallowedAclSids = ['S-1-1-0', 'S-1-5-32-545', 'S-1-5-11']
+  const adminSid = 'S-1-5-32-544'
+  const aclAdminRemoval = execute('icacls.exe', [scratch, '/remove:g', `*${adminSid}`, '/T', '/C'])
+  const disallowedAclSids = ['S-1-1-0', 'S-1-5-32-545', 'S-1-5-11', 'S-1-5-32-544']
   const aclScript = join(scratch, 'verify-acl.ps1')
   writeFileSync(aclScript, '$ErrorActionPreference = "Stop"\n$paths = ConvertFrom-Json $env:V23_ACL_PATHS\n$result = foreach ($path in $paths) { $item = Get-Item -LiteralPath $path -Force; foreach ($entry in $item.GetAccessControl().Access) { [pscustomobject]@{ path = $path; sid = $entry.IdentityReference.Translate([System.Security.Principal.SecurityIdentifier]).Value; type = [string]$entry.AccessControlType; rights = [string]$entry.FileSystemRights; inherited = [bool]$entry.IsInherited } } }\nConvertTo-Json -InputObject @($result) -Compress -Depth 5\n')
   const aclChecks = execute('powershell.exe', ['-NoProfile', '-NonInteractive', '-File', aclScript], { env: { ...process.env, V23_ACL_PATHS: JSON.stringify([workspace, configDir, configPath]) } })
   const aclEntries = JSON.parse(aclChecks.stdout)
-  if (aclEntries.some((entry) => entry.sid !== sid || entry.type !== 'Allow') || disallowedAclSids.some((value) => aclEntries.some((entry) => entry.sid === value)) || new Set(aclEntries.map((entry) => entry.path)).size !== 3) throw new Error('isolated workspace/config ACL is not restricted to current-user allow entries')
+  const classifyAclSid = (entrySid) => entrySid === sid ? 'CURRENT_USER' : entrySid === 'S-1-5-18' ? 'LOCAL_SYSTEM' : entrySid === 'S-1-5-32-544' ? 'BUILTIN_ADMINISTRATORS' : entrySid === 'S-1-5-11' ? 'AUTHENTICATED_USERS' : entrySid === 'S-1-5-32-545' ? 'BUILTIN_USERS' : entrySid === 'S-1-1-0' ? 'EVERYONE' : 'OTHER'
+  const allowedAclClasses = new Set(['CURRENT_USER', 'LOCAL_SYSTEM'])
+  diagnostics.steps.acl = {
+    checkedPaths: ['<isolated-workspace>', '<isolated-workspace>/.armorbreak', '<isolated-workspace>/.armorbreak/mcp-host-config.json'],
+    entries: aclEntries.map((entry) => ({ pathLabel: entry.path === workspace ? '<isolated-workspace>' : entry.path === configDir ? '<isolated-workspace>/.armorbreak' : '<isolated-workspace>/.armorbreak/mcp-host-config.json', principalClass: classifyAclSid(entry.sid), sidSha256: digest(Buffer.from(entry.sid)), type: entry.type, rights: entry.rights, inherited: entry.inherited })),
+    broadPrincipalsAbsent: !disallowedAclSids.some((value) => aclEntries.some((entry) => entry.sid === value)),
+    allowedPrincipalClasses: [...allowedAclClasses],
+      commandOutputSha256: digest(Buffer.from(`${aclResult.stdout}\n${aclInheritanceResult.stdout}\n${aclAdminRemoval.stdout}`)),
+    inspectionOutputSha256: digest(Buffer.from(aclChecks.stdout)),
+  }
+  if (aclEntries.some((entry) => !allowedAclClasses.has(classifyAclSid(entry.sid)) || entry.type !== 'Allow') || disallowedAclSids.some((value) => aclEntries.some((entry) => entry.sid === value)) || new Set(aclEntries.map((entry) => entry.path)).size !== 3) throw new Error('isolated workspace/config ACL includes an unapproved principal or access type')
   const runEnv = {
     ...process.env,
     ARMORBREAK_STATE_ROOT: stateRoot,
@@ -139,15 +208,73 @@ try {
     ARMORBREAK_PRINCIPAL_ID: 'armorbreak-v23-isolated-test-user',
     ARMORBREAK_MCP_AUDIT_LOG: join(stateRoot, 'mcp-audit.jsonl'),
   }
+  diagnostics.steps.environment = {
+    stateRootMatchesConfigured: samePath(runEnv.ARMORBREAK_STATE_ROOT, config.mcpServers.armorbreak.env.ARMORBREAK_STATE_ROOT),
+    workspaceMatchesConfigured: samePath(runEnv.ARMORBREAK_WORKSPACE, config.mcpServers.armorbreak.env.ARMORBREAK_WORKSPACE),
+    stateRootIsIsolated: isWithinPath(runEnv.ARMORBREAK_STATE_ROOT, scratch),
+    workspaceIsIsolated: isWithinPath(runEnv.ARMORBREAK_WORKSPACE, scratch),
+    principalConfigured: Boolean(runEnv.ARMORBREAK_PRINCIPAL_ID),
+    principalMatchesConfig: runEnv.ARMORBREAK_PRINCIPAL_ID === config.mcpServers.armorbreak.env.ARMORBREAK_PRINCIPAL_ID,
+    stateRootLabel: '<isolated-state-root>', workspaceLabel: '<isolated-workspace>', sessionPolicy: 'CLI process has no MCP session; task session is null by design',
+  }
   const v22CapabilitiesBefore = cli(v22Install, runEnv, 'capabilities', '--json')
   if (v22CapabilitiesBefore.status !== 0 || JSON.parse(v22CapabilitiesBefore.stdout).length !== historicalV22CapabilityCount) throw new Error(`published V2.2.0 package capability baseline does not match ${historicalV22CapabilityCount}`)
   const v22SeedAnalyzeArgs = ['analyze', '--capability', 'forensics.hash', '--target', sample, '--json']
   const v22Seed = cli(v22Install, runEnv, ...v22SeedAnalyzeArgs)
-  if (v22Seed.status !== 0) throw new Error(`V2.2 package could not create the isolated history task: ${v22Seed.stderr}`)
+  diagnostics.steps.v22Seed = { exitCode: v22Seed.status, signal: v22Seed.signal, errorCode: v22Seed.errorCode, stdoutSha256: digest(Buffer.from(v22Seed.stdout)), stderr: redactDiagnostic(v22Seed.stderr, [[scratch, '<isolated-temp>']]), taskId: null }
+  if (v22Seed.status !== 0) throw new Error('V2.2 package could not create the isolated history task (see structured diagnostics)')
   const taskId = JSON.parse(v22Seed.stdout).taskId
+  diagnostics.steps.v22Seed.taskId = { present: typeof taskId === 'string', formatValid: typeof taskId === 'string' && /^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/.test(taskId) }
   const v22Task = cli(v22Install, runEnv, 'task', 'status', taskId, '--json')
   const v22Report = cli(v22Install, runEnv, 'report', taskId, '--json')
-  if (v22Task.status !== 0 || v22Report.status !== 0) throw new Error('V2.2 package failed to read its own task/report before upgrade')
+  const taskDir = join(workspace, '.armorbreak', 'tasks', String(taskId))
+  const taskFile = join(taskDir, 'task.json')
+  let taskRecordOnDisk = null
+  let taskRecordErrorCode = null
+  try { if (existsSync(taskFile)) taskRecordOnDisk = JSON.parse(readFileSync(taskFile, 'utf8')) } catch (error) { taskRecordErrorCode = error?.code ?? 'INVALID_JSON' }
+  let reportRecordOnDisk = null
+  const reportsDir = join(taskDir, 'reports')
+  if (existsSync(reportsDir)) {
+    const reportFiles = readdirSync(reportsDir).filter((name) => name.endsWith('.md')).sort()
+    if (reportFiles.length) reportRecordOnDisk = join(reportsDir, reportFiles.at(-1))
+  }
+  let reportRecord = null
+  try { reportRecord = JSON.parse(v22Report.stdout) } catch {}
+  const diagnosticPaths = [[scratch, '<isolated-temp>'], [workspace, '<isolated-workspace>'], [stateRoot, '<isolated-state-root>']]
+  diagnostics.steps.v22TaskRead = {
+    exitCode: v22Task.status, signal: v22Task.signal, errorCode: v22Task.errorCode, stdoutSha256: digest(Buffer.from(v22Task.stdout)),
+    stderr: redactDiagnostic(v22Task.stderr, diagnosticPaths), taskIdValid: diagnostics.steps.v22Seed.taskId.formatValid,
+    metadata: taskRecordOnDisk ? { schemaVersion: taskRecordOnDisk.schemaVersion, state: taskRecordOnDisk.state, workspaceMatches: typeof taskRecordOnDisk.workspace === 'string' && samePath(taskRecordOnDisk.workspace, workspace), principalMatches: taskRecordOnDisk.principalId === runEnv.ARMORBREAK_PRINCIPAL_ID, sessionIsNull: taskRecordOnDisk.sessionId == null } : null,
+    metadataErrorCode: taskRecordErrorCode,
+    files: { task: safeStat(taskFile) },
+  }
+  diagnostics.steps.v22ReportRead = {
+    exitCode: v22Report.status, signal: v22Report.signal, errorCode: v22Report.errorCode, stdoutSha256: digest(Buffer.from(v22Report.stdout)),
+    stderr: redactDiagnostic(v22Report.stderr, diagnosticPaths),
+    metadata: reportRecord ? { format: reportRecord.format ?? null, bytes: Number.isInteger(reportRecord.bytes) ? reportRecord.bytes : null, hasMarkdown: typeof reportRecord.markdown === 'string', hasPath: Boolean(reportRecord.path), declaredSha256Matches: typeof reportRecord.markdown === 'string' && reportRecord.sha256 === digest(Buffer.from(reportRecord.markdown)) } : null,
+    files: { report: reportRecordOnDisk ? safeStat(reportRecordOnDisk) : { exists: false } },
+    pathValidation: (() => {
+      const reportPath = typeof taskRecordOnDisk?.report?.path === 'string' ? resolve(taskRecordOnDisk.report.path) : null
+      if (!reportPath) return { taskDirectoryRealpathMatches: null, reportsRootRealpathMatches: null, reportFileRealpathMatches: null, reportPathWithinReportsRoot: null }
+      const canonicalTask = realpathSync(taskDir)
+      const canonicalReports = realpathSync(reportsDir)
+      const canonicalReport = realpathSync(reportPath)
+      const legacyWithin = (base, target) => {
+        const rel = relative(base, target)
+        return rel === '' || (rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel))
+      }
+      return {
+        taskDirectoryRealpathMatches: samePath(taskDir, canonicalTask),
+        reportsRootRealpathMatches: samePath(reportsDir, canonicalReports),
+        reportFileRealpathMatches: samePath(reportPath, canonicalReport),
+        reportPathWithinReportsRoot: legacyWithin(reportsDir, reportPath),
+        canonicalReportsRootWithinTaskDirectory: legacyWithin(canonicalTask, canonicalReports),
+        canonicalReportWithinCanonicalReportsRoot: legacyWithin(canonicalReports, canonicalReport),
+      }
+    })(),
+  }
+  if (v22Task.status !== 0) { diagnostics.status = 'FAIL_V22_TASK_READ'; writeDiagnostics(); throw new Error('V2.2 package failed to read its own task before upgrade (see structured diagnostics)') }
+  if (v22Report.status !== 0) { diagnostics.status = 'FAIL_V22_REPORT_READ'; writeDiagnostics(); throw new Error('V2.2 package failed to read its own report before upgrade (see structured diagnostics)') }
   const oldTaskRecord = JSON.parse(v22Task.stdout)
   const oldReportRecord = JSON.parse(v22Report.stdout)
   if (oldTaskRecord.schemaVersion !== 'armorbreak/v2' || !oldReportRecord.markdown?.includes('ArmorBreak')) throw new Error('V2.2 task/report content does not match the historical V2 schema')
@@ -169,7 +296,7 @@ try {
   // Install and execute the real current V2.3 package archive from the builder.
   const candidateUnpackResult = unpack(candidateArtifact, candidateInstall)
   const installedPackage = JSON.parse(readFileSync(join(candidateInstall, 'package.json'), 'utf8'))
-  assert.equal(installedPackage.version, '2.3.0')
+  assert.equal(installedPackage.version, '2.3.1')
   const candidateConfig = structuredClone(config)
   candidateConfig.mcpServers.armorbreak.args = [join(candidateInstall, 'packages', 'mcp-server', 'index.js')]
   writeFileSync(configPath, `${JSON.stringify(candidateConfig, null, 2)}\n`)
@@ -230,7 +357,7 @@ try {
     sourceCommit: head,
     platform: { os: process.platform, arch: process.arch, node: process.version },
     historicalPackage: { version: '2.2.0', release: 'v2.2.0', asset: V22_ASSET, source: 'GitHub Release API asset digest; downloaded read-only', sha256: v22Sha256, expectedSha256: V22_SHA256 },
-    candidatePackage: { version: '2.3.0', artifact: relative(root, candidateArtifact).split(sep).join('/'), sha256: candidateSha256, reproducible: candidateManifest.reproducible, cleanRoomCliCapabilities: candidateManifest.cleanRoom.cliCapabilities, productionSigned: false },
+    candidatePackage: { version: '2.3.1', artifact: relative(root, candidateArtifact).split(sep).join('/'), sha256: candidateSha256, reproducible: candidateManifest.reproducible, cleanRoomCliCapabilities: candidateManifest.cleanRoom.cliCapabilities, productionSigned: false },
     deployment: {
       v22PackageExtractedAndExecuted: true,
       v22HistoricalCapabilityCount: historicalV22CapabilityCount,
@@ -242,7 +369,7 @@ try {
       mcpInitializeProtocol: initialize.result.protocolVersion,
       mcpHistoricalCliTaskHiddenFromNewMcpSession: !listedTasks.tasks.some((task) => task.id === taskId),
       mcpReportDeniedForForeignCliSessionTask: report.result.isError,
-      trustedPrincipal: { configuredByHostEnvironment: true, callerPrincipalOverrideRejected: true, windowsSidSha256: digest(Buffer.from(sid)), aclRestrictedToCurrentUser: true, aclEntries: aclEntries.map((entry) => ({ ...entry, path: entry.path === workspace ? '<isolated-workspace>' : entry.path === configDir ? '<isolated-workspace>/.armorbreak' : '<isolated-workspace>/.armorbreak/mcp-host-config.json', sid: 'CURRENT_USER_SID' })), rawIcaclsAccountOutput: 'redacted; normalized ACL entries and command-output SHA-256 are retained', aclCommandOutputSha256: digest(Buffer.from(`${aclResult.stdout}\n${aclInheritanceResult.stdout}`)), aclInspectionOutputSha256: digest(Buffer.from(aclChecks.stdout)) },
+      trustedPrincipal: { configuredByHostEnvironment: true, callerPrincipalOverrideRejected: true, windowsSidSha256: digest(Buffer.from(sid)), aclRestrictedToCurrentUserAndLocalSystem: true, aclEntries: diagnostics.steps.acl.entries, rawIcaclsAccountOutput: 'redacted; principal classes and SID hashes are retained', aclCommandOutputSha256: digest(Buffer.from(`${aclResult.stdout}\n${aclInheritanceResult.stdout}\n${aclAdminRemoval.stdout}`)), aclInspectionOutputSha256: digest(Buffer.from(aclChecks.stdout)) },
       workspaceBoundary: { outsideTargetRejected: true, stderrSha256: digest(Buffer.from(outOfWorkspace.stderr)) },
       failureInjection: { candidateStageEntry: 'index.js', corruptedEntrySha256: corruptedHash, rejectedBeforeCandidateStartup: injectedFailureRejected, v22PackageStillStartedAfterFault: true },
       rollback: { selectedPreviousVersion: '2.2.0', previousPackageRestarted: true, taskTreeHashesBeforeAndAfterEqual: JSON.stringify(before.tasks) === JSON.stringify(after.tasks), configHashBefore: before.configSha256, configHashAfter: after.configSha256, reportHashBefore: before.reportSha256, reportHashAfter: after.reportSha256 },
@@ -255,6 +382,7 @@ try {
       summary('tar', ['-xzf', V22_ASSET, '-C', 'isolated V2.2 install'], v22UnpackResult),
       summary('icacls.exe', ['isolated temp root', '/inheritance:r', '/grant:r', 'CURRENT_USER_SID:(F)', '/T', '/C'], aclResult),
       summary('icacls.exe', ['isolated temp root', '/grant', 'CURRENT_USER_SID:(OI)(CI)(IO)(F)', '/T', '/C'], aclInheritanceResult),
+      summary('icacls.exe', ['isolated temp root', '/remove:g', 'BUILTIN_ADMINISTRATORS', '/T', '/C'], aclAdminRemoval),
       summary('powershell.exe', ['-NoProfile', '-NonInteractive', '-File', 'verify-acl.ps1'], aclChecks),
       summary(process.execPath, ['packages/cli/index.js', 'capabilities', '--json', '(published V2.2.0 baseline)'], v22CapabilitiesBefore),
       summary('tar', ['-xzf', relative(root, candidateArtifact), '-C', 'fault-injected stage'], corruptUnpackResult),
@@ -280,7 +408,12 @@ try {
   const outputPath = join(root, evidencePath)
   mkdirSync(dirname(outputPath), { recursive: true })
   writeFileSync(outputPath, `${JSON.stringify(evidence, null, 2)}\n`)
+  diagnostics.status = 'PASS'
+  diagnostics.evidence = { v22TaskIdValid: diagnostics.steps.v22Seed.taskId.formatValid, preUpgradeTaskAndReportReadable: true, candidateSha256, rollbackHashesEqual: true }
+  writeDiagnostics()
   console.log(JSON.stringify({ status: evidence.status, evidence: evidencePath, sourceCommit: head, candidateSha256, v22Sha256, taskId, beforeAfterHashesEqual: JSON.stringify(before) === JSON.stringify(after) }, null, 2))
 } finally {
+  if (diagnostics.status === 'IN_PROGRESS') diagnostics.status = 'FAIL_EARLY_EXIT'
+  writeDiagnostics()
   cleanupScratch(scratch)
 }

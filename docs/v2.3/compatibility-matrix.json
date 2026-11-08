@@ -1131,7 +1131,7 @@
         "docs/v2.3/evidence/p0-h/main-run-e30c0a9.json"
       ],
       "ci": "Clean S5/E1 Windows x64 Node 24.16.0 full suite 672/672 PASS, typecheck/docs/acceptance/PR-gate PASS. Exact E1 GitHub PR-event CI pending.",
-      "limitation": "OWNER_APPROVED_SELF_REVIEW accepted; independent human security/license review was not performed. One Windows principal was tested; multi-account isolation is unsupported/unverified. OS updater is outside scope. The V2.2 legacy Release attestation workflow still fails on V2.3 inputs but is not a required check; V2.3 exact-main CI/provenance passed. Exact tag Gate, tag-triggered Windows rollback, external owner authorization envelope and public asset verification remain required.",
+      "limitation": "Owner-approved implementer AI self-review; no independent human security review or legal certification. Only one actual Windows principal tested; second-account access remains unverified and is outside the single-principal support contract. OS-integrated updater is out of scope. v2.3.0 Tag Gate failed twice; v2.3.1 release remains blocked pending the repair PR and all exact-main/Tag/asset gates.",
       "lastObservedRemoteHead": "e30c0a9da897b588b954b286437f59f0c8e5119d",
       "localSourceCommit": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
       "releaseReadiness": "NOT_READY",
@@ -1167,7 +1167,7 @@
       },
       "releaseState": "NOT_READY",
       "mainGateProbe": "PASS: exact main required CI, V2.3 Node 22/24 Windows/Ubuntu gate, clean-room candidate package and GitHub attestation on e30c0a9da897b588b954b286437f59f0c8e5119d (runs 42443416666 and 42443416668).",
-      "releaseGateProbe": "NOT_READY: no v2.3.0 tag, owner tag-event envelope, tag Windows rollback, Tag Gate, or public Release yet.",
+      "releaseGateProbe": "NOT_READY: protected v2.3.0 Tag remains unchanged. Its Windows job failed in attempts 1 and 2 of run 42444831733 (jobs 128621461486 and 128622052417); both logs show the old combined assertion without per-command diagnostics, so the historical cause remains undetermined. v2.3.1 repair PR, PR/exact-main Windows drill, exact-main provenance, new protected Tag Gate, and public Release are pending.",
       "latestExactMain": {
         "commit": "e30c0a9da897b588b954b286437f59f0c8e5119d",
         "runId": "42443416668",

@@ -7,6 +7,7 @@ import { evaluateMainContract, evaluatePrContract, evaluateReleaseContract, miss
 const node = process.execPath
 const gateScript = 'scripts/v2/v23-release-gate.mjs'
 const SHA = 'a'.repeat(40)
+const gateSource = readFileSync(gateScript, 'utf8')
 
 test('PR contract accepts an in-progress candidate only while structured readiness remains NOT_READY', () => {
   assert.deepEqual(evaluatePrContract({ packageName: 'dsh-armorbreak', status: 'IN_PROGRESS', releaseState: 'NOT_READY' }), {
@@ -22,29 +23,34 @@ test('PR contract ignores historical Markdown wording and rejects contradictory 
 })
 
 test('main candidate contract requires completed engineering while retaining NOT_READY until tag evidence exists', () => {
-  assert.deepEqual(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', releaseState: 'NOT_READY', expectedSha: SHA, head: SHA }), {
+  assert.deepEqual(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.1', status: 'COMPLETE', releaseState: 'NOT_READY', expectedSha: SHA, head: SHA }), {
     valid: true, releaseReadiness: 'NOT_READY', blockers: [],
   })
-  assert.equal(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', releaseState: 'NOT_READY', expectedSha: SHA, head: 'b'.repeat(40) }).valid, false)
-  assert.equal(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'IN_PROGRESS', releaseState: 'NOT_READY', expectedSha: SHA, head: SHA }).valid, false)
-  assert.equal(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'IN_PROGRESS', releaseState: 'READY', expectedSha: SHA, head: SHA }).valid, false)
+  assert.equal(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.1', status: 'COMPLETE', releaseState: 'NOT_READY', expectedSha: SHA, head: 'b'.repeat(40) }).valid, false)
+  assert.equal(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.1', status: 'IN_PROGRESS', releaseState: 'NOT_READY', expectedSha: SHA, head: SHA }).valid, false)
+  assert.equal(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.1', status: 'IN_PROGRESS', releaseState: 'READY', expectedSha: SHA, head: SHA }).valid, false)
 })
 
 test('Release contract transitions to READY only from COMPLETE frozen tree plus exact external tag authorization input', () => {
-  assert.deepEqual(evaluateReleaseContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', releaseState: 'NOT_READY', tag: 'refs/tags/v2.3.0', expectedSha: SHA }), {
+  assert.deepEqual(evaluateReleaseContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.1', status: 'COMPLETE', releaseState: 'NOT_READY', tag: 'refs/tags/v2.3.1', expectedSha: SHA }), {
     valid: true, blockers: [],
   })
 })
 
 test('Release contract rejects reverse and partial transitions', () => {
-  const base = { packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', releaseState: 'NOT_READY', tag: 'refs/tags/v2.3.0', expectedSha: SHA }
+  const base = { packageName: 'dsh-armorbreak', packageVersion: '2.3.1', status: 'COMPLETE', releaseState: 'NOT_READY', tag: 'refs/tags/v2.3.1', expectedSha: SHA }
   for (const invalid of [
     { ...base, status: 'IN_PROGRESS' },
     { ...base, releaseState: 'READY' },
     { ...base, packageVersion: '2.2.0' },
-    { ...base, tag: 'refs/tags/v2.3.1' },
+    { ...base, tag: 'refs/tags/v2.3.0' },
     { ...base, expectedSha: 'HEAD' },
   ]) assert.equal(evaluateReleaseContract(invalid).valid, false)
+})
+
+test('release verification requires exact-main build provenance and the pre-Tag Windows deployment job', () => {
+  assert.match(gateSource, /'V2\.3 main candidate build and provenance'/)
+  assert.match(gateSource, /'Exact main package Windows deployment and rollback'/)
 })
 
 test('PR readiness identifies self-review and one-principal release requirements separately from the completed package drill', () => {
@@ -61,8 +67,8 @@ test('PR readiness identifies self-review and one-principal release requirements
 
 test('PR, main-candidate and release modes follow a monotonic simulated transition', () => {
   assert.equal(evaluatePrContract({ packageName: 'dsh-armorbreak', status: 'IN_PROGRESS', releaseState: 'NOT_READY' }).valid, true)
-  assert.equal(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', releaseState: 'NOT_READY', expectedSha: SHA, head: SHA }).valid, true)
-  assert.equal(evaluateReleaseContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.0', status: 'COMPLETE', releaseState: 'NOT_READY', tag: 'refs/tags/v2.3.0', expectedSha: SHA }).valid, true)
+  assert.equal(evaluateMainContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.1', status: 'COMPLETE', releaseState: 'NOT_READY', expectedSha: SHA, head: SHA }).valid, true)
+  assert.equal(evaluateReleaseContract({ packageName: 'dsh-armorbreak', packageVersion: '2.3.1', status: 'COMPLETE', releaseState: 'NOT_READY', tag: 'refs/tags/v2.3.1', expectedSha: SHA }).valid, true)
 })
 
 test('every absent mandatory release claim is rejected before release authorization can proceed', () => {
@@ -98,7 +104,7 @@ test('owner self-review claims require truthful reviewer type, owner event, exac
 })
 
 test('Release CLI fails closed while P0-H is open and no signed evidence package exists', () => {
-  const result = spawnSync(node, [gateScript, '--release'], { encoding: 'utf8', env: { ...process.env, GITHUB_REF: 'refs/tags/v2.3.0', GITHUB_SHA: SHA } })
+  const result = spawnSync(node, [gateScript, '--release'], { encoding: 'utf8', env: { ...process.env, GITHUB_REF: 'refs/tags/v2.3.1', GITHUB_SHA: SHA } })
   assert.notEqual(result.status, 0)
   const report = JSON.parse(result.stdout)
   assert.equal(report.decision, 'NOT_READY')
@@ -107,15 +113,23 @@ test('Release CLI fails closed while P0-H is open and no signed evidence package
 
 test('V2.3 workflow separates PR, main and exact-tag checks and preserves the V2.2.0 guard', () => {
   const workflow = readFileSync('.github/workflows/v2.3-main-gate.yml', 'utf8')
+  const exactHead = readFileSync('.github/workflows/v2.3-validation.yml', 'utf8')
   const legacy = readFileSync('.github/workflows/ci.yml', 'utf8')
+  assert.equal((exactHead.match(/startsWith\(github\.head_ref, 'feature\/v2\.3'\)/g) ?? []).length, 3)
+  assert.doesNotMatch(exactHead, /startsWith\(github\.head_ref, 'feature\/v2\.3-'\)/)
   assert.match(workflow, /pull_request:[\s\S]*branches:\s*\[main\]/)
   assert.match(workflow, /push:[\s\S]*branches:\s*\[main\]/)
-  assert.match(workflow, /tags:\s*\['v2\.3\.0'\]/)
+  assert.match(workflow, /tags:\s*\['v2\.3\.1'\]/)
   assert.match(workflow, /pr-candidate-validation:[\s\S]*if: \$\{\{ github\.event_name == 'pull_request' \}\}[\s\S]*name: Node \$\{\{ matrix\.node \}\} \/ \$\{\{ matrix\.os \}\}/)
   assert.match(workflow, /main-candidate-validation:[\s\S]*if: \$\{\{ github\.event_name == 'push' && github\.ref == 'refs\/heads\/main' \}\}[\s\S]*name: Node \$\{\{ matrix\.node \}\} \/ \$\{\{ matrix\.os \}\}/)
   assert.match(workflow, /main-candidate-validation:[\s\S]*v23-release-gate\.mjs --check-main/)
   assert.match(workflow, /pr-candidate-validation:[\s\S]*v23-release-gate\.mjs --check-pr/)
-  assert.match(workflow, /name: V2\.3\.0 release verification/)
+  assert.match(workflow, /name: V2\.3\.1 release verification/)
+  assert.match(workflow, /pr-windows-package-drill:[\s\S]*event_name == 'pull_request'[\s\S]*Run real V2\.2 to exact PR package deployment and rollback drill/)
+  assert.match(workflow, /main-windows-package-drill:[\s\S]*refs\/heads\/main[\s\S]*needs: \[main-candidate-validation, build-and-attest-main-candidate\][\s\S]*Run real V2\.2 to exact main V2\.3 package deployment and rollback drill/)
+  assert.match(workflow, /Upload PR Windows diagnostics \(including failure evidence\)[\s\S]*if: \$\{\{ always\(\) \}\}/)
+  assert.match(workflow, /Upload successful PR Windows drill evidence[\s\S]*if: \$\{\{ success\(\) \}\}/)
+  assert.match(workflow, /v23-main-rollback-\$\{\{ github\.sha \}\}/)
   assert.equal((workflow.match(/Prepare runner-local temporary directory \(Windows\)/g) ?? []).length, 2)
   assert.equal((workflow.match(/Prepare runner-local temporary directory \(Unix\)/g) ?? []).length, 2)
   assert.match(workflow, /TEMP=\$runtimeTemp`nTMP=\$runtimeTemp`n/)
@@ -124,7 +138,9 @@ test('V2.3 workflow separates PR, main and exact-tag checks and preserves the V2
   assert.match(workflow, /v23-release-gate\.mjs --release/)
   assert.match(legacy, /if: github\.ref != 'refs\/tags\/v2\.2\.0'/)
   assert.match(legacy, /if: github\.ref == 'refs\/tags\/v2\.2\.0'/)
-  assert.match(legacy, /Detect release evidence contract[\s\S]*version.*2\.3\.0[\s\S]*refs\/heads\/main[\s\S]*refs\/tags\/v2\.3\.0/)
+  assert.match(legacy, /startsWith\(github\.head_ref, 'feature\/v2\.3'\)/)
+  assert.match(legacy, /startsWith\(github\.ref_name, 'feature\/v2\.3'\)/)
+  assert.match(legacy, /Detect release evidence contract[\s\S]*version.*2\.3\.1[\s\S]*refs\/heads\/main[\s\S]*refs\/tags\/v2\.3\.1/)
   assert.match(legacy, /Validate V2\.3 evidence integrity[\s\S]*validate-v23-acceptance\.mjs/)
   assert.match(legacy, /Validate V2\.3 exact-main candidate contract[\s\S]*v23-release-gate\.mjs --check-main/)
   assert.match(legacy, /Evidence hashes and references[\s\S]*steps\.release_contract\.outputs\.v23 != 'true'/)
