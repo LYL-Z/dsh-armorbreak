@@ -216,16 +216,23 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           V23_DIAGNOSTICS_PATH: ${{ runner.temp }}/v23-windows-drill-diagnostics.json
         run: node scripts/v2/v23-real-package-drill.mjs
-      - name: Upload PR Windows drill evidence and diagnostics
+      - name: Upload PR Windows diagnostics (including failure evidence)
         if: ${{ always() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: v23-pr-windows-drill-${{ github.event.pull_request.head.sha }}
+          name: v23-pr-windows-diagnostics-${{ github.event.pull_request.head.sha }}
           path: |
-            docs/v2.3/evidence/p0-h/real-package-upgrade-rollback.json
             dist/v23-portable-cleanroom.json
             ${{ runner.temp }}/v23-windows-drill-diagnostics.json
           if-no-files-found: warn
+          retention-days: 90
+      - name: Upload successful PR Windows drill evidence
+        if: ${{ success() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: v23-pr-windows-drill-evidence-${{ github.event.pull_request.head.sha }}
+          path: docs/v2.3/evidence/p0-h/real-package-upgrade-rollback.json
+          if-no-files-found: error
           retention-days: 90
 
   main-windows-package-drill:

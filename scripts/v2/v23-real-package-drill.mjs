@@ -188,14 +188,17 @@ try {
   writeFileSync(aclScript, '$ErrorActionPreference = "Stop"\n$paths = ConvertFrom-Json $env:V23_ACL_PATHS\n$result = foreach ($path in $paths) { $item = Get-Item -LiteralPath $path -Force; foreach ($entry in $item.GetAccessControl().Access) { [pscustomobject]@{ path = $path; sid = $entry.IdentityReference.Translate([System.Security.Principal.SecurityIdentifier]).Value; type = [string]$entry.AccessControlType; rights = [string]$entry.FileSystemRights; inherited = [bool]$entry.IsInherited } } }\nConvertTo-Json -InputObject @($result) -Compress -Depth 5\n')
   const aclChecks = execute('powershell.exe', ['-NoProfile', '-NonInteractive', '-File', aclScript], { env: { ...process.env, V23_ACL_PATHS: JSON.stringify([workspace, configDir, configPath]) } })
   const aclEntries = JSON.parse(aclChecks.stdout)
+  const classifyAclSid = (entrySid) => entrySid === sid ? 'CURRENT_USER' : entrySid === 'S-1-5-18' ? 'LOCAL_SYSTEM' : entrySid === 'S-1-5-32-544' ? 'BUILTIN_ADMINISTRATORS' : entrySid === 'S-1-5-11' ? 'AUTHENTICATED_USERS' : entrySid === 'S-1-5-32-545' ? 'BUILTIN_USERS' : entrySid === 'S-1-1-0' ? 'EVERYONE' : 'OTHER'
+  const allowedAclClasses = new Set(['CURRENT_USER', 'LOCAL_SYSTEM'])
   diagnostics.steps.acl = {
     checkedPaths: ['<isolated-workspace>', '<isolated-workspace>/.armorbreak', '<isolated-workspace>/.armorbreak/mcp-host-config.json'],
-    entries: aclEntries.map((entry) => ({ pathLabel: entry.path === workspace ? '<isolated-workspace>' : entry.path === configDir ? '<isolated-workspace>/.armorbreak' : '<isolated-workspace>/.armorbreak/mcp-host-config.json', sidMatchesCurrentUser: entry.sid === sid, type: entry.type, rights: entry.rights, inherited: entry.inherited })),
+    entries: aclEntries.map((entry) => ({ pathLabel: entry.path === workspace ? '<isolated-workspace>' : entry.path === configDir ? '<isolated-workspace>/.armorbreak' : '<isolated-workspace>/.armorbreak/mcp-host-config.json', principalClass: classifyAclSid(entry.sid), sidSha256: digest(Buffer.from(entry.sid)), type: entry.type, rights: entry.rights, inherited: entry.inherited })),
     broadPrincipalsAbsent: !disallowedAclSids.some((value) => aclEntries.some((entry) => entry.sid === value)),
+    allowedPrincipalClasses: [...allowedAclClasses],
     commandOutputSha256: digest(Buffer.from(`${aclResult.stdout}\n${aclInheritanceResult.stdout}`)),
     inspectionOutputSha256: digest(Buffer.from(aclChecks.stdout)),
   }
-  if (aclEntries.some((entry) => entry.sid !== sid || entry.type !== 'Allow') || disallowedAclSids.some((value) => aclEntries.some((entry) => entry.sid === value)) || new Set(aclEntries.map((entry) => entry.path)).size !== 3) throw new Error('isolated workspace/config ACL is not restricted to current-user allow entries')
+  if (aclEntries.some((entry) => !allowedAclClasses.has(classifyAclSid(entry.sid)) || entry.type !== 'Allow') || disallowedAclSids.some((value) => aclEntries.some((entry) => entry.sid === value)) || new Set(aclEntries.map((entry) => entry.path)).size !== 3) throw new Error('isolated workspace/config ACL includes an unapproved principal or access type')
   const runEnv = {
     ...process.env,
     ARMORBREAK_STATE_ROOT: stateRoot,
@@ -364,7 +367,7 @@ try {
       mcpInitializeProtocol: initialize.result.protocolVersion,
       mcpHistoricalCliTaskHiddenFromNewMcpSession: !listedTasks.tasks.some((task) => task.id === taskId),
       mcpReportDeniedForForeignCliSessionTask: report.result.isError,
-      trustedPrincipal: { configuredByHostEnvironment: true, callerPrincipalOverrideRejected: true, windowsSidSha256: digest(Buffer.from(sid)), aclRestrictedToCurrentUser: true, aclEntries: aclEntries.map((entry) => ({ ...entry, path: entry.path === workspace ? '<isolated-workspace>' : entry.path === configDir ? '<isolated-workspace>/.armorbreak' : '<isolated-workspace>/.armorbreak/mcp-host-config.json', sid: 'CURRENT_USER_SID' })), rawIcaclsAccountOutput: 'redacted; normalized ACL entries and command-output SHA-256 are retained', aclCommandOutputSha256: digest(Buffer.from(`${aclResult.stdout}\n${aclInheritanceResult.stdout}`)), aclInspectionOutputSha256: digest(Buffer.from(aclChecks.stdout)) },
+      trustedPrincipal: { configuredByHostEnvironment: true, callerPrincipalOverrideRejected: true, windowsSidSha256: digest(Buffer.from(sid)), aclRestrictedToCurrentUserAndLocalSystem: true, aclEntries: diagnostics.steps.acl.entries, rawIcaclsAccountOutput: 'redacted; principal classes and SID hashes are retained', aclCommandOutputSha256: digest(Buffer.from(`${aclResult.stdout}\n${aclInheritanceResult.stdout}`)), aclInspectionOutputSha256: digest(Buffer.from(aclChecks.stdout)) },
       workspaceBoundary: { outsideTargetRejected: true, stderrSha256: digest(Buffer.from(outOfWorkspace.stderr)) },
       failureInjection: { candidateStageEntry: 'index.js', corruptedEntrySha256: corruptedHash, rejectedBeforeCandidateStartup: injectedFailureRejected, v22PackageStillStartedAfterFault: true },
       rollback: { selectedPreviousVersion: '2.2.0', previousPackageRestarted: true, taskTreeHashesBeforeAndAfterEqual: JSON.stringify(before.tasks) === JSON.stringify(after.tasks), configHashBefore: before.configSha256, configHashAfter: after.configSha256, reportHashBefore: before.reportSha256, reportHashAfter: after.reportSha256 },

@@ -31,7 +31,17 @@ test('PR and exact-main workflows run real Windows deployment before Tag creatio
   assert.match(workflow, /pr-windows-package-drill:[\s\S]*event_name == 'pull_request'[\s\S]*Run real V2\.2 to exact PR package deployment and rollback drill/)
   assert.match(workflow, /main-windows-package-drill:[\s\S]*refs\/heads\/main[\s\S]*Run real V2\.2 to exact main V2\.3 package deployment and rollback drill/)
   assert.equal((workflow.match(/node-version: 22\.23\.4/g) ?? []).length, 2, 'PR and exact-main package drills must reproduce the historical Windows Node runtime')
-  assert.match(workflow, /Upload PR Windows drill evidence and diagnostics[\s\S]*if: \$\{\{ always\(\) \}\}/)
+  assert.match(workflow, /Upload PR Windows diagnostics \(including failure evidence\)[\s\S]*if: \$\{\{ always\(\) \}\}/)
+  assert.match(workflow, /Upload successful PR Windows drill evidence[\s\S]*if: \$\{\{ success\(\) \}\}/)
+  const failureUploadSection = workflow.split('Upload PR Windows diagnostics (including failure evidence)')[1]?.split('Upload successful PR Windows drill evidence')[0] ?? ''
+  assert.doesNotMatch(failureUploadSection, /real-package-upgrade-rollback\.json/)
   assert.match(workflow, /Upload exact-main Windows drill diagnostics[\s\S]*if: \$\{\{ always\(\) \}\}/)
   assert.match(workflow, /release-verification:[\s\S]*refs\/tags\/v2\.3\.1/)
+})
+
+test('Windows ACL drill permits only the runner principal and Local System and records safe principal classes', () => {
+  assert.match(drill, /allowedAclClasses = new Set\(\['CURRENT_USER', 'LOCAL_SYSTEM'\]\)/)
+  assert.match(drill, /principalClass: classifyAclSid\(entry\.sid\)/)
+  assert.match(drill, /aclEntries\.some\(\(entry\) => !allowedAclClasses\.has\(classifyAclSid\(entry\.sid\)\)/)
+  assert.match(drill, /aclRestrictedToCurrentUserAndLocalSystem: true/)
 })
