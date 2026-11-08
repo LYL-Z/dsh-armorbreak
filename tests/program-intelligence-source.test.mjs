@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { access, mkdtemp, mkdir, writeFile } from 'node:fs/promises'
+import { access, mkdtemp, mkdir, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
@@ -283,4 +283,32 @@ test('M2 integrates source.symbols and CrossLanguageSourceReview through the rea
   assert.ok(bounded.data.summary.truncatedFiles > 0)
   assert.ok(bounded.data.analysis.limitsApplied.includes('maxFileBytes'))
   assert.ok(bounded.data.summary.bytesRead <= 1024)
+})
+
+test('M2 source.symbols reads JavaScript and TypeScript through a trusted workspace junction', async () => {
+  const stateRoot = await mkdtemp(join(tmpdir(), 'abm-source-alias-state-'))
+  const root = await mkdtemp(join(tmpdir(), 'abm-source-alias-'))
+  const workspaceReal = join(root, 'workspace-real')
+  const workspaceAlias = join(root, 'workspace-alias')
+  await mkdir(workspaceReal, { recursive: true })
+  await symlink(workspaceReal, workspaceAlias, process.platform === 'win32' ? 'junction' : 'dir')
+  await writeFile(join(workspaceReal, 'sample.js'), 'export function run(value) { return value.trim() }\n')
+  await writeFile(join(workspaceReal, 'sample.ts'), 'export interface User { id: string }\nexport function getId(user: User): string { return user.id }\n')
+
+  const runtime = new ArmorBreakRuntime({ stateRoot })
+  await runtime.init()
+  const task = await runtime.workspace(workspaceAlias).taskStore.create({
+    title: 'trusted workspace junction source read',
+    targetPath: workspaceAlias,
+    targetKind: 'directory',
+    steps: [{ id: 'symbols-alias', capabilityId: 'source.symbols' }],
+  })
+  await runtime.registry.load()
+  const capability = runtime.registry.get('source.symbols')
+  const input = await runtime.runner.buildCapabilityInput({ task, capability, targetPath: task.targetPath, options: {}, controller: new AbortController(), log: [] })
+  const result = await capability.run(input)
+  assert.equal(result.data.summary.filesParsed, 2)
+  assert.equal(result.data.summary.unreadableFiles, 0)
+  assert.equal(result.data.analysis.status, 'COMPLETE')
+  assert.deepEqual(new Set(result.data.files.map((file) => file.path)), new Set(['sample.js', 'sample.ts']))
 })

@@ -6,7 +6,7 @@
  */
 import { readdir, stat } from 'node:fs/promises'
 import { realpathSync } from 'node:fs'
-import { join } from 'node:path'
+import { join, relative } from 'node:path'
 import { makeApprovalId } from '../../../lib/control/approvalAuthority.js'
 import { isPathInside, looksTextual, nowIso, readBounded, redactDeep, sanitizeText, sha256, textOf } from './util.js'
 import { getWorkflow } from './workflows.js'
@@ -359,7 +359,7 @@ export class ExecutionRunner {
       env.listFiles = async (/** @type {string} */ start, opts = {}) => {
         const requested = start ? start : root
         const resolvedStart = realpathOf(requested)
-        if (!isPathInside(root, requested) || !isPathInside(realRoot, resolvedStart)) {
+        if ((!isPathInside(root, requested) && !isPathInside(realRoot, requested)) || !isPathInside(realRoot, resolvedStart)) {
           throw new ExecutionError('PATH_ESCAPE', `listFiles start path escapes the target directory: ${requested}`)
         }
         const maxFiles = Math.min(Number(opts.maxFiles ?? 2000), 5000)
@@ -378,7 +378,9 @@ export class ExecutionRunner {
             if (entry.isDirectory()) {
               if (depth < maxDepth) await walk(full, depth + 1)
             } else if (entry.isFile()) {
-              files.push(full)
+              // Preserve the caller's workspace spelling so downstream relative-path
+              // checks and reads work when the trusted workspace is a Windows junction.
+              files.push(join(root, relative(realRoot, full)))
             }
           }
         }
@@ -389,14 +391,14 @@ export class ExecutionRunner {
         const resolved = realpathOf(absPath)
         // Both the lexical path and its real target must stay inside the analyzed root:
         // a symlink/junction planted below the root can never redirect a read outside it.
-        if (!isPathInside(root, absPath) || !isPathInside(realRoot, resolved)) {
+        if ((!isPathInside(root, absPath) && !isPathInside(realRoot, absPath)) || !isPathInside(realRoot, resolved)) {
           throw new ExecutionError('PATH_ESCAPE', `readFile target escapes the analyzed directory (resolved to ${resolved}): ${absPath}`)
         }
         if (controller.signal.aborted) throw new ExecutionError('CANCELLED', 'execution cancelled')
         const read = await readBounded(resolved, Math.min(maxBytes, limits.maxFileReadBytes), {
           authorize: async (file) => {
             const currentResolved = realpathOf(file)
-            if (!isPathInside(root, file) || !isPathInside(realRoot, currentResolved)) {
+            if (!isPathInside(realRoot, file) || !isPathInside(realRoot, currentResolved)) {
               throw new PolicyDeniedError('PATH_ESCAPE', `readFile target escaped the analyzed directory: ${file}`)
             }
             const check = await ctx.scope.checkFile({ taskId: task.id, targetPath: file, workspaceRoot: task.workspace })
