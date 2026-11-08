@@ -1,8 +1,8 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "503fb7108d635e14f0cd5b767b1bc9ade48df753",
-  "generatedAt": "2026-11-08T05:40:28.500Z",
+  "sourceCommit": "656c11a251d815d5e737c6cfb13a5d29e5c7e843",
+  "generatedAt": "2026-11-08T05:45:55.866Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     ".github/workflows/ci.yml": {
@@ -34,8 +34,8 @@
       "sha256": "1ededbb91891a438be6cdb4dbfffdf46f2e4378088b7334d08c255bf00ab1b01"
     },
     "docs/v2.3/acceptance-report.md": {
-      "size": 59739,
-      "sha256": "7597819f2c59f4af495d0ad1247c6e8063c4eab6904d41f8c263d7a498fadbfd"
+      "size": 61208,
+      "sha256": "a42d6225b019e9d29bd36fe57bc56235957312404b950f7bf91266335b148793"
     },
     "docs/v2.3/architecture.md": {
       "size": 4621,
@@ -662,8 +662,8 @@
       "sha256": "003e8f05197d49864fd35ff5cd76b538d4e32d9e392be874322da085f498a98e"
     },
     "scripts/v2/v23-real-package-drill.mjs": {
-      "size": 32190,
-      "sha256": "d5b906e56c38ed8dd1614efba80212bdf2735e8a68c73c435de453fe76eca66e"
+      "size": 34251,
+      "sha256": "18984eb462d398515baed0d7a57346455954d85f24335381e11d1035704696b0"
     },
     "scripts/v2/v23-release-gate.mjs": {
       "size": 20277,
