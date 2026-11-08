@@ -9,7 +9,7 @@
  */
 import { createHash } from 'node:crypto'
 import { constants } from 'node:fs'
-import { isAbsolute, join, relative, resolve, sep } from 'node:path'
+import { basename, isAbsolute, join, relative, resolve, sep } from 'node:path'
 import { open, realpath, stat } from 'node:fs/promises'
 import { getRuntime } from '../../lib/core/runtime.js'
 import { ApprovalAuthority } from '../../lib/control/approvalAuthority.js'
@@ -47,14 +47,19 @@ function denyReport(message) {
   throw new EngineError('POLICY_DENIED', message)
 }
 
-function assertCanonicalReportPaths(taskDirectory, reportsRoot, candidate, canonicalPaths) {
-  const [canonicalTaskDirectory, canonicalRoot, canonicalFile] = canonicalPaths
+function assertCanonicalReportPaths(tasksRoot, taskDirectory, reportsRoot, candidate, canonicalPaths) {
+  const [canonicalTasksRoot, canonicalTaskDirectory, canonicalRoot, canonicalFile] = canonicalPaths
+  const expectedTaskDirectory = join(canonicalTasksRoot, basename(taskDirectory))
+  const expectedReportsRoot = join(expectedTaskDirectory, 'reports')
+  const expectedReportFile = join(expectedReportsRoot, relative(reportsRoot, candidate))
   const violations = []
-  // Reject any symlink/junction in the task/report path, including a reports
-  // root that was redirected together with the candidate file.
-  if (!samePath(taskDirectory, canonicalTaskDirectory)) violations.push('task-directory-realpath-changed')
-  if (!samePath(reportsRoot, canonicalRoot)) violations.push('reports-root-realpath-changed')
-  if (!samePath(candidate, canonicalFile)) violations.push('report-file-realpath-changed')
+  // Permit a trusted workspace/state-root ancestor to be canonicalized by Windows
+  // (for example, a runner TEMP junction), while rejecting a redirected task leaf
+  // or any link/escape below the task directory.
+  if (!samePath(expectedTaskDirectory, canonicalTaskDirectory)) violations.push('task-directory-realpath-changed')
+  if (!samePath(expectedReportsRoot, canonicalRoot)) violations.push('reports-root-realpath-changed')
+  if (!samePath(expectedReportFile, canonicalFile)) violations.push('report-file-realpath-changed')
+  if (!pathWithin(canonicalTasksRoot, canonicalTaskDirectory)) violations.push('task-directory-outside-tasks-root')
   if (!pathWithin(canonicalTaskDirectory, canonicalRoot)) violations.push('reports-root-outside-task-directory')
   if (!pathWithin(canonicalRoot, canonicalFile)) violations.push('report-file-outside-reports-root')
   if (samePath(canonicalRoot, canonicalTaskDirectory)) violations.push('reports-root-equals-task-directory')
@@ -63,9 +68,9 @@ function assertCanonicalReportPaths(taskDirectory, reportsRoot, candidate, canon
   return { canonicalRoot, canonicalFile }
 }
 
-async function canonicalReportPaths(taskDirectory, reportsRoot, candidate) {
-  const values = await Promise.all([realpath(taskDirectory), realpath(reportsRoot), realpath(candidate)])
-  return assertCanonicalReportPaths(taskDirectory, reportsRoot, candidate, values)
+async function canonicalReportPaths(tasksRoot, taskDirectory, reportsRoot, candidate) {
+  const values = await Promise.all([realpath(tasksRoot), realpath(taskDirectory), realpath(reportsRoot), realpath(candidate)])
+  return assertCanonicalReportPaths(tasksRoot, taskDirectory, reportsRoot, candidate, values)
 }
 
 async function readBoundedReport(handle) {
@@ -96,7 +101,8 @@ export async function readTaskReport(store, report) {
   // opened-file identity checks below reject junction swaps before any bytes
   // are read. On POSIX, O_NOFOLLOW rejects a final-component symlink and
   // O_NONBLOCK prevents a substituted FIFO from hanging the report reader.
-  const initialPaths = await canonicalReportPaths(taskDirectory, reportsRoot, candidate)
+  const tasksRoot = resolve(store.tasksDir ?? dirname(taskDirectory))
+  const initialPaths = await canonicalReportPaths(tasksRoot, taskDirectory, reportsRoot, candidate)
   if (process.platform !== 'win32' &&
       (typeof constants.O_NOFOLLOW !== 'number' || typeof constants.O_NONBLOCK !== 'number')) {
     denyReport('the platform cannot guarantee a bounded no-follow report open')
@@ -109,7 +115,7 @@ export async function readTaskReport(store, report) {
       denyReport('report file type, identity, link count, or size is not allowed')
     }
 
-    const currentPaths = await canonicalReportPaths(taskDirectory, reportsRoot, candidate)
+    const currentPaths = await canonicalReportPaths(tasksRoot, taskDirectory, reportsRoot, candidate)
     if (!samePath(initialPaths.canonicalRoot, currentPaths.canonicalRoot) ||
         !samePath(initialPaths.canonicalFile, currentPaths.canonicalFile)) {
       denyReport('report path changed while it was being opened')
@@ -319,7 +325,7 @@ export class TrustedEngine {
       try { task = await store.get(String(taskId)) } catch { throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace') }
       if (!taskOwnedBy(task, principal, sessionOf(ctx)) || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized principal, session, or workspace')
       if (!task.report?.path) throw new EngineError('INVALID_REQUEST', 'task has no report')
-      const content = await readTaskReport({ taskDir: (id) => store.taskDir(id) }, { ...task.report, taskId: task.id })
+      const content = await readTaskReport({ taskDir: (id) => store.taskDir(id), tasksDir: store.tasksDir }, { ...task.report, taskId: task.id })
       return { taskId: task.id, path: task.report.path, sha256: task.report.sha256, markdown: content }
     })
   }
