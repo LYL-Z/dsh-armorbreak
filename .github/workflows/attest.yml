@@ -3,7 +3,9 @@ name: Release attestation
 on:
   workflow_dispatch:
   push:
-    branches: [main, feat/attestation]
+    # V2.3 main candidate builds and attestations are owned by
+    # v2.3-main-gate.yml. Keep this legacy V2.2 readiness workflow off main.
+    branches: [feat/attestation]
 
 permissions:
   contents: read
