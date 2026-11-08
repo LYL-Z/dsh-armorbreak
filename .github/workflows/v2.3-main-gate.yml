@@ -202,7 +202,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 24
+          node-version: 22.23.4
       - run: npm ci --no-audit --no-fund
       - name: Build and exercise the exact PR package
         env:
@@ -240,6 +240,9 @@ jobs:
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22.23.4
       - name: Download exact main candidate package and SBOM
         shell: pwsh
         env:
