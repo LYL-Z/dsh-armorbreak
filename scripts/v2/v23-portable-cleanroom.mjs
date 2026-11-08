@@ -32,15 +32,18 @@ const run = (command, args, options = {}) => {
 }
 let engine
 let evidence
+let stage = 'extract-package'
 try {
   mkdirSync(appRoot, { recursive: true })
   mkdirSync(workspace, { recursive: true })
   execFileSync('tar', ['-xzf', '-'], { cwd: appRoot, input: artifactBytes, stdio: ['pipe', 'pipe', 'pipe'] })
   const npmVersion = execFileSync(npmCommand, [...npmArgsPrefix, '--version'], { encoding: 'utf8' }).trim()
+  stage = 'install-runtime-dependencies'
   const install = run(npmCommand, [...npmArgsPrefix, 'install', '--omit=dev', '--ignore-scripts', '--no-audit', '--no-fund', '--registry', 'https://registry.npmjs.org'])
   const packageJson = JSON.parse(readFileSync(join(appRoot, 'node_modules', 'typescript', 'package.json'), 'utf8'))
   if (packageJson.version !== '5.9.3' || packageJson.license !== 'Apache-2.0') throw new Error('isolated runtime did not install the pinned TypeScript 5.9.3 Apache-2.0 package')
 
+  stage = 'capabilities'
   const capabilities = run(process.execPath, ['packages/cli/index.js', 'capabilities', '--json'], {
     env: { ...process.env, ARMORBREAK_STATE_ROOT: stateRoot, ARMORBREAK_WORKSPACE: workspace },
   })
@@ -59,14 +62,17 @@ try {
     if (response.error || response.result?.isError) throw new Error(response.error?.message ?? response.result.content?.[0]?.text ?? `${name} failed`)
     return JSON.parse(response.result.content[0].text)
   }
+  stage = 'mcp-initialize'
   const initialize = JSON.parse(await server.handleLine(JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-06-18' } })))
   if (initialize.result?.protocolVersion !== '2025-06-18') throw new Error('portable MCP initialize failed')
+  stage = 'source.symbols task and report read'
   const direct = await call(2, 'armorbreak_analyze', { capability: 'source.symbols', target: workspace })
   const directTask = await call(3, 'armorbreak_task_get', { taskId: direct.taskId })
   const directReport = await call(4, 'armorbreak_report', { taskId: direct.taskId })
   if (direct.state !== 'COMPLETED' || !directTask.id || !directReport.markdown) throw new Error('direct JS/TS source.symbols task/report read failed')
   const directSummary = directTask.steps?.[0]?.summary ?? ''
   if (!/2\/2/.test(directSummary)) throw new Error(`clean-room JS/TS analysis did not report both source files: ${directSummary}`)
+  stage = 'L0 workflow task and report read'
   const workflow = await call(5, 'armorbreak_workflow', { action: 'start', workflow: 'CrossLanguageSourceReview', target: workspace })
   const workflowTask = await call(6, 'armorbreak_task_get', { taskId: workflow.taskId })
   const workflowReport = await call(7, 'armorbreak_report', { taskId: workflow.taskId })
@@ -97,6 +103,22 @@ try {
   mkdirSync(dirname(output), { recursive: true })
   writeFileSync(output, `${JSON.stringify(evidence, null, 2)}\n`, { flag: 'wx' })
   console.log(JSON.stringify({ status: evidence.status, sourceCommit: evidence.sourceCommit, artifactSha256, evidencePath: output, checked: ['capabilities', 'JavaScript and TypeScript source.symbols', 'CrossLanguageSourceReview L0 workflow', 'task and report reads'] }, null, 2))
+} catch (error) {
+  const message = String(error?.message ?? '')
+  const reportDiagnostic = /^report path validation failed \(([a-z,-]+)\)$/.exec(message)?.[1] ?? null
+  const failure = {
+    schemaVersion: 'armorbreak.v2.3-portable-cleanroom-failure/v1',
+    status: 'FAIL_ACTUAL_CLEANROOM_ARCHIVE_EXECUTION',
+    sourceCommit,
+    environment: { platform: process.platform, arch: process.arch, node: process.version },
+    artifact: { path: basename(artifact), bytes: artifactBytes.length, sha256: artifactSha256, manifestCommit: manifest.commit, manifestSha256 },
+    stage,
+    error: { name: error?.name ?? 'Error', code: error?.code ?? null, reportDiagnostic, messageSha256: digest(Buffer.from(message)) },
+  }
+  mkdirSync(dirname(output), { recursive: true })
+  writeFileSync(output, `${JSON.stringify(failure, null, 2)}\n`, { flag: 'wx' })
+  console.error(JSON.stringify(failure, null, 2))
+  throw error
 } finally {
   if (engine) await engine.close().catch(() => {})
   rmSync(scratch, { recursive: true, force: true })

@@ -49,17 +49,17 @@ function denyReport(message) {
 
 function assertCanonicalReportPaths(taskDirectory, reportsRoot, candidate, canonicalPaths) {
   const [canonicalTaskDirectory, canonicalRoot, canonicalFile] = canonicalPaths
+  const violations = []
   // Reject any symlink/junction in the task/report path, including a reports
   // root that was redirected together with the candidate file.
-  if (!samePath(taskDirectory, canonicalTaskDirectory) ||
-      !samePath(reportsRoot, canonicalRoot) ||
-      !samePath(candidate, canonicalFile) ||
-      !pathWithin(canonicalTaskDirectory, canonicalRoot) ||
-      !pathWithin(canonicalRoot, canonicalFile) ||
-      samePath(canonicalRoot, canonicalTaskDirectory) ||
-      samePath(canonicalFile, canonicalRoot)) {
-    denyReport('report resolves outside the task report directory or through a link')
-  }
+  if (!samePath(taskDirectory, canonicalTaskDirectory)) violations.push('task-directory-realpath-changed')
+  if (!samePath(reportsRoot, canonicalRoot)) violations.push('reports-root-realpath-changed')
+  if (!samePath(candidate, canonicalFile)) violations.push('report-file-realpath-changed')
+  if (!pathWithin(canonicalTaskDirectory, canonicalRoot)) violations.push('reports-root-outside-task-directory')
+  if (!pathWithin(canonicalRoot, canonicalFile)) violations.push('report-file-outside-reports-root')
+  if (samePath(canonicalRoot, canonicalTaskDirectory)) violations.push('reports-root-equals-task-directory')
+  if (samePath(canonicalFile, canonicalRoot)) violations.push('report-file-equals-reports-root')
+  if (violations.length) denyReport(`report path validation failed (${violations.join(',')})`)
   return { canonicalRoot, canonicalFile }
 }
 

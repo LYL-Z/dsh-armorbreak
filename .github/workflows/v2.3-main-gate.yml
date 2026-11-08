@@ -223,6 +223,7 @@ jobs:
           name: v23-pr-windows-drill-${{ github.event.pull_request.head.sha }}
           path: |
             docs/v2.3/evidence/p0-h/real-package-upgrade-rollback.json
+            dist/v23-portable-cleanroom.json
             ${{ runner.temp }}/v23-windows-drill-diagnostics.json
           if-no-files-found: warn
           retention-days: 90

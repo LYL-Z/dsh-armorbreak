@@ -65,7 +65,7 @@ test('getReport rejects a task reports root redirected to an outside junction', 
     task.report = { format: 'markdown', path: join(reportsRoot, 'report.md'), sha256: sha256(content) }
     await store.save(task)
 
-    await assert.rejects(() => engine.getReport(ctx, task.id), (error) => error.code === 'POLICY_DENIED')
+    await assert.rejects(() => engine.getReport(ctx, task.id), (error) => error.code === 'POLICY_DENIED' && /reports-root-realpath-changed/.test(error.message))
   })
 })
 
