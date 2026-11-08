@@ -5,7 +5,7 @@ import { createHash } from 'node:crypto'
 import { execFileSync, spawnSync } from 'node:child_process'
 import { existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { release, tmpdir } from 'node:os'
-import { dirname, join, relative, resolve, sep } from 'node:path'
+import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)))
@@ -109,6 +109,17 @@ const writeDiagnostics = () => {
 }
 
 if (process.platform !== 'win32') throw new Error('the real package permission/ACL drill requires a Windows host')
+// Use the runner-owned scratch root as TEMP/TMP for every child CLI. The hosted
+// Windows default user Temp path was outside RUNNER_TEMP; preserving the custom
+// default can make historical V2.2 path checks depend on runner path aliases.
+const isolatedTempRoot = resolve(process.env.RUNNER_TEMP || tmpdir())
+process.env.TEMP = isolatedTempRoot
+process.env.TMP = isolatedTempRoot
+diagnostics.runner.tempPathSha256 = digest(Buffer.from(isolatedTempRoot))
+diagnostics.runner.tmpPathSha256 = digest(Buffer.from(isolatedTempRoot))
+diagnostics.runner.tempEqualsTmp = true
+diagnostics.runner.tempUnderRunnerTemp = Boolean(process.env.RUNNER_TEMP && (samePath(isolatedTempRoot, process.env.RUNNER_TEMP) || isWithinPath(isolatedTempRoot, process.env.RUNNER_TEMP)))
+diagnostics.runner.tmpUnderRunnerTemp = diagnostics.runner.tempUnderRunnerTemp
 if (candidateVersion !== '2.3.1') throw new Error(`candidate package version must be 2.3.1 (found ${candidateVersion})`)
 if (!existsSync(candidateArtifact) || !existsSync(candidateManifestPath)) throw new Error('build the committed V2.3 candidate package and manifest before running this drill')
 const head = execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
@@ -118,7 +129,7 @@ const candidateSha256 = fileDigest(candidateArtifact)
 const manifestSha256 = candidateManifest.sha256 ?? candidateManifest.artifact?.sha256
 if (manifestSha256 !== candidateSha256 || candidateManifest.version !== '2.3.1' || candidateManifest.reproducible !== true || candidateManifest.cleanRoom?.result !== 'PASS') throw new Error('candidate artifact digest, version, reproducibility, or clean-room execution check failed')
 
-const scratch = mkdtempSync(join(tmpdir(), 'armorbreak-v23-real-deploy-'))
+const scratch = mkdtempSync(join(isolatedTempRoot, 'armorbreak-v23-real-deploy-'))
 try {
   const v22Downloads = join(scratch, 'v22-download')
   mkdirSync(v22Downloads, { recursive: true })
@@ -237,6 +248,25 @@ try {
     stderr: redactDiagnostic(v22Report.stderr, diagnosticPaths),
     metadata: reportRecord ? { format: reportRecord.format ?? null, bytes: Number.isInteger(reportRecord.bytes) ? reportRecord.bytes : null, hasMarkdown: typeof reportRecord.markdown === 'string', hasPath: Boolean(reportRecord.path), declaredSha256Matches: typeof reportRecord.markdown === 'string' && reportRecord.sha256 === digest(Buffer.from(reportRecord.markdown)) } : null,
     files: { report: reportRecordOnDisk ? safeStat(reportRecordOnDisk) : { exists: false } },
+    pathValidation: (() => {
+      const reportPath = typeof taskRecordOnDisk?.report?.path === 'string' ? resolve(taskRecordOnDisk.report.path) : null
+      if (!reportPath) return { taskDirectoryRealpathMatches: null, reportsRootRealpathMatches: null, reportFileRealpathMatches: null, reportPathWithinReportsRoot: null }
+      const canonicalTask = realpathSync(taskDir)
+      const canonicalReports = realpathSync(reportsDir)
+      const canonicalReport = realpathSync(reportPath)
+      const legacyWithin = (base, target) => {
+        const rel = relative(base, target)
+        return rel === '' || (rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel))
+      }
+      return {
+        taskDirectoryRealpathMatches: samePath(taskDir, canonicalTask),
+        reportsRootRealpathMatches: samePath(reportsDir, canonicalReports),
+        reportFileRealpathMatches: samePath(reportPath, canonicalReport),
+        reportPathWithinReportsRoot: legacyWithin(reportsDir, reportPath),
+        canonicalReportsRootWithinTaskDirectory: legacyWithin(canonicalTask, canonicalReports),
+        canonicalReportWithinCanonicalReportsRoot: legacyWithin(canonicalReports, canonicalReport),
+      }
+    })(),
   }
   if (v22Task.status !== 0) { diagnostics.status = 'FAIL_V22_TASK_READ'; writeDiagnostics(); throw new Error('V2.2 package failed to read its own task before upgrade (see structured diagnostics)') }
   if (v22Report.status !== 0) { diagnostics.status = 'FAIL_V22_REPORT_READ'; writeDiagnostics(); throw new Error('V2.2 package failed to read its own report before upgrade (see structured diagnostics)') }
