@@ -1,8 +1,8 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "19f8488eefef44e1ca53f448b08190be12d9eb2e",
-  "generatedAt": "2026-11-08T05:10:55.106Z",
+  "sourceCommit": "b5789480d1ef0a740b8175f1555478eb67265fb4",
+  "generatedAt": "2026-11-08T05:14:08.543Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     ".github/workflows/ci.yml": {
@@ -34,8 +34,8 @@
       "sha256": "1ededbb91891a438be6cdb4dbfffdf46f2e4378088b7334d08c255bf00ab1b01"
     },
     "docs/v2.3/acceptance-report.md": {
-      "size": 54808,
-      "sha256": "6854717273948537a3194a87daa6d4177573b7a7bd7c683b9ed407568ca5534b"
+      "size": 54807,
+      "sha256": "6786a1efde13761cb26d16a72c6ced20814d8109701a6169ffb583653400bf57"
     },
     "docs/v2.3/architecture.md": {
       "size": 4621,
