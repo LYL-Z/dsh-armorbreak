@@ -16,7 +16,9 @@ concurrency:
 
 jobs:
   pr-candidate-validation:
-    if: ${{ github.event_name == 'pull_request' }}
+    # V2.3's evidence-only contract is frozen. Do not apply it to later
+    # feature branches (which correctly fail its post-source allowlist).
+    if: ${{ github.event_name == 'pull_request' && (startsWith(github.head_ref, 'feature/v2.3') || startsWith(github.head_ref, 'fix/v2.3')) }}
     name: Node ${{ matrix.node }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -74,7 +76,8 @@ jobs:
           node scripts/v2/v23-release-gate.mjs --check-pr
 
   main-candidate-validation:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    # Exact published V2.3.1 source only; future main commits are development.
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && github.sha == 'cfb984b7178bb8b1dca9728325fdbe599b5430a3' }}
     name: Node ${{ matrix.node }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -132,7 +135,7 @@ jobs:
           node scripts/v2/v23-release-gate.mjs --check-main
 
   build-and-attest-main-candidate:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && github.sha == 'cfb984b7178bb8b1dca9728325fdbe599b5430a3' }}
     name: V2.3 main candidate build and provenance
     needs: main-candidate-validation
     runs-on: ubuntu-latest
@@ -190,7 +193,7 @@ jobs:
           retention-days: 90
 
   pr-windows-package-drill:
-    if: ${{ github.event_name == 'pull_request' }}
+    if: ${{ github.event_name == 'pull_request' && (startsWith(github.head_ref, 'feature/v2.3') || startsWith(github.head_ref, 'fix/v2.3')) }}
     name: V2.2 to PR package Windows deployment and rollback
     runs-on: windows-latest
     permissions:
@@ -236,7 +239,7 @@ jobs:
           retention-days: 90
 
   main-windows-package-drill:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && github.sha == 'cfb984b7178bb8b1dca9728325fdbe599b5430a3' }}
     name: Exact main package Windows deployment and rollback
     needs: [main-candidate-validation, build-and-attest-main-candidate]
     runs-on: windows-latest
