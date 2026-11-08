@@ -1,8 +1,8 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "656c11a251d815d5e737c6cfb13a5d29e5c7e843",
-  "generatedAt": "2026-11-08T05:45:55.866Z",
+  "sourceCommit": "47fb316fe6cbefcbccfec916eab686c46b35cbc0",
+  "generatedAt": "2026-11-08T05:52:00.919Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     ".github/workflows/ci.yml": {
@@ -10,8 +10,8 @@
       "sha256": "4076b72c829d4b2006070ea769be658d50e615f78c5babb106de27b3c5660b4d"
     },
     ".github/workflows/v2.3-main-gate.yml": {
-      "size": 16259,
-      "sha256": "3904314938b7e01110b3f42c47789e5788bff8eb73b4b7722705d0d04ba6fc6e"
+      "size": 16616,
+      "sha256": "2e8e8919f24fedcee372627aa3a7b4bf7ca31b632980e4301179762ecda9a236"
     },
     ".github/workflows/v2.3-validation.yml": {
       "size": 4697,
@@ -34,8 +34,8 @@
       "sha256": "1ededbb91891a438be6cdb4dbfffdf46f2e4378088b7334d08c255bf00ab1b01"
     },
     "docs/v2.3/acceptance-report.md": {
-      "size": 61208,
-      "sha256": "a42d6225b019e9d29bd36fe57bc56235957312404b950f7bf91266335b148793"
+      "size": 62989,
+      "sha256": "fdcf79ddef4142cfdf438c86c6b856a705d9d8a4daa5a934ec55306a15db7f71"
     },
     "docs/v2.3/architecture.md": {
       "size": 4621,
@@ -662,8 +662,8 @@
       "sha256": "003e8f05197d49864fd35ff5cd76b538d4e32d9e392be874322da085f498a98e"
     },
     "scripts/v2/v23-real-package-drill.mjs": {
-      "size": 34251,
-      "sha256": "18984eb462d398515baed0d7a57346455954d85f24335381e11d1035704696b0"
+      "size": 34550,
+      "sha256": "1f5157688ad10941b94bf025112415460ea260445981796e68cc4b8b2362340f"
     },
     "scripts/v2/v23-release-gate.mjs": {
       "size": 20277,
@@ -706,12 +706,12 @@
       "sha256": "19e8d19b60675a385959556544d11b20365957614fe730658c12698d0ba1705f"
     },
     "tests/v23-real-package-drill-contract.test.mjs": {
-      "size": 2714,
-      "sha256": "77983ce2b07d06d8a236dfbd1da61cb07b0661add71a66e5e66eeaeb4f5f89a1"
+      "size": 3558,
+      "sha256": "6905c5c91967782f5c9c14e7ff80388c207ee5deb0ed21e3901bf86ee6f0d67f"
     },
     "tests/v23-release-gate.test.mjs": {
-      "size": 11889,
-      "sha256": "3370d9e9f478aa8f641f5f2dc9c47f4502e090c196d10f8df756dfc757fbffdf"
+      "size": 12007,
+      "sha256": "0e6d17796c954b69e881589aaf779ff31a65f9cb90266dec9d327af66fe32bd6"
     }
   }
 }
