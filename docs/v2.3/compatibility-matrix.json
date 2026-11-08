@@ -1127,11 +1127,12 @@
         "docs/v2.3/evidence/p0-h/npm-test-dirty-worktree-053e3b5.log",
         "docs/v2.3/evidence/p0-h/npm-test-dirty-worktree-053e3b5.json",
         "docs/v2.3/evidence/p0-h/npm-test-clean-c956d23.log",
-        "docs/v2.3/evidence/p0-h/npm-test-clean-c956d23.json"
+        "docs/v2.3/evidence/p0-h/npm-test-clean-c956d23.json",
+        "docs/v2.3/evidence/p0-h/main-run-e30c0a9.json"
       ],
       "ci": "Clean S5/E1 Windows x64 Node 24.16.0 full suite 672/672 PASS, typecheck/docs/acceptance/PR-gate PASS. Exact E1 GitHub PR-event CI pending.",
-      "limitation": "OWNER_APPROVED_SELF_REVIEW accepted by owner; no independent human security or legal review. Two-account Windows isolation remains unverified and cross-account service is unsupported; OS updater is outside scope. Exact S5/E1 PR CI and subsequent protected merge, exact-main build/provenance/SBOM/attestation, protected exact tag and Tag Gate remain required. Latest branch-protection API listed required status checks and no required review count; recheck before merge.",
-      "lastObservedRemoteHead": "5a5f5165acd829a181a43f6de01e4687328aa629",
+      "limitation": "OWNER_APPROVED_SELF_REVIEW accepted; independent human security/license review was not performed. One Windows principal was tested; multi-account isolation is unsupported/unverified. OS updater is outside scope. The V2.2 legacy Release attestation workflow still fails on V2.3 inputs but is not a required check; V2.3 exact-main CI/provenance passed. Exact tag Gate, tag-triggered Windows rollback, external owner authorization envelope and public asset verification remain required.",
+      "lastObservedRemoteHead": "e30c0a9da897b588b954b286437f59f0c8e5119d",
       "localSourceCommit": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
       "releaseReadiness": "NOT_READY",
       "realPackageDrill": {
@@ -1165,16 +1166,16 @@
         "limitation": "npm pack includes P0-H documentation/evidence; lockfile registry mirror and legal chain-of-title limitations are disclosed; exact-main/tag inventory remains future validation"
       },
       "releaseState": "NOT_READY",
-      "mainGateProbe": "PASS: exact main candidate gate and package provenance on 5a5f5165acd829a181a43f6de01e4687328aa629 (run 41955141920); required inherited Release evidence check FAILED and is under protected follow-up repair.",
-      "releaseGateProbe": "NOT_READY: no v2.3.0 tag or tag-scoped owner authorization envelope; main required check repair must pass first.",
+      "mainGateProbe": "PASS: exact main required CI, V2.3 Node 22/24 Windows/Ubuntu gate, clean-room candidate package and GitHub attestation on e30c0a9da897b588b954b286437f59f0c8e5119d (runs 42443416666 and 42443416668).",
+      "releaseGateProbe": "NOT_READY: no v2.3.0 tag, owner tag-event envelope, tag Windows rollback, Tag Gate, or public Release yet.",
       "latestExactMain": {
-        "commit": "5a5f5165acd829a181a43f6de01e4687328aa629",
-        "runId": "41955141920",
+        "commit": "e30c0a9da897b588b954b286437f59f0c8e5119d",
+        "runId": "42443416668",
+        "requiredCiRunId": "42443416666",
         "gate": "SUCCESS",
-        "candidateArtifactSha256": "09f19ca1031850257791a04e0c13a3789647314347c8a640ded8cd06d583a23e",
+        "candidateArtifactSha256": "71e3ba0681ca2e6f16b6843e02da8b6745950c6fc3495fdebf687a3557a63c87",
         "attestation": "GITHUB_OIDC_VERIFIED",
-        "inheritedRequiredCheck": "FAILURE",
-        "evidence": "docs/v2.3/evidence/p0-h/main-run-5a5f516.json"
+        "evidence": "docs/v2.3/evidence/p0-h/main-run-e30c0a9.json"
       }
     }
   ],

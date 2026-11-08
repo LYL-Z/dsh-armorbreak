@@ -2,7 +2,7 @@
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
   "sourceCommit": "053e3b509a09772169e678d35441f4dc1c52570a",
-  "generatedAt": "2026-11-05T02:41:46.964Z",
+  "generatedAt": "2026-11-08T03:43:58.992Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     ".github/workflows/ci.yml": {
@@ -18,12 +18,12 @@
       "sha256": "a504409fbc62398fa4e40c2cb20aa19a40e4b9d06706efa703ba0153d4b52a2e"
     },
     "docs/releases/v2.3.0.md": {
-      "size": 2897,
-      "sha256": "f3316efc00588bcad41fdf2fd0cdcd0bbb4f12d60281d3cc736ae8d3590c3f7f"
+      "size": 3394,
+      "sha256": "72b765e8fadd11863dd1c362e9e90b4fd0a3d12bae055aa8bb4fbe0971fc474c"
     },
     "docs/v2.3/acceptance-report.md": {
-      "size": 50585,
-      "sha256": "43beb49dbf41cd66276997d400ad5756bce8b53f523962dfd2de5c7b8c160b7b"
+      "size": 52200,
+      "sha256": "5ad871e12b5c2b1f9eaa7572453f70fb2cf044ba03e16d1ed083cfd8f94abddd"
     },
     "docs/v2.3/architecture.md": {
       "size": 4621,
@@ -34,8 +34,8 @@
       "sha256": "3ecb9f50976afe01747d4f3045a803b1c93ccfcb9a5890cbe955763dff314f15"
     },
     "docs/v2.3/compatibility-matrix.json": {
-      "size": 49839,
-      "sha256": "b01a5cf446fd65b07db686dd0ace1c1035b962de2e86448b1b7968d15d19024a"
+      "size": 49892,
+      "sha256": "e977be1c7eeb1295a15752cd24a61206985662259eb2d57e416381898f243d80"
     },
     "docs/v2.3/evidence/m0/current-registry.json": {
       "size": 12385,
@@ -420,6 +420,10 @@
     "docs/v2.3/evidence/p0-h/main-run-5a5f516.json": {
       "size": 2769,
       "sha256": "a4c40041773bf260b657c98423692ece39d04412623ee4b082a3965dc0ce3b12"
+    },
+    "docs/v2.3/evidence/p0-h/main-run-e30c0a9.json": {
+      "size": 2919,
+      "sha256": "bee2b741a028e6283cd3224b492538aed5d05b9482d24f140e95e559361874f7"
     },
     "docs/v2.3/evidence/p0-h/node22-local-validation.json": {
       "size": 2924,
