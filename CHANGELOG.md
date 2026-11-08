@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.3.1 — Windows release-gate repair (candidate)
+
+- Split V2.2 task-read and report-read diagnostics; retain redacted Windows runner and ACL/path metadata on failed drills.
+- Run actual V2.2-to-candidate package deployment and rollback during PR and exact-main validation before a release Tag can be created.
+- Preserve the failed, protected `v2.3.0` Tag and historical failure logs. This candidate is not released until its exact-main, Tag Gate, provenance, and asset checks succeed.
+
 ## 2.3.0 — unpublished Stable candidate (PR #25)
 
 - Candidate adds bounded artifact inventory, JavaScript/TypeScript local symbol records, PE/ELF/Mach-O Program IR, evidence correlation, finite caller-supplied behavior comparison, and a fixed L0 MCP workflow route.

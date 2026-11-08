@@ -170,7 +170,7 @@ jobs:
         shell: bash
         run: |
           version="$(node -p "require('./package.json').version")"
-          if [[ "$version" == "2.3.0" && ( "$GITHUB_REF" == "refs/heads/main" || "$GITHUB_REF" == "refs/tags/v2.3.0" ) ]]; then
+          if [[ "$version" == "2.3.1" && ( "$GITHUB_REF" == "refs/heads/main" || "$GITHUB_REF" == "refs/tags/v2.3.1" ) ]]; then
             echo 'v23=true' >> "$GITHUB_OUTPUT"
           else
             echo 'v23=false' >> "$GITHUB_OUTPUT"

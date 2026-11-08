@@ -9,11 +9,11 @@ export function verifyV23PortableManifest(artifactPath, expectedCommit) {
   const manifestPath = `${artifactPath}.manifest.json`
   const manifestBytes = readFileSync(manifestPath)
   const manifest = JSON.parse(manifestBytes.toString('utf8'))
-  const expectedArtifact = 'armorbreak-portable-2.3.0.tar.gz'
+  const expectedArtifact = 'armorbreak-portable-2.3.1.tar.gz'
 
   if (manifest.schemaVersion !== 'armorbreak.release-build/v1'
     || manifest.commit !== expectedCommit
-    || manifest.version !== '2.3.0'
+    || manifest.version !== '2.3.1'
     || manifest.reproducible !== true
     || manifest.artifact !== expectedArtifact
     || manifest.bytes !== artifactBytes.length

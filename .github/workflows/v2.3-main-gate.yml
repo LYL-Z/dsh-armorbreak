@@ -5,7 +5,7 @@ on:
     branches: [main]
   push:
     branches: [main]
-    tags: ['v2.3.0']
+    tags: ['v2.3.1']
 
 permissions:
   contents: read
@@ -158,7 +158,7 @@ jobs:
         run: node scripts/v2/build-release.mjs --out dist --evidence dist/release-build.json --no-portable-evidence
       - name: Exercise exact archive in a clean environment with production dependencies
         env:
-          V23_PORTABLE_ARTIFACT: dist/armorbreak-portable-2.3.0.tar.gz
+          V23_PORTABLE_ARTIFACT: dist/armorbreak-portable-2.3.1.tar.gz
           V23_PORTABLE_EVIDENCE: dist/v23-portable-cleanroom.json
         run: node scripts/v2/v23-portable-cleanroom.mjs
       - name: Attest exact candidate package
@@ -189,9 +189,48 @@ jobs:
           if-no-files-found: error
           retention-days: 90
 
-  release-windows-package-drill:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/tags/v2.3.0' }}
+  pr-windows-package-drill:
+    if: ${{ github.event_name == 'pull_request' }}
+    name: V2.2 to PR package Windows deployment and rollback
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+      - run: npm ci --no-audit --no-fund
+      - name: Build and exercise the exact PR package
+        env:
+          V23_PORTABLE_ARTIFACT: dist/armorbreak-portable-2.3.1.tar.gz
+          V23_PORTABLE_EVIDENCE: dist/v23-portable-cleanroom.json
+        run: |
+          node scripts/v2/build-release.mjs --out dist --evidence dist/release-build.json --no-portable-evidence
+          node scripts/v2/v23-portable-cleanroom.mjs
+      - name: Run real V2.2 to exact PR package deployment and rollback drill
+        env:
+          GH_TOKEN: ${{ github.token }}
+          V23_DIAGNOSTICS_PATH: ${{ runner.temp }}/v23-windows-drill-diagnostics.json
+        run: node scripts/v2/v23-real-package-drill.mjs
+      - name: Upload PR Windows drill evidence and diagnostics
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: v23-pr-windows-drill-${{ github.event.pull_request.head.sha }}
+          path: |
+            docs/v2.3/evidence/p0-h/real-package-upgrade-rollback.json
+            ${{ runner.temp }}/v23-windows-drill-diagnostics.json
+          if-no-files-found: warn
+          retention-days: 90
+
+  main-windows-package-drill:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     name: Exact main package Windows deployment and rollback
+    needs: [main-candidate-validation, build-and-attest-main-candidate]
     runs-on: windows-latest
     permissions:
       contents: read
@@ -201,45 +240,43 @@ jobs:
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
-      - name: Find successful exact main candidate build
-        shell: pwsh
-        env:
-          GH_TOKEN: ${{ github.token }}
-          EXPECTED_SHA: ${{ github.sha }}
-        run: |
-          $runs = gh run list --repo LYL-Z/dsh-armorbreak --workflow v2.3-main-gate.yml --branch main --event push --status success --limit 100 --json databaseId,headSha | ConvertFrom-Json
-          $matches = @($runs | Where-Object { $_.headSha -eq $env:EXPECTED_SHA })
-          if ($matches.Count -lt 1) { throw "Expected a successful exact-main run for $env:EXPECTED_SHA" }
-          "V23_MAIN_RUN_ID=$($matches[0].databaseId)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - name: Download exact main candidate package and SBOM
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh run download $env:V23_MAIN_RUN_ID --repo LYL-Z/dsh-armorbreak --name "v23-main-candidate-$env:GITHUB_SHA" --dir dist
-      - name: Assert candidate package metadata binds exact tag SHA
+        run: gh run download $env:GITHUB_RUN_ID --repo LYL-Z/dsh-armorbreak --name "v23-main-candidate-$env:GITHUB_SHA" --dir dist
+      - name: Assert candidate package metadata binds exact main SHA
         shell: pwsh
         run: |
-          $manifest = Get-Content dist/armorbreak-portable-2.3.0.tar.gz.manifest.json -Raw | ConvertFrom-Json
+          $manifest = Get-Content dist/armorbreak-portable-2.3.1.tar.gz.manifest.json -Raw | ConvertFrom-Json
           if ($manifest.commit -ne $env:GITHUB_SHA -or $manifest.reproducible -ne $true -or $manifest.cleanRoom.result -ne 'PASS') { throw 'Main candidate package manifest does not bind the exact reproducible source SHA' }
       - name: Run real V2.2 to exact main V2.3 package deployment and rollback drill
         env:
           GH_TOKEN: ${{ github.token }}
+          V23_DIAGNOSTICS_PATH: ${{ runner.temp }}/v23-windows-drill-diagnostics.json
         run: node scripts/v2/v23-real-package-drill.mjs
       - name: Stage exact release drill evidence
         shell: pwsh
         run: Copy-Item docs/v2.3/evidence/p0-h/real-package-upgrade-rollback.json docs/v2.3/evidence/p0-h/latest-release-rollback.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: v23-release-rollback-${{ github.sha }}
+          name: v23-main-rollback-${{ github.sha }}
           path: docs/v2.3/evidence/p0-h/latest-release-rollback.json
           if-no-files-found: error
           retention-days: 90
+      - name: Upload exact-main Windows drill diagnostics
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: v23-main-windows-diagnostics-${{ github.sha }}
+          path: ${{ runner.temp }}/v23-windows-drill-diagnostics.json
+          if-no-files-found: warn
+          retention-days: 90
 
   release-verification:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/tags/v2.3.0' }}
-    name: V2.3.0 release verification
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/tags/v2.3.1' }}
+    name: V2.3.1 release verification
     runs-on: ubuntu-latest
-    needs: release-windows-package-drill
     permissions:
       contents: read
       actions: read
@@ -259,7 +296,7 @@ jobs:
           EXPECTED_SHA: ${{ github.sha }}
         shell: bash
         run: |
-          test "$GITHUB_REF" = 'refs/tags/v2.3.0'
+          test "$GITHUB_REF" = 'refs/tags/v2.3.1'
           sender_id="$(node -e "const e=require(process.env.GITHUB_EVENT_PATH); process.stdout.write(String(e.sender?.id ?? ''))")"
           test "$sender_id" = '250811935'
           echo "V23_EVENT_SENDER_ID=$sender_id" >> "$GITHUB_ENV"
@@ -272,7 +309,7 @@ jobs:
         shell: bash
         run: |
           gh run download "$V23_MAIN_RUN_ID" --repo LYL-Z/dsh-armorbreak --name "v23-main-candidate-${GITHUB_SHA}" --dir dist
-          gh run download "$GITHUB_RUN_ID" --repo LYL-Z/dsh-armorbreak --name "v23-release-rollback-${GITHUB_SHA}" --dir rollback-evidence
+          gh run download "$V23_MAIN_RUN_ID" --repo LYL-Z/dsh-armorbreak --name "v23-main-rollback-${GITHUB_SHA}" --dir rollback-evidence
           cp rollback-evidence/latest-release-rollback.json dist/latest-release-rollback.json
       - name: Create detached release authorization payload
         env:
@@ -292,16 +329,16 @@ jobs:
         run: |
           gh attestation verify "$V23_AUTH_ENVELOPE_PATH" --repo LYL-Z/dsh-armorbreak \
             --signer-workflow LYL-Z/dsh-armorbreak/.github/workflows/v2.3-main-gate.yml \
-            --source-ref refs/tags/v2.3.0 --source-digest "$GITHUB_SHA" --format json > dist/release-envelope-attestation.json
+            --source-ref refs/tags/v2.3.1 --source-digest "$GITHUB_SHA" --format json > dist/release-envelope-attestation.json
           node scripts/v2/validate-v23-acceptance.mjs
           node scripts/v2/v23-release-gate.mjs --release
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: v23-release-proof-${{ github.sha }}
           path: |
-            dist/armorbreak-portable-2.3.0.tar.gz
-            dist/armorbreak-portable-2.3.0.tar.gz.sbom.cdx.json
-            dist/armorbreak-portable-2.3.0.tar.gz.manifest.json
+            dist/armorbreak-portable-2.3.1.tar.gz
+            dist/armorbreak-portable-2.3.1.tar.gz.sbom.cdx.json
+            dist/armorbreak-portable-2.3.1.tar.gz.manifest.json
             dist/attestation-verification.json
             dist/release-envelope-attestation.json
             ${{ runner.temp }}/v23-release-authorization.json

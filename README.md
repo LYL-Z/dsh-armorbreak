@@ -20,7 +20,7 @@ ArmorBreak is an open-source toolkit for **authorized** reverse engineering, sou
 > **V2.2.0 Stable is published.** It covers a **Verified Core** and **Experimental Provider Integrations**. Commercial OpenAI, Anthropic, and Gemini endpoints remain `LIVE_UNVERIFIED`; AI-assisted security review is not human certification. The historical **Full GA** contract remains `gaReady:false` with 18 blockers. Read [release verification](#v220-stable-verification) and [scope/limitations](#scope-and-limitations) before relying on a result.
 
 > [!NOTE]
-> **V2.3.0 is an unpublished candidate under PR #25.** Its proposed scope includes bounded JavaScript/TypeScript symbol analysis and program-structure evidence. It is not available as Stable until the public release page is created and its exact assets are verified. The proposed review policy is owner-approved implementation-agent self-review; no independent human audit is claimed. See the [candidate release notes](docs/releases/v2.3.0.md) and [portable install requirements](docs/v2.3/portable-install.md).
+> **V2.3.1 is the active Stable release candidate.** V2.3.0 remains an unpublished historical candidate whose protected Tag Gate failed; its Tag and failure history are retained. V2.3.1 targets the Windows upgrade/rollback gate repair. It is not available as Stable until its public release page and exact assets are verified. The owner-approved implementation-agent self-review policy does not claim independent human security or legal certification. See [V2.3.1 release notes](docs/releases/v2.3.1.md), [V2.3.0 historical notes](docs/releases/v2.3.0.md), and [portable install requirements](docs/v2.3/portable-install.md).
 
 ## Why ArmorBreak?
 

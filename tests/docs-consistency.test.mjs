@@ -30,7 +30,7 @@ test('docs consistency catches stale BLOCKED/NOT READY/test-count text', () => {
 test('V2.3 candidate package version does not rewrite the historical V2.2 Stable contract', () => {
   const root = mkdtempSync(join(tmpdir(), 'abm-v23-docs-'))
   const files = {
-    'package.json': '{"version":"2.3.0"}',
+    'package.json': '{"version":"2.3.1"}',
     'docs/v2/release/readiness.json': '{"package":{"version":"2.2.0"}}',
     'docs/v2/release/v2.2-stable-scope-v1.json': JSON.stringify({
       schemaVersion: 'armorbreak.v2.2-stable-scope/v1', packageVersion: '2.2.0', tag: 'v2.2.0',

@@ -9,7 +9,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { verifyV23PortableManifest } from './verify-v23-portable-manifest.mjs'
 
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)))
-const artifact = resolve(process.env.V23_PORTABLE_ARTIFACT ?? join(root, 'dist', 'armorbreak-portable-2.3.0.tar.gz'))
+const artifact = resolve(process.env.V23_PORTABLE_ARTIFACT ?? join(root, 'dist', 'armorbreak-portable-2.3.1.tar.gz'))
 const output = resolve(process.env.V23_PORTABLE_EVIDENCE ?? join(root, 'dist', 'v23-portable-cleanroom.json'))
 const npmCommand = process.platform === 'win32' ? process.execPath : 'npm'
 const npmArgsPrefix = process.platform === 'win32' ? [join(dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js')] : []

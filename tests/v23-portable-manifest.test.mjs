@@ -10,14 +10,14 @@ const hash = (value) => createHash('sha256').update(value).digest('hex')
 
 function fixture(mutator = (manifest) => manifest) {
   const root = mkdtempSync(join(tmpdir(), 'v23-portable-manifest-'))
-  const artifactPath = join(root, 'armorbreak-portable-2.3.0.tar.gz')
+  const artifactPath = join(root, 'armorbreak-portable-2.3.1.tar.gz')
   const artifactBytes = Buffer.from('harmless portable archive fixture')
   const manifest = {
     schemaVersion: 'armorbreak.release-build/v1',
     commit: 'a'.repeat(40),
-    version: '2.3.0',
+    version: '2.3.1',
     reproducible: true,
-    artifact: 'armorbreak-portable-2.3.0.tar.gz',
+    artifact: 'armorbreak-portable-2.3.1.tar.gz',
     bytes: artifactBytes.length,
     sha256: hash(artifactBytes),
   }
