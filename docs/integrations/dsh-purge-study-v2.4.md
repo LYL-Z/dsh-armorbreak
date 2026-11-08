@@ -108,6 +108,31 @@ The output is JSON schema `armorbreak.dsh-host-inspection/v1`. The command
 does **not** modify files, install a plugin, remove conflicting entries, apply
 patches or restart the host. No actual DSH instance is verified in Phase 0.
 
+## P1 incremental implementation: anchor drift diagnostics
+
+`lib/integrations/dshAnchorDiagnostic.js` provides an independent read-only
+literal anchor counter. The caller specifies one exact host file and one
+bounded JSON anchor specification; it reports missing, ambiguous, mismatched
+or expected occurrence counts without copying host source, prompts, snippets
+or anchor literals into the output. It will not modify or reanchor the host.
+
+Example anchor specification (synthetic, not copied from an upstream patch):
+
+```json
+{
+  "schemaVersion": "armorbreak.anchor-spec/v1",
+  "anchors": [{ "id": "example-entry", "literal": "example-host-anchor", "expectedCount": 1 }]
+}
+```
+
+```sh
+node packages/cli/index.js host diagnose --target /absolute/host/file.js --spec /absolute/anchors.json --json
+```
+
+This is only the first part of P1. Automated host-version discovery, runtime
+injection probe and tested Windows/macOS/Linux host compatibility remain
+**NOT IMPLEMENTED / NOT VERIFIED**.
+
 ## Regression and release gates
 
 - `node --test tests/dsh-host-inspector.test.mjs`: synthetic success,
