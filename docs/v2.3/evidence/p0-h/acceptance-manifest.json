@@ -1,8 +1,8 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "992751d6d1fa22864e2ffed8cb214450eda3a172",
-  "generatedAt": "2026-11-08T05:59:39.527Z",
+  "sourceCommit": "3d05d8dc45cfe43be9b2eff281c69face4f5a7ce",
+  "generatedAt": "2026-11-08T06:04:01.865Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     ".github/workflows/ci.yml": {
@@ -10,8 +10,8 @@
       "sha256": "4076b72c829d4b2006070ea769be658d50e615f78c5babb106de27b3c5660b4d"
     },
     ".github/workflows/v2.3-main-gate.yml": {
-      "size": 16616,
-      "sha256": "2e8e8919f24fedcee372627aa3a7b4bf7ca31b632980e4301179762ecda9a236"
+      "size": 16586,
+      "sha256": "5adccc9c1f927ed825aecce0c9e911a06b4066b69e6d837a989b8188011c2ba3"
     },
     ".github/workflows/v2.3-validation.yml": {
       "size": 4697,
@@ -34,8 +34,8 @@
       "sha256": "1ededbb91891a438be6cdb4dbfffdf46f2e4378088b7334d08c255bf00ab1b01"
     },
     "docs/v2.3/acceptance-report.md": {
-      "size": 65981,
-      "sha256": "27be5d49327de42dea1aca8ddaa74f4cb9dcb49e5c5e31b5b7415fa73bdc9cbb"
+      "size": 66801,
+      "sha256": "ff04c3de510bcbbebce76a6b2eeb2f961a8a273eeb9de65824af63e36b050d64"
     },
     "docs/v2.3/architecture.md": {
       "size": 4621,
@@ -710,8 +710,8 @@
       "sha256": "19e8d19b60675a385959556544d11b20365957614fe730658c12698d0ba1705f"
     },
     "tests/v23-real-package-drill-contract.test.mjs": {
-      "size": 3728,
-      "sha256": "f3c6e13f940d6d5c4d0180b9bab318f73ce39403dde1935ca47fb4b8d7ac94eb"
+      "size": 4008,
+      "sha256": "fcb28d52708ae6af74f09347e4924924ce24ba4d93792201d3432182057bd819"
     },
     "tests/v23-release-gate.test.mjs": {
       "size": 12007,
