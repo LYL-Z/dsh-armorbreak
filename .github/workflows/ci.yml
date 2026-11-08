@@ -150,7 +150,7 @@ jobs:
     # V2.3 has a separate exact-head acceptance manifest and three-state gate.
     # Route exact V2.3 main/tag commits to that contract; retain the inherited
     # V2.2 checks for every other version/ref.
-    if: ${{ !((github.event_name == 'pull_request' && startsWith(github.head_ref, 'feature/v2.3')) || (github.event_name != 'pull_request' && startsWith(github.ref_name, 'feature/v2.3'))) }}
+    if: ${{ !((github.event_name == 'pull_request' && (startsWith(github.head_ref, 'feature/v2.3') || startsWith(github.head_ref, 'fix/v2.3'))) || (github.event_name != 'pull_request' && (startsWith(github.ref_name, 'feature/v2.3') || startsWith(github.ref_name, 'fix/v2.3')))) }}
     runs-on: ubuntu-latest
     permissions:
       contents: read

@@ -8,6 +8,10 @@ const node = process.execPath
 const gateScript = 'scripts/v2/v23-release-gate.mjs'
 const SHA = 'a'.repeat(40)
 const gateSource = readFileSync(gateScript, 'utf8')
+const legacyAttestWorkflow = readFileSync('.github/workflows/attest.yml', 'utf8')
+const v23Workflow = readFileSync('.github/workflows/v2.3-main-gate.yml', 'utf8')
+const ciWorkflow = readFileSync('.github/workflows/ci.yml', 'utf8')
+const exactHeadWorkflow = readFileSync('.github/workflows/v2.3-validation.yml', 'utf8')
 
 test('PR contract accepts an in-progress candidate only while structured readiness remains NOT_READY', () => {
   assert.deepEqual(evaluatePrContract({ packageName: 'dsh-armorbreak', status: 'IN_PROGRESS', releaseState: 'NOT_READY' }), {
@@ -51,6 +55,19 @@ test('Release contract rejects reverse and partial transitions', () => {
 test('release verification requires exact-main build provenance and the pre-Tag Windows deployment job', () => {
   assert.match(gateSource, /'V2\.3 main candidate build and provenance'/)
   assert.match(gateSource, /'Exact main package Windows deployment and rollback'/)
+})
+
+test('legacy V2.2 attestation workflow does not run on V2.3 main while the V2.3 gate owns main provenance', () => {
+  assert.match(legacyAttestWorkflow, /branches: \[feat\/attestation\]/)
+  assert.doesNotMatch(legacyAttestWorkflow, /branches: \[main,\s*feat\/attestation\]/)
+  assert.match(v23Workflow, /push:[\s\S]*branches: \[main\][\s\S]*build-and-attest-main-candidate:/)
+  assert.match(v23Workflow, /actions\/attest-build-provenance/)
+})
+
+test('fix/v2.3 repair PRs use exact-head and V2.3 evidence contracts instead of legacy V2.2 checks', () => {
+  assert.match(ciWorkflow, /github\.head_ref, 'fix\/v2\.3'/)
+  assert.match(ciWorkflow, /github\.ref_name, 'fix\/v2\.3'/)
+  assert.equal((exactHeadWorkflow.match(/github\.head_ref, 'fix\/v2\.3'/g) ?? []).length, 3, 'matrix, evidence, and L1 jobs must all accept the repair branch namespace')
 })
 
 test('PR readiness identifies self-review and one-principal release requirements separately from the completed package drill', () => {

@@ -17,7 +17,7 @@ concurrency:
 jobs:
   full-suite:
     name: Node ${{ matrix.node }} / ${{ matrix.os }} (PR head)
-    if: ${{ github.event_name != 'pull_request' || startsWith(github.head_ref, 'feature/v2.3') }}
+    if: ${{ github.event_name != 'pull_request' || startsWith(github.head_ref, 'feature/v2.3') || startsWith(github.head_ref, 'fix/v2.3') }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -78,7 +78,7 @@ jobs:
 
   evidence:
     name: V2.3 evidence integrity (exact PR head)
-    if: ${{ github.event_name != 'pull_request' || startsWith(github.head_ref, 'feature/v2.3') }}
+    if: ${{ github.event_name != 'pull_request' || startsWith(github.head_ref, 'feature/v2.3') || startsWith(github.head_ref, 'fix/v2.3') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -100,7 +100,7 @@ jobs:
 
   l1-docker:
     name: Benign L1 container-path verification (exact PR head)
-    if: ${{ github.event_name != 'pull_request' || startsWith(github.head_ref, 'feature/v2.3') }}
+    if: ${{ github.event_name != 'pull_request' || startsWith(github.head_ref, 'feature/v2.3') || startsWith(github.head_ref, 'fix/v2.3') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4

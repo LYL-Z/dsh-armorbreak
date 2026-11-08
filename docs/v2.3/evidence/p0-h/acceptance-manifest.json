@@ -1,21 +1,21 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "3d05d8dc45cfe43be9b2eff281c69face4f5a7ce",
-  "generatedAt": "2026-11-08T06:04:01.865Z",
+  "sourceCommit": "d9108dc5199467bfee79ef49710e24cd589218bb",
+  "generatedAt": "2026-11-08T06:17:02.102Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     ".github/workflows/ci.yml": {
-      "size": 8437,
-      "sha256": "4076b72c829d4b2006070ea769be658d50e615f78c5babb106de27b3c5660b4d"
+      "size": 8527,
+      "sha256": "bec1cdeffe658b3fec7e4b015323c46f3423828321a0c219c7d7ce7036267ca2"
     },
     ".github/workflows/v2.3-main-gate.yml": {
       "size": 16586,
       "sha256": "5adccc9c1f927ed825aecce0c9e911a06b4066b69e6d837a989b8188011c2ba3"
     },
     ".github/workflows/v2.3-validation.yml": {
-      "size": 4697,
-      "sha256": "07988470b622e287de134bf292b5c2798a693393be18c3eff063f9393f9725e5"
+      "size": 4826,
+      "sha256": "90829b0b8f7bcc18604d06adb11292db8b409d7f83ad778f197ddb18bc444755"
     },
     "CHANGELOG.md": {
       "size": 23793,
@@ -34,8 +34,8 @@
       "sha256": "1ededbb91891a438be6cdb4dbfffdf46f2e4378088b7334d08c255bf00ab1b01"
     },
     "docs/v2.3/acceptance-report.md": {
-      "size": 66801,
-      "sha256": "ff04c3de510bcbbebce76a6b2eeb2f961a8a273eeb9de65824af63e36b050d64"
+      "size": 68868,
+      "sha256": "6166976622ac73a346fca78d1bf4bc56f50388bee2fbc10c40ec96670ec2c0b8"
     },
     "docs/v2.3/architecture.md": {
       "size": 4621,
@@ -714,8 +714,8 @@
       "sha256": "fcb28d52708ae6af74f09347e4924924ce24ba4d93792201d3432182057bd819"
     },
     "tests/v23-release-gate.test.mjs": {
-      "size": 12007,
-      "sha256": "0e6d17796c954b69e881589aaf779ff31a65f9cb90266dec9d327af66fe32bd6"
+      "size": 13175,
+      "sha256": "adada9930ff92fd0157048f4ff75c50d67cdd5d7e83e6960ff6261f407d9b88e"
     }
   }
 }
