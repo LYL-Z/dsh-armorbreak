@@ -1,21 +1,21 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "b5789480d1ef0a740b8175f1555478eb67265fb4",
-  "generatedAt": "2026-11-08T05:14:08.543Z",
+  "sourceCommit": "307856b33b51ca8944c3667faf1e48f4a75a5c04",
+  "generatedAt": "2026-11-08T05:17:32.023Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     ".github/workflows/ci.yml": {
-      "size": 8439,
-      "sha256": "108c0e85f16321c966eb8833661dd57aff6b4472059fab2bd79f201c2eae555b"
+      "size": 8437,
+      "sha256": "4076b72c829d4b2006070ea769be658d50e615f78c5babb106de27b3c5660b4d"
     },
     ".github/workflows/v2.3-main-gate.yml": {
       "size": 16214,
       "sha256": "82e5cbbb3bfdecec8112af9ac5c60cb45bc987dc8a70e3add470f4712e7bf8b6"
     },
     ".github/workflows/v2.3-validation.yml": {
-      "size": 4700,
-      "sha256": "a504409fbc62398fa4e40c2cb20aa19a40e4b9d06706efa703ba0153d4b52a2e"
+      "size": 4697,
+      "sha256": "07988470b622e287de134bf292b5c2798a693393be18c3eff063f9393f9725e5"
     },
     "CHANGELOG.md": {
       "size": 23793,
@@ -34,8 +34,8 @@
       "sha256": "1ededbb91891a438be6cdb4dbfffdf46f2e4378088b7334d08c255bf00ab1b01"
     },
     "docs/v2.3/acceptance-report.md": {
-      "size": 54807,
-      "sha256": "6786a1efde13761cb26d16a72c6ced20814d8109701a6169ffb583653400bf57"
+      "size": 55301,
+      "sha256": "ad48ba0d21d46d1d386732a4c2f4784b0a5a78c82aa6357c7c65ad9a12c35454"
     },
     "docs/v2.3/architecture.md": {
       "size": 4621,
@@ -710,8 +710,8 @@
       "sha256": "77983ce2b07d06d8a236dfbd1da61cb07b0661add71a66e5e66eeaeb4f5f89a1"
     },
     "tests/v23-release-gate.test.mjs": {
-      "size": 11468,
-      "sha256": "38fef99f618b5fd0fd0c6eaad861ce86c7b7b90675d2857be932a455809dd25e"
+      "size": 11889,
+      "sha256": "3370d9e9f478aa8f641f5f2dc9c47f4502e090c196d10f8df756dfc757fbffdf"
     }
   }
 }
