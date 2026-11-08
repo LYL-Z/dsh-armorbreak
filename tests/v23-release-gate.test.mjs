@@ -67,7 +67,7 @@ test('legacy V2.2 attestation workflow does not run on V2.3 main while the V2.3 
 test('fix/v2.3 repair PRs use exact-head and V2.3 evidence contracts instead of legacy V2.2 checks', () => {
   assert.match(ciWorkflow, /github\.head_ref, 'fix\/v2\.3'/)
   assert.match(ciWorkflow, /github\.ref_name, 'fix\/v2\.3'/)
-  assert.match(exactHeadWorkflow, /github\.head_ref, 'fix\/v2\.3'/)
+  assert.equal((exactHeadWorkflow.match(/github\.head_ref, 'fix\/v2\.3'/g) ?? []).length, 3, 'matrix, evidence, and L1 jobs must all accept the repair branch namespace')
 })
 
 test('PR readiness identifies self-review and one-principal release requirements separately from the completed package drill', () => {
