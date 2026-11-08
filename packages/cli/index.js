@@ -10,6 +10,8 @@ import { resolve } from 'node:path'
 import { applyJsonInstall, planJsonInstall, uninstallJsonServer } from '../installer/index.js'
 import { applyTomlInstall, planTomlInstall, uninstallTomlServer } from '../installer/toml.js'
 import { applyYamlInstall, planYamlInstall, uninstallYamlServer } from '../installer/yaml.js'
+import { inspectDshHostProfile } from '../../lib/integrations/dshHostInspector.js'
+import { diagnoseDshAnchors } from '../../lib/integrations/dshAnchorDiagnostic.js'
 
 function parse(argv) {
   const positional = []
@@ -42,7 +44,17 @@ function config(env = process.env) {
 export async function runCli(argv = process.argv.slice(2), dependencies = {}) {
   const { command, positional, options } = parse(argv)
   if (command === 'help' || options.help) {
-    print('armorbreak doctor|capabilities|analyze|task|workflow|approval|install approve|agent|report|mcp [--json]', false)
+    print('armorbreak doctor|host inspect --home <absolute-path> --profile <name>|host diagnose --target <file> --spec <file>|capabilities|analyze|task|workflow|approval|install approve|agent|report|mcp [--json]', false)
+    return
+  }
+  if (command === 'host' && positional[0] === 'inspect') {
+    const report = await inspectDshHostProfile({ home: options.home, profile: options.profile })
+    print(JSON.stringify(report, null, 2), false)
+    return
+  }
+  if (command === 'host' && positional[0] === 'diagnose') {
+    const report = await diagnoseDshAnchors({ targetFile: options.target, specFile: options.spec })
+    print(JSON.stringify(report, null, 2), false)
     return
   }
   const cfg = config(dependencies.env ?? process.env)

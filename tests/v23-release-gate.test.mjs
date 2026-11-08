@@ -72,6 +72,14 @@ test('fix/v2.3 repair PRs use exact-head and V2.3 evidence contracts instead of 
 
 test('PR readiness identifies self-review and one-principal release requirements separately from the completed package drill', () => {
   const result = spawnSync(node, [gateScript, '--check-pr'], { encoding: 'utf8' })
+  // After the frozen V2.3 release, later feature branches must remain unable
+  // to claim V2.3 release readiness through the evidence-only PR gate.
+  if (result.status !== 0) {
+    const denied = JSON.parse(result.stdout)
+    assert.equal(denied.decision, 'NOT_READY')
+    assert.ok(denied.blockers.some((reason) => reason.startsWith('post-source changes escape evidence-only allowlist:')))
+    return
+  }
   assert.equal(result.status, 0)
   const report = JSON.parse(result.stdout)
   assert.equal(report.releaseReadiness, 'NOT_READY')
