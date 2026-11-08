@@ -9,7 +9,7 @@
  */
 import { createHash } from 'node:crypto'
 import { constants } from 'node:fs'
-import { basename, isAbsolute, join, relative, resolve, sep } from 'node:path'
+import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path'
 import { open, realpath, stat } from 'node:fs/promises'
 import { getRuntime } from '../../lib/core/runtime.js'
 import { ApprovalAuthority } from '../../lib/control/approvalAuthority.js'

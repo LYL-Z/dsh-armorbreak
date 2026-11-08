@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
 
-import { createEngine } from '../packages/engine-node/index.js'
+import { createEngine, readTaskReport } from '../packages/engine-node/index.js'
 
 async function withReportFixture(run) {
   const root = await mkdtemp(join(tmpdir(), 'abm-engine-report-security-'))
@@ -79,6 +79,18 @@ test('getReport accepts a trusted workspace ancestor junction while keeping task
     await engine.close()
     await rm(root, { recursive: true, force: true })
   }
+})
+
+test('readTaskReport derives tasks root when an embedding store omits tasksDir', async () => {
+  await withReportFixture(async ({ store, task, reportsRoot }) => {
+    const content = '# report with derived tasks root\n'
+    await mkdir(reportsRoot, { recursive: true })
+    const reportPath = join(reportsRoot, 'report.md')
+    await writeFile(reportPath, content)
+    const minimalStore = { taskDir: store.taskDir.bind(store) }
+    const result = await readTaskReport(minimalStore, { taskId: task.id, path: reportPath, sha256: sha256(content) })
+    assert.equal(result, content)
+  })
 })
 
 test('getReport rejects a task reports root redirected to an outside junction', async () => {

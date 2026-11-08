@@ -252,10 +252,10 @@ jobs:
         with:
           node-version: 22.23.4
       - name: Download exact main candidate package and SBOM
-        shell: pwsh
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh run download $env:GITHUB_RUN_ID --repo LYL-Z/dsh-armorbreak --name "v23-main-candidate-$env:GITHUB_SHA" --dir dist
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: v23-main-candidate-${{ github.sha }}
+          path: dist
       - name: Assert candidate package metadata binds exact main SHA
         shell: pwsh
         run: |

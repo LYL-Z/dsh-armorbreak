@@ -37,6 +37,9 @@ test('PR and exact-main workflows run real Windows deployment before Tag creatio
   assert.doesNotMatch(failureUploadSection, /real-package-upgrade-rollback\.json/)
   assert.match(workflow, /Upload exact-main Windows drill diagnostics[\s\S]*if: \$\{\{ always\(\) \}\}/)
   assert.match(workflow, /release-verification:[\s\S]*refs\/tags\/v2\.3\.1/)
+  const mainJob = workflow.split('main-windows-package-drill:')[1]?.split('release-verification:')[0] ?? ''
+  assert.match(mainJob, /actions\/download-artifact@[a-f0-9]{40}[\s\S]*name: v23-main-candidate-\$\{\{ github\.sha \}\}/)
+  assert.doesNotMatch(mainJob, /gh run download/)
 })
 
 test('Windows ACL drill permits only the runner principal and Local System and records safe principal classes', () => {
