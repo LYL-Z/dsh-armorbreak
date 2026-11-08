@@ -113,7 +113,10 @@ test('Release CLI fails closed while P0-H is open and no signed evidence package
 
 test('V2.3 workflow separates PR, main and exact-tag checks and preserves the V2.2.0 guard', () => {
   const workflow = readFileSync('.github/workflows/v2.3-main-gate.yml', 'utf8')
+  const exactHead = readFileSync('.github/workflows/v2.3-validation.yml', 'utf8')
   const legacy = readFileSync('.github/workflows/ci.yml', 'utf8')
+  assert.equal((exactHead.match(/startsWith\(github\.head_ref, 'feature\/v2\.3'\)/g) ?? []).length, 3)
+  assert.doesNotMatch(exactHead, /startsWith\(github\.head_ref, 'feature\/v2\.3-'\)/)
   assert.match(workflow, /pull_request:[\s\S]*branches:\s*\[main\]/)
   assert.match(workflow, /push:[\s\S]*branches:\s*\[main\]/)
   assert.match(workflow, /tags:\s*\['v2\.3\.1'\]/)
@@ -134,6 +137,8 @@ test('V2.3 workflow separates PR, main and exact-tag checks and preserves the V2
   assert.match(workflow, /v23-release-gate\.mjs --release/)
   assert.match(legacy, /if: github\.ref != 'refs\/tags\/v2\.2\.0'/)
   assert.match(legacy, /if: github\.ref == 'refs\/tags\/v2\.2\.0'/)
+  assert.match(legacy, /startsWith\(github\.head_ref, 'feature\/v2\.3'\)/)
+  assert.match(legacy, /startsWith\(github\.ref_name, 'feature\/v2\.3'\)/)
   assert.match(legacy, /Detect release evidence contract[\s\S]*version.*2\.3\.1[\s\S]*refs\/heads\/main[\s\S]*refs\/tags\/v2\.3\.1/)
   assert.match(legacy, /Validate V2\.3 evidence integrity[\s\S]*validate-v23-acceptance\.mjs/)
   assert.match(legacy, /Validate V2\.3 exact-main candidate contract[\s\S]*v23-release-gate\.mjs --check-main/)
