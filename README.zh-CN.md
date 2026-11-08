@@ -9,15 +9,18 @@
 
 ArmorBreak 是面向**已授权逆向工程、源码安全审查、网络流量分析、数字取证与安全研究**的开源工具包。它以**宿主无关的 Universal Core** 为核心，通过 **DeepSeek Harness 原生模式**、**MCP** 和**独立 Node.js 接口**接入不同 AI Agent。模型可以协助规划和解读，但不能凭自身回复创建执行授权。
 
-**[下载 Stable 版](https://github.com/LYL-Z/dsh-armorbreak/releases/tag/v2.2.0)** · **[快速开始](#快速开始)** · **[选择接入方式](#选择接入方式)** · **[发布核验](#v220-stable-发布核验)** · **[文档导航](#文档导航)** · **[English](README.md)**
+**[下载 Stable 版](https://github.com/LYL-Z/dsh-armorbreak/releases/tag/v2.3.1)** · **[快速开始](#快速开始)** · **[选择接入方式](#选择接入方式)** · **[V2.3.1 发布核验](#v231-stable-发布核验)** · **[文档导航](#文档导航)** · **[English](README.md)**
 
 [![CI](https://github.com/LYL-Z/dsh-armorbreak/actions/workflows/ci.yml/badge.svg)](https://github.com/LYL-Z/dsh-armorbreak/actions/workflows/ci.yml)
-![Stable](https://img.shields.io/badge/release-v2.2.0%20Stable-2ea44f)
+![Stable](https://img.shields.io/badge/release-v2.3.1%20Stable-2ea44f)
 ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22-43853d)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 > [!IMPORTANT]
 > **V2.2.0 Stable 已正式发布。** 它覆盖 **Verified Core** 与 **Experimental Provider Integrations**。OpenAI、Anthropic、Gemini 商业端点仍为 `LIVE_UNVERIFIED`；AI 辅助安全审查不等于人类认证。历史 **Full GA** 契约仍为 `gaReady:false` 和 18 项阻断。使用结果前请阅读[发布核验](#v220-stable-发布核验)与[范围与限制](#范围与限制)。
+
+> [!NOTE]
+> **V2.3.1 Stable 已正式发布。** 受保护的 annotated tag 指向 exact main 提交 `cfb984b7178bb8b1dca9728325fdbe599b5430a3`；公开资产、校验和、SBOM 及 GitHub attestation 见 [V2.3.1 发布核验](docs/releases/v2.3.1-verification.md)。所有者批准了实现者 AI 自审路径；本次未进行独立人工安全审计、法律意见或认证。失败的受保护 V2.3.0 Tag 及其历史保持不变。详见 [V2.3.1 发布说明](docs/releases/v2.3.1.md)、[V2.3.0 历史说明](docs/releases/v2.3.0.md) 和 [便携安装要求](docs/v2.3/portable-install.md)。
 
 ## 为什么选择 ArmorBreak？
 
@@ -31,6 +34,24 @@ ArmorBreak 是面向**已授权逆向工程、源码安全审查、网络流量�
 ArmorBreak 是**安全研究工具包**，不是漏洞真实性担保，也不能代替独立安全评估。
 
 ## 快速开始
+
+### V2.3.1 Stable 发布核验
+
+下载公开发布的 V2.3.1 资产，并在解压前核对归档包与 SBOM 哈希。归档包大小为 5,961,689 字节。JavaScript/TypeScript 源码符号分析还需要单独安装 TypeScript 5.9.3 运行时依赖；详见便携安装要求。
+
+```powershell
+$rel = Join-Path $env:TEMP 'armorbreak-v2.3.1'
+New-Item -ItemType Directory -Force $rel | Out-Null
+gh release download v2.3.1 --repo LYL-Z/dsh-armorbreak --dir $rel
+Get-FileHash "$rel\armorbreak-portable-2.3.1.tar.gz" -Algorithm SHA256
+Get-FileHash "$rel\armorbreak-portable-2.3.1.tar.gz.sbom.cdx.json" -Algorithm SHA256
+Get-Content "$rel\SHA256SUMS.txt"
+```
+
+归档 SHA-256：`28dcd964448b9a8a9496e7432a45fbeefe78ef85a83f6fa9f3053301e3e58087`<br />
+CycloneDX SBOM SHA-256：`06a3935ef764aa9f964cb5fe966e34f0512409b55f6174f3e41a740802e186cd`
+
+Release 页面还提供构建清单、SBOM、校验和、构建及发行授权核验记录、Windows 回滚证据和完整发行核验报告。V2.2.0 仍保留在原历史 Tag 与 Release。
 
 ### 方案 A — 校验正式 Stable 资产
 

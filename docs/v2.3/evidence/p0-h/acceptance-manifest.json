@@ -1,9 +1,9 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "12cae1edfb8fdeaa91b3f126e37a3eafa5162c61",
-  "generatedAt": "2026-11-08T06:32:20.568Z",
-  "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
+  "sourceCommit": "9d3d17385bc9eaeaff369116a505d6fee7e6a5da",
+  "generatedAt": "2026-11-08T07:00:29.193Z",
+  "scope": "M0-M6 evidence integrity; V2.3.1 final release state and P0-H disposition are recorded in the final acceptance addendum and tag-bound Release verification.",
   "files": {
     ".github/workflows/ci.yml": {
       "size": 8527,
@@ -18,24 +18,24 @@
       "sha256": "90829b0b8f7bcc18604d06adb11292db8b409d7f83ad778f197ddb18bc444755"
     },
     "CHANGELOG.md": {
-      "size": 23793,
-      "sha256": "4fbaf9557957909184efa20a3934644bf298fc45e309c9fe34a6af58653921b7"
+      "size": 24174,
+      "sha256": "f0df89f10348b1e7883b1e423ce20f36e4719e82f11cca6eb306a8f42f4f412d"
     },
     "README.md": {
-      "size": 12490,
-      "sha256": "39151760506ddf0eaad399cd8b9f25cb0ba393855c031243250167a69d702085"
+      "size": 13658,
+      "sha256": "b578ebf0e6ef0bd367ea082f3bcff282f5eeff68ee09513e6bc3947693810837"
     },
     "docs/releases/v2.3.0.md": {
       "size": 3394,
       "sha256": "72b765e8fadd11863dd1c362e9e90b4fd0a3d12bae055aa8bb4fbe0971fc474c"
     },
     "docs/releases/v2.3.1.md": {
-      "size": 2390,
-      "sha256": "1ededbb91891a438be6cdb4dbfffdf46f2e4378088b7334d08c255bf00ab1b01"
+      "size": 2949,
+      "sha256": "a0ddb5ac74f5a55a32f5518e40c6c07e645f0ce064a422f66a9b4cc79355eec3"
     },
     "docs/v2.3/acceptance-report.md": {
-      "size": 68868,
-      "sha256": "6166976622ac73a346fca78d1bf4bc56f50388bee2fbc10c40ec96670ec2c0b8"
+      "size": 71488,
+      "sha256": "c155144d1112787b88f5283716d531a7855a4207fc58dd8da11566b688085244"
     },
     "docs/v2.3/architecture.md": {
       "size": 4621,

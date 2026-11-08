@@ -4,13 +4,14 @@
 
 | Version | Supported |
 |---|---|
+| 2.3.x (Stable) | Security fixes or mitigations for confirmed vulnerabilities, subject to maintainer capacity; no fixed support end date |
 | 2.2.x (Stable) | Security fixes or mitigations for confirmed vulnerabilities, subject to maintainer capacity; no fixed support end date |
 | 1.0.x | ✅ security fixes (existing commitment unchanged) |
 | < 1.0.0 | ❌ (not published) |
 
 ### Support lifecycle
 
-- `2.2.x` is the current Stable maintenance line.
+- `2.3.x` is the current Stable maintenance line. The `2.2.x` Stable maintenance line remains supported under the same capacity-based terms.
 - No fixed support end date is promised; this is not a permanent-maintenance commitment.
 - Confirmed security issues are handled according to severity, impact, technical feasibility and maintainer capacity.
 - The existing `1.0.x` security-fix commitment remains in force.
