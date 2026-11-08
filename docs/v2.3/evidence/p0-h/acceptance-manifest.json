@@ -1,21 +1,21 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "05003711135c22ccecbeca5a6c277e984127fd10",
-  "generatedAt": "2026-11-08T06:12:35.441Z",
+  "sourceCommit": "617339db38f69aba4ffe7d9a503228b83981767d",
+  "generatedAt": "2026-11-08T06:14:44.847Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     ".github/workflows/ci.yml": {
-      "size": 8437,
-      "sha256": "4076b72c829d4b2006070ea769be658d50e615f78c5babb106de27b3c5660b4d"
+      "size": 8527,
+      "sha256": "bec1cdeffe658b3fec7e4b015323c46f3423828321a0c219c7d7ce7036267ca2"
     },
     ".github/workflows/v2.3-main-gate.yml": {
       "size": 16586,
       "sha256": "5adccc9c1f927ed825aecce0c9e911a06b4066b69e6d837a989b8188011c2ba3"
     },
     ".github/workflows/v2.3-validation.yml": {
-      "size": 4697,
-      "sha256": "07988470b622e287de134bf292b5c2798a693393be18c3eff063f9393f9725e5"
+      "size": 4740,
+      "sha256": "85ae43f0df5aca9720680fe6873ac791948faf0d9e4571ec5c93c05035fc89b5"
     },
     "CHANGELOG.md": {
       "size": 23793,
@@ -34,8 +34,8 @@
       "sha256": "1ededbb91891a438be6cdb4dbfffdf46f2e4378088b7334d08c255bf00ab1b01"
     },
     "docs/v2.3/acceptance-report.md": {
-      "size": 67864,
-      "sha256": "9e10ef2f3f0663c3a2ebe66a0e33544aeb20560ef44cff9e5d222d5db7b7106f"
+      "size": 68471,
+      "sha256": "ff4b1db6887f7d3b3a51253232553965091355f8233962a18c8b4c9571f948fc"
     },
     "docs/v2.3/architecture.md": {
       "size": 4621,
@@ -714,8 +714,8 @@
       "sha256": "fcb28d52708ae6af74f09347e4924924ce24ba4d93792201d3432182057bd819"
     },
     "tests/v23-release-gate.test.mjs": {
-      "size": 12614,
-      "sha256": "38e07b2e702f6f9e414da02d4472c46740d3c7dcb7ecace6e4758bed8312b876"
+      "size": 13073,
+      "sha256": "2fed006dd35a38235fccaf505dde937190a45aa5a854e4fb0945f47330e11f53"
     }
   }
 }
