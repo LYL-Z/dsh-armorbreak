@@ -1,0 +1,17 @@
+{
+  "schemaVersion":"armorbreak.v2.3-exact-main-evidence/v1",
+  "sourceCommit":"053e3b509a09772169e678d35441f4dc1c52570a",
+  "previousEvidenceHead":"391bd03b21d1d3b1f38d2c405e3b012a86d8aee7",
+  "mainCommit":"e30c0a9da897b588b954b286437f59f0c8e5119d",
+  "mainTree":"4e8611eaf36feb19182dde5690816ab0dcf7d7bd",
+  "pr26":{"state":"MERGED","head":"391bd03b21d1d3b1f38d2c405e3b012a86d8aee7","mergeCommit":"e30c0a9da897b588b954b286437f59f0c8e5119d","url":"https://github.com/LYL-Z/dsh-armorbreak/pull/26"},
+  "runs":{
+    "requiredCi":{"runId":"42443416666","conclusion":"success","url":"https://github.com/LYL-Z/dsh-armorbreak/actions/runs/42443416666","requiredChecks":{"Node 24 on ubuntu-latest":"success","Node 24 on windows-latest":"success","L0 offline boundary (static gate)":"success","L1 Docker integration (real daemon)":"success","Release evidence checks (commit-bound)":"success"}},
+    "v23MainGate":{"runId":"42443416668","conclusion":"success","url":"https://github.com/LYL-Z/dsh-armorbreak/actions/runs/42443416668","matrix":["Node 22 / ubuntu-latest","Node 24 / ubuntu-latest","Node 22 / windows-latest","Node 24 / windows-latest"],"buildJobId":"128617702898"},
+    "legacyReleaseAttestation":{"runId":"42443416660","conclusion":"failure","required":false,"url":"https://github.com/LYL-Z/dsh-armorbreak/actions/runs/42443416660","failure":"The V2.2 evidence-base validator ran on the V2.3.0 main tree and rejected the inherited baseline/changed paths. V2.3-specific candidate build and attestation succeeded independently in run 42443416668."}
+  },
+  "candidate":{"artifactId":"13602312301","artifactName":"v23-main-candidate-e30c0a9da897b588b954b286437f59f0c8e5119d","archive":{"name":"armorbreak-portable-2.3.0.tar.gz","sizeBytes":5923289,"sha256":"71e3ba0681ca2e6f16b6843e02da8b6745950c6fc3495fdebf687a3557a63c87"},"manifest":{"name":"armorbreak-portable-2.3.0.tar.gz.manifest.json","sizeBytes":91793,"sha256":"d813ef4c9bb95bf19c1d8050085a65d538c64932e85e051c35cbad9f55f0f476","commit":"e30c0a9da897b588b954b286437f59f0c8e5119d","reproducible":true,"cleanRoom":"PASS"},"sbom":{"name":"armorbreak-portable-2.3.0.tar.gz.sbom.cdx.json","sizeBytes":95267,"sha256":"cafdff9c426bf42f4797b1817e5cc55588377b57315eb9d6d96f91c032692c5c","format":"CycloneDX","subjectSha256":"71e3ba0681ca2e6f16b6843e02da8b6745950c6fc3495fdebf687a3557a63c87","components":13},"attestation":{"verification":"gh attestation verify exit 0 on independently downloaded archive","workflow":".github/workflows/v2.3-main-gate.yml","workflowRef":"refs/heads/main","sourceCommit":"e30c0a9da897b588b954b286437f59f0c8e5119d","archiveSha256":"71e3ba0681ca2e6f16b6843e02da8b6745950c6fc3495fdebf687a3557a63c87"},"portableCleanroom":{"file":"v23-portable-cleanroom.json","sha256":"d3e2575c21ebfa91cc5cd7e1b9d4d99b2b414a90e6ecaf7cfc3acd95b9c5060f","result":"PASS"}},
+  "tag":"NOT_CREATED",
+  "release":"NOT_CREATED",
+  "releaseReadiness":"NOT_READY"
+}
