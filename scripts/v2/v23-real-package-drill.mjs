@@ -183,7 +183,9 @@ try {
   if (!sid) throw new Error('cannot identify the Windows current-user principal SID')
   const aclResult = execute('icacls.exe', [scratch, '/inheritance:r', '/grant:r', `*${sid}:(F)`, '/T', '/C'])
   const aclInheritanceResult = execute('icacls.exe', [scratch, '/grant', `*${sid}:(OI)(CI)(IO)(F)`, '/T', '/C'])
-  const disallowedAclSids = ['S-1-1-0', 'S-1-5-32-545', 'S-1-5-11']
+  const adminSid = 'S-1-5-32-544'
+  const aclAdminRemoval = execute('icacls.exe', [scratch, '/remove:g', `*${adminSid}`, '/T', '/C'])
+  const disallowedAclSids = ['S-1-1-0', 'S-1-5-32-545', 'S-1-5-11', 'S-1-5-32-544']
   const aclScript = join(scratch, 'verify-acl.ps1')
   writeFileSync(aclScript, '$ErrorActionPreference = "Stop"\n$paths = ConvertFrom-Json $env:V23_ACL_PATHS\n$result = foreach ($path in $paths) { $item = Get-Item -LiteralPath $path -Force; foreach ($entry in $item.GetAccessControl().Access) { [pscustomobject]@{ path = $path; sid = $entry.IdentityReference.Translate([System.Security.Principal.SecurityIdentifier]).Value; type = [string]$entry.AccessControlType; rights = [string]$entry.FileSystemRights; inherited = [bool]$entry.IsInherited } } }\nConvertTo-Json -InputObject @($result) -Compress -Depth 5\n')
   const aclChecks = execute('powershell.exe', ['-NoProfile', '-NonInteractive', '-File', aclScript], { env: { ...process.env, V23_ACL_PATHS: JSON.stringify([workspace, configDir, configPath]) } })
@@ -195,7 +197,7 @@ try {
     entries: aclEntries.map((entry) => ({ pathLabel: entry.path === workspace ? '<isolated-workspace>' : entry.path === configDir ? '<isolated-workspace>/.armorbreak' : '<isolated-workspace>/.armorbreak/mcp-host-config.json', principalClass: classifyAclSid(entry.sid), sidSha256: digest(Buffer.from(entry.sid)), type: entry.type, rights: entry.rights, inherited: entry.inherited })),
     broadPrincipalsAbsent: !disallowedAclSids.some((value) => aclEntries.some((entry) => entry.sid === value)),
     allowedPrincipalClasses: [...allowedAclClasses],
-    commandOutputSha256: digest(Buffer.from(`${aclResult.stdout}\n${aclInheritanceResult.stdout}`)),
+      commandOutputSha256: digest(Buffer.from(`${aclResult.stdout}\n${aclInheritanceResult.stdout}\n${aclAdminRemoval.stdout}`)),
     inspectionOutputSha256: digest(Buffer.from(aclChecks.stdout)),
   }
   if (aclEntries.some((entry) => !allowedAclClasses.has(classifyAclSid(entry.sid)) || entry.type !== 'Allow') || disallowedAclSids.some((value) => aclEntries.some((entry) => entry.sid === value)) || new Set(aclEntries.map((entry) => entry.path)).size !== 3) throw new Error('isolated workspace/config ACL includes an unapproved principal or access type')
@@ -367,7 +369,7 @@ try {
       mcpInitializeProtocol: initialize.result.protocolVersion,
       mcpHistoricalCliTaskHiddenFromNewMcpSession: !listedTasks.tasks.some((task) => task.id === taskId),
       mcpReportDeniedForForeignCliSessionTask: report.result.isError,
-      trustedPrincipal: { configuredByHostEnvironment: true, callerPrincipalOverrideRejected: true, windowsSidSha256: digest(Buffer.from(sid)), aclRestrictedToCurrentUserAndLocalSystem: true, aclEntries: diagnostics.steps.acl.entries, rawIcaclsAccountOutput: 'redacted; principal classes and SID hashes are retained', aclCommandOutputSha256: digest(Buffer.from(`${aclResult.stdout}\n${aclInheritanceResult.stdout}`)), aclInspectionOutputSha256: digest(Buffer.from(aclChecks.stdout)) },
+      trustedPrincipal: { configuredByHostEnvironment: true, callerPrincipalOverrideRejected: true, windowsSidSha256: digest(Buffer.from(sid)), aclRestrictedToCurrentUserAndLocalSystem: true, aclEntries: diagnostics.steps.acl.entries, rawIcaclsAccountOutput: 'redacted; principal classes and SID hashes are retained', aclCommandOutputSha256: digest(Buffer.from(`${aclResult.stdout}\n${aclInheritanceResult.stdout}\n${aclAdminRemoval.stdout}`)), aclInspectionOutputSha256: digest(Buffer.from(aclChecks.stdout)) },
       workspaceBoundary: { outsideTargetRejected: true, stderrSha256: digest(Buffer.from(outOfWorkspace.stderr)) },
       failureInjection: { candidateStageEntry: 'index.js', corruptedEntrySha256: corruptedHash, rejectedBeforeCandidateStartup: injectedFailureRejected, v22PackageStillStartedAfterFault: true },
       rollback: { selectedPreviousVersion: '2.2.0', previousPackageRestarted: true, taskTreeHashesBeforeAndAfterEqual: JSON.stringify(before.tasks) === JSON.stringify(after.tasks), configHashBefore: before.configSha256, configHashAfter: after.configSha256, reportHashBefore: before.reportSha256, reportHashAfter: after.reportSha256 },
@@ -380,6 +382,7 @@ try {
       summary('tar', ['-xzf', V22_ASSET, '-C', 'isolated V2.2 install'], v22UnpackResult),
       summary('icacls.exe', ['isolated temp root', '/inheritance:r', '/grant:r', 'CURRENT_USER_SID:(F)', '/T', '/C'], aclResult),
       summary('icacls.exe', ['isolated temp root', '/grant', 'CURRENT_USER_SID:(OI)(CI)(IO)(F)', '/T', '/C'], aclInheritanceResult),
+      summary('icacls.exe', ['isolated temp root', '/remove:g', 'BUILTIN_ADMINISTRATORS', '/T', '/C'], aclAdminRemoval),
       summary('powershell.exe', ['-NoProfile', '-NonInteractive', '-File', 'verify-acl.ps1'], aclChecks),
       summary(process.execPath, ['packages/cli/index.js', 'capabilities', '--json', '(published V2.2.0 baseline)'], v22CapabilitiesBefore),
       summary('tar', ['-xzf', relative(root, candidateArtifact), '-C', 'fault-injected stage'], corruptUnpackResult),

@@ -43,5 +43,7 @@ test('Windows ACL drill permits only the runner principal and Local System and r
   assert.match(drill, /allowedAclClasses = new Set\(\['CURRENT_USER', 'LOCAL_SYSTEM'\]\)/)
   assert.match(drill, /principalClass: classifyAclSid\(entry\.sid\)/)
   assert.match(drill, /aclEntries\.some\(\(entry\) => !allowedAclClasses\.has\(classifyAclSid\(entry\.sid\)\)/)
+  assert.match(drill, /'\/remove:g', `\*\$\{adminSid\}`/)
+  assert.match(drill, /summary\('icacls\.exe', \['isolated temp root', '\/remove:g', 'BUILTIN_ADMINISTRATORS'/)
   assert.match(drill, /aclRestrictedToCurrentUserAndLocalSystem: true/)
 })
