@@ -263,4 +263,3 @@ This addendum supersedes prior statements about the release attempt while preser
 - Windows testing uses an isolated downloaded V2.2.0 package and synthetic test workspace/config only. It does not modify the formal V2.2.0 installation or release assets. The test uses one actual Windows runner identity; a second real Windows principal remains unverified and outside the declared single-principal service scope.
 
 No V2.3.1 PR, exact-main Windows drill, Tag, or Release result is claimed by this addendum. Their real run IDs and artifact hashes must be reported only after they occur.
-
