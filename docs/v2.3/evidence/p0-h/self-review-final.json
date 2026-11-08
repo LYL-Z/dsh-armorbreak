@@ -10,15 +10,18 @@
     "humanCertification": false,
     "ownerRiskAcceptance": "Authorized in the owner-provided V2.3.0 release execution order; this record is not a signature."
   },
-  "sourceCommitReviewed": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
-  "reviewedAt": "2026-11-05",
+  "sourceCommitReviewed": "12cae1edfb8fdeaa91b3f126e37a3eafa5162c61",
+  "reviewedAt": "2026-11-08",
   "environment": {
     "platform": "Windows x64",
     "node": "v24.16.0",
     "npm": "11.13.0",
-    "candidateArchiveSha256": "d3fca8f98217d6043075007ddb834078457bbf8d3b21d6ad662076f6393bc096",
-    "portableCleanroomEvidence": "docs/v2.3/evidence/p0-h/portable-cleanroom-c085bba.json",
-    "realPackageDrillEvidence": "docs/v2.3/evidence/p0-h/real-package-upgrade-rollback-c085bba.json"
+    "candidateArchiveSha256": "28dcd964448b9a8a9496e7432a45fbeefe78ef85a83f6fa9f3053301e3e58087",
+    "portableCleanroomEvidence": "GitHub Actions run 42454358071 artifact v23-main-candidate-12cae1edfb8fdeaa91b3f126e37a3eafa5162c61/v23-portable-cleanroom.json",
+    "realPackageDrillEvidence": "GitHub Actions run 42454358071 artifact v23-main-rollback-12cae1edfb8fdeaa91b3f126e37a3eafa5162c61/latest-release-rollback.json",
+    "mainCandidateRunId": 42454358071,
+    "exactMainSha": "12cae1edfb8fdeaa91b3f126e37a3eafa5162c61",
+    "packageVersion": "2.3.1"
   },
   "method": {
     "type": "source-and-package-implementation-agent-review",
@@ -55,7 +58,34 @@
       "Only one Windows OS principal was available for the package drill. Cross-account isolation is outside the declared single-principal product scope and remains unverified.",
       "The npm lockfile resolves TypeScript through registry.npmmirror.com with a pinned integrity value; the clean-room command requested registry.npmjs.org. The source discrepancy is disclosed in the package/license inventory.",
       "No final exact-main build, production OIDC attestation, Tag workflow, or public Release exists in this report."
-    ]
+    ],
+    "exactMainReview": {
+      "runId": 42454358071,
+      "result": "SUCCESS",
+      "sourceSha": "12cae1edfb8fdeaa91b3f126e37a3eafa5162c61",
+      "steps": [
+        "Node 22/24 on Ubuntu and Windows",
+        "full node test suite and typecheck",
+        "pinned actionlint",
+        "acceptance evidence integrity",
+        "reproducible portable candidate build and SBOM",
+        "clean-room production dependency install and JS/TS/L0/MCP task/report execution",
+        "GitHub OIDC build provenance verification",
+        "real Windows V2.2-to-exact-main V2.3.1 deployment, corruption rejection, historical task/report read, permission/workspace checks, and rollback hash checks"
+      ]
+    },
+    "reviewedSourceChanges": {
+      "from": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
+      "to": "12cae1edfb8fdeaa91b3f126e37a3eafa5162c61",
+      "reviewedAreas": [
+        "Windows junction canonicalization for source analysis and report reads",
+        "task/report identity and path-bound checks",
+        "real-package drill diagnostics and ACL assertions",
+        "exact-main candidate artifact retrieval and reproducible build/provenance",
+        "PR/main/release workflow routing and evidence integrity",
+        "version-specific release docs and package/lockfile identity"
+      ]
+    }
   },
   "coverage": [
     {
@@ -141,7 +171,7 @@
       "title": "Ghidra is not a hostile-input sandbox",
       "disposition": "Ghidra is separate L1, requires per-task authorization, uses bounded process/output settings and an exact temporary copy. The product will not claim safe sandboxing of hostile binaries.",
       "fixCommit": "fdbf9f8dc9be6dbbf249d7e12a7790e38a8f292d",
-      "retest": "Source and existing adapter tests inspected; only authored fixture validation is available. Hostile-sample containment remains unverified."
+      "retest": "Exact-main full CI, tests, and V2.2-to-V2.3.1 Windows drill passed in run 42454358071. The drill exercised the authorized host approval path, but no hostile Ghidra corpus or OS-level containment proof was run; Ghidra remains an unsandboxed external process."
     },
     {
       "id": "V23-SEC-002",
@@ -149,7 +179,7 @@
       "title": "No two-account Windows isolation result",
       "disposition": "V2.3 HTTP service is explicitly single-principal and rejects multi-principal configuration. Cross-account service mode is outside supported scope; no two-account test is claimed.",
       "fixCommit": "fdbf9f8dc9be6dbbf249d7e12a7790e38a8f292d",
-      "retest": "Actual isolated package drill passed ACL/workspace/session checks under one Windows SID. A second SID test remains unverified."
+      "retest": "Run 42454358071 verified current-user ACL, principal binding, MCP session separation, workspace boundary, and rollback hashes under one Windows SID. A genuinely separate second Windows account was unavailable and remains unverified."
     },
     {
       "id": "V23-SEC-003",
@@ -157,7 +187,7 @@
       "title": "Behavior comparison depends on caller-supplied observations",
       "disposition": "No execution or global equivalence claim is made; the contract labels unverified caller provenance.",
       "fixCommit": null,
-      "retest": "Bounded design and test source reviewed; authentication of external observation sources remains outside scope."
+      "retest": "Exact-main tests passed, but the comparator still consumes finite caller-supplied observations and does not authenticate their external origin."
     },
     {
       "id": "V23-SEC-004",
@@ -165,7 +195,7 @@
       "title": "Review is not exhaustive across serializers and hostile corpora",
       "disposition": "Retain explicit disclosure; independent human review was not performed by owner choice.",
       "fixCommit": null,
-      "retest": "Owner accepted the stated risk; no human or third-party certification is claimed."
+      "retest": "Owner-approved implementation-agent review only. It is not an independent human audit, hostile-corpus certification, or legal opinion."
     },
     {
       "id": "V23-UI-001",
@@ -181,15 +211,23 @@
       "title": "Post-source evidence allowlist omitted the V2.3 release notes and license inventory",
       "disposition": "Added only the two exact V2.3 documentation paths to the explicit source-to-evidence allowlist; code, workflow, validator, and adjacent V2.2/independent-audit paths remain rejected.",
       "fixCommit": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
-      "retest": "16 focused tests and full clean E1 npm test 672/672 passed; E1 PR gate and acceptance validator passed with release NOT_READY."
+      "retest": "Exact-head acceptance validation passed in run 42454110319; exact-main acceptance validation and all required main candidate/Windows rollback jobs passed in run 42454358071. Historical failed workflow runs remain preserved."
     },
     {
       "id": "V23-PKG-001",
       "severity": "P2_DISTRIBUTION_SCOPE",
       "title": "npm tarball includes P0-H documentation and evidence JSON",
-      "disposition": "Exact S5 inventory contains 64 P0-H evidence/document paths. The inventory was reviewed for absolute machine paths and binary/test payloads; none were present. This broadens public npm package disclosure scope and is recorded for owner review.",
+      "disposition": "The V2.3.1 npm dry-run inventory includes P0-H evidence files and is not equivalent to the Portable release archive. No tests, M3 fixtures, or binary tool payloads were found in the npm tarball inventory. This expands the public npm disclosure scope and is not a legal clearance.",
       "fixCommit": null,
-      "retest": "S5 npm pack inventory captured exact 677 paths and sizes; exact-main/tag packaging must be reviewed again."
+      "retest": "At source 12cae1edfb8fdeaa91b3f126e37a3eafa5162c61, npm pack --dry-run --json reported 726 paths, 11,516,676 unpacked bytes, 80 P0-H evidence paths, zero test/fixture paths, and zero .exe/.dll/.zip/.tar.gz paths. Portable archive is separately bound to SHA-256 28dcd964448b9a8a9496e7432a45fbeefe78ef85a83f6fa9f3053301e3e58087. npm publish has not been performed."
+    },
+    {
+      "id": "V23-SEC-005",
+      "severity": "P2_WINDOWS_PATH_COMPATIBILITY",
+      "title": "Windows trusted workspace junctions require narrow canonicalization exceptions",
+      "disposition": "The final code allows a trusted workspace ancestor junction while keeping report task/report leaves and resolved paths bound under the canonical tasks root. No blanket symlink allowance was introduced.",
+      "fixCommit": "3d05d8d and 3efd771",
+      "retest": "Run 42454358071 passed the Windows/Node 22 and Windows/Node 24 matrices and the real exact-main package deployment/report-read/rollback drill. Run 42454110319 passed the exact-head path security tests. Hostile concurrent reparse-point race testing beyond the recorded suite remains unverified."
     }
   ],
   "decision": "OWNER_APPROVED_SELF_REVIEW_RECORDED; FORMAL_RELEASE_STILL_NOT_READY",

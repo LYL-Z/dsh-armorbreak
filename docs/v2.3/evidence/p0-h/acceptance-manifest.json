@@ -1,8 +1,8 @@
 {
   "schemaVersion": "armorbreak.v2.3-acceptance-manifest/v1",
   "baselineSha": "66ec0017af4b9d636f09e45f7cf55eed060512ac",
-  "sourceCommit": "d9108dc5199467bfee79ef49710e24cd589218bb",
-  "generatedAt": "2026-11-08T06:17:02.102Z",
+  "sourceCommit": "12cae1edfb8fdeaa91b3f126e37a3eafa5162c61",
+  "generatedAt": "2026-11-08T06:32:20.568Z",
   "scope": "M0-M6 local evidence integrity; P0-H release readiness is reported separately and remains NOT_READY until all owner-approved release gates pass.",
   "files": {
     ".github/workflows/ci.yml": {
@@ -402,8 +402,8 @@
       "sha256": "2526286714e4a4b3777dfb33102973189ce495c1a95a4b7f699df47117c89ba0"
     },
     "docs/v2.3/evidence/p0-h/license-review-final.json": {
-      "size": 6545,
-      "sha256": "44e305a9b940657098bc1b5c953477a2bdfc845fb50d2631483a3bc054df40b8"
+      "size": 7911,
+      "sha256": "c2392adbf7ca04262535dbda679b0be68e090653a80dc2b0eb67ee01ca9d73f1"
     },
     "docs/v2.3/evidence/p0-h/local-docker-l1-e02e7fe.json": {
       "size": 1411,
@@ -586,8 +586,8 @@
       "sha256": "eccf15979d7e1648879c7e8215790deaad6ae7e4075bd68f413eb615ba3e5842"
     },
     "docs/v2.3/evidence/p0-h/self-review-final.json": {
-      "size": 12539,
-      "sha256": "16c1dbaa55d40264975d2b2828c2c7e1aa74e7f3e6ed393952550b4b2fd8550d"
+      "size": 15581,
+      "sha256": "84dea1f16b309e21621e8f74f67b361d68c1e6ddc23aea17554ec8410ccbd060"
     },
     "docs/v2.3/evidence/p0-h/upgrade-rollback-drill.json": {
       "size": 2833,

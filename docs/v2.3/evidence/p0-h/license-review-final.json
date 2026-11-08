@@ -5,25 +5,27 @@
   "reviewerType": "IMPLEMENTER_AI_SELF_REVIEW",
   "independentHumanReview": "NOT_PERFORMED",
   "legalOpinion": false,
-  "sourceCommitReviewed": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
-  "reviewedAt": "2026-11-05",
+  "sourceCommitReviewed": "12cae1edfb8fdeaa91b3f126e37a3eafa5162c61",
+  "reviewedAt": "2026-11-08",
   "packageEvidence": {
     "portableArchive": {
-      "name": "armorbreak-portable-2.3.0.tar.gz",
-      "sourceCommit": "c085bba67618472e1e2f4f8d73ad5b5b2c1f7212",
-      "bytes": 5913561,
-      "sha256": "d3fca8f98217d6043075007ddb834078457bbf8d3b21d6ad662076f6393bc096",
-      "manifest": "docs/v2.3/evidence/p0-h/candidate-package-c085bba.manifest.json",
-      "sbom": "docs/v2.3/evidence/p0-h/candidate-package-c085bba.sbom.cdx.json"
+      "name": "armorbreak-portable-2.3.1.tar.gz",
+      "sourceCommit": "12cae1edfb8fdeaa91b3f126e37a3eafa5162c61",
+      "bytes": 5961689,
+      "sha256": "28dcd964448b9a8a9496e7432a45fbeefe78ef85a83f6fa9f3053301e3e58087",
+      "manifest": "GitHub Actions run 42454358071 artifact armorbreak-portable-2.3.1.tar.gz.manifest.json",
+      "sbom": "GitHub Actions run 42454358071 artifact armorbreak-portable-2.3.1.tar.gz.sbom.cdx.json",
+      "sbomSha256": "06a3935ef764aa9f964cb5fe966e34f0512409b55f6174f3e41a740802e186cd"
     },
     "npmPackage": {
-      "name": "dsh-armorbreak@2.3.0",
-      "dryRunInventory": "docs/v2.3/evidence/p0-h/npm-package-c085bba.json",
-      "fileCount": 677,
-      "unpackedBytes": 9922961,
+      "name": "dsh-armorbreak@2.3.1",
+      "dryRunInventory": "npm pack --dry-run --json executed at exact main source; local retained output .runtime/npm-pack-2.3.1-exact-main.json; SHA-256 8bca09a8b42951f554bfa143831c78dbc7cea3c7d2999fa92f5eff80865b5b76",
+      "fileCount": 726,
+      "unpackedBytes": 11516676,
       "testPaths": 0,
       "m3BinaryFixturePaths": 0,
-      "binaryPaths": 0
+      "binaryPaths": 0,
+      "p0hEvidencePaths": 80
     }
   },
   "licenseSources": [
@@ -100,7 +102,7 @@
       "title": "Internal @armorbreak package manifests do not each declare SPDX license",
       "disposition": "Root MIT LICENSE and NOTICE are included. No contradictory license was observed in the package contents; per-package metadata provenance was not independently certified.",
       "fixCommit": null,
-      "retest": "Exact npm and portable inventories were captured; adding per-package SPDX metadata is a future metadata improvement, not represented as completed."
+      "retest": "Exact V2.3.1 npm dry-run and portable archive inventories captured at source 12cae1edfb8fdeaa91b3f126e37a3eafa5162c61. Root MIT license and NOTICE are present; internal package SPDX metadata gap remains."
     },
     {
       "id": "V23-LIC-002",
@@ -108,7 +110,7 @@
       "title": "TypeScript lockfile URL uses a registry mirror",
       "disposition": "The lockfile pins the official TypeScript 5.9.3 package integrity; clean-room npm install succeeded. Audit used registry.npmjs.org. The mirror URL and actual registry discrepancy are disclosed; no advisory was reported.",
       "fixCommit": null,
-      "retest": "Verified package metadata declares Apache-2.0 and lock integrity is present."
+      "retest": "Exact-main npm audit against registry.npmjs.org reported 0 advisories across all severities; npm ls resolved the locked TypeScript 5.9.3 runtime dependency. Lockfile mirror URL remains disclosed with integrity pinned."
     },
     {
       "id": "V23-LIC-003",
@@ -116,17 +118,36 @@
       "title": "Repository-level MIT declaration does not independently prove authorship or third-party rights for every source file",
       "disposition": "The release includes only repository files selected by the builder, with LICENSE and NOTICE. This self-review cannot certify chain of title; owner accepts the implementation-agent review path but no independent legal review is claimed.",
       "fixCommit": null,
-      "retest": "No conflicting license text was identified in the reviewed distribution inventory; human legal/copyright certification remains unperformed."
+      "retest": "No legal opinion or chain-of-title certification is made. Human copyright/license review remains unperformed under the owner-approved AI self-review path."
     },
     {
       "id": "V23-LIC-004",
       "severity": "P2_DISTRIBUTION_SCOPE",
       "title": "npm package includes V2.3 P0-H documentation/evidence JSON",
-      "disposition": "The exact inventory records 64 P0-H paths and no binary/test payloads. This self-inventory is not a legal opinion; the expanded disclosure scope is documented for owner consideration.",
+      "disposition": "Exact V2.3.1 npm dry-run includes 80 P0-H evidence paths; the Portable archive excludes those P0-H evidence JSON paths but includes the acceptance report. This is a broader npm disclosure surface than Portable and is not legal clearance.",
       "fixCommit": null,
-      "retest": "Full S5 npm path/size/mode inventory and zero audit advisories recorded; re-inventory exact-main/tag before any npm distribution."
+      "retest": "At exact main SHA 12cae1edfb8fdeaa91b3f126e37a3eafa5162c61, npm pack --dry-run --json reported 726 files (11,516,676 unpacked bytes), no test/fixture paths, no binary tool payloads, and the current npm audit reported zero advisories. npm package is not asserted published."
     }
   ],
   "decision": "OWNER_APPROVED_LICENSE_SELF_REVIEW_WITH_DISCLOSED_RESIDUALS; NO_LEGAL_CERTIFICATION",
-  "releaseReadiness": "NOT_READY"
+  "releaseReadiness": "NOT_READY",
+  "exactMainAudit": {
+    "sourceSha": "12cae1edfb8fdeaa91b3f126e37a3eafa5162c61",
+    "mainRunId": 42454358071,
+    "npmAuditRegistry": "https://registry.npmjs.org",
+    "npmAuditVulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "npmAuditOutput": ".runtime/npm-audit-2.3.1-exact-main.json",
+    "npmLsOutput": ".runtime/npm-ls-2.3.1-exact-main.json",
+    "npmPackDryRunOnly": true,
+    "npmPublishPerformed": false,
+    "portableAttestationVerifiedBy": "gh attestation verify",
+    "portableManifestCommit": "12cae1edfb8fdeaa91b3f126e37a3eafa5162c61"
+  }
 }
