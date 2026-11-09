@@ -32,6 +32,35 @@ test('post-release main updates cannot impersonate V2.3 exact-main evidence', ()
   }
 })
 
+test('V2.4 development gate runs exact-head cross-platform and explicit L0/L1 jobs', () => {
+  const matrix = jobHeader(mainWorkflow, 'v24-development-validation')
+  assert.match(matrix, /github\.event_name == 'pull_request'/)
+  assert.match(matrix, /github\.event_name == 'push'/)
+  assert.match(matrix, /github\.event\.pull_request\.head\.sha \|\| github\.sha/)
+  assert.match(matrix, /os: \[ubuntu-latest, windows-latest\]/)
+  assert.match(matrix, /node: \['22', '24'\]/)
+  assert.match(matrix, /npm ci --no-audit --no-fund/)
+  assert.match(matrix, /node --test --test-concurrency=1/)
+  assert.match(matrix, /npm run typecheck/)
+  for (const [name, assertion] of [
+    ['v24-development-l0', /tests\/offline-core\.test\.mjs/],
+    ['v24-development-l1', /scripts\/verify-l1\.mjs/],
+  ]) {
+    const job = jobHeader(mainWorkflow, name)
+    assert.match(job, /github\.event\.pull_request\.head\.sha \|\| github\.sha/)
+    assert.match(job, assertion)
+  }
+})
+
+test('V2.4 aggregate gate fails closed when any real validation is skipped or fails', () => {
+  const gate = jobHeader(mainWorkflow, 'v24-development-gate')
+  assert.match(gate, /always\(\)/)
+  assert.match(gate, /needs: \[v24-development-validation, v24-development-l0, v24-development-l1\]/)
+  for (const result of ['MATRIX_RESULT', 'L0_RESULT', 'L1_RESULT']) {
+    assert.match(gate, new RegExp(`test \\"\\$${result}\\" = success`))
+  }
+})
+
 test('V2.3.1 protected tag verifier and main artifact authorization remain intact', () => {
   const release = jobHeader(mainWorkflow, 'release-verification')
   assert.match(release, /github\.ref == 'refs\/tags\/v2\.3\.1'/)

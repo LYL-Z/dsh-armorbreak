@@ -19,8 +19,11 @@ This transition separates **historical release verification** from
 2. Frozen V2.3 exact-main build, attestation, and rollback jobs are restricted
    to the one published source SHA. Later main commits are not V2.3 release
    candidates. The V2.3.1 protected Tag event and verifier are unchanged.
-3. Generic CI keeps Node 24 on Linux and Windows, full tests, offline Core
-   network checks and real Docker L1 integration for ordinary development PRs.
+3. The V2.4 development workflow now has an exact-candidate Node 22/24 ×
+   Linux/Windows matrix, a separately executed L0 offline boundary job, and a
+   real Docker L1 job. A stable aggregate gate uses `always()` and fails unless
+   all three jobs report `success`; a skipped or failed prerequisite cannot
+   produce a green aggregate.
 4. Historical V2.2/V2.3 release-evidence job only runs on version Tag pushes
    or the frozen V2.3.1 main source. Future V2.4 release candidates must have
    a **new, separately reviewed release Gate** before publishing.
@@ -38,6 +41,14 @@ release artifacts, or create a bypass for the frozen Tag verification job.
   package drills; general V2.4 development PRs should not be misclassified as
   V2.3 release candidates.
 
-If branch-protection rules require a particular historical job name, inspect
-the resulting required-check status before merging. **Do not disable required
-reviews or bypass protected workflows to merge this change.**
+The aggregate V2.4 gate is a real executed check, but it is **not yet proven
+required by the current main branch-protection configuration**. The inherited
+required `Release evidence checks (commit-bound)` context was skipped on the
+previous PR run and GitHub may count a skipped required job as satisfied.
+Therefore this transition remains blocked for merge until an authorized
+maintainer reviews the exact required-check names and approves any needed
+protection update. No protection setting is changed by this PR.
+
+The V2.3.1 historical Tag Gate, exact-main provenance, protected tag, release
+and rollback evidence remain unchanged. A successful V2.4 development gate is
+not a V2.4 release authorization.
