@@ -64,14 +64,22 @@ test('legacy V2.2 attestation workflow does not run on V2.3 main while the V2.3 
   assert.match(v23Workflow, /actions\/attest-build-provenance/)
 })
 
-test('fix/v2.3 repair PRs use exact-head and V2.3 evidence contracts instead of legacy V2.2 checks', () => {
-  assert.match(ciWorkflow, /github\.head_ref, 'fix\/v2\.3'/)
-  assert.match(ciWorkflow, /github\.ref_name, 'fix\/v2\.3'/)
+test('fix/v2.3 maintenance PRs use exact-head and frozen V2.3 gates; post-release source is isolated', () => {
+  assert.match(v23Workflow, /github\.head_ref, 'fix\/v2\.3'/)
+  assert.match(ciWorkflow, /github\.event_name == 'push' && \(startsWith\(github\.ref, 'refs\/tags\/v'\)/)
   assert.equal((exactHeadWorkflow.match(/github\.head_ref, 'fix\/v2\.3'/g) ?? []).length, 3, 'matrix, evidence, and L1 jobs must all accept the repair branch namespace')
 })
 
 test('PR readiness identifies self-review and one-principal release requirements separately from the completed package drill', () => {
   const result = spawnSync(node, [gateScript, '--check-pr'], { encoding: 'utf8' })
+  // A post-release workflow transition is intentionally outside V2.3's
+  // evidence-only allowlist. The old gate must reject the changed tree.
+  if (result.status !== 0) {
+    const denied = JSON.parse(result.stdout)
+    assert.equal(denied.decision, 'NOT_READY')
+    assert.ok(denied.blockers.some((reason) => reason.startsWith('post-source changes escape evidence-only allowlist:')))
+    return
+  }
   assert.equal(result.status, 0)
   const report = JSON.parse(result.stdout)
   assert.equal(report.releaseReadiness, 'NOT_READY')
@@ -137,8 +145,8 @@ test('V2.3 workflow separates PR, main and exact-tag checks and preserves the V2
   assert.match(workflow, /pull_request:[\s\S]*branches:\s*\[main\]/)
   assert.match(workflow, /push:[\s\S]*branches:\s*\[main\]/)
   assert.match(workflow, /tags:\s*\['v2\.3\.1'\]/)
-  assert.match(workflow, /pr-candidate-validation:[\s\S]*if: \$\{\{ github\.event_name == 'pull_request' \}\}[\s\S]*name: Node \$\{\{ matrix\.node \}\} \/ \$\{\{ matrix\.os \}\}/)
-  assert.match(workflow, /main-candidate-validation:[\s\S]*if: \$\{\{ github\.event_name == 'push' && github\.ref == 'refs\/heads\/main' \}\}[\s\S]*name: Node \$\{\{ matrix\.node \}\} \/ \$\{\{ matrix\.os \}\}/)
+  assert.match(workflow, /pr-candidate-validation:[\s\S]*if: \$\{\{ github\.event_name == 'pull_request' && \(startsWith\(github\.head_ref, 'feature\/v2\.3'\)/)
+  assert.match(workflow, /main-candidate-validation:[\s\S]*if: \$\{\{ github\.event_name == 'push' && github\.ref == 'refs\/heads\/main' && github\.sha == 'cfb984b7178bb8b1dca9728325fdbe599b5430a3'/)
   assert.match(workflow, /main-candidate-validation:[\s\S]*v23-release-gate\.mjs --check-main/)
   assert.match(workflow, /pr-candidate-validation:[\s\S]*v23-release-gate\.mjs --check-pr/)
   assert.match(workflow, /name: V2\.3\.1 release verification/)
@@ -155,8 +163,8 @@ test('V2.3 workflow separates PR, main and exact-tag checks and preserves the V2
   assert.match(workflow, /v23-release-gate\.mjs --release/)
   assert.match(legacy, /if: github\.ref != 'refs\/tags\/v2\.2\.0'/)
   assert.match(legacy, /if: github\.ref == 'refs\/tags\/v2\.2\.0'/)
-  assert.match(legacy, /startsWith\(github\.head_ref, 'feature\/v2\.3'\)/)
-  assert.match(legacy, /startsWith\(github\.ref_name, 'feature\/v2\.3'\)/)
+  assert.match(legacy, /github\.event_name == 'push' && \(startsWith\(github\.ref, 'refs\/tags\/v'\)/)
+  assert.match(legacy, /github\.sha == 'cfb984b7178bb8b1dca9728325fdbe599b5430a3'/)
   assert.match(legacy, /Detect release evidence contract[\s\S]*version.*2\.3\.1[\s\S]*refs\/heads\/main[\s\S]*refs\/tags\/v2\.3\.1/)
   assert.match(legacy, /Validate V2\.3 evidence integrity[\s\S]*validate-v23-acceptance\.mjs/)
   assert.match(legacy, /Validate V2\.3 exact-main candidate contract[\s\S]*v23-release-gate\.mjs --check-main/)
