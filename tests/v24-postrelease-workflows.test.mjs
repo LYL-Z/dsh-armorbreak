@@ -50,6 +50,9 @@ test('V2.4 development gate runs exact-head cross-platform and explicit L0/L1 jo
     assert.match(job, /github\.event\.pull_request\.head\.sha \|\| github\.sha/)
     assert.match(job, assertion)
   }
+  const l1 = jobHeader(mainWorkflow, 'v24-development-l1')
+  assert.match(l1, /busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662/)
+  assert.doesNotMatch(l1, /busybox:1\.36|RepoDigests/)
 })
 
 test('V2.4 aggregate gate fails closed when any real validation is skipped or fails', () => {
