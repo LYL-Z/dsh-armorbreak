@@ -196,7 +196,13 @@ test('migration rollback pins the opened task file across an ancestor junction s
       })
     } catch (error) { rollbackError = error }
 
-    assert.equal(writeCheckpointReached, true, 'rollback must pass manifest validation and reach the deterministic pre-write checkpoint')
+    const safeRollbackFailure = rollbackError ? {
+      name: rollbackError.name,
+      code: rollbackError.code ?? null,
+      message: String(rollbackError.message ?? rollbackError).replace(/[A-Z]:\\[^\s]+/gi, '<redacted-windows-path>'),
+    } : null
+    assert.equal(writeCheckpointReached, true,
+      `rollback must pass manifest validation and reach the deterministic pre-write checkpoint; pre-checkpoint failure=${JSON.stringify(safeRollbackFailure)}`)
     if (process.platform === 'linux') {
       assert.equal(swapError, null, 'native Linux test must complete the deterministic rename and symlink injection')
       assert.equal(moved, true, 'the parent-directory rename must reach the race window')
