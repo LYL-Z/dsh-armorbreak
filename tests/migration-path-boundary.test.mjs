@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { chmod, mkdir, mkdtemp, readFile, rename, rm, symlink, writeFile } from 'node:fs/promises'
+import { chmod, mkdir, mkdtemp, readFile, realpath, rename, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import test from 'node:test'
 import { planMigration, recoverInterruptedMigrations, rollbackMigration } from '../lib/migrations/v1-to-v2.js'
 
@@ -59,7 +59,13 @@ test('migration rollback rejects a backup outside its migration directory', asyn
   await writeFile(target, 'SYNTHETIC-TASK-ORIGINAL')
   const fixture = await maliciousManifest({ root, mode: 'backup', file: target, backup: externalBackup })
 
-  await assert.rejects(() => rollbackMigration({ manifestPath: fixture.manifestPath }), /backup must be a direct child/)
+  const canonicalTaskDir = await realpath(dirname(target))
+  const canonicalTasksRoot = await realpath(join(workspaceRoot, '.armorbreak', 'tasks'))
+  assert.equal(await realpath(dirname(canonicalTaskDir)), canonicalTasksRoot, 'fixture target must satisfy the legitimate task-root precondition')
+  assert.equal(target.split(/[\\/]/).at(-1), 'task.json')
+  await assert.rejects(() => rollbackMigration({ manifestPath: fixture.manifestPath }),
+    (error) => /backup must be a direct child/.test(error.message),
+    'the legitimate task target must pass prevalidation and reach the external-backup rejection')
   assert.equal(await readFile(target, 'utf8'), 'SYNTHETIC-TASK-ORIGINAL')
 })
 
@@ -151,6 +157,7 @@ test('migration rollback pins the opened task file across an ancestor junction s
   const outsideTargetBeforeSha256 = createHash('sha256').update('SYNTHETIC-OUTSIDE-MIGRATION-TARGET').digest('hex')
   let moved = false
   let linked = false
+  let writeCheckpointReached = false
   let swapError = null
   let rollbackError = null
 
@@ -174,6 +181,7 @@ test('migration rollback pins the opened task file across an ancestor junction s
         manifestPath,
         workspaceRoot,
         async onBeforeTargetWrite() {
+          writeCheckpointReached = true
           try {
             await rename(taskDir, retainedTaskDir)
             moved = true
@@ -188,6 +196,7 @@ test('migration rollback pins the opened task file across an ancestor junction s
       })
     } catch (error) { rollbackError = error }
 
+    assert.equal(writeCheckpointReached, true, 'rollback must pass manifest validation and reach the deterministic pre-write checkpoint')
     if (process.platform === 'linux') {
       assert.equal(swapError, null, 'native Linux test must complete the deterministic rename and symlink injection')
       assert.equal(moved, true, 'the parent-directory rename must reach the race window')
@@ -209,7 +218,8 @@ test('migration rollback pins the opened task file across an ancestor junction s
       assert.equal(await readFile(target, 'utf8'), 'SYNTHETIC-IN-ROOT-TASK')
     }
     assert.equal(createHash('sha256').update(await readFile(outsideTarget)).digest('hex'), outsideTargetBeforeSha256)
-    assert.equal(JSON.parse(await readFile(manifestPath, 'utf8')).status, 'rolling-back')
+    assert.equal(JSON.parse(await readFile(manifestPath, 'utf8')).status, 'rolling-back',
+      'once rollback persists its intent, a refused race remains recoverable as rolling-back')
 
     if (linked) {
       await rm(taskDir, { recursive: true, force: true })
