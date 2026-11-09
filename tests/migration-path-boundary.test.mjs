@@ -200,6 +200,7 @@ test('migration rollback pins the opened task file across an ancestor junction s
       name: rollbackError.name,
       code: rollbackError.code ?? null,
       message: String(rollbackError.message ?? rollbackError).replace(/[A-Z]:\\[^\s]+/gi, '<redacted-windows-path>'),
+      pathBoundary: rollbackError.pathBoundary ?? null,
     } : null
     assert.equal(writeCheckpointReached, true,
       `rollback must pass manifest validation and reach the deterministic pre-write checkpoint; pre-checkpoint failure=${JSON.stringify(safeRollbackFailure)}`)
