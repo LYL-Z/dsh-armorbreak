@@ -1,0 +1,38 @@
+name: Isolated gate failure experiments
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  successful:
+    uses: ./.github/workflows/gate-fault-fixture.yml
+    with:
+      scenario: success
+  failed:
+    uses: ./.github/workflows/gate-fault-fixture.yml
+    with:
+      scenario: failure
+  skipped:
+    uses: ./.github/workflows/gate-fault-fixture.yml
+    with:
+      scenario: skipped
+  timedout:
+    uses: ./.github/workflows/gate-fault-fixture.yml
+    with:
+      scenario: timeout
+  observe:
+    if: ${{ always() }}
+    needs: [successful, failed, skipped, timedout]
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          SUCCESSFUL: ${{ needs.successful.result }}
+          FAILED: ${{ needs.failed.result }}
+          SKIPPED: ${{ needs.skipped.result }}
+          TIMEDOUT: ${{ needs.timedout.result }}
+        run: |
+          test "$SUCCESSFUL" = success
+          test "$FAILED" = failure
+          test "$SKIPPED" = failure
+          test "$TIMEDOUT" = cancelled
+
