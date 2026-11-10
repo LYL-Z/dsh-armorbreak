@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 export const context = 'ArmorBreak trusted development gate'
 export const expectedJobs = ['Node 22 / ubuntu-latest (common development)', 'Node 24 / ubuntu-latest (common development)', 'Node 22 / windows-latest (common development)', 'Node 24 / windows-latest (common development)', 'Common development L0', 'Common development L1', 'ArmorBreak development gate (required)']
-const sourceFile = p => /^(lib\/|packages\/core\/src\/).+\.(?:js|mjs|ts)$/.test(p) && !/(^|\/)(?:tests?|fixtures|__tests__)(\/|\.)/.test(p)
+const sourceFile = p => /^(?:docs\/integrations\/.+\.md|README(?:\.zh-CN)?\.md|CHANGELOG\.md|SECURITY\.md)$/.test(p) || /^(lib\/|packages\/core\/src\/).+\.(?:js|mjs|ts)$/.test(p) && !/(^|\/)(?:tests?|fixtures|__tests__)(\/|\.)/.test(p)
 export function evaluate({ policy, candidate, run, jobs, tree }) {
   const errors = []
   if (policy.repository !== candidate.repository || !/^[a-f0-9]{40}$/.test(candidate.sha)) errors.push('candidate identity')
@@ -21,3 +21,4 @@ export function evaluate({ policy, candidate, run, jobs, tree }) {
   return errors
 }
 export function policyDigest(policy) { return createHash('sha256').update(JSON.stringify(policy)).digest('hex') }
+

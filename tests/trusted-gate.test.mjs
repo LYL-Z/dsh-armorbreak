@@ -17,3 +17,4 @@ test('duplicate successful jobs cannot replace matrix member',()=>{const f=fixtu
 test('truncated source tree denied',()=>{const f=fixture();f.tree.truncated=true;assert.deepEqual(evaluate(f),['incomplete candidate tree'])})
 test('ordinary product source change allowed',()=>{const f=fixture();f.tree.tree.push({path:'lib/diagnostic.js',type:'blob',mode:'100644',sha:'new'});assert.deepEqual(evaluate(f),[])})
 
+test('ordinary integration documentation change allowed',()=>{const f=fixture();f.tree.tree.push({path:'docs/integrations/read-only.md',type:'blob',mode:'100644',sha:'doc'});assert.deepEqual(evaluate(f),[])})
