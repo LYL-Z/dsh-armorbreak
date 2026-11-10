@@ -3,13 +3,13 @@ import { createSign } from 'node:crypto'
 import { resolve, isAbsolute } from 'node:path'
 import { evaluate, context } from './evaluate.mjs'
 import { candidateFromPr, sameCandidate, mergeTarget } from './binding.mjs'
-import { githubApi, paged, issueToken, publish, withLease } from './runtime.mjs'
+import { githubApi, paged, issueToken, publish, reconcile } from './runtime.mjs'
 import { readRootFile, digest } from './trust.mjs'
 export async function control({trust,number,runId,mode,root}) {
  const {policy,manifest,policyDigest}=trust
  const repoPath=`repos/${policy.repository}`
  let api
- if(mode==='--publish'){
+ if(mode!=='--dry-run'){
   const now=Math.floor(Date.now()/1000), app=manifest.app
   const enc=x=>Buffer.from(JSON.stringify(x)).toString('base64url')
   const message=`${enc({alg:'RS256',typ:'JWT'})}.${enc({iat:now-60,exp:now+540,iss:app?.appId})}`
@@ -45,13 +45,14 @@ export async function control({trust,number,runId,mode,root}) {
  const tuple={repository:policy.repository,pr:number,head:candidate.sha,base:candidate.baseSha,baseRef:candidate.baseRef,merge:pr.merge_commit_sha,policy:policyDigest,controllerVersion:manifest.controllerVersion,run:runId,attempt:run.run_attempt}
  const externalId=digest(JSON.stringify(tuple))
  const decision={context,...tuple,externalId,target:target?.sha,conclusion:errors.length?'failure':'success',errors}
- if(mode==='--publish'){
+ if(mode!=='--dry-run'){
   if(!target)throw new Error('no verified merge target; publication refused')
   // Fixed external service root only. Duplicate delivery is serialized; a
   // surviving lock requires operator recovery, not an automatic timeout bypass.
   const state=process.env.ARMORBREAK_CONTROLLER_STATE
   if(!state||!isAbsolute(state)||realpathSync(state)!==resolve(state)||resolve(state)===resolve(root))throw new Error('separate protected state directory required')
-  await withLease(resolve(state,'controller.lock'),()=>publish(api,{config:manifest.app,repository:policy.repository,target:target.sha,decision,externalId,recheck}))
+  const operation=mode==='--reconcile'?reconcile:publish
+  await operation(api,{config:manifest.app,repository:policy.repository,target:target.sha,decision,externalId,recheck,stateDirectory:state})
  }
  console.log(JSON.stringify(decision,null,2))
  if(errors.length)process.exitCode=1

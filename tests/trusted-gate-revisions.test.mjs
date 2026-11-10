@@ -1,3 +1,7 @@
+import { mkdtempSync, rmSync } from 'node:fs'
+import { after } from 'node:test'
+const publicationScratch=[]
+after(()=>publicationScratch.forEach(p=>rmSync(p,{recursive:true,force:true})))
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { generateKeyPairSync, sign } from 'node:crypto'
@@ -59,7 +63,7 @@ test('R4 malformed JSON refuses',async()=>{await assert.rejects(githubApi('TEST'
 test('R4 duplicate pagination denied',async()=>{await assert.rejects(paged(async()=>({total_count:2,jobs:[{id:1}]}),'repos/owner/repo/jobs','jobs'),/duplicate/)})
 test('R4 missing page denied',async()=>{await assert.rejects(paged(async()=>({total_count:1,jobs:[]}), 'repos/owner/repo/jobs','jobs'),/incomplete/)})
 test('R4 changed pagination totals denied',async()=>{let i=0;await assert.rejects(paged(async()=>({total_count:++i===1?2:3,jobs:[{id:i}]}),'repos/owner/repo/jobs','jobs'),/inconsistent/)})
-function publisherFixture(){const calls=[];const check={id:3,name:'trusted',app:{id:99},head_sha:sha,external_id:'receipt',conclusion:'success'};const api=async(path,method='GET',body)=>{calls.push({path,method,body});if(path.startsWith('installation/'))return{total_count:1,repositories:[{id:10}]};if(path.includes('/commits/'))return{total_count:0,check_runs:[]};return check};return{calls,check,api,args:{config,repository:'owner/repo',target:sha,decision:{context:'trusted',errors:[]},externalId:'receipt',recheck:async()=>{}}}}
+function publisherFixture(){const stateDirectory=mkdtempSync(join(tmpdir(),'ab-publish-'));publicationScratch.push(stateDirectory);const calls=[];const check={id:3,name:'trusted',status:'completed',app:{id:99},head_sha:sha,external_id:'receipt',conclusion:'success'};const api=async(path,method='GET',body)=>{calls.push({path,method,body});if(path.startsWith('installation/'))return{total_count:1,repositories:[{id:10}]};if(path.includes('/commits/'))return{total_count:0,check_runs:[]};if(method==='POST')return {...check,status:'in_progress',conclusion:null};return check};return{calls,check,api,args:{stateDirectory,config,repository:'owner/repo',target:sha,decision:{context:'trusted',errors:[]},externalId:'receipt',recheck:async()=>{}}}}
 test('R4 wrong publication issuer never completes success',async()=>{const f=publisherFixture();f.check.app.id=88;await assert.rejects(publish(f.api,f.args),/issuer/);assert.equal(f.calls.filter(x=>x.method==='PATCH').length,0)})
 test('R4 head/base change before completion leaves no green check',async()=>{const f=publisherFixture();f.args.recheck=async()=>{throw new Error('base changed')};await assert.rejects(publish(f.api,f.args),/base changed/);assert.equal(f.calls.filter(x=>x.method==='PATCH').length,0)})
 test('R4 normal publication validates readback (SIMULATED)',async()=>{const f=publisherFixture();assert.equal((await publish(f.api,f.args)).app.id,99)})
