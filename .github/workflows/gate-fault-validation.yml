@@ -34,4 +34,5 @@ jobs:
           test "$SUCCESSFUL" = success
           test "$FAILED" = failure
           test "$SKIPPED" = failure
-          test "$TIMEDOUT" = failure
+          test "$TIMEDOUT" = cancelled
+
