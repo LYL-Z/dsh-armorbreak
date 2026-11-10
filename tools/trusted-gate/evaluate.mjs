@@ -1,9 +1,10 @@
+import { bindRun } from './binding.mjs'
 import { createHash } from 'node:crypto'
 export const context = 'ArmorBreak trusted development gate'
 export const expectedJobs = ['Node 22 / ubuntu-latest (common development)', 'Node 24 / ubuntu-latest (common development)', 'Node 22 / windows-latest (common development)', 'Node 24 / windows-latest (common development)', 'Common development L0', 'Common development L1', 'ArmorBreak development gate (required)']
 const sourceFile = p => /^(?:docs\/integrations\/.+\.md|README(?:\.zh-CN)?\.md|CHANGELOG\.md|SECURITY\.md)$/.test(p) || /^(lib\/|packages\/core\/src\/).+\.(?:js|mjs|ts)$/.test(p) && !/(^|\/)(?:tests?|fixtures|__tests__)(\/|\.)/.test(p)
 export function evaluate({ policy, candidate, run, jobs, tree }) {
-  const errors = []
+  const errors = bindRun(candidate, run)
   if (policy.repository !== candidate.repository || !/^[a-f0-9]{40}$/.test(candidate.sha)) errors.push('candidate identity')
   if (tree.truncated || !Array.isArray(tree.tree)) return ['incomplete candidate tree']
   const actual = new Map(tree.tree.filter(x => x.type === 'blob').map(x => [x.path, `${x.mode}:${x.sha}`]))

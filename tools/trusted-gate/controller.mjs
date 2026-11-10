@@ -1,38 +1,60 @@
-// Run only in the independently deployed controller, never on a candidate runner.
-// Policy path must point outside the candidate checkout, pinned by the operator.
-import { readFileSync } from 'node:fs'
-import { evaluate, context, policyDigest } from './evaluate.mjs'
-const [policyFile, number, runId, mode = '--dry-run'] = process.argv.slice(2)
-if (!policyFile || !/^\d+$/.test(number ?? '') || !/^\d+$/.test(runId ?? '') || !['--dry-run', '--publish'].includes(mode)) throw new Error('usage: controller POLICY PR RUN [--dry-run|--publish]')
-const policy = JSON.parse(readFileSync(policyFile, 'utf8').replace(/^\uFEFF/, ''))
-if (!/^[\w.-]+\/[\w.-]+$/.test(policy.repository) || !/^[a-f0-9]{40}$/.test(policy.trustCommit)) throw new Error('invalid externally pinned policy')
-const token = process.env.ARMORBREAK_CONTROLLER_TOKEN
-if (!token) throw new Error('external controller installation/read token required')
-async function api(path, method = 'GET', body) {
-  const r = await fetch(`https://api.github.com/repos/${policy.repository}/${path}`, { method, headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'Content-Type': 'application/json' }, body: body && JSON.stringify(body), signal: AbortSignal.timeout(30000) })
-  if (!r.ok) throw new Error(`GitHub API ${r.status}; no success published`)
-  return r.json()
+import { realpathSync } from 'node:fs'
+import { createSign } from 'node:crypto'
+import { resolve, isAbsolute } from 'node:path'
+import { evaluate, context } from './evaluate.mjs'
+import { candidateFromPr, sameCandidate, mergeTarget } from './binding.mjs'
+import { githubApi, paged, issueToken, publish, withLease } from './runtime.mjs'
+import { readRootFile, digest } from './trust.mjs'
+export async function control({trust,number,runId,mode,root}) {
+ const {policy,manifest,policyDigest}=trust
+ const repoPath=`repos/${policy.repository}`
+ let api
+ if(mode==='--publish'){
+  const now=Math.floor(Date.now()/1000), app=manifest.app
+  const enc=x=>Buffer.from(JSON.stringify(x)).toString('base64url')
+  const message=`${enc({alg:'RS256',typ:'JWT'})}.${enc({iat:now-60,exp:now+540,iss:app?.appId})}`
+  const signer=createSign('RSA-SHA256');signer.update(message)
+  const jwt=`${message}.${signer.sign(readRootFile(root,'app-private-key.pem'),'base64url')}`
+  const token=await issueToken(githubApi(jwt),app)
+  api=githubApi(token)
+ }else{
+  const token=process.env.ARMORBREAK_CONTROLLER_READ_TOKEN
+  if(!token)throw new Error('read-only replay token required')
+  api=githubApi(token)
+ }
+ const pr=await api(`${repoPath}/pulls/${number}`)
+ if(pr.number!==number||pr.state!=='open'||pr.base?.repo?.full_name!==policy.repository)throw new Error('not the selected open repository PR')
+ const candidate=candidateFromPr(pr)
+ const run=await api(`${repoPath}/actions/runs/${runId}`)
+ const tree=await api(`${repoPath}/git/trees/${candidate.sha}?recursive=1`)
+ const jobs=await paged(api,`${repoPath}/actions/runs/${runId}/attempts/${run.run_attempt}/jobs`,'jobs')
+ const errors=evaluate({policy,candidate,run,jobs,tree})
+ let target
+ try{
+  const merge=await api(`${repoPath}/git/commits/${pr.merge_commit_sha}`)
+  const head=await api(`${repoPath}/git/commits/${candidate.sha}`)
+  target=mergeTarget(pr,merge,head)
+ }catch(error){errors.push(error.message)}
+ const recheck=async()=>{
+  const current=await api(`${repoPath}/pulls/${number}`)
+  if(!sameCandidate(candidate,candidateFromPr(current))||current.merge_commit_sha!==pr.merge_commit_sha||current.state!=='open')throw new Error('PR head/base/target changed during evaluation')
+  const latest=await api(`${repoPath}/actions/runs/${runId}`)
+  if(latest.run_attempt!==run.run_attempt||latest.status!=='completed'||latest.conclusion!=='success')throw new Error('run attempt changed or not successful')
+ }
+ await recheck()
+ const tuple={repository:policy.repository,pr:number,head:candidate.sha,base:candidate.baseSha,baseRef:candidate.baseRef,merge:pr.merge_commit_sha,policy:policyDigest,controllerVersion:manifest.controllerVersion,run:runId,attempt:run.run_attempt}
+ const externalId=digest(JSON.stringify(tuple))
+ const decision={context,...tuple,externalId,target:target?.sha,conclusion:errors.length?'failure':'success',errors}
+ if(mode==='--publish'){
+  if(!target)throw new Error('no verified merge target; publication refused')
+  // Fixed external service root only. Duplicate delivery is serialized; a
+  // surviving lock requires operator recovery, not an automatic timeout bypass.
+  const state=process.env.ARMORBREAK_CONTROLLER_STATE
+  if(!state||!isAbsolute(state)||realpathSync(state)!==resolve(state)||resolve(state)===resolve(root))throw new Error('separate protected state directory required')
+  await withLease(resolve(state,'controller.lock'),()=>publish(api,{config:manifest.app,repository:policy.repository,target:target.sha,decision,externalId,recheck}))
+ }
+ console.log(JSON.stringify(decision,null,2))
+ if(errors.length)process.exitCode=1
+ return decision
 }
-const pr = await api(`pulls/${number}`)
-const sha = pr.head.sha
-if (pr.state !== 'open' || pr.base.repo.full_name !== policy.repository) throw new Error('not an open candidate PR')
-const run = await api(`actions/runs/${runId}`)
-const tree = await api(`git/trees/${sha}?recursive=1`)
-const jobs = []
-for (let page=1; page<=20; page++) {
-  const data = await api(`actions/runs/${runId}/attempts/${run.run_attempt}/jobs?per_page=100&page=${page}`)
-  jobs.push(...data.jobs)
-  if (jobs.length >= data.total_count) break
-  if (page === 20) throw new Error('incomplete job pagination')
-}
-const errors = evaluate({ policy, candidate: { repository: policy.repository, sha }, run, jobs, tree })
-// Re-read immediately before publication. Stale-SHA checks cannot satisfy new HEAD.
-if ((await api(`pulls/${number}`)).head.sha !== sha) throw new Error('PR advanced during evaluation')
-const decision = { context, sha, runId: run.id, policyCommit: policy.trustCommit, policyDigest: policyDigest(policy), conclusion: errors.length ? 'failure' : 'success', errors }
-if (mode === '--publish') {
-  if (!Number.isSafeInteger(policy.appId) || policy.appId <= 0 || policy.appId === 15368) throw new Error('independent App ID required; Actions identity prohibited')
-  const check = await api('check-runs', 'POST', { name: context, head_sha: sha, status: 'completed', conclusion: decision.conclusion, output: { title: decision.conclusion, summary: JSON.stringify(decision) } })
-  if (check.app?.id !== policy.appId) throw new Error('check issuer differs from configured independent App; do not enable protection')
-}
-console.log(JSON.stringify(decision, null, 2))
-if (errors.length) process.exitCode = 1
+
