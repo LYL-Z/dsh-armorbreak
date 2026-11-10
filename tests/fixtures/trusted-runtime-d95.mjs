@@ -48,5 +48,3 @@ export async function publish(api,{config,repository,target,decision,externalId,
  return readback
 }
 export async function withLease(path,action){let handle;try{handle=await open(path,'wx',0o600)}catch{throw new Error('controller lease exists; explicit recovery required')}try{return await action()}finally{await handle.close();await unlink(path)}}
-
-
