@@ -1,10 +1,11 @@
 # CHANGELOG
 
-## 2.3.1 — Windows release-gate repair (candidate)
+## 2.3.1 — Windows release-gate repair (Stable, 2026-11-08)
 
 - Split V2.2 task-read and report-read diagnostics; retain redacted Windows runner and ACL/path metadata on failed drills.
 - Run actual V2.2-to-candidate package deployment and rollback during PR and exact-main validation before a release Tag can be created.
-- Preserve the failed, protected `v2.3.0` Tag and historical failure logs. This candidate is not released until its exact-main, Tag Gate, provenance, and asset checks succeed.
+- Preserve the failed, protected `v2.3.0` Tag and historical failure logs. V2.3.1 was built from exact main commit `cfb984b7178bb8b1dca9728325fdbe599b5430a3`; exact-main CI, Windows deployment/rollback, Tag Gate, GitHub attestations, and independent asset hash checks passed. See [release verification](docs/releases/v2.3.1-verification.md).
+- Release assurance is `OWNER_APPROVED_SELF_REVIEW`; no independent human security audit or legal opinion is claimed. A second Windows principal remains unverified, and no OS-integrated updater is shipped.
 
 ## 2.3.0 — unpublished Stable candidate (PR #25)
 

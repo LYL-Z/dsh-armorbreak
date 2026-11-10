@@ -9,10 +9,10 @@
 
 ArmorBreak is an open-source toolkit for **authorized** reverse engineering, source-code review, packet analysis, digital forensics, and security research. One host-neutral Core powers **DeepSeek Harness**, **MCP-capable agents**, and **standalone Node.js integrations**. Models can help plan and interpret; they do **not** grant permission to act.
 
-**[Download Stable](https://github.com/LYL-Z/dsh-armorbreak/releases/tag/v2.2.0)** · **[Quick start](#quick-start)** · **[Integrations](#choose-an-integration)** · **[Release verification](#v220-stable-verification)** · **[Documentation](#documentation)** · **[中文](README.zh-CN.md)**
+**[Download Stable](https://github.com/LYL-Z/dsh-armorbreak/releases/tag/v2.3.1)** · **[Quick start](#quick-start)** · **[Integrations](#choose-an-integration)** · **[V2.3.1 verification](#v231-stable-verification)** · **[Documentation](#documentation)** · **[中文](README.zh-CN.md)**
 
 [![CI](https://github.com/LYL-Z/dsh-armorbreak/actions/workflows/ci.yml/badge.svg)](https://github.com/LYL-Z/dsh-armorbreak/actions/workflows/ci.yml)
-![Stable](https://img.shields.io/badge/release-v2.2.0%20Stable-2ea44f)
+![Stable](https://img.shields.io/badge/release-v2.3.1%20Stable-2ea44f)
 ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22-43853d)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
@@ -20,7 +20,7 @@ ArmorBreak is an open-source toolkit for **authorized** reverse engineering, sou
 > **V2.2.0 Stable is published.** It covers a **Verified Core** and **Experimental Provider Integrations**. Commercial OpenAI, Anthropic, and Gemini endpoints remain `LIVE_UNVERIFIED`; AI-assisted security review is not human certification. The historical **Full GA** contract remains `gaReady:false` with 18 blockers. Read [release verification](#v220-stable-verification) and [scope/limitations](#scope-and-limitations) before relying on a result.
 
 > [!NOTE]
-> **V2.3.1 is the active Stable release candidate.** V2.3.0 remains an unpublished historical candidate whose protected Tag Gate failed; its Tag and failure history are retained. V2.3.1 targets the Windows upgrade/rollback gate repair. It is not available as Stable until its public release page and exact assets are verified. The owner-approved implementation-agent self-review policy does not claim independent human security or legal certification. See [V2.3.1 release notes](docs/releases/v2.3.1.md), [V2.3.0 historical notes](docs/releases/v2.3.0.md), and [portable install requirements](docs/v2.3/portable-install.md).
+> **V2.3.1 Stable is published.** Its protected annotated tag points to exact main commit `cfb984b7178bb8b1dca9728325fdbe599b5430a3`; public assets, checksums, SBOM, and GitHub attestations are documented in [V2.3.1 release verification](docs/releases/v2.3.1-verification.md). The owner approved an implementation-agent AI self-review path; no independent human security audit, legal opinion, or certification is claimed. The failed protected V2.3.0 tag and its history remain unchanged. See [V2.3.1 release notes](docs/releases/v2.3.1.md), [V2.3.0 historical notes](docs/releases/v2.3.0.md), and [portable install requirements](docs/v2.3/portable-install.md).
 
 ## Why ArmorBreak?
 
@@ -34,6 +34,24 @@ ArmorBreak is an open-source toolkit for **authorized** reverse engineering, sou
 ArmorBreak is a **research toolkit**, not a guarantee that a target is vulnerable or a substitute for independent security assessment.
 
 ## Quick start
+
+### V2.3.1 Stable verification
+
+Download the published V2.3.1 assets and verify the archive and SBOM hashes before extraction. The archive is 5,961,689 bytes. JavaScript and TypeScript source-symbol analysis requires the separately installed TypeScript 5.9.3 runtime dependency; see the portable install requirements.
+
+```powershell
+$rel = Join-Path $env:TEMP 'armorbreak-v2.3.1'
+New-Item -ItemType Directory -Force $rel | Out-Null
+gh release download v2.3.1 --repo LYL-Z/dsh-armorbreak --dir $rel
+Get-FileHash "$rel\armorbreak-portable-2.3.1.tar.gz" -Algorithm SHA256
+Get-FileHash "$rel\armorbreak-portable-2.3.1.tar.gz.sbom.cdx.json" -Algorithm SHA256
+Get-Content "$rel\SHA256SUMS.txt"
+```
+
+Expected archive SHA-256: `28dcd964448b9a8a9496e7432a45fbeefe78ef85a83f6fa9f3053301e3e58087`<br />
+Expected CycloneDX SBOM SHA-256: `06a3935ef764aa9f964cb5fe966e34f0512409b55f6174f3e41a740802e186cd`
+
+The release page includes the package manifest, SBOM, checksums, build and release-authorization verification records, Windows rollback evidence, and release verification report. V2.2.0 remains available at its historical tag and release.
 
 ### Option A — verify the published Stable release
 
