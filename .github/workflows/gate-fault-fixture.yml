@@ -1,0 +1,44 @@
+name: Isolated development gate fault fixture
+on:
+  workflow_call:
+    inputs:
+      scenario:
+        type: string
+        required: true
+permissions:
+  contents: read
+jobs:
+  common-matrix:
+    if: ${{ inputs.scenario != 'skipped' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - env:
+          SCENARIO: ${{ inputs.scenario }}
+        run: |
+          if [ "$SCENARIO" = failure ]; then exit 1; fi
+          if [ "$SCENARIO" = timeout ]; then sleep 90; fi
+          echo 'Benign fixture only; not a product matrix'
+  common-l0:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'Benign result fixture; not L0 coverage'
+  common-l1:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'Benign result fixture; not L1 coverage'
+  fixture-gate:
+    if: ${{ always() }}
+    needs: [common-matrix, common-l0, common-l1]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+      - env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: node scripts/validate-development-gate.mjs
