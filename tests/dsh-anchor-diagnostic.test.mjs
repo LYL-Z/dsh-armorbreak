@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { mkdtemp, writeFile, readFile, rm, symlink } from 'node:fs/promises'
+import { mkdtemp, mkdir, writeFile, readFile, rm, symlink } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { spawnSync } from 'node:child_process'
@@ -42,7 +42,11 @@ test('malformed spec, duplicate IDs and invalid paths fail closed', async (t) =>
 
 test('diagnostic does not follow symlinked host files', async (t) => {
   const f = await fixture(t, [{ id: 'a', literal: 'abc' }])
-  await symlink(f.specFile, f.targetFile)
+  if (process.platform === 'win32') {
+    const outside = f.specFile + '.external'
+    await mkdir(outside)
+    await symlink(outside, f.targetFile, 'junction')
+  } else await symlink(f.specFile, f.targetFile)
   await assert.rejects(() => diagnoseDshAnchors(f), /symlinked file/)
 })
 

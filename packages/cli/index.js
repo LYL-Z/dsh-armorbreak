@@ -67,6 +67,10 @@ export async function runCli(argv = process.argv.slice(2), dependencies = {}) {
   const engine = await createEngine(cfg)
   try {
     const ctx = { principal: cfg.principal, workspaceId: cfg.workspaceId, requestId: `cli-${Date.now()}`, traceId: `trace-${Date.now()}` }
+    if (command === 'host' && positional[0] === 'health') {
+      return print(await engine.analyze(ctx, { capability: 'host.health', target: options.resources,
+        options: options['expected-version'] === undefined ? {} : { expectedVersion: options['expected-version'] } }), options.json)
+    }
     if (command === 'doctor') return print(await engine.health(ctx), options.json)
     if (command === 'capabilities') return print(await engine.capabilities(ctx), options.json)
     if (command === 'agent' && positional[0] === 'doctor') {

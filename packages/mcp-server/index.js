@@ -124,6 +124,11 @@ async function loadSkills() {
 
 const TOOLS = [
   {
+    name: 'armorbreak_host_health',
+    description: 'Read-only Desktop disk health through Core policy, tasks, evidence and reports. Never proves runtime compatibility.',
+    inputSchema: { type: 'object', required: ['resources'], properties: { resources: { type: 'string' }, expectedVersion: { type: 'string' } }, additionalProperties: false },
+  },
+  {
     name: 'armorbreak_health',
     description: 'Read ArmorBreak health for the configured trusted workspace.',
     inputSchema: { type: 'object', properties: {}, additionalProperties: false },
@@ -305,6 +310,11 @@ export class McpServer {
         if (name === 'armorbreak_health') value = await this.engine.health(ctx)
         else if (name === 'armorbreak_capabilities') value = await this.engine.capabilities(ctx)
         else if (name === 'armorbreak_analyze') value = await this.engine.analyze(ctx, { capability: args.capability, target: args.target, options: args.options })
+        else if (name === 'armorbreak_host_health') {
+          if (Object.keys(args).some(key => !['resources', 'expectedVersion'].includes(key))) throw new Error('unsupported host health argument')
+          value = await this.engine.analyze(ctx, { capability: 'host.health', target: args.resources,
+            options: args.expectedVersion === undefined ? {} : { expectedVersion: args.expectedVersion } })
+        }
         else if (name === 'armorbreak_workflow') {
           if (!['list', 'start'].includes(args.action)) throw new Error('armorbreak_workflow action must be list or start')
           const allowed = args.action === 'list' ? ['action'] : ['action', 'workflow', 'target']
