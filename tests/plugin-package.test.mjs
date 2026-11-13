@@ -65,6 +65,8 @@ test('actual Core, generic MCP and independent CLI verify local listed files and
   assert.equal(result.result.isError, false)
   const output = JSON.parse(result.result.content[0].text)
   assert.equal(output.data.verificationStatus, 'LOCAL_LISTED_FILES_VERIFIED')
+  assert.equal(output.data.plugins[0].localFilesVerified, true)
+  for (const key of ['policyEligible', 'sourceAuthenticated', 'rightsVerified', 'activationAuthorized', 'releaseEligible']) assert.equal(output.data.plugins[0][key], false, key)
   assert.ok(output.taskId && output.evidenceIds.length && output.reportPath)
   assert.equal((await call({ enable: true })).result.isError, true)
   const cli = spawnSync(process.execPath, ['packages/cli/index.js', 'plugin', 'verify', '--root', workspace, '--json'], { encoding: 'utf8', env: { ...process.env, ARMORBREAK_STATE_ROOT: join(root, 'cli-state'), ARMORBREAK_WORKSPACE: workspace }, timeout: 30000 })
