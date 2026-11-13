@@ -124,6 +124,10 @@ async function loadSkills() {
 
 const TOOLS = [
   {
+    name: 'armorbreak_config_preview', description: 'Resolve a workspace-scoped JSON profile/overlay bundle through Core; hashes only, no host writes.',
+    inputSchema: { type: 'object', required: ['bundle'], properties: { bundle: { type: 'string' } }, additionalProperties: false },
+  },
+  {
     name: 'armorbreak_host_health',
     description: 'Read-only Desktop disk health through Core policy, tasks, evidence and reports. Never proves runtime compatibility.',
     inputSchema: { type: 'object', required: ['resources'], properties: { resources: { type: 'string' }, expectedVersion: { type: 'string' } }, additionalProperties: false },
@@ -310,6 +314,10 @@ export class McpServer {
         if (name === 'armorbreak_health') value = await this.engine.health(ctx)
         else if (name === 'armorbreak_capabilities') value = await this.engine.capabilities(ctx)
         else if (name === 'armorbreak_analyze') value = await this.engine.analyze(ctx, { capability: args.capability, target: args.target, options: args.options })
+        else if (name === 'armorbreak_config_preview') {
+          if (Object.keys(args).some(key => key !== 'bundle')) throw new Error('unsupported config preview argument')
+          value = await this.engine.analyze(ctx, { capability: 'configuration.preview', target: args.bundle })
+        }
         else if (name === 'armorbreak_host_health') {
           if (Object.keys(args).some(key => !['resources', 'expectedVersion'].includes(key))) throw new Error('unsupported host health argument')
           value = await this.engine.analyze(ctx, { capability: 'host.health', target: args.resources,
