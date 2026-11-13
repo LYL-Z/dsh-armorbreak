@@ -11,7 +11,7 @@ import { createEngine } from '../packages/engine-node/index.js'
 const HERE = resolve(fileURLToPath(new URL('.', import.meta.url)))
 const DEFAULT_ROOT = resolve(HERE, '..')
 const LOOPBACK = new Set(['127.0.0.1', '::1', 'localhost'])
-const NATIVE_CAPABILITIES = Object.freeze(['host.health', 'configuration.preview', 'maintenance.plan', 'plugin.verify'])
+const NATIVE_CAPABILITIES = Object.freeze(['host.health', 'host.diagnostics', 'configuration.preview', 'maintenance.plan', 'plugin.verify'])
 
 async function boundedJson(req) {
   const chunks = []; let bytes = 0
