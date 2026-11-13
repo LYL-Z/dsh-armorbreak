@@ -30,7 +30,11 @@ test('host inspection fails closed on invalid profile paths and symlinked input'
   const { home, profilePath } = await fixture(t)
   await assert.rejects(() => inspectDshHostProfile({ home, profile: '../outside' }), /invalid --profile/)
   await assert.rejects(() => inspectDshHostProfile({ home: 'relative', profile: 'web' }), /absolute --home/)
-  await symlink(join(home, 'missing-outside'), join(profilePath, 'package.json'))
+  if (process.platform === 'win32') {
+    const outside = join(home, 'outside')
+    await mkdir(outside)
+    await symlink(outside, join(profilePath, 'package.json'), 'junction')
+  } else await symlink(join(home, 'missing-outside'), join(profilePath, 'package.json'))
   await writeFile(join(profilePath, 'cordis.patch.yml'), 'name: harmless\n')
   const report = await inspectDshHostProfile({ home, profile: 'web' })
   assert.equal(report.manifest.status, 'SYMLINK_NOT_FOLLOWED')

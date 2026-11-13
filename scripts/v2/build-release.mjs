@@ -14,6 +14,7 @@ import { fileURLToPath } from 'node:url'
 import { signArtifact, verifyArtifactSignature } from './artifact-signature.mjs'
 import { deterministicGzip } from './deterministic-gzip.mjs'
 import { readSafeRepoFile } from '../../lib/release/safeEvidenceFile.js'
+import { CapabilityRegistry } from '../../packages/core/src/capabilities.js'
 
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)))
 const args = process.argv.slice(2)
@@ -223,8 +224,12 @@ try {
     env: { ...process.env, ARMORBREAK_STATE_ROOT: join(cleanDir, '.state'), ARMORBREAK_WORKSPACE: cleanDir },
     encoding: 'utf8', timeout: 120_000,
   })
-  const capabilities = cli.status === 0 ? JSON.parse(cli.stdout).length : 0
-  cleanRoom = { extracted: true, cliCapabilities: capabilities, result: capabilities === 53 ? 'PASS' : 'FAIL', stderr: String(cli.stderr ?? '').slice(0, 1000) }
+  const packaged = cli.status === 0 ? JSON.parse(cli.stdout).map(item => item.id).sort() : []
+  const registry = await new CapabilityRegistry({ analyzersDir: join(root, 'lib/analyzers') }).load()
+  const expected = registry.list().map(item => item.id).sort()
+  const matches = expected.length >= 53 && registry.diagnostics.length === 0 && JSON.stringify(packaged) === JSON.stringify(expected)
+  cleanRoom = { extracted: true, cliCapabilities: packaged.length, expectedCapabilityIds: expected,
+    packagedCapabilityIds: packaged, result: matches ? 'PASS' : 'FAIL', stderr: String(cli.stderr ?? '').slice(0, 1000) }
 } catch (error) {
   cleanRoom = { extracted: false, cliCapabilities: 0, result: 'FAIL', error: String(error.message) }
 } finally {
