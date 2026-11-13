@@ -72,6 +72,7 @@ export async function runCli(argv = process.argv.slice(2), dependencies = {}) {
         options: options['expected-version'] === undefined ? {} : { expectedVersion: options['expected-version'] } }), options.json)
     }
     if (command === 'doctor') return print(await engine.health(ctx), options.json)
+    if (command === 'config' && positional[0] === 'preview') return print(await engine.analyze(ctx, { capability: 'configuration.preview', target: options.bundle }), options.json)
     if (command === 'capabilities') return print(await engine.capabilities(ctx), options.json)
     if (command === 'agent' && positional[0] === 'doctor') {
       const configPath = String(options.config ?? '')
