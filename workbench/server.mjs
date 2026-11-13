@@ -4,10 +4,24 @@ import { createServer } from 'node:http'
 import { readFileSync, readdirSync, existsSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { randomBytes, randomUUID, timingSafeEqual } from 'node:crypto'
+import { isAbsolute } from 'node:path'
+import { createEngine } from '../packages/engine-node/index.js'
 
 const HERE = resolve(fileURLToPath(new URL('.', import.meta.url)))
 const DEFAULT_ROOT = resolve(HERE, '..')
 const LOOPBACK = new Set(['127.0.0.1', '::1', 'localhost'])
+const NATIVE_CAPABILITIES = Object.freeze(['host.health', 'configuration.preview', 'maintenance.plan', 'plugin.verify'])
+
+async function boundedJson(req) {
+  const chunks = []; let bytes = 0
+  for await (const chunk of req) {
+    bytes += chunk.length
+    if (bytes > 4096) throw new Error('request exceeds 4096 bytes')
+    chunks.push(chunk)
+  }
+  return JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(Buffer.concat(chunks)) || '{}')
+}
 
 function expectedAuthority(host, port) {
   const urlHost = host.includes(':') ? `[${host}]` : host
@@ -92,6 +106,7 @@ export function readState(root = DEFAULT_ROOT) {
   const skills = skillState(root)
   return {
     schemaVersion: 'armorbreak.workbench-state/v1',
+    evidenceScope: 'HISTORICAL_ACCEPTANCE_RECORDS',
     generatedAt: new Date().toISOString(),
     readiness: { ready: Boolean(readiness.ready), releaseTag: Boolean(readiness.releaseTag), blockers: readiness.blockers ?? [], waived: readiness.waived ?? [], waiver: readiness.waiver ?? null },
     hosts: (matrix.hosts ?? []).map((host) => ({
@@ -123,9 +138,20 @@ function send(res, status, body, type = 'application/json; charset=utf-8') {
   res.end(body)
 }
 
-export async function createWorkbenchServer({ root = DEFAULT_ROOT, host = '127.0.0.1', port = 0 } = {}) {
+export async function createWorkbenchServer({ root = DEFAULT_ROOT, host = '127.0.0.1', port = 0, native = null } = {}) {
   if (!LOOPBACK.has(host)) throw new Error('Workbench must bind loopback')
+  let engine = null, ctx = null, busy = false
+  const token = randomBytes(32).toString('hex')
+  if (native) {
+    if (!isAbsolute(native.workspaceId ?? '') || !isAbsolute(native.stateRoot ?? '')) throw new Error('native panel requires explicit absolute workspace and state root')
+    const principal = { id: 'workbench-local', kind: 'local-user', workspaces: [native.workspaceId] }
+    engine = await createEngine({ stateRoot: native.stateRoot, principals: [principal] })
+    ctx = { principal, workspaceId: native.workspaceId, requestId: 'workbench', traceId: randomUUID() }
+  }
   const server = createServer(async (req, res) => {
+    res.setHeader('cache-control', 'no-store')
+    res.setHeader('x-content-type-options', 'nosniff')
+    res.setHeader('content-security-policy', "default-src 'self'; script-src 'self'; style-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'")
     const expectedOrigin = expectedAuthority(host, req.socket.localPort)
     const requestAuthority = parseAuthority(req.headers.host)
     if (!requestAuthority || requestAuthority !== expectedOrigin.host) {
@@ -139,13 +165,27 @@ export async function createWorkbenchServer({ root = DEFAULT_ROOT, host = '127.0
       }
     }
     const url = new URL(req.url, `http://${req.headers.host ?? '127.0.0.1'}`)
+    if (req.method === 'GET' && url.pathname === '/api/native/session') return send(res, 200, JSON.stringify({ enabled: Boolean(engine), csrf: engine ? token : null, capabilities: engine ? NATIVE_CAPABILITIES : [], state: 'READ_ONLY_CORE', evidenceScope: 'CURRENT_CALL_RESULTS_ONLY' }))
+    if (url.pathname === '/api/native/run') {
+      if (!engine) return send(res, 503, JSON.stringify({ error: 'native panel not configured' }))
+      const provided = req.headers['x-armorbreak-session']
+      if (req.method !== 'POST' || typeof provided !== 'string' || !/^[a-f0-9]{64}$/.test(provided) || !timingSafeEqual(Buffer.from(provided), Buffer.from(token)) || req.headers['content-type'] !== 'application/json') return send(res, 403, JSON.stringify({ error: 'session or method rejected' }))
+      if (busy) return send(res, 429, JSON.stringify({ error: 'one Core request is already running' }))
+      busy = true
+      try {
+        const input = await boundedJson(req)
+        if (!input || Array.isArray(input) || Object.keys(input).some(key => !['capability', 'target', 'expectedVersion'].includes(key)) || !NATIVE_CAPABILITIES.includes(input.capability) || typeof input.target !== 'string' || input.target.length > 2048 || (input.expectedVersion !== undefined && (input.capability !== 'host.health' || typeof input.expectedVersion !== 'string'))) return send(res, 400, JSON.stringify({ error: 'invalid native request' }))
+        const result = await engine.analyze({ ...ctx, requestId: randomUUID(), traceId: randomUUID() }, { capability: input.capability, target: input.target, options: input.expectedVersion === undefined ? {} : { expectedVersion: input.expectedVersion } })
+        return send(res, 200, JSON.stringify({ taskId: result.taskId, data: result.data, evidenceIds: result.evidenceIds, reportAvailable: Boolean(result.reportPath), hostModified: false }))
+      } catch {
+        return send(res, 400, JSON.stringify({ error: 'CORE_REQUEST_REJECTED', detail: 'Check the scoped input and local Core audit. Raw paths and input values are not returned.' }))
+      } finally { busy = false }
+    }
     if (req.method === 'GET' && url.pathname === '/health') return send(res, 200, JSON.stringify({ ok: true }))
     if (req.method === 'GET' && url.pathname === '/api/state') return send(res, 200, JSON.stringify(readState(root)))
     if (req.method === 'POST' && url.pathname === '/api/diagnose') {
-      let body = ''
-      for await (const chunk of req) body += chunk
       let input
-      try { input = JSON.parse(body || '{}') } catch { return send(res, 400, JSON.stringify({ error: 'invalid JSON' })) }
+      try { input = await boundedJson(req) } catch { return send(res, 400, JSON.stringify({ error: 'invalid or oversized JSON' })) }
       if (input.host) {
         const state = readState(root)
         const row = state.hosts.find((item) => item.host === input.host)
@@ -173,18 +213,21 @@ export async function createWorkbenchServer({ root = DEFAULT_ROOT, host = '127.0
     }
     return send(res, 404, JSON.stringify({ error: 'not found' }))
   })
-  await new Promise((resolvePromise, reject) => { server.once('error', reject); server.listen(port, host, resolvePromise) })
+  try { await new Promise((resolvePromise, reject) => { server.once('error', reject); server.listen(port, host, resolvePromise) }) } catch (error) { await engine?.close(); throw error }
   return {
     host,
     port: server.address().port,
     url: `http://${host}:${server.address().port}`,
-    close: () => new Promise((resolvePromise) => server.close(resolvePromise)),
+    close: async () => { await new Promise((resolvePromise) => server.close(resolvePromise)); await engine?.close() },
   }
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {
   const index = process.argv.indexOf('--port')
   const port = index >= 0 ? Number(process.argv[index + 1]) : 8787
-  const server = await createWorkbenchServer({ port })
+  const workspaceIndex = process.argv.indexOf('--workspace'), stateIndex = process.argv.indexOf('--state-root')
+  if ((workspaceIndex >= 0) !== (stateIndex >= 0)) throw new Error('provide both --workspace and --state-root')
+  const native = workspaceIndex >= 0 ? { workspaceId: process.argv[workspaceIndex + 1], stateRoot: process.argv[stateIndex + 1] } : null
+  const server = await createWorkbenchServer({ port, native })
   console.log(JSON.stringify({ url: server.url, port: server.port }))
 }

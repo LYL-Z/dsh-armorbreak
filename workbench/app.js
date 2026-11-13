@@ -3,6 +3,30 @@ const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({ '&': '
 const badge = (value, tone = '') => `<span class="badge ${tone}">${esc(value)}</span>`
 
 let state = null
+let nativeSession = null
+
+async function loadNative() {
+  const response = await fetch('/api/native/session')
+  if (!response.ok) throw new Error('Native Core session unavailable')
+  nativeSession = await response.json()
+  $('native-status').textContent = nativeSession.enabled ? 'Current Core calls are scoped to the workspace configured at server startup. No host writes.' : 'Native Core is disabled. Start the server with explicit --workspace and --state-root.'
+  $('native-capability').innerHTML = nativeSession.capabilities.map(id => `<option value="${esc(id)}">${esc(id)}</option>`).join('')
+  $('native-run').disabled = !nativeSession.enabled
+}
+
+$('native-form').addEventListener('submit', async event => {
+  event.preventDefault()
+  if (!nativeSession?.enabled) return
+  $('native-run').disabled = true
+  try {
+    const input = { capability: $('native-capability').value, target: $('native-target').value }
+    if (input.capability === 'host.health' && $('native-version').value) input.expectedVersion = $('native-version').value
+    const response = await fetch('/api/native/run', { method: 'POST', headers: { 'content-type': 'application/json', 'x-armorbreak-session': nativeSession.csrf }, body: JSON.stringify(input) })
+    const result = await response.json()
+    $('native-output').textContent = JSON.stringify({ httpStatus: response.status, ...result }, null, 2)
+  } catch { $('native-output').textContent = 'Request failed. No successful result is inferred.' }
+  finally { $('native-run').disabled = false }
+})
 
 async function load() {
   const response = await fetch('/api/state')
@@ -13,9 +37,9 @@ async function load() {
 
 function toneFor(value) {
   const text = String(value)
-  if (/PASS|L0_COMPLETED|HOST_VERIFIED|TESTED|REAL_VERIFIED/i.test(text)) return 'pass'
-  if (/BLOCKED|NOT_RUN|NOT_STARTED|CONFIG/i.test(text)) return 'warn'
+  if (/BLOCKED|NOT_|UNKNOWN|UNVERIFIED|UNSUPPORTED|PARTIAL|CONFIG/i.test(text)) return 'warn'
   if (/FAIL|UNSIGNED|MISSING/i.test(text)) return 'bad'
+  if (/PASS|L0_COMPLETED|HOST_VERIFIED|TESTED|REAL_VERIFIED/i.test(text)) return 'pass'
   return ''
 }
 
@@ -108,3 +132,4 @@ for (const tab of document.querySelectorAll('.tab')) {
   })
 }
 load().catch((error) => { $('status-label').textContent = 'error'; $('diag-output').textContent = String(error) })
+loadNative().catch(() => { $('native-status').textContent = 'Native Core session unavailable'; $('native-run').disabled = true })
