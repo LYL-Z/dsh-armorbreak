@@ -82,8 +82,16 @@ test('symlinked metadata is not followed, even if it points to a valid package',
   const external = join(root, 'outside.json')
   await writeFile(external, JSON.stringify({ name: '@deepseek-ai/dsh-desktop-host' }))
   const dir = join(resources, 'app', 'dsh', 'node_modules', '@deepseek-ai', 'dsh-desktop-host')
-  await mkdir(dir, { recursive: true })
-  await symlink(external, join(dir, 'package.json'))
+  if (process.platform === 'win32') {
+    const outsideDir = join(root, 'outside-dir')
+    await mkdir(outsideDir)
+    await writeFile(join(outsideDir, 'package.json'), await readFile(external))
+    await mkdir(join(dir, '..'), { recursive: true })
+    await symlink(outsideDir, dir, 'junction')
+  } else {
+    await mkdir(dir, { recursive: true })
+    await symlink(external, join(dir, 'package.json'))
+  }
   const report = await inspectDshRuntimeLayout({ resources })
   assert.equal(report.status, 'INCOMPLETE')
   assert.equal(report.identity.family, 'UNVERIFIED')
@@ -92,7 +100,7 @@ test('symlinked metadata is not followed, even if it points to a valid package',
 test('symlinked resources directory is rejected without inspecting outside files', async t => {
   const { root, resources } = await fixture(t)
   await official(resources)
-  await symlink(resources, join(root, 'alias'), 'dir')
+  await symlink(resources, join(root, 'alias'), process.platform === 'win32' ? 'junction' : 'dir')
   const report = await inspectDshRuntimeLayout({ resources: join(root, 'alias') })
   assert.equal(report.directory, 'SYMLINK_NOT_FOLLOWED')
   assert.equal(report.disk.archive, 'NOT_INSPECTED')
