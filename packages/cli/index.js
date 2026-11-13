@@ -76,6 +76,7 @@ export async function runCli(argv = process.argv.slice(2), dependencies = {}) {
     if (command === 'plugin' && positional[0] === 'verify') return print(await engine.analyze(ctx, { capability: 'plugin.verify', target: options.root }), options.json)
     if (command === 'maintenance' && positional[0] === 'plan') return print(await engine.analyze(ctx, { capability: 'maintenance.plan', target: options.root }), options.json)
     if (command === 'config' && positional[0] === 'preview') return print(await engine.analyze(ctx, { capability: 'configuration.preview', target: options.bundle }), options.json)
+    if (command === 'assessment' && positional[0] === 'review') return print(await engine.analyze(ctx, { capability: 'assessment.review', target: options.bundle }), options.json)
     if (command === 'capabilities') return print(await engine.capabilities(ctx), options.json)
     if (command === 'agent' && positional[0] === 'doctor') {
       const configPath = String(options.config ?? '')

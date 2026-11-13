@@ -23,7 +23,7 @@ async function cliFixture() {
 test('CLI capabilities, analyze and task status work without DSH', async () => {
   const f = await cliFixture()
   const caps = JSON.parse((await f.run('capabilities', '--json')).stdout)
-  assert.equal(caps.length, 58)
+  assert.equal(caps.length, 59)
   const contractCapability = caps.find((item) => item.id === 'rebuild.contract')
   assert.equal(contractCapability.riskLevel, 'L0')
   assert.deepEqual(contractCapability.supportedLevels, ['S5'])
@@ -80,7 +80,7 @@ test('MCP server process emits only JSON-RPC frames on stdout', async () => {
   for (const line of lines) assert.doesNotThrow(() => JSON.parse(line))
   const second = JSON.parse(lines[1])
   const payload = JSON.parse(second.result.content[0].text)
-  assert.equal(payload.length, 58)
+  assert.equal(payload.length, 59)
   assert.ok(payload.some((item) => item.id === 'rebuild.contract' && item.riskLevel === 'L0'))
   assert.ok(payload.some((item) => item.id === 'rebuild.compare' && item.riskLevel === 'L0'))
   assert.equal(err.trim(), '')
