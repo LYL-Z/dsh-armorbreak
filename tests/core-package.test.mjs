@@ -21,7 +21,7 @@ test('Universal Core imports and lists capabilities without DSH/Cordis', async (
   const stateRoot = await mkdtemp(join(tmpdir(), 'abm-core-'))
   const core = await createCore({ stateRoot })
   const capabilities = await core.capabilities(ctx)
-  assert.equal(capabilities.length, 56)
+  assert.equal(capabilities.length, 57)
   assert.equal(core.protocolVersion, '1.0.0')
   await core.close?.()
 })
