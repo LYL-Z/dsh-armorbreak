@@ -35,10 +35,11 @@
       <button class="tab" data-tab="tasks" role="tab">Tasks</button>
       <button class="tab" data-tab="evidence" role="tab">Evidence</button>
       <button class="tab" data-tab="diagnostics" role="tab">Diagnostics</button>
+      <button class="tab" data-tab="native" role="tab">Native Core</button>
     </nav>
 
     <section id="panel-hosts" class="panel active">
-      <div class="panel-head"><h2>Host compatibility</h2><p>Handshake and real model task state, never inferred from config alone.</p></div>
+      <div class="panel-head"><h2>Historical host compatibility</h2><p>Archived acceptance records, not current runtime observations. Use Native Core for a new scoped call.</p></div>
       <div class="table-wrap"><table><thead><tr><th>Host</th><th>Version</th><th>Install</th><th>Handshake</th><th>Task</th><th>Evidence level</th></tr></thead><tbody id="hosts-body"></tbody></table></div>
       <div id="host-detail" class="detail">Select a host to inspect limitations and evidence.</div>
     </section>
@@ -68,6 +69,16 @@
       <div class="panel-head"><h2>API diagnostics</h2><p>Configuration diagnostics only; a live provider call requires a real credential and explicit test.</p></div>
       <div class="diagnose-row"><select id="diag-provider"></select><button id="diag-run" type="button">Run diagnostic</button></div>
       <pre id="diag-output" class="output">Choose a provider.</pre>
+    </section>
+    <section id="panel-native" class="panel">
+      <div class="panel-head"><h2>Native Core · read-only</h2><p id="native-status">Loading current session. Host mutation and privilege approval are not available in this panel.</p></div>
+      <form id="native-form" class="cards-list">
+        <label>Capability <select id="native-capability" required></select></label>
+        <label>Explicit workspace target <input id="native-target" type="text" required placeholder="Authorized absolute file or directory" maxlength="2048" /></label>
+        <label>Expected version (host.health only) <input id="native-version" type="text" placeholder="Optional exact disk version" maxlength="80" /></label>
+        <button id="native-run" type="submit" disabled>Run through Core</button>
+      </form>
+      <pre id="native-output" class="output">No live result yet. UNKNOWN is not a successful runtime verification.</pre>
     </section>
   </main>
   <footer>Read-only Workbench · no secrets rendered · <span id="generated"></span></footer>
