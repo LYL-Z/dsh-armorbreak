@@ -47,7 +47,7 @@ export async function verifyNpmDistribution({ repositoryRoot, commit = 'HEAD', o
     const required = ['packages/core/index.js','packages/cli/index.js','packages/mcp-server/index.js','packages/core/src/syntheticConfiguration.js','workbench/server.mjs','npm-shrinkwrap.json']
     for (const path of required) if (!report.packFiles.includes(path)) throw new Error('DISTRIBUTION_MISSING: ' + path)
     const allowedRoots = new Set(['lib','packages','plugins','skills','locale','workbench'])
-    const allowedFiles = new Set(['package.json','npm-shrinkwrap.json','index.js','tools.js','skills.js','client.js','cordis.patch.yml','icon.svg','README.md','CHANGELOG.md','LICENSE','SECURITY.md','CONTRIBUTING.md','docs/v24/distribution.md'])
+    const allowedFiles = new Set(['package.json','npm-shrinkwrap.json','index.js','tools.js','skills.js','client.js','cordis.patch.yml','icon.svg','README.md','README.zh-CN.md','CHANGELOG.md','LICENSE','SECURITY.md','CONTRIBUTING.md','docs/v24/distribution.md'])
     for (const path of report.packFiles) {
       if (!allowedFiles.has(path) && !allowedRoots.has(path.split('/')[0])) throw new Error('UNRELATED_DISTRIBUTION_FILE: ' + path)
       if (/(^|\/)(node_modules|tests?|fixtures?|evidence|acceptance|\.git|\.armorbreak)(\/|$)|(^|\/)\.env(?:\.|$)|\.(?:pem|key|p12|pfx|pyc)$/i.test(path)) throw new Error('SENSITIVE_DISTRIBUTION_PATH: ' + path)
