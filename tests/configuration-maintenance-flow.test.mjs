@@ -24,7 +24,22 @@ test('YAML import -> private profile/overlay -> approved synthetic apply -> exac
   await lab.rollback(plan.planId, { request: async () => 'allowed-once' })
   assert.deepEqual(await readFile(join(lab.data, 'config.txt')), Buffer.from(configuration.source))
   const audit = await readFile(join(lab.control, 'audit.jsonl'), 'utf8')
-  assert.match(audit, /COMMITTED/); assert.match(audit, /ROLLED_BACK/); assert.doesNotMatch(audit, /privatePin|1234|5678/)
+  const events = audit.trim().split('\n').map(line => JSON.parse(line))
+  assert.deepEqual(events.map(event => event.action), ['synthetic-maintenance.apply.approved', 'synthetic-maintenance.COMMITTED', 'synthetic-maintenance.rollback.approved', 'synthetic-maintenance.ROLLED_BACK'])
+  for (const [index, event] of events.entries()) {
+    const approval = event.action.endsWith('.approved')
+    assert.deepEqual(Object.keys(event).sort(), ['seq','at','prevHash','action','taskId','hash', ...(approval ? ['approvalId','riskLevel'] : ['changes'])].sort())
+    assert.equal(event.taskId, plan.planId); assert.equal(event.seq, index + 1)
+    assert.equal(new Date(event.at).toISOString(), event.at)
+    assert.match(event.hash, /^[a-f0-9]{64}$/)
+    assert.equal(event.prevHash, index ? events[index - 1].hash : 'genesis')
+    if (approval) {
+      assert.match(event.approvalId, /^lab:[a-f0-9-]{36}$/); assert.equal(event.riskLevel, 'L2')
+    } else assert.equal(event.changes, 1)
+  }
+  // Chain hashes and random UUIDs may coincidentally contain any short PIN substring.
+  // Verify the exact public event schema/values and chain, not substring absence in random metadata.
+  assert.equal((await lab.audit.verify()).valid, true)
 })
 test('reject conflict, invalid profile and invalid Cordis data before creating any synthetic plan', async t => {
   const r = await runtime(t)

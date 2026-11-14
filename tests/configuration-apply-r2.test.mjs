@@ -38,7 +38,7 @@ for (const format of ['json','yaml','cordis','purge-preset']) test(`${format}: p
   const values = ['cordis','purge-preset'].includes(format) ? { composition: [{ id: 'fixture', name: 'example/inert', disabled: true, config: { privatePin: '5678' } }] } : { privatePin: '5678' }
   const { lab, plan, preview } = await planSyntheticConfiguration(runtime, { configuration: original, profiles: [{ id: 'privateProfile', values }], selectedProfile: 'privateProfile', conflictPolicy: 'last-wins', operator: 'test', sessionId: 'test-session' })
   t.after(() => rm(lab.root, { recursive: true, force: true }))
-  assert.doesNotMatch(JSON.stringify({ plan, preview }), /privatePin|privatePreset|privateProfile|1234|5678|beforeSha256|afterSha256/)
+  assert.doesNotMatch(JSON.stringify({ plan, preview }), /privatePin|privatePreset|privateProfile|"1234"|"5678"|beforeSha256|afterSha256/)
   await assert.rejects(() => lab.apply(plan.planId), /PROVIDER_REQUIRED/)
   await lab.apply(plan.planId, provider)
   const resultSource = format === 'purge-preset' ? { preset: await readFile(join(lab.data, 'preset.txt'), 'utf8'), agent: await readFile(join(lab.data, 'agent.txt'), 'utf8') } : await readFile(join(lab.data, 'config.txt'), 'utf8')
@@ -74,7 +74,7 @@ test('CLI host bridge stages, refuses standalone self-approval, applies and reve
     try { await runCli(['config', ...args, '--json'], deps); return JSON.parse(output) } finally { process.stdout.write = original }
   }
   const staged = await call(['stage','--bundle',file]); t.after(() => rm(staged.lab, { recursive: true, force: true }))
-  assert.doesNotMatch(JSON.stringify(staged), /privatePin|privateLabel|1234|5678/)
+  assert.doesNotMatch(JSON.stringify(staged), /privatePin|privateLabel|"1234"|"5678"/)
   const args = ['--lab', staged.lab, '--plan', staged.planId]
   const publicCli = spawnSync(process.execPath, ['packages/cli/index.js','config','apply', ...args,'--json'], { env, encoding: 'utf8', timeout: 30000 })
   assert.equal(publicCli.status, 1); assert.match(publicCli.stderr, /TRUSTED_APPROVAL_PROVIDER_REQUIRED/)
