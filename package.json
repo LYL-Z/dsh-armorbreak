@@ -52,6 +52,7 @@
     "./icon": "./icon.svg"
   },
   "files": [
+    "npm-shrinkwrap.json",
     "index.js",
     "tools.js",
     "skills.js",
