@@ -45,7 +45,7 @@ function config(env = process.env) {
 export async function runCli(argv = process.argv.slice(2), dependencies = {}) {
   const { command, positional, options } = parse(argv)
   if (command === 'help' || options.help) {
-    print('armorbreak doctor|host inspect --home <absolute-path> --profile <name>|host diagnose --target <file> --spec <file>|host layout --resources <absolute-resources-directory>|capabilities|analyze|task|workflow|approval|install approve|agent|report|mcp [--json]', false)
+    print('armorbreak doctor|host inspect --home <absolute-path> --profile <name>|host diagnose --target <file> --spec <file>|host layout --resources <absolute-resources-directory>|config preview|config convert|config stage --bundle <file>|config status --lab <absolute-path>|config apply|config revert (trusted host only; fresh synthetic labs)|capabilities|analyze|task|workflow|approval|install approve|agent|report|mcp [--json]', false)
     return
   }
   if (command === 'host' && positional[0] === 'inspect') {
@@ -77,6 +77,10 @@ export async function runCli(argv = process.argv.slice(2), dependencies = {}) {
     if (command === 'maintenance' && positional[0] === 'plan') return print(await engine.analyze(ctx, { capability: 'maintenance.plan', target: options.root }), options.json)
     if (command === 'config' && positional[0] === 'preview') return print(await engine.analyze(ctx, { capability: 'configuration.preview', target: options.bundle }), options.json)
     if (command === 'config' && positional[0] === 'convert') return print(await engine.analyze(ctx, { capability: 'configuration.convert', target: options.bundle }), options.json)
+    if (command === 'config' && ['stage','apply','revert','status'].includes(positional[0])) {
+      const { configurationLabCommand } = await import('./configurationLab.js')
+      return print(await configurationLabCommand({ runtime: engine.runtime, workspace: cfg.workspaceId, operator: cfg.principal.id, operation: positional[0], options, dependencies }), options.json)
+    }
     if (command === 'assessment' && positional[0] === 'review') return print(await engine.analyze(ctx, { capability: 'assessment.review', target: options.bundle }), options.json)
     if (command === 'assessment' && positional[0] === 'assets') return print(await engine.analyze(ctx, { capability: 'assessment.assets', target: options.bundle }), options.json)
     if (command === 'capabilities') return print(await engine.capabilities(ctx), options.json)
