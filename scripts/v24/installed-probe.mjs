@@ -4,10 +4,12 @@ import { createRequire } from 'node:module'
 import { execFileSync, spawn } from 'node:child_process'
 import { once } from 'node:events'
 import { mkdir, readFile, writeFile, rm } from 'node:fs/promises'
-import { join, dirname } from 'node:path'
+import { join, dirname, relative, isAbsolute } from 'node:path'
 import { fileURLToPath } from 'node:url'
 const require = createRequire(import.meta.url)
 const pkg = require('dsh-armorbreak/package.json'), root = dirname(require.resolve('dsh-armorbreak/package.json'))
+const insideConsumer = path => { const rel = relative(process.cwd(),path); assert.ok(rel && !isAbsolute(rel) && rel !== '..' && !rel.startsWith('../') && !rel.startsWith('..\\')) }
+insideConsumer(root)
 const imported = []
 let clientRegistration
 globalThis.window = { __ModuleLoader__: { load(value) { clientRegistration = value } } }
@@ -21,7 +23,8 @@ for (const [name, path] of Object.entries(pkg.exports)) {
 assert.equal(clientRegistration.id, 'dsh-armorbreak'); delete globalThis.window
 const shrinkwrap = JSON.parse(await readFile(join(root, 'npm-shrinkwrap.json'), 'utf8'))
 for (const [name, version] of Object.entries(pkg.dependencies)) {
-  const installed = JSON.parse(await readFile(require.resolve(name + '/package.json'), 'utf8'))
+  const path=require.resolve(name + '/package.json');insideConsumer(path)
+  const installed = JSON.parse(await readFile(path, 'utf8'))
   assert.equal(installed.version, version); assert.equal(shrinkwrap.packages['node_modules/' + name].version, version)
 }
 const workspace = join(process.cwd(), 'workspace'), stateRoot = join(process.cwd(), 'state')
@@ -30,6 +33,8 @@ await writeFile(join(workspace, 'inert.txt'), 'package acceptance fixture\n')
 const env = { ...process.env, ARMORBREAK_WORKSPACE: workspace, ARMORBREAK_STATE_ROOT: stateRoot, ARMORBREAK_PRINCIPAL_ID: 'installed-test' }
 const cli = (...args) => JSON.parse(execFileSync(process.execPath, [join(root, pkg.bin.armorbreak), ...args, '--json'], { env, encoding: 'utf8', timeout: 30000 }))
 assert.equal(cli('capabilities').length, 61)
+const npm=join(dirname(process.execPath),'node_modules/npm/bin/npm-cli.js')
+assert.equal(JSON.parse(execFileSync(process.execPath,[npm,'exec','--offline','--no','--','armorbreak','capabilities','--json'],{env,encoding:'utf8',timeout:30000})).length,61)
 const hash = cli('analyze','--capability','forensics.hash','--target',join(workspace,'inert.txt')); assert.equal(hash.state, 'COMPLETED')
 const bundle = { schema: 'armorbreak.configuration-lab-request/v1', configuration: { schema: 'armorbreak.configuration-import/v1', format: 'yaml', source: 'value: old\r\nfuture: false\r\n' }, overlays: [{ id: 'inert', values: { value: 'new' } }], conflictPolicy: 'last-wins' }
 const requestPath = join(workspace,'request.json'); await writeFile(requestPath,JSON.stringify(bundle))
