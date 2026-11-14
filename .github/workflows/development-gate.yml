@@ -1,0 +1,132 @@
+name: Universal development validation
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: universal-development-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  common-matrix:
+    name: Node ${{ matrix.node }} / ${{ matrix.os }} (common development)
+    timeout-minutes: 20
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: ['22', '24']
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Assert exact candidate SHA
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v5
+        with:
+          python-version: '3.11'
+      - name: Prepare repository-local test scratch root
+        run: >-
+          node -e "require('node:fs').mkdirSync('.runtime/tmp', { recursive: true })"
+      - run: npm ci --no-audit --no-fund
+      - name: Full test suite
+        run: node --test --test-concurrency=1
+      - name: TypeScript contract check
+        run: npm run typecheck
+
+  common-l0:
+    name: Common development L0
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+      - uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v5
+        with:
+          python-version: '3.11'
+      - name: Assert exact candidate SHA
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - name: Static L0 network-free gate
+        run: node --test tests/offline-core.test.mjs
+      - name: Core benchmark (runnable subset)
+        env:
+          ARMORBREAK_OFFLINE: '1'
+        run: node scripts/v2/core-benchmark.mjs
+
+  common-l1:
+    name: Common development L1
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+      - name: Assert exact candidate SHA
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - name: Wait for Docker daemon
+        run: |
+          for attempt in $(seq 1 30); do
+            if docker info >/dev/null 2>&1; then exit 0; fi
+            echo "Docker daemon not ready (attempt ${attempt}/30)"
+            sleep 2
+          done
+          docker info
+          exit 1
+      - name: Pull a digest-pinned image
+        run: |
+          IMAGE="busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662"
+          docker pull "$IMAGE"
+          echo "ARMORBREAK_L1_IMAGE=$IMAGE" >> "$GITHUB_ENV"
+          echo "using $IMAGE"
+      - name: Verify hardened container execution path
+        run: node scripts/verify-l1.mjs --image "$ARMORBREAK_L1_IMAGE"
+
+  development-gate:
+    name: ArmorBreak development gate (required)
+    if: ${{ always() }}
+    needs: [common-matrix, common-l0, common-l1]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+      - name: Require executed successful dependencies on this exact candidate
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: node scripts/validate-development-gate.mjs
