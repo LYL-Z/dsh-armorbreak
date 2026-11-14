@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /** ArmorBreak native CLI (P2 slice): doctor/capabilities/analyze/task/mcp. */
 import { requestTrustedHostApproval } from './approvalPrompt.js'
+import { isMainModule } from '../../lib/core/isMainModule.js'
 import { createEngine } from '../engine-node/index.js'
 import { makeApprovalId } from '../../lib/control/approvalAuthority.js'
 import { createMcpServer } from '../mcp-server/index.js'
@@ -217,7 +218,7 @@ export async function runCli(argv = process.argv.slice(2), dependencies = {}) {
   }
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) runCli().catch((cause) => {
+if (isMainModule(import.meta.url)) runCli().catch((cause) => {
   process.stderr.write(`${String(cause?.message ?? cause)}\n`)
   process.exitCode = 1
 })
