@@ -52,7 +52,7 @@ No Windows second-principal ACL certification, real DSH approval integration or
 production authorization is claimed. A whole-root/ancestor replacement race beyond
 the held-object/revalidation checks needs native production path/handle integration.
 
-Behavior research: fixed Community source `lib/host-backup.js`, `lib/atomic-files.js`
+Behavior research: fixed Community source `lib/restore-backup.js`, `lib/atomic-files.js`
 and maintenance lifecycle concepts; no upstream executable source imported. Existing
 Core approval authority, ScopePolicy and AuditLog are reused. Verify precise source
 mapping in the authoritative migration ledger; this subset remains PARTIAL.
