@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { correlateAssets } from '../lib/integrations/assetCorrelation.js'
-import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises'
+import { mkdtemp, mkdir, writeFile, readFile, readdir, rm } from 'node:fs/promises'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { spawnSync } from 'node:child_process'
@@ -61,7 +61,26 @@ test('CLI/MCP execute current Core entry, persist reports/evidence and reject wo
   const value = JSON.parse(result.content[0].text)
   assert.deepEqual(value.data, run(input()))
   assert.ok(value.evidenceIds.length)
-  assert.ok(JSON.parse((await call('armorbreak_report', { taskId: value.taskId })).content[0].text).markdown)
+  const report = JSON.parse((await call('armorbreak_report', { taskId: value.taskId })).content[0].text)
+  assert.ok(report.markdown)
+  assert.match(report.markdown, /IPV4_CIDR_CONTAINMENT/)
+  async function filesAt(dir) {
+    const files = []
+    for (const entry of await readdir(dir, { withFileTypes: true })) {
+      const path = join(dir, entry.name)
+      files.push(...(entry.isDirectory() ? await filesAt(path) : [path]))
+    }
+    return files
+  }
+  // Core task evidence and artifacts live in the authorized workspace;
+  // stateRoot holds engine policy/session state, not task outputs.
+  const files = await filesAt(join(workspace, '.armorbreak'))
+  const artifact = files.find(path => path.endsWith('offline-assets.json'))
+  assert.ok(artifact, 'actual persisted graph artifact required')
+  assert.deepEqual(JSON.parse(await readFile(artifact, 'utf8')), value.data)
+  const evidenceFiles = files.filter(path => path.includes('evidence'))
+  const evidenceText = (await Promise.all(evidenceFiles.map(path => readFile(path, 'utf8')))).join('\n')
+  assert.match(evidenceText, /IPV4_CIDR_CONTAINMENT/)
   assert.equal((await call('armorbreak_analyze', { capability: 'assessment.assets', target: outside })).isError, true)
   assert.equal((await call('armorbreak_analyze', { capability: 'assessment.assets', target: file, options: { scan: true } })).isError, true)
   const cli = spawnSync(process.execPath, ['packages/cli/index.js', 'assessment', 'assets', '--bundle', file, '--json'], { encoding: 'utf8', timeout: 30000, env: { ...process.env, ARMORBREAK_WORKSPACE: workspace, ARMORBREAK_STATE_ROOT: join(root, 'cli-state') } })
