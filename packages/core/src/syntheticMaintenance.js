@@ -139,7 +139,25 @@ export class SyntheticMaintenance {
     await this.runtime.scope.consumeApproval(grant.id)
     await this.audit.append({ action: `synthetic-maintenance.${operation}.approved`, taskId: plan.id, approvalId: grant.id, riskLevel: 'L2' })
   }
-  async execute(operation, planId, provider, checkpoint) {
+  /** Advisory snapshot only; execution always repeats its own preflight under the lease. */
+  async recoveryStatus(planId) {
+    const plan = await this.readSealed('plan.json'), events = await this.events(), last = events.at(-1)
+    if (plan.id !== planId || plan.root !== this.root || plan.operator !== this.manifest.operator || plan.sessionId !== this.manifest.sessionId) throw new Error('LAB_PLAN_BINDING')
+    const counts = { original: 0, candidate: 0, unknown: 0 }
+    for (const row of plan.rows) await this.file(row.name, async file => {
+      const bytes = await file.readFile()
+      counts[bytes.equals(Buffer.from(row.before, 'base64')) ? 'original' : bytes.equals(Buffer.from(row.after, 'base64')) ? 'candidate' : 'unknown']++
+    })
+    const rollbackStates = ['APPLYING','WRITE_INTENT','WROTE','COMMITTED','ROLLING_BACK','RESTORE_INTENT','RESTORED']
+    const status = counts.unknown ? 'MANUAL_REVIEW_REQUIRED' : last?.state === 'PLANNED' && counts.original === plan.rows.length ? 'PLAN_UNAPPLIED'
+      : last?.state === 'ROLLED_BACK' && counts.original === plan.rows.length ? 'ALREADY_RESTORED'
+        : rollbackStates.includes(last?.state) ? 'SAFE_FOR_SEPARATELY_APPROVED_ROLLBACK' : 'MANUAL_REVIEW_REQUIRED'
+    return { status, snapshotOnly: true, automaticRecovery: false, journalState: last?.state ?? 'UNKNOWN', files: counts }
+  }
+  async execute(operation, planId, provider, checkpoint, instrumentation = {}) {
+    // Only trusted host/test JavaScript can inject functions; never accepted in model/CLI/HTTP data.
+    if (!instrumentation || Object.keys(instrumentation).some(k => !['onWritePhase','maxWriteBytes'].includes(k)) || (instrumentation.onWritePhase !== undefined && typeof instrumentation.onWritePhase !== 'function') || (instrumentation.maxWriteBytes !== undefined && (!Number.isInteger(instrumentation.maxWriteBytes) || instrumentation.maxWriteBytes < 1 || instrumentation.maxWriteBytes > 65536))) throw new Error('LAB_INSTRUMENTATION_INVALID')
+    const writePhase = async (phase, index, written, total) => { if (instrumentation.onWritePhase) await instrumentation.onWritePhase({ phase, operation, index, written, total }) }
     return this.locked(async () => {
       const plan = await this.readSealed('plan.json'), events = await this.events(), last = events.at(-1)
       if (plan.id !== planId || plan.root !== this.root || plan.operator !== this.manifest.operator || plan.sessionId !== this.manifest.sessionId) throw new Error('LAB_PLAN_BINDING')
@@ -161,9 +179,16 @@ export class SyntheticMaintenance {
           if (!current.equals(original) && (operation === 'apply' || !current.equals(candidate))) throw new Error('LAB_CONTENT_DRIFT')
           // Same opened object throughout truncate/write/fsync/readback. Never follows a replacement name.
           await file.truncate(0)
+          await writePhase('TRUNCATED', index, 0, bytes.length)
           let offset = 0
-          while (offset < bytes.length) offset += (await file.write(bytes, offset, bytes.length - offset, offset)).bytesWritten
+          while (offset < bytes.length) {
+            const written = (await file.write(bytes, offset, Math.min(bytes.length - offset, instrumentation.maxWriteBytes ?? bytes.length), offset)).bytesWritten
+            if (!written) throw new Error('LAB_ZERO_BYTE_WRITE')
+            offset += written
+            await writePhase(offset < bytes.length ? 'PARTIAL_WRITE' : 'FULL_WRITE', index, offset, bytes.length)
+          }
           await file.sync()
+          await writePhase('FILE_SYNCED', index, offset, bytes.length)
           const readback = Buffer.alloc(bytes.length)
           if (bytes.length) await file.read(readback, 0, bytes.length, 0)
           if (!readback.equals(bytes) || (await file.stat()).size !== bytes.length) throw new Error('LAB_WRITE_VERIFY_FAILED')
@@ -178,8 +203,8 @@ export class SyntheticMaintenance {
         powerLossDurability: process.platform === 'win32' ? 'NOT_VERIFIED_DIRECTORY_FSYNC_UNAVAILABLE' : 'NOT_POWER_LOSS_TESTED' }
     })
   }
-  apply(planId, provider, checkpoint) { return this.execute('apply', planId, provider, checkpoint) }
-  rollback(planId, provider, checkpoint) { return this.execute('rollback', planId, provider, checkpoint) }
+  apply(planId, provider, checkpoint, instrumentation) { return this.execute('apply', planId, provider, checkpoint, instrumentation) }
+  rollback(planId, provider, checkpoint, instrumentation) { return this.execute('rollback', planId, provider, checkpoint, instrumentation) }
   /** Explicit trusted recovery, never automatic expiry or optimistic lock deletion. */
   async releaseExitedProcessLock(expectedPid) {
     await this.boundary()

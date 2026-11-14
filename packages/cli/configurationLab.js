@@ -26,7 +26,7 @@ export async function configurationLabCommand({ runtime, workspace, operator, op
   if (operation !== 'status' && (!dependencies.sessionId || !dependencies.agent || !dependencies.callId || !dependencies.approvalProvider)) throw new Error('TRUSTED_APPROVAL_PROVIDER_REQUIRED')
   const lab = await reopenSyntheticMaintenance(runtime, options.lab, { operator, sessionId })
   const events = await lab.events()
-  if (operation === 'status') return { mode: 'SYNTHETIC_ONLY', state: events.at(-1)?.state ?? 'UNKNOWN', planId: events.at(-1)?.planId ?? null, hostModified: false }
+  if (operation === 'status') return { mode: 'SYNTHETIC_ONLY', state: events.at(-1)?.state ?? 'UNKNOWN', planId: events.at(-1)?.planId ?? null, recovery: await lab.recoveryStatus(events.at(-1)?.planId), hostModified: false }
   if (typeof options.plan !== 'string' || !options.plan) throw new Error('CONFIG_LAB_PLAN_REQUIRED')
   const provider = { request: request => requestTrustedHostApproval(dependencies.approvalProvider, { ...request, agent: dependencies.agent, callId: dependencies.callId, sessionId: dependencies.sessionId }) }
   return operation === 'apply' ? lab.apply(options.plan, provider) : lab.rollback(options.plan, provider)
