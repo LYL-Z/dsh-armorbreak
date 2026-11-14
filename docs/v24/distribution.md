@@ -9,7 +9,7 @@ npm ci --ignore-scripts --no-audit --no-fund
 node scripts/v24/verify-npm-distribution.mjs --out <new-absolute-evidence-directory>
 ```
 
-This freezes Git HEAD, runs actual `npm pack --ignore-scripts`, installs the TGZ in a new consumer, imports every declared module export in its supported context and exercises installed CLI, Core, MCP, configuration and Workbench. The default acceptance install is offline and requires the npm cache populated by the preceding `npm ci`. Use `--online` for a separate, explicitly network-enabled dependency installation from the public npm registry. The result records platform, Node, source SHA, TGZ SHA, member inventory, command exit codes and actual runtime checks. It refuses an existing output directory. It does not run installation scripts or publish anything.
+This freezes Git HEAD, runs actual `npm pack --ignore-scripts`, installs the TGZ in a new consumer, imports every declared module export in its supported context and exercises installed CLI, Core, MCP, configuration and Workbench. Acceptance installs from the public npm registry with exact versions/integrity; network access is recorded explicitly. Optional `--offline` requires a matching cache of both package metadata and tarballs; `npm ci` alone need not warm metadata, so it is not an offline guarantee. The result records platform, Node, source SHA, TGZ SHA, member inventory, command exit codes and actual runtime checks. It refuses an existing output directory. It does not run installation scripts or publish anything.
 
 An end user installs an approved TGZ (after separately checking its SHA-256) using:
 

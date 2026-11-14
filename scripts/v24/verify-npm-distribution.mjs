@@ -6,7 +6,7 @@ import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from '
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-export async function verifyNpmDistribution({ repositoryRoot, commit = 'HEAD', outputRoot, offline = true }) {
+export async function verifyNpmDistribution({ repositoryRoot, commit = 'HEAD', outputRoot, offline = false }) {
   const git = (...args) => execFileSync('git', args, { cwd: repositoryRoot, maxBuffer: 64 * 1024 * 1024 })
   const sha = git('rev-parse', '--verify', `${commit}^{commit}`).toString().trim()
   if (!/^[a-f0-9]{40}$/.test(sha)) throw new Error('DISTRIBUTION_COMMIT_INVALID')
@@ -16,8 +16,8 @@ export async function verifyNpmDistribution({ repositoryRoot, commit = 'HEAD', o
   mkdirSync(source); mkdirSync(consumer)
   const env = { ...process.env }
   for (const name of Object.keys(env)) if (name.startsWith('ARMORBREAK_') || ['NODE_PATH','NODE_OPTIONS'].includes(name)) delete env[name]
-  const npm = process.env.npm_execpath ?? join(dirname(process.execPath), 'node_modules/npm/bin/npm-cli.js')
-  if (!existsSync(npm)) throw new Error('NPM_CLI_NOT_FOUND')
+  const npm = [process.env.npm_execpath, join(dirname(process.execPath), 'node_modules/npm/bin/npm-cli.js'), resolve(dirname(process.execPath), '../lib/node_modules/npm/bin/npm-cli.js')].find(path => path && existsSync(path))
+  if (!npm) throw new Error('NPM_CLI_NOT_FOUND')
   const report = { schema: 'armorbreak.npm-distribution-validation/v1', status: 'RUNNING', commit: sha,
     environment: { node: process.version, platform: process.platform, offlineInstall: offline, developmentNodeModulesUsed: false }, commands: [] }
   const save = () => writeFileSync(join(outputRoot, 'validation.json'), JSON.stringify(report, null, 2) + '\n')
@@ -56,7 +56,7 @@ export async function verifyNpmDistribution({ repositoryRoot, commit = 'HEAD', o
     }
     const probe = join(consumer, 'installed-probe.mjs')
     writeFileSync(probe, readFileSync(new URL('./installed-probe.mjs', import.meta.url)))
-    report.checks = JSON.parse(run('installed-runtime', process.execPath, [probe]).toString())
+    report.checks = JSON.parse(run('installed-runtime', process.execPath, [probe], consumer, { env: { ...env, ARMORBREAK_ACCEPTANCE_NPM_CLI: npm } }).toString())
     report.status = 'PASS_ACTUAL_PACK_INSTALL_IMPORT_RUNTIME'; save(); return report
   } catch (error) {
     report.status = 'FAIL'; report.error = String(error.message); save(); throw error
@@ -67,6 +67,6 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   const arg = name => process.argv[process.argv.indexOf(name) + 1]
   const outputRoot = process.argv.includes('--out') ? resolve(arg('--out')) : null
   if (!outputRoot) throw new Error('--out <new-directory> is required')
-  const report = await verifyNpmDistribution({ repositoryRoot: resolve(fileURLToPath(new URL('../..', import.meta.url))), commit: process.argv.includes('--commit') ? arg('--commit') : 'HEAD', outputRoot, offline: !process.argv.includes('--online') })
+  const report = await verifyNpmDistribution({ repositoryRoot: resolve(fileURLToPath(new URL('../..', import.meta.url))), commit: process.argv.includes('--commit') ? arg('--commit') : 'HEAD', outputRoot, offline: process.argv.includes('--offline') })
   console.log(JSON.stringify({ status: report.status, commit: report.commit, artifact: report.artifact, checks: report.checks }, null, 2))
 }
