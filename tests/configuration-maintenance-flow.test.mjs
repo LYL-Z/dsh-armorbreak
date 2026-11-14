@@ -26,9 +26,9 @@ test('YAML import -> private profile/overlay -> approved synthetic apply -> exac
   const audit = await readFile(join(lab.control, 'audit.jsonl'), 'utf8')
   assert.match(audit, /COMMITTED/); assert.match(audit, /ROLLED_BACK/); assert.doesNotMatch(audit, /privatePin|1234|5678/)
 })
-test('reject conflict, invalid profile and unsupported Cordis apply before creating any synthetic plan', async t => {
+test('reject conflict, invalid profile and invalid Cordis data before creating any synthetic plan', async t => {
   const r = await runtime(t)
   await assert.rejects(() => planSyntheticConfiguration(r, { ...args, conflictPolicy: 'reject' }), /CONFIG_CONFLICT/)
   await assert.rejects(() => planSyntheticConfiguration(r, { ...args, selectedProfile: 'missing' }), /profile not found/)
-  await assert.rejects(() => planSyntheticConfiguration(r, { ...args, configuration: { ...configuration, format: 'cordis', source: '- id: x\n  name: inert' } }), /OBJECT_FORMAT_REQUIRED/)
+  await assert.rejects(() => planSyntheticConfiguration(r, { ...args, configuration: { ...configuration, format: 'cordis', source: '- id: x\n  disabled: false' } }), /configuration import rejected/)
 })
