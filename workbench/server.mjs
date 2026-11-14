@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /** Read-only ArmorBreak Workbench: local HTTP UI over acceptance artifacts. */
 import { createServer } from 'node:http'
+import { isMainModule } from '../lib/core/isMainModule.js'
 import { readFileSync, readdirSync, existsSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -225,7 +226,7 @@ export async function createWorkbenchServer({ root = DEFAULT_ROOT, host = '127.0
   }
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {
+if (isMainModule(import.meta.url)) {
   const index = process.argv.indexOf('--port')
   const port = index >= 0 ? Number(process.argv[index + 1]) : 8787
   const workspaceIndex = process.argv.indexOf('--workspace'), stateIndex = process.argv.indexOf('--state-root')
