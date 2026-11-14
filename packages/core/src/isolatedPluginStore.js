@@ -69,16 +69,20 @@ export class IsolatedPluginTransaction{
  }
  async inspect(){
   const record=await this.#verify()
+  const events=await this.#lab.events(),last=events.at(-1)
+  if(last?.planId!==record.planId)throw new Error('PLUGIN_STORE_PLAN_BINDING')
   const bytes=await this.#lab.file('installation.txt',async file=>{const stat=await file.stat();if(stat.size>65536)throw new Error('PLUGIN_STORE_STATE_LIMIT');return file.readFile()})
   if(![canonicalConfig(record.previous),canonicalConfig(record.desired)].includes(bytes.toString()))throw new Error('PLUGIN_STORE_STATE_DRIFT')
   const state=JSON.parse(bytes),version=record.versions.find(v=>v.snapshot.closureSha256===state.closure)
   const review=version?this.#reviewer.review(version.snapshot,version.receipts):null
+  const finalized=['COMMITTED','ROLLED_BACK'].includes(last.state)
   return {mode:'ISOLATED_QUARANTINE_FILES_ONLY',state,packages:version?.snapshot.plugins.map(p=>({id:p.id,version:p.version}))??[],dependencyOrder:version?.snapshot.dependencyOrder??[],fileCount:version?.files.length??0,
+   transactionState:last.state,transactionFinalized:finalized,selectionAvailable:finalized&&state.status==='INSTALLED_QUARANTINED'&&review?.state==='READY_FOR_SYNTHETIC_STAGING_APPROVAL',
    currentTrust:review?.state??'NO_PACKAGE',activationAuthorized:false,hostWrites:false,productionInstallation:false}
  }
  async readInstalled(path){
   const current=await this.inspect()
-  if(current.state.status!=='INSTALLED_QUARANTINED'||current.currentTrust!=='READY_FOR_SYNTHETIC_STAGING_APPROVAL')throw new Error('PLUGIN_STORE_DISABLED_OR_UNTRUSTED')
+  if(!current.selectionAvailable)throw new Error('PLUGIN_STORE_DISABLED_OR_UNTRUSTED')
   maintenancePath(path)
   const version=this.#record.versions.find(v=>v.snapshot.closureSha256===current.state.closure),file=version.files.find(f=>f.path===path)
   if(!file)throw new Error('PLUGIN_STORE_PATH_DENIED')
@@ -101,6 +105,7 @@ export class IsolatedPluginTransaction{
  async rollback(provider){await this.#verify();const result=await this.#lab.rollback(this.planId,provider);return {...result,...await this.inspect()}}
  async copySelected(){
   const current=await this.inspect()
+  if(!current.transactionFinalized)throw new Error('PLUGIN_STORE_TRANSACTION_NOT_FINAL')
   if(!current.state.closure)throw new Error('PLUGIN_STORE_NOT_INSTALLED')
   const version=this.#record.versions.find(v=>v.snapshot.closureSha256===current.state.closure),files=[]
   for(const file of version.files){const read=await readBounded(join(this.#lab.control,'payloads',current.state.closure,...maintenancePath(file.path)),65536);if(read.truncated||digest(read.buffer)!==file.sha256)throw new Error('PLUGIN_STORE_CONTENT_DRIFT');files.push({path:file.path,bytes:read.buffer})}

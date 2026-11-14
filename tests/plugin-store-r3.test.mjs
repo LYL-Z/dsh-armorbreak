@@ -85,6 +85,8 @@ test('post-selector failure reopens with sealed identities and restores the exac
  const f=await setup(t),v1=await f.candidate(),installed=await f.plan(v1);await installed.apply(approved)
  const updated=await f.plan({...await f.candidate('2.0.0','throw new Error("V2_NEVER_RUN")\n'),current:installed,operation:'update'})
  await assert.rejects(()=>updated.apply(approved,()=>{throw new Error('INJECTED_AFTER_SELECTOR')}),/INJECTED_AFTER_SELECTOR/)
+ assert.equal((await updated.inspect()).selectionAvailable,false)
+ await assert.rejects(()=>updated.readInstalled('inert.js'),/DISABLED_OR_UNTRUSTED/)
  const reopened=await reopenIsolatedPluginInstall(f.runtime,updated.root,{...context,reviewer:f.reviewer})
  await assert.rejects(()=>reopened.rollback({request:async()=> 'denied'}),/APPROVAL_DENIED/)
  await reopened.rollback(approved);assert.deepEqual(await reopened.readInstalled('inert.js'),Buffer.from(v1.text))
