@@ -88,6 +88,6 @@ if(pkg.exports['./isolated-plugin-store']){
   await disabled.rollback(dependencies.approvalProvider);await updated.rollback(dependencies.approvalProvider)
   assert.deepEqual(await updated.readInstalled('inert.js'),Buffer.from('throw new Error("V1_NEVER_RUN")\r\n'))
   pluginStore='INSTALLED_PACKAGE_PHYSICAL_QUARANTINE_INSTALL_UPDATE_DISABLE_RESTORE'
- }finally{for(const store of stores)await rm(store.root,{recursive:true,force:true});await runtime.close()}
+ }finally{for(const store of stores)await rm(store.root,{recursive:true,force:true});await runtime.close?.()}
 }
 console.log(JSON.stringify({exports:imported,client:'MODULE_REGISTRATION_SIMULATED_DSH_NOT_TESTED',cli:'ACTUAL_CHILD_PROCESS',mcp:'ACTUAL_STDIO_CHILD_PROCESS',core:'ACTUAL_INSTALLED_RUNTIME',workbench:'ACTUAL_HTTP_OS_AUTHENTICATION_NONE',yaml:pkg.dependencies.yaml,configuration:'INSTALLED_APPROVED_SYNTHETIC_APPLY_AND_EXACT_RESTORE',pluginStore,privateKeyScan:'PASS',runtimeVersion:pkg.version}))
