@@ -15,6 +15,8 @@ import { PROTOCOL_VERSION, validateInvocation } from '../protocol/index.js'
 import { createEvidenceEnvelope, createEventEnvelope, sanitizeEvidencePayload } from './evidenceEnvelope.js'
 
 export const CORE_VERSION = '0.1.0-p1'
+// Trusted host integration only, never a model-callable L0 analyzer or panel action.
+export { createSyntheticMaintenance, reopenSyntheticMaintenance } from './src/syntheticMaintenance.js'
 export { ArmorBreakRuntime, getRuntime, CapabilityRegistry, TaskStore, EvidenceStore, PolicyGateway, PROTOCOL_VERSION, validateInvocation, createEvidenceEnvelope, createEventEnvelope, sanitizeEvidencePayload }
 
 /**
