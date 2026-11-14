@@ -53,4 +53,6 @@ Unknown data fields survive conversion; selected replacement of arrays is intent
 
 Tests cover all four formats, profile selection and preservation, missing approval, standalone CLI denial, unexpected approval flags, session mismatch, denied host approval, workspace scope, separate restore authorization, a failure between the two Purge files and exact original-byte restore. Existing synthetic crash/reopen tests remain applicable to the unchanged executor. No real DSH writes, production secrets, ACL changes, service stops or host reboots occur.
 
+The CLI loads this module only inside the configuration branch. A child-process loader test refuses any `yaml` import while listing base capabilities, preserving dependency-free base startup. Configuration commands still require the locked YAML runtime dependency; clean-room base startup does not prove those dependencies are bundled or a production configuration installation is complete.
+
 This extends the tested subsets of `PO-PROMPT-002` and `PC-TRANSACTION-007`. Neither becomes `INTEGRATED_VERIFIED`. It does not implement the upstream host patching `--apply`/`--revert` commands merely by sharing their names. Real host schema migration, comments/layout preservation, installation compatibility, independent client authentication and full upstream behavior equivalence remain unverified.
