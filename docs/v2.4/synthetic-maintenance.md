@@ -1,8 +1,10 @@
 # Synthetic maintenance transactions (Draft, not real host writes)
 
 Trusted host entry: `createSyntheticMaintenance(runtime, {operator, sessionId, seeds})`
-and `reopenSyntheticMaintenance(runtime, root, {operator, sessionId})`, exported from
-`packages/core/index.js`. The runtime is the existing ArmorBreak Core. A fresh,
+and `reopenSyntheticMaintenance(runtime, root, {operator, sessionId})`, imported from
+`packages/core/src/syntheticMaintenance.js`. The frozen Core facade stays unchanged;
+this experimental host module is not added to that stable export contract.
+The runtime is the existing ArmorBreak Core. A fresh,
 random temporary root is mandatory: callers cannot select an existing host root.
 Only up to 16 newly seeded, bounded `.txt` files are supported. No user DSH install
 or configuration is touched. No shell/npm/plugin execution occurs.
