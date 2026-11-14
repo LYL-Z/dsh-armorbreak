@@ -73,7 +73,7 @@ export async function runCli(argv = process.argv.slice(2), dependencies = {}) {
     }
     if (command === 'doctor') return print(await engine.health(ctx), options.json)
     if (command === 'host' && positional[0] === 'diagnostics') return print(await engine.analyze(ctx, { capability: 'host.diagnostics', target: options.root }), options.json)
-    if (command === 'plugin' && positional[0] === 'verify') return print(await engine.analyze(ctx, { capability: 'plugin.verify', target: options.root }), options.json)
+    if (command === 'plugin' && positional[0] === 'verify') return print(await engine.analyze(ctx, { capability: 'plugin.verify', target: options.root, options: options.closure ? { closure: true } : {} }), options.json)
     if (command === 'maintenance' && positional[0] === 'plan') return print(await engine.analyze(ctx, { capability: 'maintenance.plan', target: options.root }), options.json)
     if (command === 'config' && positional[0] === 'preview') return print(await engine.analyze(ctx, { capability: 'configuration.preview', target: options.bundle }), options.json)
     if (command === 'config' && positional[0] === 'convert') return print(await engine.analyze(ctx, { capability: 'configuration.convert', target: options.bundle }), options.json)
