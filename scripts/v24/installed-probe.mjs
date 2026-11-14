@@ -3,9 +3,10 @@ import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import { execFileSync, spawn } from 'node:child_process'
 import { once } from 'node:events'
+import { createHash, generateKeyPairSync, sign } from 'node:crypto'
 import { mkdir, readFile, writeFile, rm } from 'node:fs/promises'
 import { join, dirname, relative, isAbsolute } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { pathToFileURL } from 'node:url'
 const require = createRequire(import.meta.url)
 const pkg = require('dsh-armorbreak/package.json'), root = dirname(require.resolve('dsh-armorbreak/package.json'))
 const insideConsumer = path => { const rel = relative(process.cwd(),path); assert.ok(rel && !isAbsolute(rel) && rel !== '..' && !rel.startsWith('../') && !rel.startsWith('..\\')) }
@@ -61,4 +62,32 @@ assert.equal(JSON.parse(out.trim()).result.protocolVersion,'2025-06-18')
 const { createWorkbenchServer }=await import('dsh-armorbreak/workbench')
 const server=await createWorkbenchServer({root,port:0,native:{workspaceId:workspace,stateRoot}})
 try {assert.equal((await fetch(server.url)).status,200);const session=await(await fetch(server.url+'/api/native/session')).json();assert.equal(session.authentication,'NONE')} finally {await server.close()}
-console.log(JSON.stringify({exports:imported,client:'MODULE_REGISTRATION_SIMULATED_DSH_NOT_TESTED',cli:'ACTUAL_CHILD_PROCESS',mcp:'ACTUAL_STDIO_CHILD_PROCESS',core:'ACTUAL_INSTALLED_RUNTIME',workbench:'ACTUAL_HTTP_OS_AUTHENTICATION_NONE',yaml:pkg.dependencies.yaml,configuration:'INSTALLED_APPROVED_SYNTHETIC_APPLY_AND_EXACT_RESTORE',privateKeyScan:'PASS',runtimeVersion:pkg.version}))
+let pluginStore='NOT_DECLARED_IN_THIS_PACKAGE'
+if(pkg.exports['./isolated-plugin-store']){
+ const {ArmorBreakRuntime}=await import('dsh-armorbreak/core'),{createIndependentPluginReviewer,pluginAttestationPayload}=await import('dsh-armorbreak/plugin-lifecycle'),{planIsolatedPluginInstall}=await import('dsh-armorbreak/isolated-plugin-store')
+ const runtime=new ArmorBreakRuntime({stateRoot:join(process.cwd(),'store-state')});await runtime.init()
+ const target=join(workspace,'package');await mkdir(target)
+ const task=await runtime.workspace(workspace).taskStore.create({title:'installed package quarantine acceptance',targetPath:target,steps:[]})
+ const repository='https://github.com/example/self-authored-fixture',keys={source:generateKeyPairSync('ed25519'),rights:generateKeyPairSync('ed25519')}
+ const reviewer=createIndependentPluginReviewer({roots:Object.keys(keys).map(role=>({keyId:role,authorityId:role+'-reviewer',role,repositories:[repository],publicKey:keys[role].publicKey.export({type:'spki',format:'pem'})}))})
+ const canonical=v=>JSON.stringify(v,(_key,value)=>value&&typeof value==='object'&&!Array.isArray(value)?Object.fromEntries(Object.keys(value).sort().map(k=>[k,value[k]])):value)
+ const {verifyPluginClosure}=await import(pathToFileURL(join(root,'lib/catalog/pluginPackage.js')).href)
+ const fixture=async(version,bytes)=>{
+  await writeFile(join(target,'inert.js'),bytes)
+  await writeFile(join(target,'armorbreak-plugin.json'),JSON.stringify({schema:'armorbreak.plugin-catalog/v1',plugins:[{id:'inert',version,source:{repository,commit:(version==='1.0.0'?'a':'b').repeat(40)},license:'MIT',dependencies:[],permissions:['workspace.read'],platforms:['win32','linux'],channel:'stable',enabled:false,files:[{path:'inert.js',sha256:createHash('sha256').update(bytes).digest('hex')}]}]}))
+  const candidate=await runtime.runner.buildCapabilityInput({task,capability:runtime.registry.get('plugin.verify'),targetPath:target,options:{closure:true},controller:new AbortController(),log:[]}),snapshot=await verifyPluginClosure(candidate),receipts={}
+  for(const role of Object.keys(keys)){const payload=pluginAttestationPayload(snapshot,role);receipts[role+'Receipt']={keyId:role,payload,signature:sign(null,Buffer.from(canonical(payload)),keys[role].privateKey).toString('base64')}}
+  return {candidate,receipts}
+ }
+ const stores=[],plan=async options=>{const x=await planIsolatedPluginInstall(runtime,{...options,reviewer,operator:'installed-store',sessionId:'installed-session'});stores.push(x.store);return x.store}
+ try{
+  const installed=await plan(await fixture('1.0.0','throw new Error("V1_NEVER_RUN")\r\n'));await installed.apply(dependencies.approvalProvider)
+  const updated=await plan({...await fixture('2.0.0','throw new Error("V2_NEVER_RUN")\r\n'),operation:'update',current:installed});await updated.apply(dependencies.approvalProvider)
+  assert.deepEqual(await updated.readInstalled('inert.js'),Buffer.from('throw new Error("V2_NEVER_RUN")\r\n'))
+  const disabled=await plan({operation:'disable',current:updated});await disabled.apply(dependencies.approvalProvider);await assert.rejects(()=>disabled.readInstalled('inert.js'),/DISABLED/)
+  await disabled.rollback(dependencies.approvalProvider);await updated.rollback(dependencies.approvalProvider)
+  assert.deepEqual(await updated.readInstalled('inert.js'),Buffer.from('throw new Error("V1_NEVER_RUN")\r\n'))
+  pluginStore='INSTALLED_PACKAGE_PHYSICAL_QUARANTINE_INSTALL_UPDATE_DISABLE_RESTORE'
+ }finally{for(const store of stores)await rm(store.root,{recursive:true,force:true});await runtime.close()}
+}
+console.log(JSON.stringify({exports:imported,client:'MODULE_REGISTRATION_SIMULATED_DSH_NOT_TESTED',cli:'ACTUAL_CHILD_PROCESS',mcp:'ACTUAL_STDIO_CHILD_PROCESS',core:'ACTUAL_INSTALLED_RUNTIME',workbench:'ACTUAL_HTTP_OS_AUTHENTICATION_NONE',yaml:pkg.dependencies.yaml,configuration:'INSTALLED_APPROVED_SYNTHETIC_APPLY_AND_EXACT_RESTORE',pluginStore,privateKeyScan:'PASS',runtimeVersion:pkg.version}))
