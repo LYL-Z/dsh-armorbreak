@@ -78,6 +78,7 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "yaml": "2.9.1"
   }
 }
