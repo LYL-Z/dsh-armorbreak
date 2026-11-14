@@ -60,3 +60,11 @@ Core approval authority, ScopePolicy and AuditLog are reused. Verify precise sou
 mapping in the authoritative migration ledger; this subset remains PARTIAL.
 
 Run `node --test tests/synthetic-maintenance.test.mjs`.
+
+For the integrated data lifecycle, trusted hosts can import
+`planSyntheticConfiguration` from `packages/core/src/syntheticConfiguration.js`.
+It parses JSON/YAML, resolves profiles and overlays, refuses unresolved conflicts,
+and plans a fresh synthetic `config.txt`. The same Core-approved apply/rollback
+restores exact original raw bytes, including CRLF. Cordis/Purge parsing remains
+data-only; applying those formats or a real host configuration is unsupported.
+Run `node --test tests/configuration-maintenance-flow.test.mjs`.
