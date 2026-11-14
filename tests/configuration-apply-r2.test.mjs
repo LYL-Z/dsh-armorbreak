@@ -17,6 +17,18 @@ async function setup(t) {
   return { root, workspace, stateRoot, runtime }
 }
 
+test('base CLI capabilities do not eagerly import optional configuration YAML runtime', async t => {
+  const { workspace, stateRoot } = await setup(t)
+  const hook = `export async function resolve(s,c,next){if(s==='yaml')throw new Error('YAML_EAGER_IMPORT_FORBIDDEN');return next(s,c)}`
+  const register = `import {register} from 'node:module';register(${JSON.stringify(`data:text/javascript,${encodeURIComponent(hook)}`)},import.meta.url)`
+  const child = spawnSync(process.execPath, ['--import', `data:text/javascript,${encodeURIComponent(register)}`, 'packages/cli/index.js', 'capabilities', '--json'], {
+    env: { ...process.env, ARMORBREAK_WORKSPACE: workspace, ARMORBREAK_STATE_ROOT: stateRoot }, encoding: 'utf8', timeout: 30000
+  })
+  assert.equal(child.status, 0, child.stderr)
+  assert.doesNotMatch(child.stderr, /YAML_EAGER_IMPORT_FORBIDDEN/)
+  assert.equal(JSON.parse(child.stdout).length, 61)
+})
+
 for (const format of ['json','yaml','cordis','purge-preset']) test(`${format}: profile preview -> approved synthetic apply -> raw-byte restore`, async t => {
   const { runtime } = await setup(t)
   const source = format === 'json' ? '{"privatePin":"1234","unknown":false}\r\n' : format === 'yaml' ? 'privatePin: "1234"\r\nunknown: false\r\n'
