@@ -1,10 +1,12 @@
 # 安装、启用、卸载与故障排查
 
+> 下文保留旧 DSH bundle 的安装说明。v2.4 开发候选的受支持 npm TGZ、CLI/MCP/Core/Workbench 安装与依赖契约见 [v2.4 分发说明](v24/distribution.md)。历史 v2.3.1 Tag/Release/制品未修改；v2.4 候选不代表当前正式发行或真实 DSH 安装验收。
+
 ## 目标环境
 
 - DeepSeek Harness Desktop **0.2.1-rc.2**（Windows/macOS/Linux 桌面版；本机验证于 Windows 11 x64）
 - 不要求 Node/pnpm 全局可用：安装由 Harness 自带的 pnpm 执行
-- 本 bundle **零运行时依赖、无安装脚本**，因此不会触发 `approvedBuilds`
+- 当前源码的 Node 运行时依赖为锁定的 TypeScript 与 YAML；无安装脚本。完整依赖与版本以包内 `package.json`、`npm-shrinkwrap.json` 为准。
 
 ## 安装（推荐：插件面板 / plugin_manager）
 

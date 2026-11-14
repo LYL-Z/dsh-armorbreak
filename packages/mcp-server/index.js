@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * @armorbreak/mcp-server (P2 slice)
  *
