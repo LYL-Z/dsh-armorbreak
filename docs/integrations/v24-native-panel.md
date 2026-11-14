@@ -44,7 +44,7 @@ acceptance remains NOT_TESTED. No live DSH host or production data was used.
 
 ## Current browser verification
 
-`scripts/test-native-panel-browser.mjs` drives real headless Chromium against
+`scripts/native-panel-browser-e2e.mjs` drives real headless Chromium against
 the running HTTP server: tab selection, form input/submission, Core task and
 evidence response, confidential preview rendering, scope-denial rendering and
 button recovery. Supply ARMORBREAK_PLAYWRIGHT_MODULE pointing at an existing
