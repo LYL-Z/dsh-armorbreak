@@ -31,8 +31,11 @@ The in-memory resolveConfig API returns the effective configuration. CLI/MCP and
 persisted reports expose only call-local field/layer ordinals, operations and conflict counts. They omit raw values, field names, caller labels and all secret-derived input/config/value digests. Core suppresses targetSha256 for this sensitive-input capability. Structure and equality/change information remain observable; this is not a zero-leakage encrypted UI.
 snapshotConfig/restoreConfigSnapshot are private in-memory data APIs, never exported as preview evidence. They provide deterministic JSON serialization
 and integrity-checked in-memory restoration; they do not write host files or
-provide encrypted backups. Native YAML/Cordis conversion, host application,
-profile persistence UI and real-host compatibility remain unimplemented.
+provide encrypted backups. Native data-only JSON/YAML/Cordis/Purge conversion is
+documented in `../v2.4/configuration-format-lifecycle.md`. A separate trusted-host
+module composes JSON/YAML preview with approved fresh synthetic transactions;
+see `../v2.4/synthetic-maintenance.md`. Real host application, profile persistence
+UI and real-host compatibility remain unimplemented or unverified.
 
 Tests: node --test tests/config-overlay.test.mjs (8 tests). The initial missing
 traceId fixture failure and corrected run are preserved in external evidence.
