@@ -52,7 +52,7 @@ try {
   assert.deepEqual(await readFile(join(staged.lab,'data/config.txt')),Buffer.from(bundle.configuration.source))
 } finally { await rm(staged.lab,{recursive:true,force:true}) }
 // Actual stdio child process, not an in-process protocol mock.
-const child=spawn(process.execPath,[join(root,pkg.bin['armorbreak-mcp'])],{env,stdio:['pipe','pipe','pipe']})
+const child=spawn(process.execPath,[npm,'exec','--offline','--no','--','armorbreak-mcp'],{env,stdio:['pipe','pipe','pipe']})
 let out='',err='';child.stdout.on('data',b=>out+=b);child.stderr.on('data',b=>err+=b)
 const exit=once(child,'exit'), timer=setTimeout(()=>child.kill(),30000)
 child.stdin.end(JSON.stringify({jsonrpc:'2.0',id:1,method:'initialize',params:{protocolVersion:'2025-06-18'}})+'\n')
