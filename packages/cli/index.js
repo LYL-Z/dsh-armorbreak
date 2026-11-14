@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /** ArmorBreak native CLI (P2 slice): doctor/capabilities/analyze/task/mcp. */
 import { requestTrustedHostApproval } from './approvalPrompt.js'
+import { isMainModule } from '../../lib/core/isMainModule.js'
 import { createEngine } from '../engine-node/index.js'
 import { makeApprovalId } from '../../lib/control/approvalAuthority.js'
 import { createMcpServer } from '../mcp-server/index.js'
@@ -45,7 +46,7 @@ function config(env = process.env) {
 export async function runCli(argv = process.argv.slice(2), dependencies = {}) {
   const { command, positional, options } = parse(argv)
   if (command === 'help' || options.help) {
-    print('armorbreak doctor|host inspect --home <absolute-path> --profile <name>|host diagnose --target <file> --spec <file>|host layout --resources <absolute-resources-directory>|capabilities|analyze|task|workflow|approval|install approve|agent|report|mcp [--json]', false)
+    print('armorbreak doctor|host inspect --home <absolute-path> --profile <name>|host diagnose --target <file> --spec <file>|host layout --resources <absolute-resources-directory>|config preview|config convert|config stage --bundle <file>|config status --lab <absolute-path>|config apply|config revert (trusted host only; fresh synthetic labs)|capabilities|analyze|task|workflow|approval|install approve|agent|report|mcp [--json]', false)
     return
   }
   if (command === 'host' && positional[0] === 'inspect') {
@@ -73,11 +74,16 @@ export async function runCli(argv = process.argv.slice(2), dependencies = {}) {
     }
     if (command === 'doctor') return print(await engine.health(ctx), options.json)
     if (command === 'host' && positional[0] === 'diagnostics') return print(await engine.analyze(ctx, { capability: 'host.diagnostics', target: options.root }), options.json)
-    if (command === 'plugin' && positional[0] === 'verify') return print(await engine.analyze(ctx, { capability: 'plugin.verify', target: options.root }), options.json)
+    if (command === 'plugin' && positional[0] === 'verify') return print(await engine.analyze(ctx, { capability: 'plugin.verify', target: options.root, options: options.closure ? { closure: true } : {} }), options.json)
     if (command === 'maintenance' && positional[0] === 'plan') return print(await engine.analyze(ctx, { capability: 'maintenance.plan', target: options.root }), options.json)
     if (command === 'config' && positional[0] === 'preview') return print(await engine.analyze(ctx, { capability: 'configuration.preview', target: options.bundle }), options.json)
     if (command === 'config' && positional[0] === 'convert') return print(await engine.analyze(ctx, { capability: 'configuration.convert', target: options.bundle }), options.json)
+    if (command === 'config' && ['stage','apply','revert','status'].includes(positional[0])) {
+      const { configurationLabCommand } = await import('./configurationLab.js')
+      return print(await configurationLabCommand({ runtime: engine.runtime, workspace: cfg.workspaceId, operator: cfg.principal.id, operation: positional[0], options, dependencies }), options.json)
+    }
     if (command === 'assessment' && positional[0] === 'review') return print(await engine.analyze(ctx, { capability: 'assessment.review', target: options.bundle }), options.json)
+    if (command === 'assessment' && positional[0] === 'assets') return print(await engine.analyze(ctx, { capability: 'assessment.assets', target: options.bundle }), options.json)
     if (command === 'capabilities') return print(await engine.capabilities(ctx), options.json)
     if (command === 'agent' && positional[0] === 'doctor') {
       const configPath = String(options.config ?? '')
@@ -212,7 +218,7 @@ export async function runCli(argv = process.argv.slice(2), dependencies = {}) {
   }
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) runCli().catch((cause) => {
+if (isMainModule(import.meta.url)) runCli().catch((cause) => {
   process.stderr.write(`${String(cause?.message ?? cause)}\n`)
   process.exitCode = 1
 })

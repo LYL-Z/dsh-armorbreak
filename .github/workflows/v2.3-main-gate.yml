@@ -15,8 +15,133 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  v24-development-validation:
+    # Run a real candidate matrix for post-release development PRs and later
+    # main commits. The frozen V2.3.1 tag/main contracts below remain separate.
+    if: ${{ (github.event_name == 'pull_request' && !(startsWith(github.head_ref, 'feature/v2.3') || startsWith(github.head_ref, 'fix/v2.3'))) || (github.event_name == 'push' && github.ref == 'refs/heads/main' && github.sha != 'cfb984b7178bb8b1dca9728325fdbe599b5430a3') }}
+    name: Node ${{ matrix.node }} / ${{ matrix.os }} (V2.4 candidate)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: ['22', '24']
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Assert exact candidate SHA
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v5
+        with:
+          python-version: '3.11'
+      - name: Prepare repository-local test scratch root
+        run: >-
+          node -e "require('node:fs').mkdirSync('.runtime/tmp', { recursive: true })"
+      - run: npm ci --no-audit --no-fund
+      - name: Full test suite
+        run: node --test --test-concurrency=1
+      - name: TypeScript contract check
+        run: npm run typecheck
+
+  v24-development-l0:
+    if: ${{ (github.event_name == 'pull_request' && !(startsWith(github.head_ref, 'feature/v2.3') || startsWith(github.head_ref, 'fix/v2.3'))) || (github.event_name == 'push' && github.ref == 'refs/heads/main' && github.sha != 'cfb984b7178bb8b1dca9728325fdbe599b5430a3') }}
+    name: V2.4 L0 offline boundary
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+      - uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v5
+        with:
+          python-version: '3.11'
+      - name: Assert exact candidate SHA
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - name: Static L0 network-free gate
+        run: node --test tests/offline-core.test.mjs
+      - name: Core benchmark (runnable subset)
+        env:
+          ARMORBREAK_OFFLINE: '1'
+        run: node scripts/v2/core-benchmark.mjs
+
+  v24-development-l1:
+    if: ${{ (github.event_name == 'pull_request' && !(startsWith(github.head_ref, 'feature/v2.3') || startsWith(github.head_ref, 'fix/v2.3'))) || (github.event_name == 'push' && github.ref == 'refs/heads/main' && github.sha != 'cfb984b7178bb8b1dca9728325fdbe599b5430a3') }}
+    name: V2.4 L1 real Docker integration
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+      - name: Assert exact candidate SHA
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - name: Wait for Docker daemon
+        run: |
+          for attempt in $(seq 1 30); do
+            if docker info >/dev/null 2>&1; then exit 0; fi
+            echo "Docker daemon not ready (attempt ${attempt}/30)"
+            sleep 2
+          done
+          docker info
+          exit 1
+      - name: Pull a digest-pinned image
+        run: |
+          IMAGE="busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662"
+          docker pull "$IMAGE"
+          echo "ARMORBREAK_L1_IMAGE=$IMAGE" >> "$GITHUB_ENV"
+          echo "using $IMAGE"
+      - name: Verify hardened container execution path
+        run: node scripts/verify-l1.mjs --image "$ARMORBREAK_L1_IMAGE"
+
+  v24-development-gate:
+    # always() makes this stable summary execute after failures/skips; it fails
+    # closed unless every expected V2.4 validation job actually succeeded.
+    if: ${{ always() && ((github.event_name == 'pull_request' && !(startsWith(github.head_ref, 'feature/v2.3') || startsWith(github.head_ref, 'fix/v2.3'))) || (github.event_name == 'push' && github.ref == 'refs/heads/main' && github.sha != 'cfb984b7178bb8b1dca9728325fdbe599b5430a3')) }}
+    name: V2.4 development gate (all required validations)
+    needs: [v24-development-validation, v24-development-l0, v24-development-l1]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Require every validation job to have executed successfully
+        shell: bash
+        env:
+          MATRIX_RESULT: ${{ needs.v24-development-validation.result }}
+          L0_RESULT: ${{ needs.v24-development-l0.result }}
+          L1_RESULT: ${{ needs.v24-development-l1.result }}
+        run: |
+          printf 'matrix=%s\nl0=%s\nl1=%s\n' "$MATRIX_RESULT" "$L0_RESULT" "$L1_RESULT"
+          test "$MATRIX_RESULT" = success
+          test "$L0_RESULT" = success
+          test "$L1_RESULT" = success
+
   pr-candidate-validation:
-    if: ${{ github.event_name == 'pull_request' }}
+    # V2.3's evidence-only contract is frozen. Do not apply it to later
+    # feature branches (which correctly fail its post-source allowlist).
+    if: ${{ github.event_name == 'pull_request' && (startsWith(github.head_ref, 'feature/v2.3') || startsWith(github.head_ref, 'fix/v2.3')) }}
     name: Node ${{ matrix.node }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -74,7 +199,8 @@ jobs:
           node scripts/v2/v23-release-gate.mjs --check-pr
 
   main-candidate-validation:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    # Exact published V2.3.1 source only; future main commits are development.
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && github.sha == 'cfb984b7178bb8b1dca9728325fdbe599b5430a3' }}
     name: Node ${{ matrix.node }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -132,7 +258,7 @@ jobs:
           node scripts/v2/v23-release-gate.mjs --check-main
 
   build-and-attest-main-candidate:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && github.sha == 'cfb984b7178bb8b1dca9728325fdbe599b5430a3' }}
     name: V2.3 main candidate build and provenance
     needs: main-candidate-validation
     runs-on: ubuntu-latest
@@ -190,7 +316,7 @@ jobs:
           retention-days: 90
 
   pr-windows-package-drill:
-    if: ${{ github.event_name == 'pull_request' }}
+    if: ${{ github.event_name == 'pull_request' && (startsWith(github.head_ref, 'feature/v2.3') || startsWith(github.head_ref, 'fix/v2.3')) }}
     name: V2.2 to PR package Windows deployment and rollback
     runs-on: windows-latest
     permissions:
@@ -236,7 +362,7 @@ jobs:
           retention-days: 90
 
   main-windows-package-drill:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && github.sha == 'cfb984b7178bb8b1dca9728325fdbe599b5430a3' }}
     name: Exact main package Windows deployment and rollback
     needs: [main-candidate-validation, build-and-attest-main-candidate]
     runs-on: windows-latest

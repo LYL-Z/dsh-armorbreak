@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * @armorbreak/mcp-server (P2 slice)
  *
@@ -6,6 +7,7 @@
  * workspace from trusted host configuration, never from tool arguments.
  */
 import { randomUUID } from 'node:crypto'
+import { isMainModule } from '../../lib/core/isMainModule.js'
 import { createInterface } from 'node:readline'
 import { pathToFileURL, fileURLToPath } from 'node:url'
 import { createHash } from 'node:crypto'
@@ -401,6 +403,6 @@ async function main() {
   await engine.close()
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (isMainModule(import.meta.url)) {
   main().catch((cause) => { process.stderr.write(`${String(cause?.stack ?? cause)}\n`); process.exitCode = 1 })
 }

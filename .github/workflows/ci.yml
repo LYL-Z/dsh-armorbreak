@@ -147,10 +147,11 @@ jobs:
 
   release-evidence:
     name: Release evidence checks (commit-bound)
-    # V2.3 has a separate exact-head acceptance manifest and three-state gate.
-    # Route exact V2.3 main/tag commits to that contract; retain the inherited
-    # V2.2 checks for every other version/ref.
-    if: ${{ !((github.event_name == 'pull_request' && (startsWith(github.head_ref, 'feature/v2.3') || startsWith(github.head_ref, 'fix/v2.3'))) || (github.event_name != 'pull_request' && (startsWith(github.ref_name, 'feature/v2.3') || startsWith(github.ref_name, 'fix/v2.3')))) }}
+    # Historical V2.2/V2.3 release contracts verify tagged releases and the
+    # exact frozen V2.3.1 main commit, not unrelated post-release PRs/main.
+    # Generic tests, L0 and real L1 jobs still run for all development PRs.
+    # A future release must have its own versioned gate before publication.
+    if: ${{ github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main' && github.sha == 'cfb984b7178bb8b1dca9728325fdbe599b5430a3')) }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
