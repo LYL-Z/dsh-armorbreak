@@ -9,7 +9,7 @@ async function loadNative() {
   const response = await fetch('/api/native/session')
   if (!response.ok) throw new Error('Native Core session unavailable')
   nativeSession = await response.json()
-  $('native-status').textContent = nativeSession.enabled ? 'Current Core calls are scoped to the workspace configured at server startup. No host writes.' : 'Native Core is disabled. Start the server with explicit --workspace and --state-root.'
+  $('native-status').textContent = nativeSession.enabled ? 'L0 only. Any local process or OS user may access this workspace panel. Token is CSRF protection, NOT identity authentication. No secrets, host writes or approvals.' : 'Native Core is disabled. Start the server with explicit --workspace and --state-root.'
   $('native-capability').innerHTML = nativeSession.capabilities.map(id => `<option value="${esc(id)}">${esc(id)}</option>`).join('')
   $('native-run').disabled = !nativeSession.enabled
 }

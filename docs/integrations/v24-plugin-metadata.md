@@ -41,3 +41,16 @@ are still unimplemented.
 Seven regression tests exercise metadata semantics plus actual Core/MCP/CLI
 local-file verification, corruption and junction refusal. All inputs are
 self-authored inert fixtures; no upstream installer or network test runs.
+
+## Review correction: independent status contracts
+
+metadataShapeValid means parsing and schema validation only. riskClassificationEligible
+means the requested risk is not L3; it is not a Core grant. licenseClaimRecognized
+is an allowlist check on a self-declaration, not rights verification.
+localFilesVerified becomes true only after all listed bytes match. It does not
+prove full archive closure. sourceAuthenticated, rightsVerified, policyEligible,
+activationAuthorized and releaseEligible remain false. corePolicyState is
+NOT_EVALUATED (or DENIED for L3). No caller metadata can set these states.
+Diagnostics reports trust-unverified separately from risk-denied. CLI/MCP and UI
+render these same Core results. No installer or loader consumes a self-claim as
+authorization; no legal rights are granted by these technical checks.

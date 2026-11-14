@@ -28,6 +28,8 @@ test('native panel is opt-in and archival state is explicitly historical', async
 test('HTTP panel executes actual Core preview and persists task/evidence without changing the input', async t => {
   const f = await fixture(t)
   assert.equal(f.session.enabled, true)
+  assert.equal(f.session.authentication, 'NONE')
+  assert.equal(f.session.tokenPurpose, 'CSRF_ONLY')
   assert.ok(f.session.capabilities.includes('configuration.preview'))
   const response = await f.post({ capability: 'configuration.preview', target: f.target })
   assert.equal(response.status, 200)
@@ -42,6 +44,20 @@ test('HTTP panel executes actual Core preview and persists task/evidence without
   assert.equal(response.headers.get('cache-control'), 'no-store')
   const page = await (await fetch(`${f.server.url}/`)).text()
   for (const id of ['native-form', 'native-target', 'native-capability', 'native-output']) assert.ok(page.includes(`id="${id}"`))
+})
+test('a second unauthenticated HTTP client can obtain CSRF but cannot gain host-write or approval authority', async t => {
+  const f = await fixture(t)
+  // Independent HTTP connection and no cookies, Origin, login or OS identity.
+  // This proves the HTTP boundary, not a second Windows-account execution.
+  const stranger = await (await fetch(`${f.server.url}/api/native/session`, { headers: { connection: 'close' } })).json()
+  assert.equal(stranger.csrf, f.session.csrf)
+  assert.equal(stranger.localClientAccess, 'ANY_LOCAL_PROCESS')
+  const post = body => fetch(`${f.server.url}/api/native/run`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-armorbreak-session': stranger.csrf }, body: JSON.stringify(body) })
+  assert.equal((await post({ capability: 'configuration.preview', target: f.target })).status, 200)
+  for (const capability of ['host.modify', 'maintenance.apply', 'plugin.activate', 'network.probe']) assert.equal((await post({ capability, target: f.target })).status, 400)
+  assert.equal((await post({ capability: 'configuration.preview', target: f.target, requestApproval: 'allowed-once' })).status, 400)
+  assert.equal((await fetch(`${f.server.url}/api/approve`, { method: 'POST' })).status, 404)
+  assert.equal(await readFile(f.target, 'utf8'), f.bundle)
 })
 test('missing/wrong/non-ASCII token, cross origin and caller principal/permission injection are refused', async t => {
   const f = await fixture(t), input = { capability: 'configuration.preview', target: f.target }

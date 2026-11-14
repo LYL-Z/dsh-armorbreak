@@ -21,9 +21,14 @@ request. Loopback and exact Host/Origin checks, a per-process random session
 token, strict request schema, 4096-byte body bound, CSP and no-store responses
 protect the local UI surface. Tokens are not persisted. Target authorization
 is exclusively the Core's responsibility. Error responses omit raw paths and
-input data. Preview outputs contain hashes, not raw configuration values.
-The local OS account and local processes remain trusted; this token is not a
-multiuser authentication system. No remote binding is permitted.
+input data. Configuration previews omit guessable input/value/name digests as well as raw values.
+The CSRF token is available to ANY local HTTP client, including another OS user.
+It is NOT authentication. The startup workspace must contain only data suitable
+for this shared local surface. Do not attach production secrets, L2 capabilities,
+host writers or approval callbacks. The Core engine independently rejects non-L0
+analysis; exact allowlisted operations and workspace checks remain enforced.
+A second unauthenticated HTTP connection is tested, but an actual second Windows
+account remains NOT_TESTED; these are not equivalent tests. No remote binding is permitted.
 
 Archived compatibility/provider/readiness records are explicitly historical;
 they are not current process observations. UNKNOWN/UNVERIFIED/NOT_TESTED do not
@@ -36,3 +41,14 @@ token/session restart boundaries, malformed/oversized requests, privilege
 injection and disabled state. Browser/desktop automation could not initialize
 in this environment (kernel assets path missing); actual click/visual
 acceptance remains NOT_TESTED. No live DSH host or production data was used.
+
+## Current browser verification
+
+`scripts/native-panel-browser-e2e.mjs` drives real headless Chromium against
+the running HTTP server: tab selection, form input/submission, Core task and
+evidence response, confidential preview rendering, scope-denial rendering and
+button recovery. Supply ARMORBREAK_PLAYWRIGHT_MODULE pointing at an existing
+Playwright index.mjs; the script never downloads dependencies. This optional
+browser test is not part of inherited GitHub CI. The current implementation run
+passed on Chromium 156.0.8078.4. Native desktop helper initialization failed and
+its log is retained. A second Windows account and DSH embedding remain NOT_TESTED.

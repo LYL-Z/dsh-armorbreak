@@ -165,7 +165,10 @@ export async function createWorkbenchServer({ root = DEFAULT_ROOT, host = '127.0
       }
     }
     const url = new URL(req.url, `http://${req.headers.host ?? '127.0.0.1'}`)
-    if (req.method === 'GET' && url.pathname === '/api/native/session') return send(res, 200, JSON.stringify({ enabled: Boolean(engine), csrf: engine ? token : null, capabilities: engine ? NATIVE_CAPABILITIES : [], state: 'READ_ONLY_CORE', evidenceScope: 'CURRENT_CALL_RESULTS_ONLY' }))
+    // This endpoint is reachable by ANY local HTTP client, including another
+    // OS user. The token prevents cross-site requests; it authenticates no user.
+    // Never attach credentials, host writes or approval callbacks to this panel.
+    if (req.method === 'GET' && url.pathname === '/api/native/session') return send(res, 200, JSON.stringify({ enabled: Boolean(engine), csrf: engine ? token : null, capabilities: engine ? NATIVE_CAPABILITIES : [], state: 'READ_ONLY_CORE', evidenceScope: 'CURRENT_CALL_RESULTS_ONLY', authentication: 'NONE', tokenPurpose: 'CSRF_ONLY', localClientAccess: 'ANY_LOCAL_PROCESS', privilegedOperations: 'UNAVAILABLE' }))
     if (url.pathname === '/api/native/run') {
       if (!engine) return send(res, 503, JSON.stringify({ error: 'native panel not configured' }))
       const provided = req.headers['x-armorbreak-session']

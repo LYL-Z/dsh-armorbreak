@@ -585,7 +585,10 @@ export class ExecutionRunner {
           ? { resolvedIps: policyResult.resolvedIps ?? [], code: policyResult.code }
           : null,
       })
-      if (input.buffer) targetSha = sha256(input.buffer)
+      // A digest of low-entropy configuration is a public guessing oracle.
+      // Sensitive-input analyzers retain bounded/pinned reads and result/audit
+      // integrity, but never persist or export a hash of the input bytes.
+      if (input.buffer && capability.sensitiveInput !== true) targetSha = sha256(input.buffer)
       const timeoutMs = Math.min(Number(options.timeoutMs ?? this.runtime.limits.timeoutMs), 5 * 60 * 1000)
       const raw = await withTimeout(Promise.resolve().then(() => capability.run(input)), timeoutMs, () => controller.abort())
       // A body that observes cancellation and settles normally is still a cancelled call.

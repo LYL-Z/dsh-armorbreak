@@ -20,7 +20,7 @@ test('overlay preserves false, empty string/list, null, unknown nested fields an
 test('profile selection is explicit; arrays replace and layers have deterministic precedence', () => {
   const result = resolveConfig(bundle({ profiles: [{ id: 'one', values: { list: [2] } }, { id: 'two', values: { list: [3] } }], selectedProfile: 'one', overlays: [{ id: 'final', values: { list: [] } }], conflictPolicy: 'last-wins' }))
   assert.deepEqual(result.config.list, [])
-  assert.deepEqual(result.preview.layers, ['one', 'final'])
+  assert.deepEqual(result.preview.layers, ['layer-1', 'layer-2'])
   assert.throws(() => resolveConfig(bundle({ selectedProfile: 'missing' })), /not found/)
 })
 test('conflicts default to reject and no automatic application exists', () => {
@@ -54,7 +54,8 @@ test('canonical serialization ignores object insertion order and rejects non-JSO
 test('preview hides config values and secret field names', () => {
   const result = resolveConfig({ schema: CONFIG_SCHEMA, base: {}, overlays: [{ id: 'safe', values: { SYNTHETIC_SECRET_FIELD: 'SYNTHETIC_SECRET_VALUE' } }] })
   assert.doesNotMatch(JSON.stringify(result.preview), /SYNTHETIC_SECRET/)
-  assert.match(result.preview.resultSha256, /^[a-f0-9]{64}$/)
+  assert.equal(result.preview.resultSha256, undefined)
+  assert.equal(result.preview.schema, 'armorbreak.config-preview/v2')
 })
 test('Core/MCP and independent CLI use the same preview with evidence and original-file integrity', async t => {
   const root = await mkdtemp(join(tmpdir(), 'abm-overlay-'))
