@@ -11,18 +11,18 @@
 
 ArmorBreak is an open-source toolkit for **authorized** reverse engineering, source-code review, packet analysis, digital forensics, and security research. One host-neutral Core powers **DeepSeek Harness**, **MCP-capable agents**, and **standalone Node.js integrations**. Models can help plan and interpret; they do **not** grant permission to act.
 
-**[Download Stable](https://github.com/LYL-Z/dsh-armorbreak/releases/tag/v2.2.0)** · **[Quick start](#quick-start)** · **[Integrations](#choose-an-integration)** · **[Release verification](#v220-stable-verification)** · **[Documentation](#documentation)** · **[中文](README.zh-CN.md)**
+**[Download Stable](https://github.com/LYL-Z/dsh-armorbreak/releases/tag/v2.3.1)** · **[Quick start](#quick-start)** · **[Integrations](#choose-an-integration)** · **[Historical v2.2 verification](#v220-stable-verification)** · **[Documentation](#documentation)** · **[中文](README.zh-CN.md)**
 
 [![CI](https://github.com/LYL-Z/dsh-armorbreak/actions/workflows/ci.yml/badge.svg)](https://github.com/LYL-Z/dsh-armorbreak/actions/workflows/ci.yml)
-![Stable](https://img.shields.io/badge/release-v2.2.0%20Stable-2ea44f)
+![Stable](https://img.shields.io/badge/release-v2.3.1%20Stable-2ea44f)
 ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22-43853d)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 > [!IMPORTANT]
-> **V2.2.0 Stable is published.** It covers a **Verified Core** and **Experimental Provider Integrations**. Commercial OpenAI, Anthropic, and Gemini endpoints remain `LIVE_UNVERIFIED`; AI-assisted security review is not human certification. The historical **Full GA** contract remains `gaReady:false` with 18 blockers. Read [release verification](#v220-stable-verification) and [scope/limitations](#scope-and-limitations) before relying on a result.
+> **v2.3.1 is the published Stable release.** Its tag, assets and historical acceptance records remain unchanged. The current source is **2.4.0-preview.1**, a development candidate with bounded offline functionality. Full upstream migration, real DSH compatibility and production identity are incomplete. No v2.4 Stable or npm registry publication is claimed.
 
 > [!NOTE]
-> **V2.3.1 is the active Stable release candidate.** V2.3.0 remains an unpublished historical candidate whose protected Tag Gate failed; its Tag and failure history are retained. V2.3.1 targets the Windows upgrade/rollback gate repair. It is not available as Stable until its public release page and exact assets are verified. The owner-approved implementation-agent self-review policy does not claim independent human security or legal certification. See [V2.3.1 release notes](docs/releases/v2.3.1.md), [V2.3.0 historical notes](docs/releases/v2.3.0.md), and [portable install requirements](docs/v2.3/portable-install.md).
+> v2.3.0 and v2.2 acceptance sections below are historical. A development check marked SKIPPED is not a passed release check. See [v2.3.1 release notes](docs/releases/v2.3.1.md) and the [v2.4 installation contract](docs/v24/distribution.md).
 
 ## Why ArmorBreak?
 
@@ -37,7 +37,11 @@ ArmorBreak is a **research toolkit**, not a guarantee that a target is vulnerabl
 
 ## Quick start
 
-### Option A — verify the published Stable release
+For the v2.4 development candidate, install an actually verified TGZ using the [distribution instructions](docs/v24/distribution.md), then run `armorbreak start --workspace /absolute/project/path`. Node 22+ is required. Open **开始使用**, run the safe example, then choose a file or project check and download its actual report. The local browser cannot issue privileged approvals. Real DSH installation remains unverified.
+
+The currently published Stable is [v2.3.1](https://github.com/LYL-Z/dsh-armorbreak/releases/tag/v2.3.1). The procedure below preserves the historical v2.2.0 example and its original hashes.
+
+### Historical v2.2.0 verification
 
 The release page carries six assets: the portable archive, its build manifest, CycloneDX SBOM, SHA-256 list, Stable Gate result, and GitHub attestation. Use Node.js **22+**; the release CI used Node 24.
 

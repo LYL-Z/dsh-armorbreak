@@ -208,7 +208,7 @@ export class ArmorBreakRuntime {
       } : {}),
     }))
     return {
-      version: '2.2.0',
+      version: (await import('../../../lib/core/productVersion.js')).PRODUCT_VERSION,
       generatedAt: nowIso(),
       workspace: root,
       workspaceBinding: 'most-recently-used (call an ArmorBreak tool to bind this session)',

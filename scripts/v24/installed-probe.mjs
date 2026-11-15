@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import { execFileSync, spawn } from 'node:child_process'
 import { once } from 'node:events'
+import { createInterface } from 'node:readline'
 import { createHash, generateKeyPairSync, sign } from 'node:crypto'
 import { mkdir, readFile, writeFile, rm } from 'node:fs/promises'
 import { join, dirname, relative, isAbsolute } from 'node:path'
@@ -34,6 +35,7 @@ await writeFile(join(workspace, 'inert.txt'), 'package acceptance fixture\n')
 const env = { ...process.env, ARMORBREAK_WORKSPACE: workspace, ARMORBREAK_STATE_ROOT: stateRoot, ARMORBREAK_PRINCIPAL_ID: 'installed-test' }
 const cli = (...args) => JSON.parse(execFileSync(process.execPath, [join(root, pkg.bin.armorbreak), ...args, '--json'], { env, encoding: 'utf8', timeout: 30000 }))
 assert.equal(cli('capabilities').length, 61)
+assert.equal(cli('doctor').version,pkg.version)
 const npm=process.env.ARMORBREAK_ACCEPTANCE_NPM_CLI
 assert.ok(npm)
 assert.equal(JSON.parse(execFileSync(process.execPath,[npm,'exec','--offline','--no','--','armorbreak','capabilities','--json'],{env,encoding:'utf8',timeout:30000})).length,61)
@@ -55,11 +57,29 @@ try {
 } finally { await rm(staged.lab,{recursive:true,force:true}) }
 // Actual stdio child process, not an in-process protocol mock.
 const child=spawn(process.execPath,[npm,'exec','--offline','--no','--','armorbreak-mcp'],{env,stdio:['pipe','pipe','pipe']})
-let out='',err='';child.stdout.on('data',b=>out+=b);child.stderr.on('data',b=>err+=b)
+let err='',nextId=0;child.stderr.on('data',b=>err+=b)
 const exit=once(child,'exit'), timer=setTimeout(()=>child.kill(),30000)
-child.stdin.end(JSON.stringify({jsonrpc:'2.0',id:1,method:'initialize',params:{protocolVersion:'2025-06-18'}})+'\n')
-const [code]=await exit;clearTimeout(timer);assert.equal(code,0,err)
-assert.equal(JSON.parse(out.trim()).result.protocolVersion,'2025-06-18')
+const frames=createInterface({input:child.stdout}),pending=new Map()
+frames.on('line',line=>{try{const frame=JSON.parse(line),callback=pending.get(frame.id);if(callback){pending.delete(frame.id);callback(frame)}}catch{child.kill()}})
+const rpc=(method,params)=>new Promise((resolve,reject)=>{
+ const id=++nextId;pending.set(id,response=>response.error?reject(new Error(JSON.stringify(response.error))):resolve(response.result))
+ child.stdin.write(JSON.stringify({jsonrpc:'2.0',id,method,params})+'\n')
+})
+child.once('exit',()=>{for(const callback of pending.values())callback({error:'MCP_CHILD_EXITED'});pending.clear()})
+const tool=async(name,args={})=>{const result=await rpc('tools/call',{name,arguments:args});assert.equal(result.isError,false,JSON.stringify(result));return JSON.parse(result.content[0].text)}
+try{
+ assert.equal((await rpc('initialize',{protocolVersion:'2025-06-18'})).protocolVersion,'2025-06-18')
+ child.stdin.write(JSON.stringify({jsonrpc:'2.0',method:'notifications/initialized'})+'\n')
+ assert.ok((await rpc('tools/list',{})).tools.some(t=>t.name==='armorbreak_analyze'))
+ assert.equal((await tool('armorbreak_health')).version,pkg.version)
+ const analyzed=await tool('armorbreak_analyze',{capability:'forensics.hash',target:join(workspace,'inert.txt')})
+ assert.equal(analyzed.state,'COMPLETED');assert.equal(analyzed.data.digests.sha256,createHash('sha256').update('package acceptance fixture\n').digest('hex'))
+ assert.ok((await tool('armorbreak_evidence',{taskId:analyzed.taskId})).evidence.length)
+ assert.match((await tool('armorbreak_report',{taskId:analyzed.taskId})).markdown,/任务状态：\*\*COMPLETED\*\*/)
+ const refused=await rpc('tools/call',{name:'armorbreak_analyze',arguments:{capability:'forensics.hash',target:join(process.cwd(),'package.json')}})
+ assert.equal(refused.isError,true)
+ child.stdin.end();const [code]=await exit;assert.equal(code,0,err)
+}finally{clearTimeout(timer);frames.close();if(child.exitCode===null)child.kill()}
 const { createWorkbenchServer }=await import('dsh-armorbreak/workbench')
 const server=await createWorkbenchServer({root,port:0,native:{workspaceId:workspace,stateRoot}})
 try {

@@ -71,7 +71,7 @@
     if (!session.enabled) {el('product-connection').textContent='尚未选择工作区。请使用 armorbreak start --workspace <项目目录> 启动。';return}
     try {
       catalog=await request('catalog')
-      el('product-connection').textContent=`当前项目：${catalog.workspaceName} · 本地 Core 已连接 · DSH / 模型未连接`
+      el('product-connection').textContent=`ArmorBreak ${catalog.productVersion} · 当前项目：${catalog.workspaceName} · 本地 Core 已连接 · DSH / 模型未连接`
       el('product-unavailable').innerHTML=catalog.unavailable.map(x=>`<li><strong>${escape(x.title)}</strong>：${escape(x.reason)}</li>`).join('')
       actions();availability();await tasks()
     } catch {el('product-connection').textContent='未能读取可用功能，请刷新页面重试。'}
