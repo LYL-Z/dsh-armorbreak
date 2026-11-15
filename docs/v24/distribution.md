@@ -1,5 +1,13 @@
 # v2.4 candidate distribution and installation contract
 
+## Windows experience ZIP
+
+The Windows package-validation job assembles `ArmorBreak-Windows-Preview.zip` from an actually installed frozen TGZ. It includes the application, locked TypeScript/YAML runtime dependencies, launcher, file hashes, source build record and license texts. It excludes acceptance state and requires an existing Node.js 22+ installation; Node itself and a graphical installer are not included.
+
+After verifying the download's SHA-256, extract the **entire** ZIP into a new user-writable folder and open `Start ArmorBreak.cmd`. No npm command, administrator elevation, model key or DSH installation is required. Keep the console open while using the local browser. Run the safe example, then place **copies** of files/projects in `workspace` and choose a relative target. Reports are downloadable from the task list. Stop with Ctrl+C. Preserve `workspace` and `state` when replacing an application folder; no automatic upgrade or data-deleting uninstaller is provided.
+
+Acceptance extracts the real ZIP to a new path containing spaces, Unicode and `&`, runs the actual CMD launcher, executes a Core task over HTTP and reads evidence/report results. It also rejects changed launchers and ZIP traversal members. This is not a fresh Explorer double-click or browser usability study, OS authentication, real DSH compatibility, self-contained Node distribution or Stable release approval. Hosted CI artifacts expire after seven days and are development downloads, not GitHub Release assets.
+
 ## First local result
 
 With Node 22+ and npm, install a verified candidate TGZ, then run `armorbreak start --workspace "/absolute/project/path"`. On Windows, quote paths such as `"D:\My Project"`. The default browser opens the loopback Workbench. No environment variables or model credentials are needed for its file/code/dependency checks. Run **运行安全示例** for real Core evidence and a downloadable report without reading project files. Current project tasks are separate from historical host acceptance. A missing target can be corrected and retried.
