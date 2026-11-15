@@ -201,7 +201,10 @@ export class McpServer {
     this.connectionId = connectionId
     this.auditLog = auditLog
     this.initialized = false
+    this.runtimeLease = engine.runtime?.runtimeObservation?.mount('MCP_STDIO')
   }
+
+  close() { this.runtimeLease?.dispose() }
 
   record(event) {
     if (!this.auditLog) return
@@ -236,6 +239,7 @@ export class McpServer {
     }
     if (message.method === 'initialize') {
       this.initialized = true
+      this.runtimeLease?.initialized()
       this.record({
         event: 'initialize',
         protocolVersion: message.params?.protocolVersion ?? null,
@@ -355,9 +359,11 @@ export class McpServer {
         else if (name === 'armorbreak_report') value = await this.engine.getReport(ctx, args.taskId)
         else if (name === 'armorbreak_task_list') value = { tasks: await this.engine.listTasks(ctx) }
         this.record({ event: 'tools/call', tool: name, ok: true })
+        this.runtimeLease?.call(true)
         return { jsonrpc: '2.0', id: message.id ?? null, result: { content: [{ type: 'text', text: JSON.stringify(value) }], isError: false } }
       } catch (cause) {
         this.record({ event: 'tools/call', tool: name, ok: false })
+        this.runtimeLease?.call(false)
         return { jsonrpc: '2.0', id: message.id ?? null, result: { content: [{ type: 'text', text: String(cause?.message ?? cause).slice(0, 2000) }], isError: true } }
       }
     }
@@ -386,7 +392,9 @@ export class McpServer {
 
 export async function createMcpServer({ stateRoot, workspaceId, principal, auditLog = null, connectionId = randomUUID() }) {
   const engine = await createEngine({ stateRoot, principals: [principal] })
-  return { engine, server: new McpServer({ engine, principal, workspaceId, auditLog, connectionId }) }
+  const server=new McpServer({ engine, principal, workspaceId, auditLog, connectionId }),closeEngine=engine.close.bind(engine)
+  engine.close=async()=>{server.close();await closeEngine()}
+  return { engine, server }
 }
 
 async function main() {

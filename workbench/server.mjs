@@ -161,6 +161,7 @@ export async function createWorkbenchServer({ root = DEFAULT_ROOT, host = '127.0
     ctx = { principal, workspaceId, requestId: 'workbench', traceId: randomUUID() }
     product = createProductApi({ engine, ctx, exampleCtx: { ...ctx, workspaceId: exampleRoot }, exampleFile })
   }
+  let runtimeLease=null
   const server = createServer(async (req, res) => {
     res.setHeader('cache-control', 'no-store')
     res.setHeader('x-content-type-options', 'nosniff')
@@ -193,9 +194,10 @@ export async function createWorkbenchServer({ root = DEFAULT_ROOT, host = '127.0
         try {
           const input = await boundedJson(req), started = performance.now()
           const result = await (url.pathname.endsWith('/example') ? product.example(input) : product.run(input))
+          runtimeLease?.call(true)
           return send(res, 200, JSON.stringify({ taskId: result.taskId, state: result.state, capability: result.capability, data: result.data, evidenceIds: result.evidenceIds, reportAvailable: Boolean(result.reportPath), durationMs: Math.round(performance.now() - started), hostModified: false }))
         } finally { busy = false }
-      } catch { return send(res, 400, JSON.stringify({ error: 'CORE_REQUEST_REJECTED', detail: '未能完成任务。请检查项目内的目标与文件类型，修正后重试。未授予额外权限。' })) }
+      } catch { runtimeLease?.call(false); return send(res, 400, JSON.stringify({ error: 'CORE_REQUEST_REJECTED', detail: '未能完成任务。请检查项目内的目标与文件类型，修正后重试。未授予额外权限。' })) }
     }
     // This endpoint is reachable by ANY local HTTP client, including another
     // OS user. The token prevents cross-site requests; it authenticates no user.
@@ -249,11 +251,13 @@ export async function createWorkbenchServer({ root = DEFAULT_ROOT, host = '127.0
     return send(res, 404, JSON.stringify({ error: 'not found' }))
   })
   try { await new Promise((resolvePromise, reject) => { server.once('error', reject); server.listen(port, host, resolvePromise) }) } catch (error) { await engine?.close(); if (exampleRoot) await rm(exampleRoot, {recursive:true,force:true}); throw error }
+  runtimeLease=engine?.runtime.runtimeObservation.mount('WORKBENCH_HTTP')??null
+  runtimeLease?.initialized()
   return {
     host,
     port: server.address().port,
     url: `http://${host}:${server.address().port}`,
-    close: async () => { await new Promise((resolvePromise) => server.close(resolvePromise)); await engine?.close(); if (exampleRoot) await rm(exampleRoot, {recursive:true,force:true}) },
+    close: async () => { await new Promise((resolvePromise) => server.close(resolvePromise)); runtimeLease?.dispose(); await engine?.close(); if (exampleRoot) await rm(exampleRoot, {recursive:true,force:true}) },
   }
 }
 
