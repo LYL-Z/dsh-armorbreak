@@ -134,7 +134,7 @@ if(pkg.exports['./isolated-plugin-store']){
   await removed.rollback(dependencies.approvalProvider);assert.deepEqual(await removed.readInstalled('inert.js'),Buffer.from('throw new Error("V1_NEVER_RUN")\r\n'))
   const activeReviewer=durableReviewer??reviewer;activeReviewer.revokeKey('source');await assert.rejects(()=>updated.copySelected(),/DISABLED_OR_UNTRUSTED/)
   if(durableReviewer){const {openPersistentPluginReviewer}=await import('dsh-armorbreak/plugin-trust-store');assert.ok(durableReviewer.checkpoint().sequence>=2);assert.ok(openPersistentPluginReviewer({directory:join(process.cwd(),'installed-trust'),policyPublicKey:durablePolicyKey}).exportRevocations().keys.includes('source'))}
-  pluginStore='INSTALLED_PACKAGE_PHYSICAL_QUARANTINE_INSTALL_UPDATE_DISABLE_UNINSTALL_RESTORE'
+  pluginStore='INSTALLED_PACKAGE_PHYSICAL_QUARANTINE_INSTALL_UPDATE_DISABLE_REENABLE_UNINSTALL_RESTORE'
  }finally{for(const store of stores)await rm(store.root,{recursive:true,force:true});await runtime.close?.()}
 }
 console.log(JSON.stringify({exports:imported,client:'MODULE_REGISTRATION_SIMULATED_DSH_NOT_TESTED',cli:'ACTUAL_CHILD_PROCESS',mcp:'ACTUAL_STDIO_CHILD_PROCESS',core:'ACTUAL_INSTALLED_RUNTIME',workbench:'ACTUAL_HTTP_OS_AUTHENTICATION_NONE',yaml:pkg.dependencies.yaml,configuration:'INSTALLED_APPROVED_SYNTHETIC_APPLY_AND_EXACT_RESTORE',pluginStore,privateKeyScan:'PASS',runtimeVersion:pkg.version}))
