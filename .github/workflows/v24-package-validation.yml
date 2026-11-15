@@ -12,11 +12,12 @@ on:
       - scripts/v24/**
       - tests/npm-distribution-r3.test.mjs
       - .github/workflows/v24-package-validation.yml
+  push:
+    branches: [main]
 permissions:
   contents: read
 jobs:
   install:
-    if: startsWith(github.head_ref, 'fix/v24-r3-') || startsWith(github.head_ref, 'feat/v24-r3-') || startsWith(github.head_ref, 'test/v24-r3-') || startsWith(github.head_ref, 'fix/v24-r4-') || startsWith(github.head_ref, 'feat/v24-r4-') || startsWith(github.head_ref, 'test/v24-r4-')
     strategy:
       fail-fast: false
       matrix:
@@ -26,11 +27,11 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: ${{ matrix.node }}
       - name: Install locked build and test dependencies
         run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Actual frozen TGZ installation and runtime validation
-        run: node scripts/v24/verify-npm-distribution.mjs --commit ${{ github.event.pull_request.head.sha }} --out ${{ runner.temp }}/armorbreak-distribution-${{ matrix.node }}
+        run: node scripts/v24/verify-npm-distribution.mjs --commit ${{ github.event.pull_request.head.sha || github.sha }} --out ${{ runner.temp }}/armorbreak-distribution-${{ matrix.node }}

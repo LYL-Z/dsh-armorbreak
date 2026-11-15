@@ -84,6 +84,7 @@ function renderMarkdown(data) {
   lines.push(`- 报告 ID：\`${task.id}\``)
   lines.push(`- 生成时间：${nowIso()}`)
   lines.push(`- 任务状态：**${task.state}**${task.workflowId ? `（工作流 ${task.workflowId}）` : ''}`)
+  if (task.reportStateBasis === 'TERMINAL_PUBLICATION_SNAPSHOT') lines.push('- 状态口径：任务收尾时发布的报告快照；以下轨迹和审计只列出生成前已经记录的事件。')
   lines.push(`- 工作区：\`${task.workspace}\``)
   lines.push(`- 目标：\`${task.targetPath ?? '(none)'}\``)
   lines.push(`- 操作者：${task.operator}`)

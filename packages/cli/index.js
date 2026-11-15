@@ -7,7 +7,9 @@ import { makeApprovalId } from '../../lib/control/approvalAuthority.js'
 import { createMcpServer } from '../mcp-server/index.js'
 import { copyFileSync, existsSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
-import { resolve } from 'node:path'
+import { resolve, join } from 'node:path'
+import { homedir } from 'node:os'
+import { spawn } from 'node:child_process'
 import { applyJsonInstall, planJsonInstall, uninstallJsonServer } from '../installer/index.js'
 import { applyTomlInstall, planTomlInstall, uninstallTomlServer } from '../installer/toml.js'
 import { applyYamlInstall, planYamlInstall, uninstallYamlServer } from '../installer/yaml.js'
@@ -45,8 +47,25 @@ function config(env = process.env) {
 
 export async function runCli(argv = process.argv.slice(2), dependencies = {}) {
   const { command, positional, options } = parse(argv)
+  if (command === 'start') {
+    if (positional.length || Object.keys(options).some(k => !['workspace','state-root','port','no-open','json'].includes(k))) throw new Error('start accepts --workspace, --state-root, --port, --no-open and --json')
+    const env = dependencies.env ?? process.env
+    const workspaceId = resolve(String(options.workspace ?? env.ARMORBREAK_WORKSPACE ?? process.cwd()))
+    const stateRoot = resolve(String(options['state-root'] ?? env.ARMORBREAK_STATE_ROOT ?? env.ARMORBREAK_HOME ?? join(homedir(), '.armorbreak')))
+    const port = options.port === undefined ? 0 : Number(options.port)
+    if (!Number.isInteger(port) || port < 0 || port > 65535 || options.port === true) throw new Error('port must be an integer from 0 to 65535')
+    const { createWorkbenchServer } = await import('../../workbench/server.mjs')
+    const server = await createWorkbenchServer({ port, native: {workspaceId,stateRoot} })
+    print(options.json ? {url:server.url,workspace:workspaceId,mode:'LOCAL_READ_ONLY',authentication:'NONE'} : `ArmorBreak 工作台：${server.url}\n当前项目：${workspaceId}\n仅本地只读检查；按 Ctrl+C 停止。`, options.json)
+    if (!options['no-open']) {
+      const [binary,args] = process.platform === 'win32' ? ['rundll32.exe',['url.dll,FileProtocolHandler',server.url]] : process.platform === 'darwin' ? ['open',[server.url]] : ['xdg-open',[server.url]]
+      const browser = spawn(binary,args,{stdio:'ignore',windowsHide:true,detached:true})
+      browser.once('error',()=>process.stderr.write('未能自动打开浏览器，请打开上方工作台地址。\n'));browser.unref()
+    }
+    return server
+  }
   if (command === 'help' || options.help) {
-    print('armorbreak doctor|host inspect --home <absolute-path> --profile <name>|host diagnose --target <file> --spec <file>|host layout --resources <absolute-resources-directory>|config preview|config convert|config stage --bundle <file>|config status --lab <absolute-path>|config apply|config revert (trusted host only; fresh synthetic labs)|capabilities|analyze|task|workflow|approval|install approve|agent|report|mcp [--json]', false)
+    print('armorbreak start [--workspace <project-directory>] [--no-open]|doctor|host inspect --home <absolute-path> --profile <name>|host diagnose --target <file> --spec <file>|host layout --resources <absolute-resources-directory>|config preview|config convert|config stage --bundle <file>|config status --lab <absolute-path>|config apply|config revert (trusted host only; fresh synthetic labs)|capabilities|analyze|task|workflow|approval|install approve|agent|report|mcp [--json]', false)
     return
   }
   if (command === 'host' && positional[0] === 'inspect') {
@@ -218,7 +237,9 @@ export async function runCli(argv = process.argv.slice(2), dependencies = {}) {
   }
 }
 
-if (isMainModule(import.meta.url)) runCli().catch((cause) => {
+if (isMainModule(import.meta.url)) runCli().then(server => {
+  if (server?.close) for (const signal of ['SIGINT','SIGTERM']) process.once(signal,()=>{server.close().then(()=>process.exit(0)).catch(()=>process.exit(1))})
+}).catch((cause) => {
   process.stderr.write(`${String(cause?.message ?? cause)}\n`)
   process.exitCode = 1
 })

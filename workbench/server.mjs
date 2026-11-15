@@ -8,6 +8,9 @@ import { fileURLToPath } from 'node:url'
 import { randomBytes, randomUUID, timingSafeEqual } from 'node:crypto'
 import { isAbsolute } from 'node:path'
 import { createEngine } from '../packages/engine-node/index.js'
+import { mkdtemp, writeFile, rm, realpath, stat } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { createProductApi } from './product.mjs'
 
 const HERE = resolve(fileURLToPath(new URL('.', import.meta.url)))
 const DEFAULT_ROOT = resolve(HERE, '..')
@@ -141,13 +144,19 @@ function send(res, status, body, type = 'application/json; charset=utf-8') {
 
 export async function createWorkbenchServer({ root = DEFAULT_ROOT, host = '127.0.0.1', port = 0, native = null } = {}) {
   if (!LOOPBACK.has(host)) throw new Error('Workbench must bind loopback')
-  let engine = null, ctx = null, busy = false
+  let engine = null, ctx = null, product = null, exampleRoot = null, busy = false
   const token = randomBytes(32).toString('hex')
   if (native) {
     if (!isAbsolute(native.workspaceId ?? '') || !isAbsolute(native.stateRoot ?? '')) throw new Error('native panel requires explicit absolute workspace and state root')
-    const principal = { id: 'workbench-local', kind: 'local-user', workspaces: [native.workspaceId] }
-    engine = await createEngine({ stateRoot: native.stateRoot, principals: [principal] })
-    ctx = { principal, workspaceId: native.workspaceId, requestId: 'workbench', traceId: randomUUID() }
+    const workspaceId = await realpath(native.workspaceId)
+    if (!(await stat(workspaceId)).isDirectory()) throw new Error('workspace must be a directory')
+    exampleRoot = await mkdtemp(join(tmpdir(), 'armorbreak-welcome-'))
+    const exampleFile = join(exampleRoot, 'welcome.txt')
+    await writeFile(exampleFile, 'ArmorBreak first run: this inert example is analyzed by the real Core.\n', { flag: 'wx', mode: 0o600 })
+    const principal = { id: 'workbench-local', kind: 'local-user', workspaces: [workspaceId, exampleRoot] }
+    try { engine = await createEngine({ stateRoot: native.stateRoot, principals: [principal] }) } catch (error) { await rm(exampleRoot, { recursive: true, force: true }); throw error }
+    ctx = { principal, workspaceId, requestId: 'workbench', traceId: randomUUID() }
+    product = createProductApi({ engine, ctx, exampleCtx: { ...ctx, workspaceId: exampleRoot }, exampleFile })
   }
   const server = createServer(async (req, res) => {
     res.setHeader('cache-control', 'no-store')
@@ -166,6 +175,25 @@ export async function createWorkbenchServer({ root = DEFAULT_ROOT, host = '127.0
       }
     }
     const url = new URL(req.url, `http://${req.headers.host ?? '127.0.0.1'}`)
+    if (url.pathname.startsWith('/api/product/')) {
+      if (!product) return send(res, 503, JSON.stringify({ error: 'PRODUCT_NOT_CONFIGURED', detail: 'Start with armorbreak start --workspace <project-directory>.' }))
+      const provided = req.headers['x-armorbreak-session']
+      if (typeof provided !== 'string' || !/^[a-f0-9]{64}$/.test(provided) || !timingSafeEqual(Buffer.from(provided), Buffer.from(token))) return send(res, 403, JSON.stringify({ error: 'session rejected' }))
+      try {
+        if (req.method === 'GET' && url.pathname === '/api/product/catalog') return send(res, 200, JSON.stringify(await product.catalog()))
+        if (req.method === 'GET' && url.pathname === '/api/product/tasks') return send(res, 200, JSON.stringify(await product.tasks()))
+        if (req.method === 'GET' && url.pathname === '/api/product/report') return send(res, 200, JSON.stringify(await product.report(url.searchParams.get('taskId'))))
+        if (req.method === 'GET' && url.pathname === '/api/product/evidence') return send(res, 200, JSON.stringify(await product.evidence(url.searchParams.get('taskId'))))
+        if (req.method !== 'POST' || !['/api/product/run','/api/product/example'].includes(url.pathname) || req.headers['content-type'] !== 'application/json') return send(res, 400, JSON.stringify({ error: 'invalid product request' }))
+        if (busy) return send(res, 429, JSON.stringify({ error: 'CORE_BUSY', detail: '已有任务正在运行，请完成后重试。' }))
+        busy = true
+        try {
+          const input = await boundedJson(req), started = performance.now()
+          const result = await (url.pathname.endsWith('/example') ? product.example(input) : product.run(input))
+          return send(res, 200, JSON.stringify({ taskId: result.taskId, state: result.state, capability: result.capability, data: result.data, evidenceIds: result.evidenceIds, reportAvailable: Boolean(result.reportPath), durationMs: Math.round(performance.now() - started), hostModified: false }))
+        } finally { busy = false }
+      } catch { return send(res, 400, JSON.stringify({ error: 'CORE_REQUEST_REJECTED', detail: '未能完成任务。请检查项目内的目标与文件类型，修正后重试。未授予额外权限。' })) }
+    }
     // This endpoint is reachable by ANY local HTTP client, including another
     // OS user. The token prevents cross-site requests; it authenticates no user.
     // Never attach credentials, host writes or approval callbacks to this panel.
@@ -207,7 +235,7 @@ export async function createWorkbenchServer({ root = DEFAULT_ROOT, host = '127.0
         secretRendered: false,
       }))
     }
-    if (req.method === 'GET' && ['/', '/index.html', '/app.js', '/style.css'].includes(url.pathname)) {
+    if (req.method === 'GET' && ['/', '/index.html', '/app.js', '/product.js', '/style.css'].includes(url.pathname)) {
       const file = url.pathname === '/' || url.pathname === '/index.html' ? 'index.html' : url.pathname.slice(1)
       try {
         const body = readFileSync(join(HERE, file))
@@ -217,12 +245,12 @@ export async function createWorkbenchServer({ root = DEFAULT_ROOT, host = '127.0
     }
     return send(res, 404, JSON.stringify({ error: 'not found' }))
   })
-  try { await new Promise((resolvePromise, reject) => { server.once('error', reject); server.listen(port, host, resolvePromise) }) } catch (error) { await engine?.close(); throw error }
+  try { await new Promise((resolvePromise, reject) => { server.once('error', reject); server.listen(port, host, resolvePromise) }) } catch (error) { await engine?.close(); if (exampleRoot) await rm(exampleRoot, {recursive:true,force:true}); throw error }
   return {
     host,
     port: server.address().port,
     url: `http://${host}:${server.address().port}`,
-    close: async () => { await new Promise((resolvePromise) => server.close(resolvePromise)); await engine?.close() },
+    close: async () => { await new Promise((resolvePromise) => server.close(resolvePromise)); await engine?.close(); if (exampleRoot) await rm(exampleRoot, {recursive:true,force:true}) },
   }
 }
 

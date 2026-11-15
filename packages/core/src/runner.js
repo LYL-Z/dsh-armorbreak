@@ -899,19 +899,25 @@ export class ExecutionRunner {
     await store.addNote(task, `evidence chain ${chain.valid ? 'verified' : `BROKEN at ${chain.brokenAt}`} (${chain.records} records)`)
     await store.transition(task, 'REPORTING', 'generating report')
     let reportFailure = null
+    const failedSteps = task.steps.filter((item) => item.status === 'FAILED').length
+    const analysisTerminal = failedSteps > 0
+      ? task.stats.evidence === 0 && task.stats.findings === 0 ? 'FAILED' : 'PARTIAL_SUCCESS'
+      : 'COMPLETED'
     if (opts.generateReport !== false) {
       try {
         const { generateTaskReport } = await import('./reports.js')
-        const report = await generateTaskReport(this.runtime, task, { format: 'markdown' })
+        // Prepare an immutable finalization snapshot. Its reference becomes public only
+        // in the same atomic task save as the actual terminal transition below.
+        const snapshot = structuredClone(task)
+        snapshot.state = analysisTerminal
+        snapshot.reportStateBasis = 'TERMINAL_PUBLICATION_SNAPSHOT'
+        const report = await generateTaskReport(this.runtime, snapshot, { format: 'markdown' })
         task.report = { format: report.format, path: report.path, sha256: report.sha256, at: report.generatedAt }
-        await store.save(task)
-        await store.addNote(task, `report generated: ${report.path}`)
       } catch (error) {
         reportFailure = String(/** @type {any} */ (error)?.message ?? error)
         await store.addNote(task, `report generation failed: ${reportFailure}`)
       }
     }
-    const failedSteps = task.steps.filter((item) => item.status === 'FAILED').length
     const partial = failedSteps > 0 || Boolean(reportFailure)
     const terminal = partial ? 'PARTIAL_SUCCESS' : 'COMPLETED'
     if (partial && task.stats.evidence === 0 && task.stats.findings === 0 && failedSteps > 0) {
@@ -919,6 +925,7 @@ export class ExecutionRunner {
     } else {
       await store.transition(task, terminal, partial ? 'finished with failed steps; collected results preserved' : 'analysis completed')
     }
+    if (task.report && !reportFailure) await store.addNote(task, `report generated: ${task.report.path}`)
     await audit.append({
       action: 'task.finalize',
       taskId: task.id,
