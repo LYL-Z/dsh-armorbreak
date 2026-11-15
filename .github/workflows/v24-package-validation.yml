@@ -16,7 +16,7 @@ permissions:
   contents: read
 jobs:
   install:
-    if: startsWith(github.head_ref, 'fix/v24-r3-') || startsWith(github.head_ref, 'feat/v24-r3-') || startsWith(github.head_ref, 'test/v24-r3-')
+    if: startsWith(github.head_ref, 'fix/v24-r3-') || startsWith(github.head_ref, 'feat/v24-r3-') || startsWith(github.head_ref, 'test/v24-r3-') || startsWith(github.head_ref, 'fix/v24-r4-') || startsWith(github.head_ref, 'feat/v24-r4-') || startsWith(github.head_ref, 'test/v24-r4-')
     strategy:
       fail-fast: false
       matrix:
