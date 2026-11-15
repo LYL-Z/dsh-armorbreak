@@ -844,6 +844,14 @@ export class ExecutionRunner {
       step.error = reason.slice(0, 1200)
       step.finishedAt = nowIso()
     }
+    const skipBlocked = () => {
+      // A newly skipped step can doom another dependency level. Settle the
+      // complete closure before deciding that no runnable steps remain.
+      let blocked
+      while ((blocked = blockedSteps(plan, statusMap())).length) {
+        for (const item of blocked) markSkipped(stepById.get(item.id), 'skipped: a dependency failed or was skipped')
+      }
+    }
     const maxSteps = Math.max(1, Math.min(opts.maxSteps ?? 50, 50))
     const concurrency = Math.max(1, Math.min(Number(opts.concurrency ?? 1), 4))
     let executed = 0
@@ -852,7 +860,7 @@ export class ExecutionRunner {
         await store.cancel(task, 'cancelled during workflow execution')
         return task
       }
-      for (const item of blockedSteps(plan, statusMap())) markSkipped(stepById.get(item.id), 'skipped: a dependency failed or was skipped')
+      skipBlocked()
       const ready = readySteps(plan, statusMap())
       if (ready.length === 0) break
       const batch = ready.slice(0, concurrency)
@@ -871,7 +879,7 @@ export class ExecutionRunner {
       }
       if (!TERMINAL.has(task.state)) await store.transition(task, 'COLLECTING_EVIDENCE', 'step evidence collected')
     }
-    for (const item of blockedSteps(plan, statusMap())) markSkipped(stepById.get(item.id), 'skipped: a dependency failed or was skipped')
+    skipBlocked()
     const pending = task.steps.some((step) => step.status === 'PENDING' || step.status === 'RUNNING')
     if (!pending && !TERMINAL.has(task.state)) {
       await this.finalizeTask(task, { generateReport: opts.generateReport !== false })

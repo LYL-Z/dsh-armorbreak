@@ -15,7 +15,6 @@ import { constants as fsConstants, appendFileSync, mkdirSync } from 'node:fs'
 import { lstat, open, readdir, realpath, stat } from 'node:fs/promises'
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path'
 import { createEngine } from '../engine-node/index.js'
-import { getWorkflow } from '../../lib/core/workflows.js'
 
 const PROTOCOL_VERSION = '2025-06-18'
 const SERVER_VERSION = '0.1.0-p2'
@@ -336,22 +335,7 @@ export class McpServer {
           if (unexpected) throw new Error(`unsupported armorbreak_workflow argument: ${unexpected}`)
           if (args.action === 'list') value = { workflows: await this.engine.listWorkflows(ctx) }
           else if (args.action === 'start') {
-            if (typeof args.workflow !== 'string' || args.workflow.length > 120) throw new Error('workflow must be a registered workflow id')
-            const workflow = getWorkflow(String(args.workflow ?? ''))
-            const capabilities = await this.engine.capabilities(ctx)
-            const risks = workflow.steps.map((step) => capabilities.find((capability) => capability.id === step.capabilityId)?.riskLevel ?? 'UNKNOWN')
-            if (risks.some((risk) => risk !== 'L0')) throw new Error('MCP workflow start supports only workflows whose every step is registered L0')
-            if (workflow.targetKind !== 'none' && typeof args.target !== 'string') throw new Error(`workflow ${workflow.id} requires a target path`)
-            const task = await this.engine.createTask(ctx, {
-              title: workflow.title,
-              objective: workflow.description,
-              workflowId: workflow.id,
-              targetPath: args.target,
-              targetKind: workflow.targetKind,
-              steps: workflow.steps,
-            })
-            const completed = await this.engine.runtime.runner.runWorkflow(task)
-            value = { taskId: task.id, workflowId: workflow.id, state: completed.state, stats: completed.stats, report: completed.report ?? null }
+            value = await this.engine.startWorkflow(ctx,{workflow:args.workflow,target:args.target})
           }
         }
         else if (name === 'armorbreak_task_get') value = await this.engine.getTask(ctx, args.taskId)

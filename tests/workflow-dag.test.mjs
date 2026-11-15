@@ -125,3 +125,19 @@ test('a failed step skips its dependents but independent steps still run', async
   assert.equal(updated.state, 'PARTIAL_SUCCESS')
   assert.ok(updated.stats.evidence > 0)
 })
+
+test('a failed root settles all transitive descendants even when the plan is not topologically ordered',async()=>{
+ const stateRoot=await mkdtemp(join(tmpdir(),'abm-dag-chain-')),runtime=new ArmorBreakRuntime({stateRoot});await runtime.init()
+ const workspace=await workspaceWithProject(),store=runtime.workspace(workspace).taskStore
+ const task=await store.create({title:'transitive failure regression',targetPath:workspace,targetKind:'directory',steps:[
+  {id:'last',capabilityId:'sast.sbom',dependsOn:['middle2']},
+  {id:'failure',capabilityId:'sast.semgrep',dependsOn:[]},
+  {id:'middle2',capabilityId:'sast.sbom',dependsOn:['middle1']},
+  {id:'middle1',capabilityId:'sast.sbom',dependsOn:['failure']},
+  {id:'independent',capabilityId:'sast.scan',dependsOn:[]},
+ ]})
+ const result=await runtime.runner.runWorkflow(task,{concurrency:2})
+ assert.equal(result.state,'PARTIAL_SUCCESS')
+ assert.deepEqual(result.steps.map(s=>s.status),['SKIPPED','FAILED','SKIPPED','SKIPPED','DONE'])
+ assert.equal((await store.get(task.id)).state,'PARTIAL_SUCCESS');assert.ok(result.report?.path)
+})
