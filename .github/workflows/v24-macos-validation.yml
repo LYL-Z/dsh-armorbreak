@@ -1,0 +1,71 @@
+name: V2.4 macOS runtime validation
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: v24-macos-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+jobs:
+  macos:
+    name: macOS Node ${{ matrix.node }} actual runtime
+    # Standard hosted public-repository runners only; never opt into paid larger runners.
+    if: github.event.repository.private == false
+    runs-on: macos-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: ${{ matrix.node }}
+      - uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c
+        with:
+          python-version: '3.11'
+      - name: Assert frozen candidate and prepare bounded test scratch
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          node --input-type=module -e "import {mkdirSync,realpathSync,appendFileSync} from 'node:fs';mkdirSync('.runtime/tmp',{recursive:true});const scratch=realpathSync('.runtime/tmp');appendFileSync(process.env.GITHUB_ENV,'TMPDIR='+scratch+'\nTEMP='+scratch+'\nTMP='+scratch+'\n')"
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Full regression and contract checks
+        id: regression
+        run: |
+          set -euo pipefail
+          node --test --test-concurrency=1 2>&1 | tee "$RUNNER_TEMP/macos-full-tests.log"
+          npm run typecheck
+      - name: Actual frozen package, fresh consumer and runtime entrypoints
+        id: installed
+        # Preserve full-regression failures while independently exercising the
+        # installed runtime. A passing package probe never turns this job green.
+        if: ${{ !cancelled() }}
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: node scripts/v24/verify-npm-distribution.mjs --commit "$EXPECTED_SHA" --out "$RUNNER_TEMP/macos-package"
+      - name: Record actual platform with explicit host limits
+        if: ${{ !cancelled() }}
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          FULL_REGRESSION: ${{ steps.regression.outcome }}
+          INSTALLED_PACKAGE: ${{ steps.installed.outcome }}
+        run: |
+          node --input-type=module -e "import {writeFileSync} from 'node:fs';import os from 'node:os';writeFileSync(process.env.RUNNER_TEMP+'/macos-runtime.json',JSON.stringify({commit:process.env.EXPECTED_SHA,node:process.version,platform:process.platform,architecture:process.arch,kernel:os.release(),fullRegression:process.env.FULL_REGRESSION,actualInstalledPackage:process.env.INSTALLED_PACKAGE,nativeGui:'NOT_TESTED',realDshHost:'NOT_TESTED',legacySafeEvidenceWrite:'UNSUPPORTED_ON_DARWIN',legacyTaskSchemaMigration:'UNSUPPORTED_ON_DARWIN',fullUpstreamEquivalence:'NOT_PROVEN'},null,2)+'\n')"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: v24-macos-node${{ matrix.node }}-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            ${{ runner.temp }}/macos-full-tests.log
+            ${{ runner.temp }}/macos-runtime.json
+            ${{ runner.temp }}/macos-package/validation.json
+          if-no-files-found: warn
+          retention-days: 7
