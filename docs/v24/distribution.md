@@ -1,5 +1,17 @@
 # v2.4 candidate distribution and installation contract
 
+## First local result
+
+With Node 22+ and npm, install a verified candidate TGZ, then run `armorbreak start --workspace "/absolute/project/path"`. On Windows, quote paths such as `"D:\My Project"`. The default browser opens the loopback Workbench. No environment variables or model credentials are needed for its file/code/dependency checks. Run **运行安全示例** for real Core evidence and a downloadable report without reading project files. Current project tasks are separate from historical host acceptance. A missing target can be corrected and retried.
+
+`--no-open` prints the URL; `--port 0` chooses an available port; `--state-root <absolute-directory>` selects Core state. Ctrl+C stops the server. DSH/model connection is not inferred from a running Workbench. The panel is still CSRF-only, with no OS authentication, L2 writes, production keys or approval issuance. A graphical installer, real DSH onboarding and independent novice-user timing are not yet verified.
+
+## Configuration presentation
+
+Trusted configuration staging uses the existing strict data importer, then reconciles the private YAML document tree. Supported YAML/Cordis/Purge-preset changes preserve existing comments, map order, compatible scalar quoting, and uniform CRLF. An unchanged document returns its original bytes. Changed arbitrary whitespace is not guaranteed; comments on deleted nodes can be removed. Cordis component comments follow stable IDs during reorder; generic arrays use positional annotations. Tags, anchors, aliases, merge keys, duplicate keys and unsafe values remain rejected. The exact serialized candidate is reparsed and compared to intended data before approval. Source bytes and keys remain private; no value digest or comment is added to public previews.
+
+This uses the locked YAML document API ([upstream documentation](https://eemeli.org/yaml/#documents)), not a second configuration engine. The transaction still writes only a fresh synthetic lab and restores the original raw bytes through a separately approved rollback. It does not modify real DSH configuration or establish complete host schema compatibility.
+
 The supported v2.4 Node distribution path is an actual npm TGZ installed through npm in a new application directory. The root plugin, tools/skills, Core, engine, CLI, MCP and read-only Workbench ship together. This is a development candidate contract, not permission to publish, merge or replace a historical release. Existing package version metadata remains 2.3.1 for compatibility in this development stack; the full Git commit and TGZ SHA-256 identify a candidate. No v2.3.1 Tag, Release or original asset is rebuilt or changed.
 
 From a committed checkout with Node >=22 and npm installed:
