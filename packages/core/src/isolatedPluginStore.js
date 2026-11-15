@@ -103,7 +103,7 @@ export class IsolatedPluginTransaction{
   const execute=async()=>{
   await this.#verify()
   const record=this.#record
-  const check=()=>{if(record.operation!=='disable'){
+  const check=()=>{if(!['disable','uninstall'].includes(record.operation)){
    const version=record.versions.find(v=>v.snapshot.closureSha256===record.desired.closure)
    if(this.#reviewer.review(version.snapshot,version.receipts).state!=='READY_FOR_SYNTHETIC_STAGING_APPROVAL')throw new Error('PLUGIN_STORE_REVIEW_REVOKED_OR_DENIED')
   }}
@@ -135,9 +135,10 @@ export async function planIsolatedPluginInstall(runtime,options){
  if(!options||Object.keys(options).some(k=>!['operation','candidate','current','reviewer','receipts','operator','sessionId'].includes(k)))throw new Error('PLUGIN_STORE_OPERATION_INVALID')
  const {operation='install',candidate,current,reviewer,receipts,operator,sessionId}=options
  independent(reviewer)
- if(!['install','update','disable'].includes(operation)||(operation==='install'&&current)||(operation!=='install'&&!(current instanceof IsolatedPluginTransaction))||(operation==='disable'&&candidate)||(operation!=='disable'&&!candidate))throw new Error('PLUGIN_STORE_OPERATION_INVALID')
+ const removesSelection=['disable','uninstall'].includes(operation)
+ if(!['install','update','disable','uninstall'].includes(operation)||(operation==='install'&&current)||(operation!=='install'&&!(current instanceof IsolatedPluginTransaction))||(removesSelection&&candidate)||(!removesSelection&&!candidate))throw new Error('PLUGIN_STORE_OPERATION_INVALID')
  if(current){const previousLab=await reopenSyntheticMaintenance(runtime,current.root,{operator,sessionId});await previousLab.events()}
- const previous=current?await historicalReaders.get(current)():null,next=operation==='disable'?null:await capture(candidate,receipts)
+ const previous=current?await historicalReaders.get(current)():null,next=removesSelection?null:await capture(candidate,receipts)
  if(next&&reviewer.review(next.snapshot,receipts).state!=='READY_FOR_SYNTHETIC_STAGING_APPROVAL')throw new Error('PLUGIN_STORE_REVIEW_DENIED')
  if(operation==='update'){
   if(previous.snapshot.closureSha256===next.snapshot.closureSha256)throw new Error('PLUGIN_STORE_NO_CHANGE')
@@ -147,7 +148,7 @@ export async function planIsolatedPluginInstall(runtime,options){
   for(const plugin of newer){const prior=old.find(p=>p.id===plugin.id);if(prior.source.repository!==plugin.source.repository)throw new Error('PLUGIN_STORE_SOURCE_CHANGE');const cmp=compareVersion(plugin.version,prior.version);if(cmp<0)throw new Error('PLUGIN_STORE_DOWNGRADE_DENIED');advanced||=cmp>0}
   if(!advanced)throw new Error('PLUGIN_STORE_VERSION_NOT_ADVANCED')
  }
- const before=previous?.state??EMPTY,desired=operation==='disable'?{...before,status:'DISABLED'}:{...EMPTY,status:before.status==='DISABLED'?'DISABLED':'INSTALLED_QUARANTINED',closure:next.snapshot.closureSha256}
+ const before=previous?.state??EMPTY,desired=operation==='uninstall'?{...EMPTY}:operation==='disable'?{...before,status:'DISABLED'}:{...EMPTY,status:before.status==='DISABLED'?'DISABLED':'INSTALLED_QUARANTINED',closure:next.snapshot.closureSha256}
  const lab=await createSyntheticMaintenance(runtime,{operator,sessionId,seeds:{'installation.txt':canonicalConfig(before)}})
  const payloads=join(lab.control,'payloads');await mkdir(payloads,{mode:0o700})
  const versions=[]
