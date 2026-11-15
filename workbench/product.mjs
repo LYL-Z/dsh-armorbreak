@@ -1,6 +1,7 @@
 /** Presentation over the same Core. No independent scheduler, approval or host writer. */
 import { resolve, basename } from 'node:path'
 import { randomUUID } from 'node:crypto'
+import { PRODUCT_VERSION } from '../lib/core/productVersion.js'
 const ACTIONS=Object.freeze([
  {id:'file-integrity',capability:'forensics.hash',title:'检查文件完整性',description:'计算文件摘要，检查文件大小与类型，生成可下载的报告。',targetKind:'file',placeholder:'例如：downloads/package.tgz'},
  {id:'project-review',capability:'sast.scan',title:'检查项目代码',description:'离线查找危险代码模式。结果是排查线索，需要结合代码确认。',targetKind:'directory',placeholder:'例如：src 或 .'},
@@ -16,7 +17,7 @@ export function createProductApi({engine,ctx,exampleCtx,exampleFile}){
  return Object.freeze({
   async catalog(){
    const caps=await engine.capabilities(ctx)
-   return {schema:'armorbreak.product-catalog/v1',workspaceName:basename(ctx.workspaceId),mode:'OFFLINE_READ_ONLY',hostConnection:'NOT_CONNECTED',authentication:'NONE',
+   return {schema:'armorbreak.product-catalog/v1',productVersion:PRODUCT_VERSION,workspaceName:basename(ctx.workspaceId),mode:'OFFLINE_READ_ONLY',hostConnection:'NOT_CONNECTED',authentication:'NONE',
     actions:ACTIONS.filter(a=>caps.some(c=>c.id===a.capability&&c.riskLevel==='L0')).map(a=>({...a,permission:'L0_READ_ONLY'})),exampleAvailable:Boolean(exampleCtx),
     unavailable:[{id:'host-install',title:'安装到 DSH 宿主',reason:'真实宿主适配与可信身份尚未验收'}, {id:'plugin-activation',title:'启用宿主插件',reason:'隔离文件事务不等于真实加载'}, {id:'configuration-write',title:'应用宿主配置',reason:'本地网页不签发写入批准'}]}
   },
