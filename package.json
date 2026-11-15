@@ -46,6 +46,7 @@
     "./workbench": "./workbench/server.mjs",
     "./configuration-lab": "./packages/core/src/syntheticConfiguration.js",
     "./plugin-lifecycle": "./lib/catalog/pluginLifecycle.js",
+    "./plugin-trust-store": "./lib/catalog/persistentPluginTrust.js",
     "./plugin-lab": "./packages/core/src/syntheticPlugin.js",
     "./isolated-plugin-store": "./packages/core/src/isolatedPluginStore.js",
     "./package.json": "./package.json",

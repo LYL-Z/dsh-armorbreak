@@ -87,7 +87,8 @@ export class IsolatedPluginTransaction{
   const after=await this.#inspect()
   if(!after.transactionFinalized||canonicalConfig({state:before.state,transactionState:before.transactionState})!==canonicalConfig({state:after.state,transactionState:after.transactionState})||(!historical&&!after.selectionAvailable))throw new Error('PLUGIN_STORE_SELECTION_CHANGED_OR_UNTRUSTED')
  }
- async readInstalled(path){
+ async readInstalled(path){return this.#reviewer.withCommitLease?this.#reviewer.withCommitLease(()=>this.#readInstalled(path)):this.#readInstalled(path)}
+ async #readInstalled(path){
   const current=await this.#inspect()
   if(!current.selectionAvailable)throw new Error('PLUGIN_STORE_DISABLED_OR_UNTRUSTED')
   maintenancePath(path)
@@ -99,6 +100,7 @@ export class IsolatedPluginTransaction{
   return bytes.buffer
  }
  async apply(provider,checkpoint){
+  const execute=async()=>{
   await this.#verify()
   const record=this.#record
   const check=()=>{if(record.operation!=='disable'){
@@ -109,9 +111,13 @@ export class IsolatedPluginTransaction{
   // Recheck after delayed host approval. This is not production revocation/commit linearization.
   const wrapped={request:async request=>{if(!provider||typeof provider.request!=='function')throw new Error('TRUSTED_APPROVAL_PROVIDER_REQUIRED');const outcome=await provider.request(request);await this.#verify();check();return outcome}}
   const result=await this.#lab.apply(record.planId,wrapped,checkpoint);await this.#verify();return {...result,...await this.#inspect()}
+  }
+  // Durable policy writers and this complete synthetic commit use one exclusive lease.
+  // A competing revocation receives BUSY and must retry; it is never reported as committed.
+  return this.#reviewer.withCommitLease?this.#reviewer.withCommitLease(execute):execute()
  }
  async rollback(provider){await this.#verify();const result=await this.#lab.rollback(this.planId,provider);return {...result,...await this.#inspect()}}
- async copySelected(){return this.#copySnapshot(false)}
+ async copySelected(){return this.#reviewer.withCommitLease?this.#reviewer.withCommitLease(()=>this.#copySnapshot(false)):this.#copySnapshot(false)}
  async #copySnapshot(historical){
   const current=await this.#inspect()
   if(!current.transactionFinalized)throw new Error('PLUGIN_STORE_TRANSACTION_NOT_FINAL')
