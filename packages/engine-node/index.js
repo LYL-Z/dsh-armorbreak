@@ -376,6 +376,7 @@ export class TrustedEngine {
         taskId: task.id, state: finalized.state, capability: capabilityId, riskLevel: selected.riskLevel,
         target: result.target ?? targetPath, targetSha256: result.targetSha256 ?? null,
         evidenceIds: result.evidenceIds ?? [], reportPath: finalized.report?.path ?? null,
+        data: result.data,
       }
     })
   }

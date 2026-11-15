@@ -364,24 +364,32 @@ export class ExecutionRunner {
         }
         const maxFiles = Math.min(Number(opts.maxFiles ?? 2000), 5000)
         const maxDepth = Math.min(Number(opts.maxDepth ?? 5), 8)
+        const strict = opts.strict === true
+        if (strict && (!Number.isInteger(maxFiles) || maxFiles < 1 || !Number.isInteger(maxDepth) || maxDepth < 0)) throw new ExecutionError('INVENTORY_LIMIT', 'invalid strict inventory bounds')
         const files = []
+        let entriesSeen = 0
         /** @param {string} dir @param {number} depth */
         const walk = async (dir, depth) => {
-          if (files.length >= maxFiles || controller.signal.aborted) return
-          const entries = await readdir(dir, { withFileTypes: true }).catch(() => [])
+          if (controller.signal.aborted) { if (strict) throw new ExecutionError('CANCELLED', 'inventory cancelled'); return }
+          if (!strict && files.length >= maxFiles) return
+          const entries = await readdir(dir, { withFileTypes: true }).catch(error => { if (strict) throw error; return [] })
           for (const entry of entries) {
-            if (files.length >= maxFiles || controller.signal.aborted) return
-            if (entry.name.startsWith('.') && entry.name !== '.env') continue
-            if (SKIP_DIRS.has(entry.name)) continue
+            if (strict && ++entriesSeen > maxFiles) throw new ExecutionError('INVENTORY_LIMIT', 'strict inventory entry limit exceeded')
+            if (controller.signal.aborted) { if (strict) throw new ExecutionError('CANCELLED', 'inventory cancelled'); return }
+            if (!strict && files.length >= maxFiles) return
+            if (!strict && entry.name.startsWith('.') && entry.name !== '.env') continue
+            if (!strict && SKIP_DIRS.has(entry.name)) continue
             const full = join(dir, entry.name)
+            if (strict && entry.isSymbolicLink()) throw new ExecutionError('INVENTORY_LINK', 'strict inventory rejects symbolic links and junctions')
             // Dirent.isFile() is false for symlinks, so links are never enumerated.
             if (entry.isDirectory()) {
+              if (strict && depth >= maxDepth) throw new ExecutionError('INVENTORY_LIMIT', 'strict inventory depth exceeded')
               if (depth < maxDepth) await walk(full, depth + 1)
             } else if (entry.isFile()) {
               // Preserve the caller's workspace spelling so downstream relative-path
               // checks and reads work when the trusted workspace is a Windows junction.
               files.push(join(root, relative(realRoot, full)))
-            }
+            } else if (strict) throw new ExecutionError('INVENTORY_SPECIAL', 'strict inventory rejects special entries')
           }
         }
         await walk(resolvedStart, 0)
@@ -585,7 +593,10 @@ export class ExecutionRunner {
           ? { resolvedIps: policyResult.resolvedIps ?? [], code: policyResult.code }
           : null,
       })
-      if (input.buffer) targetSha = sha256(input.buffer)
+      // A digest of low-entropy configuration is a public guessing oracle.
+      // Sensitive-input analyzers retain bounded/pinned reads and result/audit
+      // integrity, but never persist or export a hash of the input bytes.
+      if (input.buffer && capability.sensitiveInput !== true) targetSha = sha256(input.buffer)
       const timeoutMs = Math.min(Number(options.timeoutMs ?? this.runtime.limits.timeoutMs), 5 * 60 * 1000)
       const raw = await withTimeout(Promise.resolve().then(() => capability.run(input)), timeoutMs, () => controller.abort())
       // A body that observes cancellation and settles normally is still a cancelled call.

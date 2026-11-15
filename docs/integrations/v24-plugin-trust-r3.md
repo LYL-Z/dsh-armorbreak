@@ -1,0 +1,11 @@
+# Scoped plugin trust: independent keys, authorities and revocation
+
+`createIndependentPluginReviewer({roots, revocations})` is the stricter trusted-host policy in `lib/catalog/pluginLifecycle.js` (npm export `/plugin-lifecycle`). Each root has `keyId`, `authorityId`, one role (`source` or `rights`), exact repository scopes and an Ed25519 public key. Keys are normalized to SPKI bytes; reusing key material under another label is rejected. Valid source and rights signatures with the same declared authority remain individually authenticated assertions but cannot produce an eligible plan.
+
+Distinct authority IDs are a configuration assertion from the trusted host, not proof that two separate humans or organizations performed review. Signatures do not prove GitHub server authentication or legal title. Even a valid independent pair grants only the existing review/synthetic staging scope; activation, real host installation and redistribution remain false.
+
+`revokeKey(id)` and `revokeAuthority(id)` only add revocations. A review evaluates the current revocation sets on every call. `exportRevocations()` returns the versioned data record for a trusted host to persist; constructing another reviewer with that record retains the revocation. The module does not persist policy automatically or fetch an external revocation service. Callers must durably store policy state, prevent rollback to old policy and recheck immediately before a later approved operation. No production policy keys are created by this change. Tests use process-local ephemeral keys only.
+
+The prior `createPluginReviewer(roots)` stays compatible for previously reviewed synthetic experiments and can represent one signer with two roles. It must not be described as independent review. Neither API accepts a candidate-provided public key or policy override through plugin metadata or receipts. No HTTP/MCP/Workbench authority endpoint is added.
+
+Tests: `tests/plugin-trust-r3.test.mjs` cover reused key material, same authority with different keys, role swap, repository scope mismatch, caller mutation, key revocation, authority revocation and reconstruction from a revocation record. Existing closure and plugin metadata tests remain in place. Real rights clearance and actual independent-signing operations are not established by synthetic tests.

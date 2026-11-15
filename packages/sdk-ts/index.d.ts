@@ -26,6 +26,8 @@ export interface AnalyzeResult {
   targetSha256: string | null
   evidenceIds: string[]
   reportPath: string | null
+  /** Capability-specific bounded output; host.health never contains raw config. */
+  data?: unknown
 }
 
 export interface TaskResult {

@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * @armorbreak/mcp-server (P2 slice)
  *
@@ -6,6 +7,7 @@
  * workspace from trusted host configuration, never from tool arguments.
  */
 import { randomUUID } from 'node:crypto'
+import { isMainModule } from '../../lib/core/isMainModule.js'
 import { createInterface } from 'node:readline'
 import { pathToFileURL, fileURLToPath } from 'node:url'
 import { createHash } from 'node:crypto'
@@ -123,6 +125,15 @@ async function loadSkills() {
 }
 
 const TOOLS = [
+  {
+    name: 'armorbreak_config_preview', description: 'Resolve a workspace-scoped JSON profile/overlay bundle through Core; hashes only, no host writes.',
+    inputSchema: { type: 'object', required: ['bundle'], properties: { bundle: { type: 'string' } }, additionalProperties: false },
+  },
+  {
+    name: 'armorbreak_host_health',
+    description: 'Read-only Desktop disk health through Core policy, tasks, evidence and reports. Never proves runtime compatibility.',
+    inputSchema: { type: 'object', required: ['resources'], properties: { resources: { type: 'string' }, expectedVersion: { type: 'string' } }, additionalProperties: false },
+  },
   {
     name: 'armorbreak_health',
     description: 'Read ArmorBreak health for the configured trusted workspace.',
@@ -305,6 +316,15 @@ export class McpServer {
         if (name === 'armorbreak_health') value = await this.engine.health(ctx)
         else if (name === 'armorbreak_capabilities') value = await this.engine.capabilities(ctx)
         else if (name === 'armorbreak_analyze') value = await this.engine.analyze(ctx, { capability: args.capability, target: args.target, options: args.options })
+        else if (name === 'armorbreak_config_preview') {
+          if (Object.keys(args).some(key => key !== 'bundle')) throw new Error('unsupported config preview argument')
+          value = await this.engine.analyze(ctx, { capability: 'configuration.preview', target: args.bundle })
+        }
+        else if (name === 'armorbreak_host_health') {
+          if (Object.keys(args).some(key => !['resources', 'expectedVersion'].includes(key))) throw new Error('unsupported host health argument')
+          value = await this.engine.analyze(ctx, { capability: 'host.health', target: args.resources,
+            options: args.expectedVersion === undefined ? {} : { expectedVersion: args.expectedVersion } })
+        }
         else if (name === 'armorbreak_workflow') {
           if (!['list', 'start'].includes(args.action)) throw new Error('armorbreak_workflow action must be list or start')
           const allowed = args.action === 'list' ? ['action'] : ['action', 'workflow', 'target']
@@ -383,6 +403,6 @@ async function main() {
   await engine.close()
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (isMainModule(import.meta.url)) {
   main().catch((cause) => { process.stderr.write(`${String(cause?.stack ?? cause)}\n`); process.exitCode = 1 })
 }

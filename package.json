@@ -39,17 +39,31 @@
     "./tools": "./tools.js",
     "./skills": "./skills.js",
     "./client": "./client.js",
+    "./core": "./packages/core/index.js",
+    "./engine-node": "./packages/engine-node/index.js",
+    "./cli": "./packages/cli/index.js",
+    "./mcp": "./packages/mcp-server/index.js",
+    "./workbench": "./workbench/server.mjs",
+    "./configuration-lab": "./packages/core/src/syntheticConfiguration.js",
+    "./plugin-lifecycle": "./lib/catalog/pluginLifecycle.js",
+    "./plugin-trust-store": "./lib/catalog/persistentPluginTrust.js",
+    "./plugin-lab": "./packages/core/src/syntheticPlugin.js",
+    "./isolated-plugin-store": "./packages/core/src/isolatedPluginStore.js",
     "./package.json": "./package.json",
     "./locale/*.json": "./locale/*.json",
     "./icon": "./icon.svg"
   },
   "files": [
+    "npm-shrinkwrap.json",
     "index.js",
     "tools.js",
     "skills.js",
     "client.js",
     "cordis.patch.yml",
     "lib",
+    "packages",
+    "plugins",
+    "workbench",
     "skills",
     "locale",
     "icon.svg",
@@ -58,9 +72,13 @@
     "LICENSE",
     "SECURITY.md",
     "CONTRIBUTING.md",
-    "docs",
-    "scripts"
+    "docs/v24/distribution.md"
   ],
+  "bin": {
+    "armorbreak": "./packages/cli/index.js",
+    "armorbreak-mcp": "./packages/mcp-server/index.js",
+    "armorbreak-workbench": "./workbench/server.mjs"
+  },
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
@@ -75,9 +93,11 @@
     "bench": "node benchmarks/bench.mjs",
     "inventory": "node scripts/file-changes.mjs",
     "clean-temp": "node scripts/clean-temp.mjs",
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json",
+    "verify:distribution": "node scripts/v24/verify-npm-distribution.mjs"
   },
   "dependencies": {
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "yaml": "2.9.1"
   }
 }
