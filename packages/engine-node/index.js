@@ -13,7 +13,7 @@ import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'nod
 import { open, realpath, stat } from 'node:fs/promises'
 import { getRuntime } from '../../lib/core/runtime.js'
 import { ApprovalAuthority } from '../../lib/control/approvalAuthority.js'
-import { listWorkflows } from '../../lib/core/workflows.js'
+import { listWorkflows, getWorkflow } from '../../lib/core/workflows.js'
 import { validateInvocation } from '../protocol/index.js'
 import { createEvidenceEnvelope, createEventEnvelope, CORE_VERSION } from '../core/index.js'
 import { isFilesystemPathWithin, sameFilesystemPath } from '../../lib/core/pathBoundary.js'
@@ -335,6 +335,26 @@ export class TrustedEngine {
     return listWorkflows()
   }
 
+  /** Run a registered, entirely L0 workflow through the existing Core DAG runner. */
+  async startWorkflow(ctx, input = {}) {
+    return this.bounded(ctx, async()=>{
+      this.authenticate(ctx)
+      if(!input||Array.isArray(input)||Object.keys(input).some(k=>!['workflow','target'].includes(k))||typeof input.workflow!=='string'||input.workflow.length>120)throw new EngineError('INVALID_REQUEST','registered workflow and target are required')
+      const workflow=getWorkflow(input.workflow)
+      if(workflow.steps.some(step=>this.runtime.registry.get(step.capabilityId)?.riskLevel!=='L0'))throw new EngineError('APPROVAL_REQUIRED','this entry supports registered L0 workflows only')
+      const targetPath=workflow.targetKind==='none'?null:typeof input.target==='string'&&input.target.trim()&&input.target.length<=MAX_TARGET?resolve(input.target):null
+      if(workflow.targetKind!=='none'&&!targetPath)throw new EngineError('INVALID_REQUEST','workflow requires a file or directory target')
+      if(targetPath&&!pathWithin(ctx.workspaceId,targetPath))throw new EngineError('TARGET_OUT_OF_SCOPE','target is outside the authorized workspace')
+      const task=await this.createTask(ctx,{title:workflow.title,objective:workflow.description,workflowId:workflow.id,targetPath,targetKind:workflow.targetKind,steps:structuredClone(workflow.steps)})
+      const completed=await this.runtime.runner.runWorkflow(task,{requestApproval:async()=>false,signal:ctx.cancellation??ctx.signal,generateReport:true})
+      const evidence=await this.getEvidence(ctx,task.id)
+      return {taskId:task.id,workflowId:workflow.id,state:completed.state,stats:completed.stats,report:completed.report??null,
+        evidenceIds:evidence.evidence.map(e=>e.id),reportPath:completed.report?.path??null,
+        data:{workflowId:workflow.id,findings:completed.stats.findings,evidence:completed.stats.evidence,
+          steps:completed.steps.map(s=>({id:s.id,title:s.title,capability:s.capabilityId,status:s.status,summary:s.summary??null}))}}
+    })
+  }
+
   async capabilities(ctx) {
     this.authenticate(ctx)
     return this.runtime.registry.list()
@@ -401,7 +421,7 @@ export class TrustedEngine {
 
 export async function createEngine(options) {
   const engine = await new TrustedEngine(options).init()
-  const methods = ['createTask', 'getTask', 'listTasks', 'cancelTask', 'getEvidence', 'getReport', 'recordEnvelope', 'analyze', 'capabilities', 'health', 'listWorkflows', 'verifyApproval']
+  const methods = ['createTask', 'getTask', 'listTasks', 'cancelTask', 'getEvidence', 'getReport', 'recordEnvelope', 'analyze', 'capabilities', 'health', 'listWorkflows', 'startWorkflow', 'verifyApproval']
   for (const name of methods) {
     const original = engine[name].bind(engine)
     engine[name] = (ctx, ...args) => engine.bounded(ctx, () => original(ctx, ...args))

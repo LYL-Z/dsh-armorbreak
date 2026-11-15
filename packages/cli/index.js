@@ -223,8 +223,12 @@ export async function runCli(argv = process.argv.slice(2), dependencies = {}) {
     }
     if (command === 'workflow') {
       if (positional[0] === 'list') return print(await engine.listWorkflows(ctx), options.json)
+      if (positional[0] === 'start') {
+        if(Object.keys(options).some(k=>!['workflow','target','json'].includes(k)))throw new Error('workflow start accepts only --workflow, --target and --json')
+        return print(await engine.startWorkflow(ctx,{workflow:options.workflow,target:options.target}),options.json)
+      }
       if (positional[0] === 'cancel' && positional[1]) return print(await engine.cancelTask(ctx, positional[1]), options.json)
-      throw new Error('workflow list or workflow cancel <task-id> is required')
+      throw new Error('workflow list, workflow start --workflow ID --target ABS, or workflow cancel <task-id> is required')
     }
     if (command === 'mcp' && positional[0] === 'serve') {
       const { server } = await createMcpServer(cfg)

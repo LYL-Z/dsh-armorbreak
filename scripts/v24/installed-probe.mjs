@@ -40,6 +40,7 @@ const npm=process.env.ARMORBREAK_ACCEPTANCE_NPM_CLI
 assert.ok(npm)
 assert.equal(JSON.parse(execFileSync(process.execPath,[npm,'exec','--offline','--no','--','armorbreak','capabilities','--json'],{env,encoding:'utf8',timeout:30000})).length,61)
 const hash = cli('analyze','--capability','forensics.hash','--target',join(workspace,'inert.txt')); assert.equal(hash.state, 'COMPLETED')
+const combined=cli('workflow','start','--workflow','ForensicFileReview','--target',join(workspace,'inert.txt'));assert.equal(combined.state,'COMPLETED');assert.equal(combined.data.steps.length,6);assert.ok(combined.data.steps.every(s=>s.status==='DONE'))
 const bundle = { schema: 'armorbreak.configuration-lab-request/v1', configuration: { schema: 'armorbreak.configuration-import/v1', format: 'yaml', source: '# installed YAML comment\r\nvalue: "old" # preserve this note\r\nfuture: false\r\n' }, overlays: [{ id: 'inert', values: { value: 'new' } }], conflictPolicy: 'last-wins' }
 const requestPath = join(workspace,'request.json'); await writeFile(requestPath,JSON.stringify(bundle))
 const convertPath = join(workspace,'convert.json'); await writeFile(convertPath,JSON.stringify(bundle.configuration))
@@ -78,6 +79,8 @@ try{
  assert.equal(analyzed.state,'COMPLETED');assert.equal(analyzed.data.digests.sha256,createHash('sha256').update('package acceptance fixture\n').digest('hex'))
  assert.ok((await tool('armorbreak_evidence',{taskId:analyzed.taskId})).evidence.length)
  assert.match((await tool('armorbreak_report',{taskId:analyzed.taskId})).markdown,/任务状态：\*\*COMPLETED\*\*/)
+ const multi=await tool('armorbreak_workflow',{action:'start',workflow:'ForensicFileReview',target:join(workspace,'inert.txt')});assert.equal(multi.state,'COMPLETED');assert.equal(multi.data.steps.length,6)
+ assert.match((await tool('armorbreak_report',{taskId:multi.taskId})).markdown,/任务状态：\*\*COMPLETED\*\*/)
  assert.ok((await tool('armorbreak_health')).runtimeObservation.adapters.some(a=>a.kind==='MCP_STDIO'&&a.successfulCalls>=4))
  const refused=await rpc('tools/call',{name:'armorbreak_analyze',arguments:{capability:'forensics.hash',target:join(process.cwd(),'package.json')}})
  assert.equal(refused.isError,true)
@@ -91,6 +94,7 @@ try {
  const catalog=await(await fetch(server.url+'/api/product/catalog',{headers})).json();assert.ok(catalog.actions.some(a=>a.id==='file-integrity'))
  const result=await(await fetch(server.url+'/api/product/example',{method:'POST',headers,body:'{}'})).json();assert.equal(result.state,'COMPLETED');assert.ok(result.evidenceIds.length)
  const report=await(await fetch(server.url+'/api/product/report?taskId='+result.taskId,{headers})).json();assert.match(report.markdown,/任务状态：\*\*COMPLETED\*\*/)
+ const multi=await(await fetch(server.url+'/api/product/run',{method:'POST',headers,body:JSON.stringify({action:'file-review',target:'inert.txt'})})).json();assert.equal(multi.state,'COMPLETED');assert.equal(multi.data.steps.length,6);assert.ok(multi.reportAvailable)
 } finally {await server.close()}
 let pluginStore='NOT_DECLARED_IN_THIS_PACKAGE'
 if(pkg.exports['./isolated-plugin-store']){

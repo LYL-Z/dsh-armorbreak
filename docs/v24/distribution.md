@@ -14,6 +14,12 @@ With Node 22+ and npm, install a verified candidate TGZ, then run `armorbreak st
 
 `--no-open` prints the URL; `--port 0` chooses an available port; `--state-root <absolute-directory>` selects Core state. Ctrl+C stops the server. DSH/model connection is not inferred from a running Workbench. The panel is still CSRF-only, with no OS authentication, L2 writes, production keys or approval issuance. A graphical installer, real DSH onboarding and independent novice-user timing are not yet verified.
 
+## Multi-tool checks and a combined report
+
+The function center also provides **项目综合审查** (code, secret indicators, dependencies and SBOM), **分析离线抓包** (seven PCAP/PCAPNG checks) and **文件综合取证** (six file checks). These run existing registered Core workflows and produce one task, per-step states, evidence and a combined downloadable report. The browser does not supply custom plans, tool options or approvals. All selected steps must currently be registered L0; input remains confined to the selected workspace. No live packet capture, target scanning, program execution or model credential is used. Indicators and heuristics do not establish a verified vulnerability.
+
+For a configured CLI workspace, run `armorbreak workflow start --workflow PCAPInvestigation --target /absolute/workspace/capture.pcap --json`. The MCP `armorbreak_workflow` start action uses the same Engine entry. A malformed input records an actual failed step and transitively skips blocked descendants, then finalizes the failed report. Independent DAG branches continue according to the existing Core policy; a failed step does not fabricate success.
+
 ## Configuration presentation
 
 Trusted configuration staging uses the existing strict data importer, then reconciles the private YAML document tree. Supported YAML/Cordis/Purge-preset changes preserve existing comments, map order, compatible scalar quoting, and uniform CRLF. An unchanged document returns its original bytes. Changed arbitrary whitespace is not guaranteed; comments on deleted nodes can be removed. Cordis component comments follow stable IDs during reorder; generic arrays use positional annotations. Tags, anchors, aliases, merge keys, duplicate keys and unsafe values remain rejected. The exact serialized candidate is reparsed and compared to intended data before approval. Source bytes and keys remain private; no value digest or comment is added to public previews.
