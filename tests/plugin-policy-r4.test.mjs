@@ -87,3 +87,18 @@ test('actual cross-process revocation cannot complete during selector commit; co
  await assert.rejects(()=>store.copySelected(),/DISABLED_OR_UNTRUSTED/)
  await store.rollback(approved);assert.equal((await store.inspect()).state.status,'NOT_INSTALLED')
 })
+
+test('reenable holds durable policy lease through commit; later cross-process revocation blocks reopened selection and rollback stays disabled',async t=>{
+ const f=await fixture(t),installed=await f.plan(await f.candidate());await installed.apply(approved)
+ const disabled=await f.plan({operation:'disable',current:installed});await disabled.apply(approved)
+ const enabled=await f.plan({operation:'enable',current:disabled})
+ let enter,release;const waiting=new Promise(r=>enter=r),hold=new Promise(r=>release=r)
+ const applying=enabled.apply(approved,async()=>{enter();await hold})
+ await waiting
+ try{assert.equal(f.child("r.revokeAuthority('rights-reviewer')").error,'PLUGIN_POLICY_BUSY');await assert.rejects(()=>enabled.copySelected(),/TRANSACTION_NOT_FINAL|POLICY_BUSY/)}finally{release();await applying}
+ assert.ok((await enabled.copySelected()).files.length)
+ assert.equal(f.child("r.revokeAuthority('rights-reviewer')").revocations.authorities.includes('rights-reviewer'),true)
+ const reopened=await reopenIsolatedPluginInstall(f.runtime,enabled.root,{...context,reviewer:f.reopen()})
+ await assert.rejects(()=>reopened.copySelected(),/DISABLED_OR_UNTRUSTED/)
+ await reopened.rollback(approved);assert.equal((await reopened.inspect()).state.status,'DISABLED');await assert.rejects(()=>reopened.readInstalled('inert.js'),/DISABLED_OR_UNTRUSTED/)
+})

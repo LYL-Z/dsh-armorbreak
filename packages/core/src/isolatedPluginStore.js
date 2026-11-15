@@ -136,10 +136,13 @@ export async function planIsolatedPluginInstall(runtime,options){
  const {operation='install',candidate,current,reviewer,receipts,operator,sessionId}=options
  independent(reviewer)
  const removesSelection=['disable','uninstall'].includes(operation)
- if(!['install','update','disable','uninstall'].includes(operation)||(operation==='install'&&current)||(operation!=='install'&&!(current instanceof IsolatedPluginTransaction))||(removesSelection&&candidate)||(!removesSelection&&!candidate))throw new Error('PLUGIN_STORE_OPERATION_INVALID')
+ const restoresSelection=operation==='enable'
+ if(!['install','update','disable','uninstall','enable'].includes(operation)||(operation==='install'&&current)||(operation!=='install'&&!(current instanceof IsolatedPluginTransaction))||((removesSelection||restoresSelection)&&candidate)||(restoresSelection&&receipts)||(!removesSelection&&!restoresSelection&&!candidate))throw new Error('PLUGIN_STORE_OPERATION_INVALID')
  if(current){const previousLab=await reopenSyntheticMaintenance(runtime,current.root,{operator,sessionId});await previousLab.events()}
- const previous=current?await historicalReaders.get(current)():null,next=removesSelection?null:await capture(candidate,receipts)
- if(next&&reviewer.review(next.snapshot,receipts).state!=='READY_FOR_SYNTHETIC_STAGING_APPROVAL')throw new Error('PLUGIN_STORE_REVIEW_DENIED')
+ const previous=current?await historicalReaders.get(current)():null
+ if(restoresSelection&&previous?.state.status!=='DISABLED')throw new Error('PLUGIN_STORE_ENABLE_REQUIRES_DISABLED')
+ const next=removesSelection?null:restoresSelection?previous:await capture(candidate,receipts)
+ if(next&&reviewer.review(next.snapshot,next.receipts).state!=='READY_FOR_SYNTHETIC_STAGING_APPROVAL')throw new Error('PLUGIN_STORE_REVIEW_DENIED')
  if(operation==='update'){
   if(previous.snapshot.closureSha256===next.snapshot.closureSha256)throw new Error('PLUGIN_STORE_NO_CHANGE')
   const old=previous.snapshot.plugins,newer=next.snapshot.plugins
@@ -148,7 +151,7 @@ export async function planIsolatedPluginInstall(runtime,options){
   for(const plugin of newer){const prior=old.find(p=>p.id===plugin.id);if(prior.source.repository!==plugin.source.repository)throw new Error('PLUGIN_STORE_SOURCE_CHANGE');const cmp=compareVersion(plugin.version,prior.version);if(cmp<0)throw new Error('PLUGIN_STORE_DOWNGRADE_DENIED');advanced||=cmp>0}
   if(!advanced)throw new Error('PLUGIN_STORE_VERSION_NOT_ADVANCED')
  }
- const before=previous?.state??EMPTY,desired=operation==='uninstall'?{...EMPTY}:operation==='disable'?{...before,status:'DISABLED'}:{...EMPTY,status:before.status==='DISABLED'?'DISABLED':'INSTALLED_QUARANTINED',closure:next.snapshot.closureSha256}
+ const before=previous?.state??EMPTY,desired=operation==='uninstall'?{...EMPTY}:operation==='disable'?{...before,status:'DISABLED'}:{...EMPTY,status:restoresSelection?'INSTALLED_QUARANTINED':before.status==='DISABLED'?'DISABLED':'INSTALLED_QUARANTINED',closure:next.snapshot.closureSha256}
  const lab=await createSyntheticMaintenance(runtime,{operator,sessionId,seeds:{'installation.txt':canonicalConfig(before)}})
  const payloads=join(lab.control,'payloads');await mkdir(payloads,{mode:0o700})
  const versions=[]

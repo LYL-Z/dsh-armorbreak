@@ -12,7 +12,7 @@ Trusted configuration staging uses the existing strict data importer, then recon
 
 This uses the locked YAML document API ([upstream documentation](https://eemeli.org/yaml/#documents)), not a second configuration engine. The transaction still writes only a fresh synthetic lab and restores the original raw bytes through a separately approved rollback. It does not modify real DSH configuration or establish complete host schema compatibility.
 
-The supported v2.4 Node distribution path is an actual npm TGZ installed through npm in a new application directory. The root plugin, tools/skills, Core, engine, CLI, MCP and read-only Workbench ship together. This is a development candidate contract, not permission to publish, merge or replace a historical release. Existing package version metadata remains 2.3.1 for compatibility in this development stack; the full Git commit and TGZ SHA-256 identify a candidate. No v2.3.1 Tag, Release or original asset is rebuilt or changed.
+The supported v2.4 Node distribution path is an actual npm TGZ installed through npm in a new application directory. The root plugin, tools/skills, Core, engine, CLI, MCP and read-only Workbench ship together. The package now declares **2.4.0-preview.1**, separately from the frozen v2.3.1 release. The full Git commit and TGZ SHA-256 identify a candidate. No v2.3.1 Tag, Release or original asset is rebuilt or changed. Successful development validation does not approve Stable publication.
 
 From a committed checkout with Node >=22 and npm installed:
 
@@ -41,6 +41,12 @@ The package includes `npm-shrinkwrap.json`, with exact runtime versions and inte
 - npm bin `armorbreak`: the native CLI; `armorbreak-mcp`: stdio MCP; `armorbreak-workbench`: loopback Workbench. Configure `ARMORBREAK_STATE_ROOT`, `ARMORBREAK_WORKSPACE` and the principal before CLI/MCP use. Workbench native mode requires `--workspace <absolute> --state-root <absolute>`; choose its port explicitly when needed.
 
 Configuration `config stage/status` can run in the standalone CLI; `config apply/revert` require a trusted host-injected one-use approval provider and act only on fresh sealed synthetic labs. No terminal flag, MCP request or local panel issues approval. Package acceptance checks actual installed YAML conversion and approved synthetic apply/restore, preserving original bytes. It never writes to a real DSH installation.
+
+## Restoring quarantine selection after disable
+
+The trusted-host `/isolated-plugin-store` API accepts `planIsolatedPluginInstall(runtime, {operation:'enable', current:disabledStore, reviewer, operator, sessionId})`. It creates a **new isolated transaction** using the sealed historical closure; caller-supplied replacement packages or receipts are rejected. The returned `store.apply(trustedApprovalProvider)` needs a fresh one-use approval and rechecks current source/rights trust after delayed approval. Revoked keys/authorities cannot regain selection. `store.rollback(trustedApprovalProvider)` separately restores DISABLED with the original bytes.
+
+Here, enable means restoring **quarantine file selection only**. `activationAuthorized=false`, `hostWrites=false` and `productionInstallation=false` remain enforced. No JavaScript is imported or executed, no DSH is modified, and older transaction roots are independent snapshots. The local HTTP panel and MCP cannot invoke this trusted-host approval API. Tests cover planning/approval, reopen, rejection, revocation races and byte-exact return to disabled.
 
 Workbench remains `authentication=NONE`, `tokenPurpose=CSRF_ONLY`; production secrets, L2 host writes and approval signing remain unavailable. Optional adapters requiring another host's SDK are not evidence of that host's runtime support.
 
