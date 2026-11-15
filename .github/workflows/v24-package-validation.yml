@@ -36,8 +36,18 @@ jobs:
       - name: Actual frozen TGZ installation and runtime validation
         run: node scripts/v24/verify-npm-distribution.mjs --commit ${{ github.event.pull_request.head.sha || github.sha }} --out ${{ runner.temp }}/armorbreak-distribution-${{ matrix.node }}
       - name: Preview source manifest, dependency SBOM and license texts
+        id: preview
         shell: bash
         run: |
           if node -e "process.exit(/^2\\.4\\.0-preview\\.[1-9]\\d*$/.test(require('./package.json').version)?0:1)"; then
             node scripts/v24/preview-metadata.mjs --validation "${{ runner.temp }}/armorbreak-distribution-${{ matrix.node }}" --out "${{ runner.temp }}/armorbreak-preview-${{ matrix.node }}"
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
           fi
+      - name: Upload bounded development Preview files
+        if: steps.preview.outputs.ready == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: v24-development-preview-${{ matrix.os }}-node${{ matrix.node }}-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/armorbreak-preview-${{ matrix.node }}/*
+          if-no-files-found: error
+          retention-days: 7
