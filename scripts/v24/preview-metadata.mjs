@@ -43,11 +43,14 @@ export function buildPreviewMetadata({ validationRoot, outputRoot }) {
   if(existsSync(outputRoot))throw new Error('REFUSE_EXISTING_OUTPUT')
   mkdirSync(outputRoot,{recursive:true})
   const write=(name,value)=>writeFileSync(join(outputRoot,name),typeof value==='string'?value:JSON.stringify(value,null,2)+'\n')
-  const rootId='SPDXRef-Package-dsh-armorbreak', created=new Date().toISOString()
+  const rootId='SPDXRef-Package-dsh-armorbreak', created=new Date(validation.sourceDate??Date.now()).toISOString()
   const sbom={spdxVersion:'SPDX-2.3',dataLicense:'CC0-1.0',SPDXID:'SPDXRef-DOCUMENT',name:`${pkg.name}-${pkg.version}`,documentNamespace:`https://github.com/LYL-Z/dsh-armorbreak/sbom/${validation.commit}/${artifact.sha256}`,creationInfo:{created,creators:['Tool: scripts/v24/preview-metadata.mjs']},packages:[{name:pkg.name,versionInfo:pkg.version,SPDXID:rootId,downloadLocation:'NOASSERTION',filesAnalyzed:true,licenseDeclared:pkg.license,licenseConcluded:'NOASSERTION',checksums:[{algorithm:'SHA256',checksumValue:artifact.sha256}]},...dependencies],files,relationships:[{spdxElementId:'SPDXRef-DOCUMENT',relationshipType:'DESCRIBES',relatedSpdxElement:rootId},...files.map(f=>({spdxElementId:rootId,relationshipType:'CONTAINS',relatedSpdxElement:f.SPDXID})),...dependencies.map(d=>({spdxElementId:rootId,relationshipType:'DEPENDS_ON',relatedSpdxElement:d.SPDXID}))]}
-  copyFileSync(artifactPath,join(outputRoot,artifact.file));write('sbom.spdx.json',sbom)
+  copyFileSync(artifactPath,join(outputRoot,artifact.file))
   write('THIRD_PARTY_NOTICES.txt','Declared licenses and installed license texts; not independent legal clearance.\n\n'+notices.map(n=>`${n.name}@${n.version} (${n.license})\n${n.text}`).join('\n\n---\n\n'))
   const manifest={schema:'armorbreak.preview-build/v1',version:pkg.version,commit:validation.commit,artifact,platformValidation:validation.environment,packageValidation:validation.status,sourceBinding:'FROZEN_GIT_SOURCE_TO_INSTALLED_PACK_FILES_BYTE_EQUAL',fileCount:files.length,dependencyCount:dependencies.length,provenance:'LOCAL_UNSIGNED_BUILD_RECORD_NOT_GITHUB_ATTESTATION',publicationAuthorized:false,stableEligible:false,fullMigrationComplete:false,realDshCompatibility:'NOT_TESTED',productionIdentity:'NOT_VERIFIED'}
+  manifest.metadataTimestampOrigin=validation.sourceDate?'FROZEN_GIT_COMMIT_SOURCE_DATE_EPOCH':'LEGACY_BUILD_CLOCK'
+  sbom.creationInfo.comment='Reproducible metadata uses the frozen Git commit timestamp as SOURCE_DATE_EPOCH; actual build timing belongs to the hosted workflow record.'
+  write('sbom.spdx.json',sbom)
   write('preview-build.json',manifest)
   const outputs=[artifact.file,'sbom.spdx.json','THIRD_PARTY_NOTICES.txt','preview-build.json']
   write('SHA256SUMS.txt',outputs.map(p=>digest(readFileSync(join(outputRoot,p)))+'  '+p).join('\n')+'\n')
