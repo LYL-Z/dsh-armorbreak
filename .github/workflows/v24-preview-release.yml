@@ -1,0 +1,134 @@
+name: V2.4 bounded Preview release
+on:
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: Exact current main SHA with successful push development and package matrices
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: v24-preview-release
+  cancel-in-progress: false
+jobs:
+  build:
+    name: Build and exercise exact Preview assets
+    if: github.repository == 'LYL-Z/dsh-armorbreak' && github.ref == 'refs/heads/main' && github.actor == 'LYL-Z'
+    runs-on: windows-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ inputs.commit }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+      - name: Require exact-main checks and immutable historical tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREVIEW_COMMIT: ${{ inputs.commit }}
+        run: node scripts/v24/preview-release-preflight.mjs --commit $env:PREVIEW_COMMIT --out "${{ runner.temp }}/admission.json"
+      - name: Install locked build dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Build and exercise frozen installed package
+        env:
+          PREVIEW_COMMIT: ${{ inputs.commit }}
+        run: node scripts/v24/verify-npm-distribution.mjs --commit $env:PREVIEW_COMMIT --out "${{ runner.temp }}/preview-validation"
+      - name: Assemble and reproduce Windows Preview
+        shell: pwsh
+        env:
+          PREVIEW_COMMIT: ${{ inputs.commit }}
+        run: |
+          node scripts/v24/preview-metadata.mjs --validation "${{ runner.temp }}/preview-validation" --out "${{ runner.temp }}/release-drop"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/v24/build-windows-experience.mjs --validation "${{ runner.temp }}/preview-validation" --out "${{ runner.temp }}/experience-a"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/v24/build-windows-experience.mjs --validation "${{ runner.temp }}/preview-validation" --out "${{ runner.temp }}/experience-b"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python scripts/v24/windows-experience-archive.py pack "${{ runner.temp }}/experience-a" "${{ runner.temp }}/release-drop/ArmorBreak-Windows-Preview.zip" > "${{ runner.temp }}/release-drop/windows-experience-zip.json"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python scripts/v24/windows-experience-archive.py pack "${{ runner.temp }}/experience-b" "${{ runner.temp }}/repeat.zip"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/v24/compare-preview-builds.mjs --commit $env:PREVIEW_COMMIT --first "${{ runner.temp }}/release-drop/ArmorBreak-Windows-Preview.zip" --second "${{ runner.temp }}/repeat.zip" --out "${{ runner.temp }}/release-drop/windows-experience-reproducibility.json"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python scripts/v24/windows-experience-archive.py extract "${{ runner.temp }}/release-drop/ArmorBreak-Windows-Preview.zip" "${{ runner.temp }}/experience-extracted"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/v24/verify-windows-experience.mjs --root "${{ runner.temp }}/experience-extracted" --out "${{ runner.temp }}/release-drop/windows-experience-acceptance.json"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Copy-Item -LiteralPath "${{ runner.temp }}/admission.json" -Destination "${{ runner.temp }}/release-drop/admission.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: v24-preview-release-input
+          path: ${{ runner.temp }}/release-drop/*
+          if-no-files-found: error
+          retention-days: 7
+  publish:
+    name: Attest, verify remote draft and publish Preview only
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ inputs.commit }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: v24-preview-release-input
+          path: release-drop
+      - name: Recheck exact main admission
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREVIEW_COMMIT: ${{ inputs.commit }}
+        run: node scripts/v24/preview-release-preflight.mjs --commit "$PREVIEW_COMMIT"
+      - name: GitHub managed short-lived provenance
+        id: attest
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          create-storage-record: false
+          subject-path: |
+            release-drop/*.tgz
+            release-drop/ArmorBreak-Windows-Preview.zip
+            release-drop/sbom.spdx.json
+            release-drop/THIRD_PARTY_NOTICES.txt
+            release-drop/preview-build.json
+            release-drop/windows-experience-*.json
+            release-drop/admission.json
+      - name: Verify attested commit and signer workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREVIEW_COMMIT: ${{ inputs.commit }}
+          BUNDLE_PATH: ${{ steps.attest.outputs.bundle-path }}
+        run: |
+          set -euo pipefail
+          cp "$BUNDLE_PATH" release-drop/github-attestation.sigstore.json
+          TGZ=$(find release-drop -maxdepth 1 -name '*.tgz' -print -quit)
+          gh attestation verify "$TGZ" --repo LYL-Z/dsh-armorbreak --signer-workflow LYL-Z/dsh-armorbreak/.github/workflows/v24-preview-release.yml --source-ref refs/heads/main --source-digest "$PREVIEW_COMMIT" --deny-self-hosted-runners --format json > release-drop/attestation-tgz.json
+          gh attestation verify release-drop/ArmorBreak-Windows-Preview.zip --repo LYL-Z/dsh-armorbreak --signer-workflow LYL-Z/dsh-armorbreak/.github/workflows/v24-preview-release.yml --source-ref refs/heads/main --source-digest "$PREVIEW_COMMIT" --deny-self-hosted-runners --format json > release-drop/attestation-windows.json
+      - name: Publish after actual draft downloads match
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREVIEW_COMMIT: ${{ inputs.commit }}
+        run: node scripts/v24/publish-preview.mjs --commit "$PREVIEW_COMMIT" --dir release-drop
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: v24-preview-publication-record
+          path: |
+            preview-publication.json
+            release-drop/attestation-tgz.json
+            release-drop/attestation-windows.json
+          if-no-files-found: warn
+          retention-days: 7

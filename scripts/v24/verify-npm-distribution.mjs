@@ -19,6 +19,7 @@ export async function verifyNpmDistribution({ repositoryRoot, commit = 'HEAD', o
   const npm = [process.env.npm_execpath, join(dirname(process.execPath), 'node_modules/npm/bin/npm-cli.js'), resolve(dirname(process.execPath), '../lib/node_modules/npm/bin/npm-cli.js')].find(path => path && existsSync(path))
   if (!npm) throw new Error('NPM_CLI_NOT_FOUND')
   const report = { schema: 'armorbreak.npm-distribution-validation/v1', status: 'RUNNING', commit: sha,
+    sourceDate: new Date(git('show','-s','--format=%cI',sha).toString().trim()).toISOString(),
     environment: { node: process.version, platform: process.platform, offlineInstall: offline, developmentNodeModulesUsed: false }, commands: [] }
   const save = () => writeFileSync(join(outputRoot, 'validation.json'), JSON.stringify(report, null, 2) + '\n')
   function run(label, binary, args, cwd = consumer, extra = {}) {
