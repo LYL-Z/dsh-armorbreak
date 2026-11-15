@@ -148,8 +148,11 @@ export async function createWorkbenchServer({ root = DEFAULT_ROOT, host = '127.0
   const token = randomBytes(32).toString('hex')
   if (native) {
     if (!isAbsolute(native.workspaceId ?? '') || !isAbsolute(native.stateRoot ?? '')) throw new Error('native panel requires explicit absolute workspace and state root')
-    const workspaceId = await realpath(native.workspaceId)
-    if (!(await stat(workspaceId)).isDirectory()) throw new Error('workspace must be a directory')
+    const workspaceId = native.workspaceId
+    // Keep the explicit lexical workspace binding (including Windows 8.3 spelling).
+    // Core checks canonical file boundaries itself. Normalizing only this root
+    // would make legitimate caller targets fail the Engine's lexical scope check.
+    if (!(await stat(await realpath(workspaceId))).isDirectory()) throw new Error('workspace must be a directory')
     exampleRoot = await mkdtemp(join(tmpdir(), 'armorbreak-welcome-'))
     const exampleFile = join(exampleRoot, 'welcome.txt')
     await writeFile(exampleFile, 'ArmorBreak first run: this inert example is analyzed by the real Core.\n', { flag: 'wx', mode: 0o600 })
