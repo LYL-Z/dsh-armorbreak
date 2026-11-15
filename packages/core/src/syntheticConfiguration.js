@@ -11,12 +11,13 @@ export async function planSyntheticConfiguration(runtime, { configuration, profi
   const { config, preview } = resolveConfig(bundle)
   if (preview.status !== 'PREVIEW_READY') throw new Error('SYNTHETIC_CONFIG_CONFLICT')
   if (document.format === 'cordis' && Object.keys(config).join(',') !== 'composition') throw new Error('SYNTHETIC_CORDIS_SHAPE_REQUIRED')
-  const candidate = exportConfiguration({ ...document, data: document.format === 'cordis' ? config.composition : config })
+  const candidate = exportConfiguration({ ...document, data: document.format === 'cordis' ? config.composition : config }, {preserveSource:configuration.source})
   // Both the original raw bytes and the converted candidate stay private in the lab.
   // The original is copied, never opened for writing; the caller cannot supply a path.
   const seeds = document.format === 'purge-preset' ? { 'preset.txt': configuration.source.preset, 'agent.txt': configuration.source.agent } : { 'config.txt': configuration.source }
   const changes = document.format === 'purge-preset' ? [{ name: 'preset.txt', content: candidate.preset }, { name: 'agent.txt', content: candidate.agent }] : [{ name: 'config.txt', content: candidate }]
   const lab = await createSyntheticMaintenance(runtime, { operator, sessionId, seeds })
   const plan = await lab.plan(changes)
-  return { lab, plan, preview: { ...preview, conversion: imported, mode: 'SYNTHETIC_ONLY', approvalRequired: true } }
+  const conversion = document.format === 'json' ? imported : {...imported,limitations:['Existing comments, map order and compatible scalar style are retained; arbitrary whitespace layout is not guaranteed. Comments on deleted nodes may be removed.',...imported.limitations.slice(1)]}
+  return { lab, plan, preview: { ...preview, conversion, serialization:document.format==='json'?'JSON_DATA_WITH_EXACT_UNCHANGED_SOURCE':'YAML_AST_WITH_EXACT_UNCHANGED_SOURCE', mode: 'SYNTHETIC_ONLY', approvalRequired: true } }
 }

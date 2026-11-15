@@ -38,7 +38,7 @@ const npm=process.env.ARMORBREAK_ACCEPTANCE_NPM_CLI
 assert.ok(npm)
 assert.equal(JSON.parse(execFileSync(process.execPath,[npm,'exec','--offline','--no','--','armorbreak','capabilities','--json'],{env,encoding:'utf8',timeout:30000})).length,61)
 const hash = cli('analyze','--capability','forensics.hash','--target',join(workspace,'inert.txt')); assert.equal(hash.state, 'COMPLETED')
-const bundle = { schema: 'armorbreak.configuration-lab-request/v1', configuration: { schema: 'armorbreak.configuration-import/v1', format: 'yaml', source: 'value: old\r\nfuture: false\r\n' }, overlays: [{ id: 'inert', values: { value: 'new' } }], conflictPolicy: 'last-wins' }
+const bundle = { schema: 'armorbreak.configuration-lab-request/v1', configuration: { schema: 'armorbreak.configuration-import/v1', format: 'yaml', source: '# installed YAML comment\r\nvalue: "old" # preserve this note\r\nfuture: false\r\n' }, overlays: [{ id: 'inert', values: { value: 'new' } }], conflictPolicy: 'last-wins' }
 const requestPath = join(workspace,'request.json'); await writeFile(requestPath,JSON.stringify(bundle))
 const convertPath = join(workspace,'convert.json'); await writeFile(convertPath,JSON.stringify(bundle.configuration))
 assert.equal(cli('config','convert','--bundle',convertPath).state,'COMPLETED')
@@ -49,6 +49,7 @@ const staged=await hostCli(['stage','--bundle',requestPath])
 try {
   assert.equal((await hostCli(['apply','--lab',staged.lab,'--plan',staged.planId])).state,'COMMITTED')
   assert.match(await readFile(join(staged.lab,'data/config.txt'),'utf8'),/new/)
+  assert.match(await readFile(join(staged.lab,'data/config.txt'),'utf8'),/# installed YAML comment\r\nvalue: "new" # preserve this note/)
   assert.equal((await hostCli(['revert','--lab',staged.lab,'--plan',staged.planId])).state,'ROLLED_BACK')
   assert.deepEqual(await readFile(join(staged.lab,'data/config.txt')),Buffer.from(bundle.configuration.source))
 } finally { await rm(staged.lab,{recursive:true,force:true}) }
