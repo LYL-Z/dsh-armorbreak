@@ -50,6 +50,17 @@ test('canonical target scope refuses external directory links',async t=>{
  await symlink(outside,join(f.workspace,'alias'),process.platform==='win32'?'junction':'dir')
  assert.equal((await f.request('run',{action:'file-integrity',target:'alias/secret.txt'})).status,400)
 })
+test('explicit workspace spelling remains usable through native HTTP on case-normalizing filesystems',async t=>{
+ const f=await fixture(t),workspaceId=process.platform==='win32'?f.workspace.toLowerCase():f.workspace
+ const server=await createWorkbenchServer({native:{workspaceId,stateRoot:join(f.root,'spelling-state')}});t.after(()=>server.close())
+ const session=await(await fetch(server.url+'/api/native/session')).json()
+ const response=await fetch(server.url+'/api/native/run',{method:'POST',headers:{'content-type':'application/json','x-armorbreak-session':session.csrf},body:JSON.stringify({capability:'configuration.preview',target:join(workspaceId,'overlay.json')})})
+ // A missing file should be denied, then the same explicit spelling should work once valid.
+ assert.equal(response.status,400)
+ await writeFile(join(f.workspace,'overlay.json'),JSON.stringify({schema:'armorbreak.config-overlay/v1',base:{enabled:false},overlays:[]}))
+ const valid=await fetch(server.url+'/api/native/run',{method:'POST',headers:{'content-type':'application/json','x-armorbreak-session':session.csrf},body:JSON.stringify({capability:'configuration.preview',target:join(workspaceId,'overlay.json')})})
+ assert.equal(valid.status,200)
+})
 test('start creates the real workbench without required environment variables and returns a closable service',async t=>{
  const root=await mkdtemp(join(tmpdir(),'ab-start-'));t.after(()=>rm(root,{recursive:true,force:true}))
  const write=process.stdout.write;let output='';process.stdout.write=function(chunk){output+=chunk;return true}
