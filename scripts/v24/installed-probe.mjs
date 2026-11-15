@@ -71,6 +71,13 @@ if(pkg.exports['./isolated-plugin-store']){
  const repository='https://github.com/example/self-authored-fixture',keys={source:generateKeyPairSync('ed25519'),rights:generateKeyPairSync('ed25519')}
  const reviewer=createIndependentPluginReviewer({roots:Object.keys(keys).map(role=>({keyId:role,authorityId:role+'-reviewer',role,repositories:[repository],publicKey:keys[role].publicKey.export({type:'spki',format:'pem'})}))})
  const canonical=v=>JSON.stringify(v,(_key,value)=>value&&typeof value==='object'&&!Array.isArray(value)?Object.fromEntries(Object.keys(value).sort().map(k=>[k,value[k]])):value)
+ let durableReviewer,durablePolicyKey
+ if(pkg.exports['./plugin-trust-store']){
+  const {createPersistentPluginReviewer}=await import('dsh-armorbreak/plugin-trust-store'),issuer=generateKeyPairSync('ed25519')
+  const payload={schema:'armorbreak.plugin-trust-policy/v1',policyId:'installed-synthetic-policy',version:1,notBefore:Date.now()-60000,expiresAt:Date.now()+600000,roots:Object.keys(keys).map(role=>({keyId:role,authorityId:role+'-reviewer',role,repositories:[repository],publicKey:keys[role].publicKey.export({type:'spki',format:'pem'})}))}
+  durablePolicyKey=issuer.publicKey.export({type:'spki',format:'pem'})
+  durableReviewer=createPersistentPluginReviewer({directory:join(process.cwd(),'installed-trust'),policyPublicKey:issuer.publicKey.export({type:'spki',format:'pem'}),policy:{payload,signature:sign(null,Buffer.from(canonical(payload)),issuer.privateKey).toString('base64')}})
+ }
  const {verifyPluginClosure}=await import(pathToFileURL(join(root,'lib/catalog/pluginPackage.js')).href)
  const fixture=async(version,bytes)=>{
   await writeFile(join(target,'inert.js'),bytes)
@@ -79,14 +86,17 @@ if(pkg.exports['./isolated-plugin-store']){
   for(const role of Object.keys(keys)){const payload=pluginAttestationPayload(snapshot,role);receipts[role+'Receipt']={keyId:role,payload,signature:sign(null,Buffer.from(canonical(payload)),keys[role].privateKey).toString('base64')}}
   return {candidate,receipts}
  }
- const stores=[],plan=async options=>{const x=await planIsolatedPluginInstall(runtime,{...options,reviewer,operator:'installed-store',sessionId:'installed-session'});stores.push(x.store);return x.store}
+ const stores=[],plan=async options=>{const x=await planIsolatedPluginInstall(runtime,{...options,reviewer:durableReviewer??reviewer,operator:'installed-store',sessionId:'installed-session'});stores.push(x.store);return x.store}
  try{
   const installed=await plan(await fixture('1.0.0','throw new Error("V1_NEVER_RUN")\r\n'));await installed.apply(dependencies.approvalProvider)
   const updated=await plan({...await fixture('2.0.0','throw new Error("V2_NEVER_RUN")\r\n'),operation:'update',current:installed});await updated.apply(dependencies.approvalProvider)
   assert.deepEqual(await updated.readInstalled('inert.js'),Buffer.from('throw new Error("V2_NEVER_RUN")\r\n'))
   const disabled=await plan({operation:'disable',current:updated});await disabled.apply(dependencies.approvalProvider);await assert.rejects(()=>disabled.readInstalled('inert.js'),/DISABLED/)
+  await assert.rejects(()=>disabled.copySelected(),/DISABLED/)
   await disabled.rollback(dependencies.approvalProvider);await updated.rollback(dependencies.approvalProvider)
   assert.deepEqual(await updated.readInstalled('inert.js'),Buffer.from('throw new Error("V1_NEVER_RUN")\r\n'))
+  const activeReviewer=durableReviewer??reviewer;activeReviewer.revokeKey('source');await assert.rejects(()=>updated.copySelected(),/DISABLED_OR_UNTRUSTED/)
+  if(durableReviewer){const {openPersistentPluginReviewer}=await import('dsh-armorbreak/plugin-trust-store');assert.ok(durableReviewer.checkpoint().sequence>=2);assert.ok(openPersistentPluginReviewer({directory:join(process.cwd(),'installed-trust'),policyPublicKey:durablePolicyKey}).exportRevocations().keys.includes('source'))}
   pluginStore='INSTALLED_PACKAGE_PHYSICAL_QUARANTINE_INSTALL_UPDATE_DISABLE_RESTORE'
  }finally{for(const store of stores)await rm(store.root,{recursive:true,force:true});await runtime.close?.()}
 }
