@@ -9,6 +9,8 @@ import { createSyntheticMaintenance, reopenSyntheticMaintenance } from './synthe
 import { readBounded } from './util.js'
 import { sameFilesystemPath } from '../../../lib/core/pathBoundary.js'
 const TOKEN=Symbol('fresh quarantine transaction'),digest=bytes=>createHash('sha256').update(bytes).digest('hex')
+// A module-private capability, never a public method or caller-controlled option.
+const historicalReaders=new WeakMap()
 const id=stat=>({dev:stat.dev,ino:stat.ino}),same=(a,b)=>a.dev===b.dev&&a.ino===b.ino
 const EMPTY={schema:'armorbreak.quarantined-install/v1',status:'NOT_INSTALLED',closure:null,executionAllowed:false}
 async function writeNew(path,bytes){const file=await open(path,'wx',0o600);try{await file.writeFile(bytes);await file.sync()}finally{await file.close()}}
@@ -38,7 +40,7 @@ function compareVersion(a,b){
 
 export class IsolatedPluginTransaction{
  #lab;#record;#reviewer
- constructor(token,lab,record,reviewer){if(token!==TOKEN)throw new Error('PLUGIN_STORE_CONSTRUCTOR_DENIED');this.#lab=lab;this.#record=record;this.#reviewer=reviewer;Object.freeze(this)}
+ constructor(token,lab,record,reviewer){if(token!==TOKEN)throw new Error('PLUGIN_STORE_CONSTRUCTOR_DENIED');this.#lab=lab;this.#record=record;this.#reviewer=reviewer;historicalReaders.set(this,()=>this.#copySnapshot(true));Object.freeze(this)}
  get root(){return this.#lab.root}get planId(){return this.#record.planId}
  async #verify(){
   await this.#lab.boundary()
@@ -67,7 +69,7 @@ export class IsolatedPluginTransaction{
   }
   return record
  }
- async inspect(){
+ async #inspect(){
   const record=await this.#verify()
   const events=await this.#lab.events(),last=events.at(-1)
   if(last?.planId!==record.planId)throw new Error('PLUGIN_STORE_PLAN_BINDING')
@@ -80,14 +82,20 @@ export class IsolatedPluginTransaction{
    transactionState:last.state,transactionFinalized:finalized,selectionAvailable:finalized&&state.status==='INSTALLED_QUARANTINED'&&review?.state==='READY_FOR_SYNTHETIC_STAGING_APPROVAL',
    currentTrust:review?.state??'NO_PACKAGE',activationAuthorized:false,hostWrites:false,productionInstallation:false}
  }
+ async inspect(){return this.#inspect()}
+ async #recheckSelection(before,historical=false){
+  const after=await this.#inspect()
+  if(!after.transactionFinalized||canonicalConfig({state:before.state,transactionState:before.transactionState})!==canonicalConfig({state:after.state,transactionState:after.transactionState})||(!historical&&!after.selectionAvailable))throw new Error('PLUGIN_STORE_SELECTION_CHANGED_OR_UNTRUSTED')
+ }
  async readInstalled(path){
-  const current=await this.inspect()
+  const current=await this.#inspect()
   if(!current.selectionAvailable)throw new Error('PLUGIN_STORE_DISABLED_OR_UNTRUSTED')
   maintenancePath(path)
   const version=this.#record.versions.find(v=>v.snapshot.closureSha256===current.state.closure),file=version.files.find(f=>f.path===path)
   if(!file)throw new Error('PLUGIN_STORE_PATH_DENIED')
   const bytes=await readBounded(join(this.#lab.control,'payloads',current.state.closure,...maintenancePath(path)),65536)
   if(bytes.truncated||digest(bytes.buffer)!==file.sha256)throw new Error('PLUGIN_STORE_CONTENT_DRIFT')
+  await this.#recheckSelection(current)
   return bytes.buffer
  }
  async apply(provider,checkpoint){
@@ -100,15 +108,18 @@ export class IsolatedPluginTransaction{
   check()
   // Recheck after delayed host approval. This is not production revocation/commit linearization.
   const wrapped={request:async request=>{if(!provider||typeof provider.request!=='function')throw new Error('TRUSTED_APPROVAL_PROVIDER_REQUIRED');const outcome=await provider.request(request);await this.#verify();check();return outcome}}
-  const result=await this.#lab.apply(record.planId,wrapped,checkpoint);await this.#verify();return {...result,...await this.inspect()}
+  const result=await this.#lab.apply(record.planId,wrapped,checkpoint);await this.#verify();return {...result,...await this.#inspect()}
  }
- async rollback(provider){await this.#verify();const result=await this.#lab.rollback(this.planId,provider);return {...result,...await this.inspect()}}
- async copySelected(){
-  const current=await this.inspect()
+ async rollback(provider){await this.#verify();const result=await this.#lab.rollback(this.planId,provider);return {...result,...await this.#inspect()}}
+ async copySelected(){return this.#copySnapshot(false)}
+ async #copySnapshot(historical){
+  const current=await this.#inspect()
   if(!current.transactionFinalized)throw new Error('PLUGIN_STORE_TRANSACTION_NOT_FINAL')
   if(!current.state.closure)throw new Error('PLUGIN_STORE_NOT_INSTALLED')
+  if(!historical&&!current.selectionAvailable)throw new Error('PLUGIN_STORE_DISABLED_OR_UNTRUSTED')
   const version=this.#record.versions.find(v=>v.snapshot.closureSha256===current.state.closure),files=[]
   for(const file of version.files){const read=await readBounded(join(this.#lab.control,'payloads',current.state.closure,...maintenancePath(file.path)),65536);if(read.truncated||digest(read.buffer)!==file.sha256)throw new Error('PLUGIN_STORE_CONTENT_DRIFT');files.push({path:file.path,bytes:read.buffer})}
+  await this.#recheckSelection(current,historical)
   return {state:current.state,snapshot:structuredClone(version.snapshot),receipts:structuredClone(version.receipts),files}
  }
 }
@@ -120,7 +131,7 @@ export async function planIsolatedPluginInstall(runtime,options){
  independent(reviewer)
  if(!['install','update','disable'].includes(operation)||(operation==='install'&&current)||(operation!=='install'&&!(current instanceof IsolatedPluginTransaction))||(operation==='disable'&&candidate)||(operation!=='disable'&&!candidate))throw new Error('PLUGIN_STORE_OPERATION_INVALID')
  if(current){const previousLab=await reopenSyntheticMaintenance(runtime,current.root,{operator,sessionId});await previousLab.events()}
- const previous=current?await current.copySelected():null,next=operation==='disable'?null:await capture(candidate,receipts)
+ const previous=current?await historicalReaders.get(current)():null,next=operation==='disable'?null:await capture(candidate,receipts)
  if(next&&reviewer.review(next.snapshot,receipts).state!=='READY_FOR_SYNTHETIC_STAGING_APPROVAL')throw new Error('PLUGIN_STORE_REVIEW_DENIED')
  if(operation==='update'){
   if(previous.snapshot.closureSha256===next.snapshot.closureSha256)throw new Error('PLUGIN_STORE_NO_CHANGE')
