@@ -1038,6 +1038,8 @@ export function apply(ctx) {
       },
     }),
   )
+  const lease=runtime.runtimeObservation.mount('DSH_TOOLS')
+  try { ctx.on('dispose',()=>lease.dispose()) } catch { /* Process-local observation only; a host without dispose cannot prove unmount. */ }
 }
 function riskHelp(level) {
   if (level === 'L0') return '离线只读分析，工作区内默认允许'

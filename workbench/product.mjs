@@ -17,7 +17,7 @@ export function createProductApi({engine,ctx,exampleCtx,exampleFile}){
  return Object.freeze({
   async catalog(){
    const caps=await engine.capabilities(ctx)
-   return {schema:'armorbreak.product-catalog/v1',productVersion:PRODUCT_VERSION,workspaceName:basename(ctx.workspaceId),mode:'OFFLINE_READ_ONLY',hostConnection:'NOT_CONNECTED',authentication:'NONE',
+   return {schema:'armorbreak.product-catalog/v1',productVersion:PRODUCT_VERSION,runtimeObservation:engine.runtime?.runtimeObservation?.snapshot(),workspaceName:basename(ctx.workspaceId),mode:'OFFLINE_READ_ONLY',hostConnection:'NOT_CONNECTED',authentication:'NONE',
     actions:ACTIONS.filter(a=>caps.some(c=>c.id===a.capability&&c.riskLevel==='L0')).map(a=>({...a,permission:'L0_READ_ONLY'})),exampleAvailable:Boolean(exampleCtx),
     unavailable:[{id:'host-install',title:'安装到 DSH 宿主',reason:'真实宿主适配与可信身份尚未验收'}, {id:'plugin-activation',title:'启用宿主插件',reason:'隔离文件事务不等于真实加载'}, {id:'configuration-write',title:'应用宿主配置',reason:'本地网页不签发写入批准'}]}
   },

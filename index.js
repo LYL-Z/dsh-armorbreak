@@ -640,7 +640,9 @@ export function apply(ctx) {
       { path: '/armorbreak/llm-report', handler: createLLMReportHandler(runtime) },
     ]
     const disposers = routes.map((route) => ctx.webServer.register({ kind: 'exact', path: route.path, handler: route.handler }))
+    const lease=runtime.runtimeObservation.mount('DSH_WEB_ROUTES')
     dispose = () => {
+      lease.dispose()
       for (const disposeRoute of disposers) {
         try {
           disposeRoute()

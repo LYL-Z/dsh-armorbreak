@@ -23,6 +23,7 @@ import { ExecutionRunner } from './runner.js'
 import { ScopePolicy } from './scope.js'
 import { TaskQueue } from './taskQueue.js'
 import { TaskStore } from './tasks.js'
+import { RuntimeObservation } from './runtimeObservation.js'
 import { isolationPresentation, policyPresentation, taskRows, toolsPresentation } from './presentation.js'
 import { ensureDir, nowIso, resolveStateRoot } from './util.js'
 
@@ -32,6 +33,7 @@ export class ArmorBreakRuntime {
   /** @param {{stateRoot?: string}} [options] */
   constructor(options = {}) {
     this.stateRoot = options.stateRoot ?? resolveStateRoot()
+    this.runtimeObservation = new RuntimeObservation()
     this.health = new HealthService({ stateRoot: this.stateRoot })
     this.registry = new CapabilityRegistry({ analyzersDir: ANALYZERS_DIR, health: this.health })
     this.approvalAuthority = new ApprovalAuthority({ stateRoot: this.stateRoot })
@@ -209,6 +211,7 @@ export class ArmorBreakRuntime {
     }))
     return {
       version: (await import('../../../lib/core/productVersion.js')).PRODUCT_VERSION,
+      runtimeObservation: this.runtimeObservation.snapshot(),
       generatedAt: nowIso(),
       workspace: root,
       workspaceBinding: 'most-recently-used (call an ArmorBreak tool to bind this session)',
