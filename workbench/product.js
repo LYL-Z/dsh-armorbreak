@@ -65,8 +65,8 @@
       const workflowSummary=steps?`<p>完成 ${steps.filter(s=>s.status==='DONE').length} / ${steps.length} 项分析；记录 ${escape(result.data.findings)} 条待核对发现。</p><ol>${steps.map(s=>`<li><strong>${escape(s.title)}</strong> · ${escape(s.status)}${s.summary?`<p>${escape(s.summary)}</p>`:''}</li>`).join('')}</ol>`:''
       el('product-result').innerHTML=`<h3>${complete?'结果已保存':'检查未完成'}</h3><p>${example?'分析的是内置文本，没有读取你的项目文件。':'项目输入未被修改。此结果只覆盖所选能力的实际检查范围。'}</p>${digest?`<dl><dt>SHA-256</dt><dd><code>${escape(digest)}</code></dd></dl>`:''}<p>任务 <code>${escape(result.taskId)}</code></p>${result.reportAvailable?`<div class="task-actions"><button type="button" data-report="${escape(result.taskId)}">查看报告</button><button type="button" data-download="${escape(result.taskId)}">下载 Markdown</button></div>`:''}<details><summary>查看原始结果</summary><pre>${escape(JSON.stringify(result.data,null,2))}</pre></details>`
       if(workflowSummary)el('product-result').insertAdjacentHTML('beforeend',workflowSummary)
-      el('product-result').hidden=false;attachReports(el('product-result'));await tasks()
-    } catch(error) { el('product-feedback').textContent=error.message;el('product-feedback').className='feedback error' }
+      el('product-result').hidden=false;attachReports(el('product-result'));el('product-result').scrollIntoView({block:'start'});await tasks()
+    } catch(error) { el('product-feedback').textContent=error.message;el('product-feedback').className='feedback error';el('product-feedback').scrollIntoView({block:'center'}) }
     finally { running=false;availability();el('product-example').textContent='运行安全示例';el('product-run').textContent='开始检查' }
   }
   window.initializeProduct = async nativeSession => {
