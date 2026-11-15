@@ -35,7 +35,7 @@ jobs:
           EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
-          node -e "require('node:fs').mkdirSync('.runtime/tmp',{recursive:true})"
+          node --input-type=module -e "import {mkdirSync,realpathSync,appendFileSync} from 'node:fs';mkdirSync('.runtime/tmp',{recursive:true});const scratch=realpathSync('.runtime/tmp');appendFileSync(process.env.GITHUB_ENV,'TMPDIR='+scratch+'\nTEMP='+scratch+'\nTMP='+scratch+'\n')"
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Full regression and contract checks
         run: |
