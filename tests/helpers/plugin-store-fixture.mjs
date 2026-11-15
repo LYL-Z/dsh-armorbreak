@@ -9,14 +9,14 @@ import { canonicalConfig } from '../../lib/integrations/configOverlay.js'
 import { planIsolatedPluginInstall } from '../../packages/core/src/isolatedPluginStore.js'
 export const approved={request:async()=> 'allowed-once'}
 export const context={operator:'selection-owner',sessionId:'selection-session'}
-export async function storeFixture(t,{wrapReviewer}={}){
+export async function storeFixture(t,{wrapReviewer,reviewerFactory}={}){
  const root=await mkdtemp(join(tmpdir(),'ab-selection-r4-')),workspace=join(root,'workspace'),target=join(workspace,'candidate')
  await mkdir(target,{recursive:true});t.after(()=>rm(root,{recursive:true,force:true}))
  const runtime=new ArmorBreakRuntime({stateRoot:join(root,'state')});await runtime.init()
  const task=await runtime.workspace(workspace).taskStore.create({title:'selection fixture',targetPath:target,steps:[]})
  const repository='https://github.com/example/self-authored-fixture',keys={source:generateKeyPairSync('ed25519'),rights:generateKeyPairSync('ed25519')}
  const roots=Object.keys(keys).map(role=>({keyId:role,authorityId:role+'-reviewer',role,repositories:[repository],publicKey:keys[role].publicKey.export({type:'spki',format:'pem'})}))
- const baseReviewer=createIndependentPluginReviewer({roots}),reviewer=wrapReviewer?wrapReviewer(baseReviewer):baseReviewer
+ const baseReviewer=reviewerFactory?await reviewerFactory({roots,root}):createIndependentPluginReviewer({roots}),reviewer=wrapReviewer?wrapReviewer(baseReviewer):baseReviewer
  async function candidate(version='1.0.0'){
   const bytes=`throw new Error("NEVER_EXECUTE_${version}")\r\n`
   await writeFile(join(target,'inert.js'),bytes)
@@ -26,5 +26,5 @@ export async function storeFixture(t,{wrapReviewer}={}){
   return {candidate:input,receipts}
  }
  async function plan(options){const result=await planIsolatedPluginInstall(runtime,{...context,reviewer,...options});t.after(()=>rm(result.store.root,{recursive:true,force:true}));return result.store}
- return {root,runtime,roots,reviewer,baseReviewer,candidate,plan}
+ return {root,runtime,roots,keys,reviewer,baseReviewer,candidate,plan}
 }
