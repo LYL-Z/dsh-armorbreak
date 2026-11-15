@@ -9,6 +9,7 @@ import { mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
+import { PRODUCT_VERSION } from '../lib/core/productVersion.js'
 
 /** @returns {Promise<{defs: Map<string, any>, ctx: any}>} */
 async function loadTools() {
@@ -72,7 +73,7 @@ test('armorbreak_health reports environment, isolation denial and capability cou
   setWorkspace(workspace)
   const value = await defs.get('armorbreak_health').execute({ workspace }, mockExec())
   assert.match(value.text, /环境健康|ArmorBreak/)
-  assert.equal(value.data.version, '2.2.0')
+  assert.equal(value.data.version, PRODUCT_VERSION)
   assert.ok(value.data.registry.capabilities > 0)
   assert.equal(typeof value.data.isolation.available, 'boolean')
   assert.ok(Array.isArray(value.data.capabilities))
