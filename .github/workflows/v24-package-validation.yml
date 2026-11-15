@@ -51,3 +51,26 @@ jobs:
           path: ${{ runner.temp }}/armorbreak-preview-${{ matrix.node }}/*
           if-no-files-found: error
           retention-days: 7
+      - name: Assemble Windows application folder and ZIP
+        if: matrix.os == 'windows-latest' && matrix.node == 24 && steps.preview.outputs.ready == 'true'
+        shell: pwsh
+        run: |
+          node scripts/v24/build-windows-experience.mjs --validation "${{ runner.temp }}/armorbreak-distribution-24" --out "${{ runner.temp }}/armorbreak-windows-experience"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python scripts/v24/windows-experience-archive.py pack "${{ runner.temp }}/armorbreak-windows-experience" "${{ runner.temp }}/ArmorBreak-Windows-Preview.zip" > "${{ runner.temp }}/windows-experience-zip.json"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python scripts/v24/windows-experience-archive.py extract "${{ runner.temp }}/ArmorBreak-Windows-Preview.zip" "${{ runner.temp }}/armorbreak-windows-extracted"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/v24/verify-windows-experience.mjs --root "${{ runner.temp }}/armorbreak-windows-extracted" --out "${{ runner.temp }}/windows-experience-acceptance.json"
+          exit $LASTEXITCODE
+      - name: Upload Windows experience and actual acceptance
+        if: matrix.os == 'windows-latest' && matrix.node == 24 && steps.preview.outputs.ready == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: v24-windows-experience-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            ${{ runner.temp }}/ArmorBreak-Windows-Preview.zip
+            ${{ runner.temp }}/windows-experience-zip.json
+            ${{ runner.temp }}/windows-experience-acceptance.json
+          if-no-files-found: error
+          retention-days: 7

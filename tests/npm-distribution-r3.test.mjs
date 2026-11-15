@@ -6,6 +6,10 @@ import { join } from 'node:path'
 import { verifyNpmDistribution } from '../scripts/v24/verify-npm-distribution.mjs'
 import { buildPreviewMetadata } from '../scripts/v24/preview-metadata.mjs'
 import { readFile, writeFile } from 'node:fs/promises'
+import { buildWindowsExperience } from '../scripts/v24/build-windows-experience.mjs'
+import { verifyWindowsExperience } from '../scripts/v24/verify-windows-experience.mjs'
+import { execFileSync } from 'node:child_process'
+import { fileURLToPath } from 'node:url'
 
 test('frozen actual npm pack installs and runs all declared runtime surfaces in a fresh consumer', {timeout:120000}, async t => {
   const parent=await mkdtemp(join(tmpdir(),'ab-npm-r3-'));t.after(()=>rm(parent,{recursive:true,force:true}))
@@ -22,6 +26,18 @@ test('frozen actual npm pack installs and runs all declared runtime surfaces in 
     assert.ok(sbom.packages.some(p=>p.name==='yaml'&&p.versionInfo==='2.9.1'));assert.equal(sbom.files.length,result.packFiles.length)
     assert.match(await readFile(join(outputRoot,'THIRD_PARTY_NOTICES.txt'),'utf8'),/TypeScript|Microsoft/)
     assert.throws(()=>buildPreviewMetadata({validationRoot,outputRoot}),/REFUSE_EXISTING_OUTPUT/)
+    if(process.platform==='win32'){
+      const experience=join(parent,'experience 体验 & files')
+      const built=buildWindowsExperience({validationRoot,outputRoot:experience});assert.equal(built.nodeBundled,false)
+      const archiver=fileURLToPath(new URL('../scripts/v24/windows-experience-archive.py',import.meta.url)),zip=join(parent,'experience.zip'),extracted=join(parent,'extracted 体验 & files')
+      execFileSync('python',[archiver,'pack',experience,zip],{stdio:'pipe',timeout:30000})
+      execFileSync('python',[archiver,'extract',zip,extracted],{stdio:'pipe',timeout:30000})
+      const accepted=await verifyWindowsExperience(extracted);assert.equal(accepted.taskState,'COMPLETED');assert.ok(accepted.evidenceCount>0)
+      await writeFile(join(extracted,'Start ArmorBreak.cmd'),'echo replaced')
+      await assert.rejects(()=>verifyWindowsExperience(extracted),/EXPERIENCE_FILE_DRIFT/)
+      execFileSync('python',['-c',"import sys,zipfile;z=zipfile.ZipFile(sys.argv[1],'a');z.writestr('../outside.txt','denied');z.close()",zip])
+      assert.throws(()=>execFileSync('python',[archiver,'extract',zip,join(parent,'bad-zip')],{stdio:'pipe'}))
+    }
     const artifact=join(validationRoot,result.artifact.file),before=await readFile(artifact);await writeFile(artifact,Buffer.concat([before,Buffer.from('corrupt')]))
     assert.throws(()=>buildPreviewMetadata({validationRoot,outputRoot:join(parent,'bad-artifact')}),/ARTIFACT_MISMATCH/)
     await writeFile(artifact,before)
