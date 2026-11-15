@@ -34,7 +34,10 @@ test('project actions run existing Core file/code/dependency analyzers with real
 })
 test('bad/missing targets can be corrected and retried; scope, token, report and privilege injection refuse',async t=>{
  const f=await fixture(t)
- for(const body of [{action:'file-integrity',target:'missing'},{action:'file-integrity',target:'../SECRET_OUTSIDE.txt'},{action:'file-integrity',target:'hello.txt',principal:'admin'},{action:'plugin.activate',target:'.'},{action:'project-review',target:'.',options:{approve:true}}]){
+ // Missing targets may be rejected during canonical scope validation (notably
+ // Windows TEMP aliases). Also exercise a real analyzer failure on an existing
+ // in-scope directory, so FAILED settlement is required on every platform.
+ for(const body of [{action:'file-integrity',target:'missing'},{action:'file-integrity',target:'.'},{action:'file-integrity',target:'../SECRET_OUTSIDE.txt'},{action:'file-integrity',target:'hello.txt',principal:'admin'},{action:'plugin.activate',target:'.'},{action:'project-review',target:'.',options:{approve:true}}]){
   const response=await f.request('run',body);assert.equal(response.status,400);assert.doesNotMatch(await response.text(),/SECRET_OUTSIDE|ab-product-|stack|at Engine/)
  }
  assert.equal((await f.request('example',{path:'hello.txt'})).status,400)
