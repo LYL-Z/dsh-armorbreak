@@ -364,12 +364,24 @@ export class TrustedEngine {
         sessionId: sessionOf(ctx),
         steps: [{ id: 'analyze', title: selected.title, capabilityId, options: options && typeof options === 'object' ? options : {} }],
       })
-      const result = await this.runtime.runner.runCapability({
+      let result
+      try { result = await this.runtime.runner.runCapability({
         task, capabilityId, targetPath, options: options && typeof options === 'object' ? options : {},
         stepId: task.steps.find((step) => step.status === 'PENDING')?.id ?? null,
         requestApproval: async () => false,
         signal: ctx.cancellation ?? ctx.signal,
-      })
+      }) } catch (error) {
+        // A rejected analysis must not leave an EXECUTING task that reappears as
+        // INTERRUPTED on restart. Settle the real step before preserving the error.
+        if (error?.code === 'CANCELLED') await store.cancel(task, 'analysis cancelled')
+        else {
+          const step = task.steps.find(s => s.id === 'analyze')
+          if (step && !['DONE','FAILED'].includes(step.status)) await store.updateStep(task, step.id, {status:'FAILED',error:'analysis rejected; see Core audit',finishedAt:new Date().toISOString()})
+          if (['EXECUTING','COLLECTING_EVIDENCE','VERIFYING'].includes(task.state)) await this.runtime.runner.finalizeTask(task,{generateReport:true})
+          else if (!['FAILED','REJECTED','CANCELLED','TIMED_OUT'].includes(task.state)) await store.transition(task,'FAILED','analysis rejected before execution completed')
+        }
+        throw error
+      }
       let finalized = task
       if (!task.steps.some((step) => step.status === 'PENDING' || step.status === 'RUNNING')) finalized = await this.runtime.runner.finalizeTask(task, { generateReport: true })
       return {

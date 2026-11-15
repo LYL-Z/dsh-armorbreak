@@ -9,36 +9,73 @@
 <body>
   <header class="topbar">
     <div>
-      <p class="eyebrow">ARMORBREAK · UNIVERSAL CORE</p>
-      <h1>ArmorBreak Workbench</h1>
-      <p class="subtitle">Hosts, providers, skills and evidence in one read-only console.</p>
+      <h1>ArmorBreak 工作台</h1>
+      <p class="subtitle">检查本地项目，查看结果，保留可追溯的报告。</p>
     </div>
     <div class="top-actions">
       <span id="status-dot" class="dot"></span>
-      <span id="status-label">loading</span>
-      <button id="refresh" type="button">Refresh</button>
+      <span id="status-label">正在连接</span>
+      <button id="refresh" type="button">刷新</button>
     </div>
   </header>
 
   <main>
-    <section class="summary" aria-label="Summary">
+    <nav class="tabs" role="tablist" aria-label="工作台导航">
+      <button class="tab active" data-tab="home" role="tab" aria-selected="true">开始使用</button>
+      <button class="tab" data-tab="results" role="tab" aria-selected="false">任务与报告</button>
+      <button class="tab" data-tab="hosts" role="tab" aria-selected="false">历史兼容记录</button>
+      <button class="tab" data-tab="providers" role="tab" aria-selected="false">模型配置</button>
+      <button class="tab" data-tab="skills" role="tab" aria-selected="false">Skills</button>
+      <button class="tab" data-tab="tasks" role="tab" aria-selected="false">历史验收</button>
+      <button class="tab" data-tab="evidence" role="tab" aria-selected="false">历史证据</button>
+      <button class="tab" data-tab="diagnostics" role="tab" aria-selected="false">模型诊断</button>
+      <button class="tab" data-tab="native" role="tab" aria-selected="false">高级检查</button>
+    </nav>
+
+    <section id="panel-home" class="panel active" role="tabpanel">
+      <div class="welcome">
+        <div><h2>先完成一次真实检查</h2><p>无需连接模型。分析内置的无害文本，查看 Core 生成的摘要、证据与报告。</p></div>
+        <button id="product-example" class="primary" type="button" disabled>运行安全示例</button>
+      </div>
+      <p id="product-connection" class="connection" role="status">正在检查工作区…</p>
+      <div class="product-layout">
+        <section class="feature-center" aria-labelledby="feature-title">
+          <h2 id="feature-title">选择要做的事</h2>
+          <label class="search-label" for="product-search">搜索功能</label>
+          <input id="product-search" type="search" placeholder="文件、代码、依赖…" />
+          <div id="product-actions" class="action-list"></div>
+        </section>
+        <section class="task-composer" aria-labelledby="composer-title">
+          <h2 id="composer-title">检查目标</h2>
+          <p id="product-description">先选择左侧的功能，或运行上方示例。</p>
+          <form id="product-form">
+            <label for="product-target">项目内的文件或目录</label>
+            <input id="product-target" required maxlength="2048" autocomplete="off" placeholder="例如：src 或 ." />
+            <small>只读取当前工作区。输入 . 表示项目目录；文件检查需要具体文件名。</small>
+            <button id="product-run" class="primary" type="submit" disabled>开始检查</button>
+          </form>
+        </section>
+      </div>
+      <p id="product-feedback" class="feedback" role="status" aria-live="polite">尚未运行任务。</p>
+      <div id="product-result" class="result-summary" hidden></div>
+      <details class="capability-boundary"><summary>哪些操作目前不可用？</summary><ul id="product-unavailable"></ul><p>此网页只支持低权限检查。会话令牌用于防止跨站请求，不是系统用户身份认证；这里不提供宿主写入、密钥管理或批准签发。</p></details>
+    </section>
+
+    <section id="panel-results" class="panel" role="tabpanel">
+      <div class="panel-head"><h2>当前工作区任务</h2><button id="product-reload-tasks" type="button">刷新任务</button></div>
+      <p>这里展示当前 Core 的实际任务；内置示例属于临时工作区。</p>
+      <div id="product-tasks" class="live-tasks">运行一次检查后，这里会出现任务与报告。</div>
+      <pre id="product-report" class="report-preview" hidden></pre>
+    </section>
+
+    <section id="panel-hosts" class="panel">
+    <section class="summary" aria-label="历史验收摘要">
       <article class="metric"><span>Readiness</span><strong id="m-ready">—</strong><small id="m-ready-note">—</small></article>
-      <article class="metric"><span>Hosts L0</span><strong id="m-hosts">—</strong><small>real model tasks</small></article>
+      <article class="metric"><span>历史 Hosts L0</span><strong id="m-hosts">—</strong><small>归档任务，非当前连接</small></article>
       <article class="metric"><span>Providers</span><strong id="m-providers">—</strong><small>configured adapters</small></article>
       <article class="metric"><span>Artifact</span><strong id="m-artifact">—</strong><small id="m-artifact-note">—</small></article>
     </section>
 
-    <nav class="tabs" role="tablist">
-      <button class="tab active" data-tab="hosts" role="tab">Hosts</button>
-      <button class="tab" data-tab="providers" role="tab">Providers</button>
-      <button class="tab" data-tab="skills" role="tab">Skills</button>
-      <button class="tab" data-tab="tasks" role="tab">Tasks</button>
-      <button class="tab" data-tab="evidence" role="tab">Evidence</button>
-      <button class="tab" data-tab="diagnostics" role="tab">Diagnostics</button>
-      <button class="tab" data-tab="native" role="tab">Native Core</button>
-    </nav>
-
-    <section id="panel-hosts" class="panel active">
       <div class="panel-head"><h2>Historical host compatibility</h2><p>Archived acceptance records, not current runtime observations. Use Native Core for a new scoped call.</p></div>
       <div class="table-wrap"><table><thead><tr><th>Host</th><th>Version</th><th>Install</th><th>Handshake</th><th>Task</th><th>Evidence level</th></tr></thead><tbody id="hosts-body"></tbody></table></div>
       <div id="host-detail" class="detail">Select a host to inspect limitations and evidence.</div>
@@ -81,7 +118,8 @@
       <pre id="native-output" class="output">No live result yet. UNKNOWN is not a successful runtime verification.</pre>
     </section>
   </main>
-  <footer>Read-only Workbench · no secrets rendered · <span id="generated"></span></footer>
+  <footer>ArmorBreak 开发版 · 本地只读检查 · 真实 DSH 连接尚未验收 · <span id="generated"></span></footer>
+  <script src="/product.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>

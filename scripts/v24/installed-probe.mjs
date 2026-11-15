@@ -61,7 +61,13 @@ const [code]=await exit;clearTimeout(timer);assert.equal(code,0,err)
 assert.equal(JSON.parse(out.trim()).result.protocolVersion,'2025-06-18')
 const { createWorkbenchServer }=await import('dsh-armorbreak/workbench')
 const server=await createWorkbenchServer({root,port:0,native:{workspaceId:workspace,stateRoot}})
-try {assert.equal((await fetch(server.url)).status,200);const session=await(await fetch(server.url+'/api/native/session')).json();assert.equal(session.authentication,'NONE')} finally {await server.close()}
+try {
+ assert.equal((await fetch(server.url)).status,200);const session=await(await fetch(server.url+'/api/native/session')).json();assert.equal(session.authentication,'NONE')
+ const headers={'content-type':'application/json','x-armorbreak-session':session.csrf}
+ const catalog=await(await fetch(server.url+'/api/product/catalog',{headers})).json();assert.ok(catalog.actions.some(a=>a.id==='file-integrity'))
+ const result=await(await fetch(server.url+'/api/product/example',{method:'POST',headers,body:'{}'})).json();assert.equal(result.state,'COMPLETED');assert.ok(result.evidenceIds.length)
+ const report=await(await fetch(server.url+'/api/product/report?taskId='+result.taskId,{headers})).json();assert.match(report.markdown,/任务状态：\*\*COMPLETED\*\*/)
+} finally {await server.close()}
 let pluginStore='NOT_DECLARED_IN_THIS_PACKAGE'
 if(pkg.exports['./isolated-plugin-store']){
  const {ArmorBreakRuntime}=await import('dsh-armorbreak/core'),{createIndependentPluginReviewer,pluginAttestationPayload}=await import('dsh-armorbreak/plugin-lifecycle'),{planIsolatedPluginInstall}=await import('dsh-armorbreak/isolated-plugin-store')

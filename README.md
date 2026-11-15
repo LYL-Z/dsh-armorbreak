@@ -4,6 +4,8 @@
 
 # ArmorBreak · 破甲
 
+> **v2.4 main development:** after installing a verified candidate TGZ, run `armorbreak start --workspace "/absolute/project/path"`. The local Workbench runs real read-only file/code/dependency checks and exports reports without model credentials. Node 22+ is required. This is not v2.4 Stable; real DSH installation and production client identity remain unverified. See the [current distribution contract](docs/v24/distribution.md).
+
 **Evidence-first security analysis for AI agents.**<br>
 *Inspect with tools. Enforce scope in code. Keep the evidence.*
 
