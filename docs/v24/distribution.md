@@ -12,6 +12,8 @@ Acceptance extracts the real ZIP to a new path containing spaces, Unicode and `&
 
 With Node 22+ and npm, install a verified candidate TGZ, then run `armorbreak start --workspace "/absolute/project/path"`. On Windows, quote paths such as `"D:\My Project"`. The default browser opens the loopback Workbench. No environment variables or model credentials are needed for its file/code/dependency checks. Run **运行安全示例** for real Core evidence and a downloadable report without reading project files. Current project tasks are separate from historical host acceptance. A missing target can be corrected and retried.
 
+The home page also offers **检查 DSH 安装目录**, **核对插件完整包** and **预览配置变更**. Select an explicit Desktop Resources directory, a package directory containing `armorbreak-plugin.json`, or an ArmorBreak JSON overlay request within the authorized workspace. These actions call the existing L0 Core analyzers; the package action always verifies the full local file closure. The result is a read-only observation, not live DSH connection, trusted plugin provenance/activation, or applied configuration. No caller-supplied approval or verification options are accepted.
+
 `--no-open` prints the URL; `--port 0` chooses an available port; `--state-root <absolute-directory>` selects Core state. Ctrl+C stops the server. DSH/model connection is not inferred from a running Workbench. The panel is still CSRF-only, with no OS authentication, L2 writes, production keys or approval issuance. A graphical installer, real DSH onboarding and independent novice-user timing are not yet verified.
 
 ## Multi-tool checks and a combined report
