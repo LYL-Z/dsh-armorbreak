@@ -24,6 +24,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+          fetch-depth: 0 # legacy release-gate ancestry checks require the frozen source commit
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: ${{ matrix.node }}
@@ -35,7 +36,7 @@ jobs:
           EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
-          node --input-type=module -e "import {mkdirSync,realpathSync,appendFileSync} from 'node:fs';mkdirSync('.runtime/tmp',{recursive:true});const scratch=realpathSync('.runtime/tmp');appendFileSync(process.env.GITHUB_ENV,'TMPDIR='+scratch+'\nTEMP='+scratch+'\nTMP='+scratch+'\n')"
+          node --input-type=module -e "import {mkdtempSync,realpathSync,appendFileSync} from 'node:fs';import {join,relative,isAbsolute,sep} from 'node:path';const root=realpathSync(process.cwd()),base=realpathSync(process.env.RUNNER_TEMP),rel=relative(root,base);if(rel===''||(!isAbsolute(rel)&&rel!=='..'&&!rel.startsWith('..'+sep)))throw Error('runner scratch must be outside source tree');const scratch=mkdtempSync(join(base,'armorbreak-macos-'));appendFileSync(process.env.GITHUB_ENV,'TMPDIR='+scratch+'\nTEMP='+scratch+'\nTMP='+scratch+'\n')"
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Full regression and contract checks
         id: regression
