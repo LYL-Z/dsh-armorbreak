@@ -38,6 +38,9 @@ jobs:
           test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
           node --input-type=module -e "import {mkdtempSync,realpathSync,appendFileSync} from 'node:fs';import {join,relative,isAbsolute,sep} from 'node:path';const root=realpathSync(process.cwd()),base=realpathSync(process.env.RUNNER_TEMP),rel=relative(root,base);if(rel===''||(!isAbsolute(rel)&&rel!=='..'&&!rel.startsWith('..'+sep)))throw Error('runner scratch must be outside source tree');const scratch=mkdtempSync(join(base,'armorbreak-macos-'));appendFileSync(process.env.GITHUB_ENV,'TMPDIR='+scratch+'\nTEMP='+scratch+'\nTMP='+scratch+'\n')"
       - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Native descriptor-relative evidence helper regressions
+        id: native_evidence
+        run: python3 -I tests/safe-evidence-posix-helper.py
       - name: Full regression and contract checks
         id: regression
         run: |
@@ -57,9 +60,10 @@ jobs:
         env:
           EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           FULL_REGRESSION: ${{ steps.regression.outcome }}
+          NATIVE_EVIDENCE: ${{ steps.native_evidence.outcome }}
           INSTALLED_PACKAGE: ${{ steps.installed.outcome }}
         run: |
-          node --input-type=module -e "import {writeFileSync} from 'node:fs';import os from 'node:os';writeFileSync(process.env.RUNNER_TEMP+'/macos-runtime.json',JSON.stringify({commit:process.env.EXPECTED_SHA,node:process.version,platform:process.platform,architecture:process.arch,kernel:os.release(),fullRegression:process.env.FULL_REGRESSION,actualInstalledPackage:process.env.INSTALLED_PACKAGE,nativeGui:'NOT_TESTED',realDshHost:'NOT_TESTED',legacySafeEvidenceWrite:'UNSUPPORTED_ON_DARWIN',legacyTaskSchemaMigration:'UNSUPPORTED_ON_DARWIN',fullUpstreamEquivalence:'NOT_PROVEN'},null,2)+'\n')"
+          node --input-type=module -e "import {writeFileSync} from 'node:fs';import os from 'node:os';writeFileSync(process.env.RUNNER_TEMP+'/macos-runtime.json',JSON.stringify({commit:process.env.EXPECTED_SHA,node:process.version,platform:process.platform,architecture:process.arch,kernel:os.release(),fullRegression:process.env.FULL_REGRESSION,actualInstalledPackage:process.env.INSTALLED_PACKAGE,nativeGui:'NOT_TESTED',realDshHost:'NOT_TESTED',legacySafeEvidenceWrite:process.env.NATIVE_EVIDENCE,legacyEvidenceHelperScope:'NATIVE_POSIX_REGRESSION_NOT_POWER_LOSS_ACCEPTANCE',legacyTaskSchemaMigration:'UNSUPPORTED_ON_DARWIN',fullUpstreamEquivalence:'NOT_PROVEN'},null,2)+'\n')"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
