@@ -29,7 +29,7 @@ def components(path):
     parts = path.split('/')
     for part in parts:
         require(part not in ('', '.', '..') and not part.endswith(('.', ' '))
-                and not any(ord(c) < 32 or c in '\\:<>\"|?*' for c in part),
+                and not any(ord(c) < 32 or c in '\\:<>"|?*' for c in part),
                 'unsafe path component')
     return parts
 
