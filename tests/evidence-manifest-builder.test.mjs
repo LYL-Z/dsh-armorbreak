@@ -22,6 +22,7 @@ function fixture(t) {
   copyFileSync(sourceManifestBuilder, join(root, 'scripts/v2/build-evidence-manifest.mjs'))
   copyFileSync(sourceSafeFile, join(root, 'lib/release/safeEvidenceFile.js'))
   copyFileSync(sourceSafeWindowsWriter, join(root, 'lib/release/safe-evidence-write-windows.ps1'))
+  copyFileSync(join(repoRoot, 'lib/release/safe-evidence-write-posix.py'), join(root, 'lib/release/safe-evidence-write-posix.py'))
   writeFileSync(join(root, 'package.json'), '{"type":"module"}\n')
   writeFileSync(join(root, 'README.md'), '# baseline\n')
   writeFileSync(join(root, 'docs/v2/acceptance/test-report.tap'), 'TAP version 13\n# tests 1\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n')
