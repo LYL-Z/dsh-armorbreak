@@ -8,7 +8,7 @@ import { readdir, stat } from 'node:fs/promises'
 import { realpathSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { makeApprovalId } from '../../../lib/control/approvalAuthority.js'
-import { isPathInside, looksTextual, nowIso, readBounded, redactDeep, sanitizeText, sha256, textOf } from './util.js'
+import { isPathInside, looksTextual, nowIso, readBounded, readBoundedRanges, redactDeep, sanitizeText, sha256, textOf } from './util.js'
 import { getWorkflow } from './workflows.js'
 import { blockedSteps, compilePlan, pendingSteps, readySteps } from './dag.js'
 
@@ -417,6 +417,17 @@ export class ExecutionRunner {
         // Contract (docs/CONTRACT.md): env.readFile resolves to a Buffer.
         if (read.truncated) env.targetTruncated = true
         return read.buffer
+      }
+      if (['host.health', 'host.diagnostics'].includes(capability.id)) {
+        env.inspectHostArchive = (absPath, inspect) => readBoundedRanges(absPath, 8 * 1024 * 1024 + 2 * 65536 + 16, {
+          authorize: async (file) => {
+            if (controller.signal.aborted) throw new ExecutionError('CANCELLED', 'execution cancelled')
+            if ((!isPathInside(root, file) && !isPathInside(realRoot, file)) || !isPathInside(realRoot, realpathOf(file))) {
+              throw new PolicyDeniedError('PATH_ESCAPE', 'host archive escapes the analyzed directory')
+            }
+            return ctx.scope.checkFile({ taskId: task.id, targetPath: file, workspaceRoot: task.workspace })
+          },
+        }, inspect)
       }
     }
     return {

@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { mkdtemp, mkdir, writeFile, readFile, rm, symlink } from 'node:fs/promises'
+import { mkdtemp, mkdir, writeFile, readFile, rm, symlink, link } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { spawnSync } from 'node:child_process'
@@ -87,4 +87,55 @@ test('Core health never reads metadata through an external junction', async t =>
   const engine = await createEngine(f.options)
   t.after(() => engine.close())
   await assert.rejects(() => engine.analyze(f.ctx, { capability: 'host.health', target: alias }))
+})
+
+function packedHost({ malformed = false } = {}) {
+  const metadata = Buffer.from(JSON.stringify({ name: '@deepseek-ai/dsh-desktop-host', version: '1.2.3', pin: 'PACKED_PRIVATE_PIN' }))
+  const path = ['dsh', 'node_modules', '@deepseek-ai', 'dsh-desktop-host', 'package.json']
+  const entry = { size: metadata.length, offset: malformed ? '9007199254740991' : '0' }
+  const tree = path.reduceRight((child, name) => ({ files: { [name]: child } }), entry)
+  const json = Buffer.from(JSON.stringify(tree))
+  const padded = Math.ceil(json.length / 4) * 4
+  const header = Buffer.alloc(16 + padded)
+  header.writeUInt32LE(4, 0)
+  header.writeUInt32LE(padded + 8, 4)
+  header.writeUInt32LE(padded + 4, 8)
+  header.writeUInt32LE(json.length, 12)
+  json.copy(header, 16)
+  return Buffer.concat([header, metadata])
+}
+
+test('Core reads packaged Desktop identity and persists only allowed fields', async t => {
+  const f = await fixture(t), archive = join(f.resources, 'app.asar')
+  await rm(f.file)
+  const bytes = packedHost()
+  await writeFile(archive, bytes)
+  const engine = await createEngine(f.options)
+  t.after(() => engine.close())
+  const result = await engine.analyze(f.ctx, { capability: 'host.health', target: f.resources, options: { expectedVersion: '1.2.3' } })
+  assert.deepEqual(result.data.identity, { family: 'OFFICIAL_DISK_PACKAGE', version: '1.2.3', evidence: 'official-asar' })
+  assert.equal(result.data.archiveMetadata, 'PACKAGE_FOUND')
+  assert.equal(result.data.runtime, 'UNKNOWN')
+  assert.equal(result.data.compatibility.versionRequirement, 'MATCH')
+  assert.doesNotMatch(JSON.stringify(result), /PACKED_PRIVATE_PIN/)
+  assert.doesNotMatch((await engine.getReport(f.ctx, result.taskId)).markdown, /PACKED_PRIVATE_PIN/)
+  assert.deepEqual(await readFile(archive), bytes)
+})
+
+test('archive component accepts neither out-of-bounds metadata nor an alias to an external file', async t => {
+  const f = await fixture(t), archive = join(f.resources, 'app.asar')
+  await rm(f.file)
+  await writeFile(archive, packedHost({ malformed: true }))
+  const rejected = await inspectDshHostHealth({ resources: f.resources })
+  assert.equal(rejected.archiveMetadata, 'UNREADABLE_OR_INVALID')
+  assert.equal(rejected.identity.family, 'UNVERIFIED')
+  await rm(archive)
+  const outside = join(f.root, 'outside.asar')
+  await writeFile(outside, packedHost())
+  await link(outside, archive)
+  const engine = await createEngine(f.options)
+  t.after(() => engine.close())
+  const result = await engine.analyze(f.ctx, { capability: 'host.health', target: f.resources })
+  assert.equal(result.data.archiveMetadata, 'UNREADABLE_OR_INVALID')
+  assert.equal(result.data.identity.family, 'UNVERIFIED')
 })
