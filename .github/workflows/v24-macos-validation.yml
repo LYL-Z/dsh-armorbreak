@@ -41,8 +41,12 @@ jobs:
       - name: Native descriptor-relative evidence helper regressions
         id: native_evidence
         run: python3 -I tests/safe-evidence-posix-helper.py
+      - name: Native migration, crash recovery and exact bytes
+        id: migration
+        run: node --test tests/migration-v2.test.mjs tests/migration-path-boundary.test.mjs tests/migration-faults.test.mjs tests/migration-platform-contract.test.mjs
       - name: Full regression and contract checks
         id: regression
+        if: ${{ !cancelled() }}
         run: |
           set -euo pipefail
           node --test --test-concurrency=1 2>&1 | tee "$RUNNER_TEMP/macos-full-tests.log"
@@ -61,9 +65,10 @@ jobs:
           EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           FULL_REGRESSION: ${{ steps.regression.outcome }}
           NATIVE_EVIDENCE: ${{ steps.native_evidence.outcome }}
+          NATIVE_MIGRATION: ${{ steps.migration.outcome }}
           INSTALLED_PACKAGE: ${{ steps.installed.outcome }}
         run: |
-          node --input-type=module -e "import {writeFileSync} from 'node:fs';import os from 'node:os';writeFileSync(process.env.RUNNER_TEMP+'/macos-runtime.json',JSON.stringify({commit:process.env.EXPECTED_SHA,node:process.version,platform:process.platform,architecture:process.arch,kernel:os.release(),fullRegression:process.env.FULL_REGRESSION,actualInstalledPackage:process.env.INSTALLED_PACKAGE,nativeGui:'NOT_TESTED',realDshHost:'NOT_TESTED',legacySafeEvidenceWrite:process.env.NATIVE_EVIDENCE,legacyEvidenceHelperScope:'NATIVE_POSIX_REGRESSION_NOT_POWER_LOSS_ACCEPTANCE',legacyTaskSchemaMigration:'UNSUPPORTED_ON_DARWIN',fullUpstreamEquivalence:'NOT_PROVEN'},null,2)+'\n')"
+          node --input-type=module -e "import {writeFileSync} from 'node:fs';import os from 'node:os';writeFileSync(process.env.RUNNER_TEMP+'/macos-runtime.json',JSON.stringify({commit:process.env.EXPECTED_SHA,node:process.version,platform:process.platform,architecture:process.arch,kernel:os.release(),fullRegression:process.env.FULL_REGRESSION,actualInstalledPackage:process.env.INSTALLED_PACKAGE,nativeGui:'NOT_TESTED',realDshHost:'NOT_TESTED',legacySafeEvidenceWrite:process.env.NATIVE_EVIDENCE,legacyTaskSchemaMigration:process.env.NATIVE_MIGRATION,powerLoss:'NOT_TESTED',fullUpstreamEquivalence:'NOT_PROVEN'},null,2)+'\n')"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

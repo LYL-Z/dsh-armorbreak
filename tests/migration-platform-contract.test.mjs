@@ -6,14 +6,13 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
 
-// Native Darwin executes the real contract. Linux and Windows use an isolated
-// child that changes only the platform discriminator to cover the refusal path;
-// this does not establish Darwin filesystem semantics or writable support.
+// Model a platform without a descriptor-relative backend in an isolated child.
+// The existing migration and fault tests exercise actual supported platforms.
 function runUnsupportedPlatform(script, root) {
   const moduleUrl = new URL('../lib/migrations/v1-to-v2.js', import.meta.url).href
   return spawnSync(process.execPath, ['--input-type=module', '-e', `
     import assert from 'node:assert/strict'
-    if (process.platform !== 'darwin') Object.defineProperty(process, 'platform', { value: 'darwin' })
+    Object.defineProperty(process, 'platform', { value: 'unsupported-test-platform' })
     const { planMigration, applyMigration, rollbackMigration, recoverInterruptedMigrations } = await import(${JSON.stringify(moduleUrl)})
     const root = process.argv[1]
     ${script}
