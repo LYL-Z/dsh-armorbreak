@@ -13,17 +13,21 @@
   function availability() {
     el('product-example').disabled = running || !catalog?.exampleAvailable
     el('product-run').disabled = running || !selected
+    el('product-target').disabled=running
+    for(const button of el('product-actions').querySelectorAll('[data-action]'))button.disabled=running
   }
   function actions() {
     const query = el('product-search').value.trim().toLowerCase()
     const visible = catalog.actions.filter(a => (a.title+' '+a.description).toLowerCase().includes(query))
-    el('product-actions').innerHTML = visible.length ? visible.map(a => `<button type="button" class="action-option ${selected?.id===a.id?'selected':''}" data-action="${escape(a.id)}" aria-pressed="${selected?.id===a.id}"><strong>${escape(a.title)}</strong><span>${escape(a.description)}</span><small>只读 · ${a.targetKind==='file'?'单个文件':'项目目录'}</small></button>`).join('') : '<p>没有匹配的功能。试试“文件”“代码”或“依赖”。</p>'
+    el('product-actions').innerHTML = visible.length ? visible.map(a => `<button type="button" class="action-option ${selected?.id===a.id?'selected':''}" data-action="${escape(a.id)}" aria-pressed="${selected?.id===a.id}"><strong>${escape(a.title)}</strong><span>${escape(a.description)}</span><small>只读 · ${escape(a.targetLabel??(a.targetKind==='file'?'单个文件':'项目目录'))}</small></button>`).join('') : '<p>没有匹配的功能。试试“文件”“代码”“宿主”“插件”或“配置”。</p>'
+    for(const button of el('product-actions').querySelectorAll('[data-action]'))button.disabled=running
     for (const button of el('product-actions').querySelectorAll('[data-action]')) button.addEventListener('click', () => {
+      if(running)return
       selected = catalog.actions.find(a => a.id===button.dataset.action)
       el('composer-title').textContent = selected.title
       el('product-description').textContent = selected.description
       el('product-target').placeholder = selected.placeholder
-      el('product-target').value = selected.targetKind==='directory'?'.':''
+      el('product-target').value = selected.targetKind==='directory'&&!selected.explicitTarget?'.':''
       actions();availability();el('product-target').focus()
     })
   }
@@ -48,6 +52,19 @@
       attachReports(el('product-tasks'))
     } catch { el('product-tasks').textContent='未能加载任务，请点击“刷新任务”重试。' }
   }
+  function diagnosticSummary(data) {
+    if(data?.schema==='armorbreak.host-health/v1'){
+      const observed=data.observation==='DETECTED_ON_DISK'?'检测到磁盘包':'未确认磁盘包'
+      return '<h4>宿主检查</h4><p>'+observed+' · 版本：'+escape(data.identity?.version??'未知')+'。未验证正在运行的宿主或模型连接。</p>'
+    }
+    if(data?.verificationStatus==='LOCAL_PACKAGE_CLOSURE_VERIFIED'){
+      return '<h4>插件包完整性</h4><p>本地包闭包核对完成，共 '+escape(data.closure?.length??0)+' 个文件。未认证来源及权利、未授权激活、未安装或运行插件。</p>'
+    }
+    if(data?.schema==='armorbreak.config-preview/v2'){
+      return '<h4>配置预览</h4><p>'+escape(data.changes?.length??0)+' 项变更，'+escape(data.conflicts?.length??0)+' 项冲突。只展示结构，未应用任何配置。</p>'
+    }
+    return ''
+  }
   async function run(example) {
     if (running) return
     running=true;availability()
@@ -64,6 +81,8 @@
       const steps=result.data?.workflowId&&Array.isArray(result.data.steps)?result.data.steps:null
       const workflowSummary=steps?`<p>完成 ${steps.filter(s=>s.status==='DONE').length} / ${steps.length} 项分析；记录 ${escape(result.data.findings)} 条待核对发现。</p><ol>${steps.map(s=>`<li><strong>${escape(s.title)}</strong> · ${escape(s.status)}${s.summary?`<p>${escape(s.summary)}</p>`:''}</li>`).join('')}</ol>`:''
       el('product-result').innerHTML=`<h3>${complete?'结果已保存':'检查未完成'}</h3><p>${example?'分析的是内置文本，没有读取你的项目文件。':'项目输入未被修改。此结果只覆盖所选能力的实际检查范围。'}</p>${digest?`<dl><dt>SHA-256</dt><dd><code>${escape(digest)}</code></dd></dl>`:''}<p>任务 <code>${escape(result.taskId)}</code></p>${result.reportAvailable?`<div class="task-actions"><button type="button" data-report="${escape(result.taskId)}">查看报告</button><button type="button" data-download="${escape(result.taskId)}">下载 Markdown</button></div>`:''}<details><summary>查看原始结果</summary><pre>${escape(JSON.stringify(result.data,null,2))}</pre></details>`
+      const diagnostic=diagnosticSummary(result.data)
+      if(diagnostic)el('product-result').insertAdjacentHTML('beforeend',diagnostic)
       if(workflowSummary)el('product-result').insertAdjacentHTML('beforeend',workflowSummary)
       el('product-result').hidden=false;attachReports(el('product-result'));el('product-result').scrollIntoView({block:'start'});await tasks()
     } catch(error) { el('product-feedback').textContent=error.message;el('product-feedback').className='feedback error';el('product-feedback').scrollIntoView({block:'center'}) }

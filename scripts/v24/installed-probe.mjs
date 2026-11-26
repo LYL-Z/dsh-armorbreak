@@ -95,6 +95,14 @@ try {
  const result=await(await fetch(server.url+'/api/product/example',{method:'POST',headers,body:'{}'})).json();assert.equal(result.state,'COMPLETED');assert.ok(result.evidenceIds.length)
  const report=await(await fetch(server.url+'/api/product/report?taskId='+result.taskId,{headers})).json();assert.match(report.markdown,/任务状态：\*\*COMPLETED\*\*/)
  const multi=await(await fetch(server.url+'/api/product/run',{method:'POST',headers,body:JSON.stringify({action:'file-review',target:'inert.txt'})})).json();assert.equal(multi.state,'COMPLETED');assert.equal(multi.data.steps.length,6);assert.ok(multi.reportAvailable)
+ const runDiagnostic=async(action,target)=>{const response=await fetch(server.url+'/api/product/run',{method:'POST',headers,body:JSON.stringify({action,target})});assert.equal(response.status,200);const result=await response.json();assert.equal(result.state,'COMPLETED');assert.ok(result.reportAvailable&&result.evidenceIds.length);return result.data}
+ const hostDir=join(workspace,'diagnostic-resources','app','dsh','node_modules','@deepseek-ai','dsh-desktop-host');await mkdir(hostDir,{recursive:true});await writeFile(join(hostDir,'package.json'),JSON.stringify({name:'@deepseek-ai/dsh-desktop-host',version:'1.2.3'}))
+ const host=await runDiagnostic('host-health','diagnostic-resources');assert.equal(host.observation,'DETECTED_ON_DISK');assert.equal(host.runtime,'UNKNOWN')
+ const pluginDir=join(workspace,'diagnostic-plugin');await mkdir(pluginDir);await writeFile(join(pluginDir,'inert.txt'),'diagnostic inert bytes')
+ await writeFile(join(pluginDir,'armorbreak-plugin.json'),JSON.stringify({schema:'armorbreak.plugin-catalog/v1',plugins:[{id:'diagnostic',version:'1.0.0',source:{repository:'https://github.com/example/inert',commit:'a'.repeat(40)},license:'MIT',dependencies:[],permissions:['workspace.read'],platforms:['win32','linux','darwin'],channel:'stable',enabled:false,files:[{path:'inert.txt',sha256:createHash('sha256').update('diagnostic inert bytes').digest('hex')}]}]}))
+ const plugin=await runDiagnostic('plugin-closure','diagnostic-plugin');assert.equal(plugin.verificationStatus,'LOCAL_PACKAGE_CLOSURE_VERIFIED');assert.equal(plugin.plugins[0].activationAuthorized,false)
+ await writeFile(join(workspace,'diagnostic-overlay.json'),JSON.stringify({schema:'armorbreak.config-overlay/v1',base:{apiPin:'TEST_PRIVATE_VALUE'},overlays:[]}))
+ const config=await runDiagnostic('configuration-preview','diagnostic-overlay.json');assert.equal(config.applied,false);assert.doesNotMatch(JSON.stringify(config),/apiPin|TEST_PRIVATE_VALUE/)
 } finally {await server.close()}
 let pluginStore='NOT_DECLARED_IN_THIS_PACKAGE'
 if(pkg.exports['./isolated-plugin-store']){
