@@ -65,9 +65,9 @@ test('safe evidence writes no bytes when a parent junction changes during tempor
     symlinkSync(outside, acceptance, process.platform === 'win32' ? 'junction' : 'dir')
     swapped = true
   }
-  if (process.platform === 'win32') {
+  if (['win32', 'darwin'].includes(process.platform)) {
     childProcess.spawnSync = function (command, args, options) {
-      if (!swapped && args?.some((argument) => String(argument).endsWith('safe-evidence-write-windows.ps1'))) swapParent()
+      if (!swapped && args?.some((argument) => String(argument).endsWith(process.platform === 'darwin' ? 'safe-evidence-write-posix.py' : 'safe-evidence-write-windows.ps1'))) swapParent()
       return originalSpawnSync.call(this, command, args, options)
     }
   } else {
@@ -121,9 +121,9 @@ test('safe evidence replacement does not follow a parent swap at the final repla
     symlinkSync(outside, acceptance, process.platform === 'win32' ? 'junction' : 'dir')
     swapped = true
   }
-  if (process.platform === 'win32') {
+  if (['win32', 'darwin'].includes(process.platform)) {
     childProcess.spawnSync = function (command, args, options) {
-      if (!swapped && args?.some((argument) => String(argument).endsWith('safe-evidence-write-windows.ps1'))) swapParent()
+      if (!swapped && args?.some((argument) => String(argument).endsWith(process.platform === 'darwin' ? 'safe-evidence-write-posix.py' : 'safe-evidence-write-windows.ps1'))) swapParent()
       return originalSpawnSync.call(this, command, args, options)
     }
   } else {
