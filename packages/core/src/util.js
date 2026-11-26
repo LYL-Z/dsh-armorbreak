@@ -192,6 +192,45 @@ export async function readJsonl(file, opts = {}) {
  * @returns {Promise<{buffer: Buffer, truncated: boolean, size: number}>}
  */
 export async function readBounded(file, maxBytes, options = {}) {
+  return withVerifiedFile(file, options, async (handle, opened) => {
+    const limit = Number.isFinite(Number(maxBytes)) ? Math.max(0, Math.floor(Number(maxBytes))) : 0
+    const buffer = Buffer.alloc(limit + 1)
+    const { bytesRead } = await handle.read(buffer, 0, buffer.length, 0)
+    const truncated = opened.size > BigInt(bytesRead) || bytesRead > limit
+    return { buffer: buffer.subarray(0, Math.min(bytesRead, limit)), truncated, size: Number(opened.size) }
+  })
+}
+
+/** Pass only bounded positional reads to a trusted built-in archive decoder. */
+export async function readBoundedRanges(file, maxBytes, options, inspect) {
+  return withVerifiedFile(file, options, async (handle, opened) => {
+    let remaining = maxBytes
+    const size = Number(opened.size)
+    if (!Number.isSafeInteger(size)) throw new Error('archive size exceeds safe offsets')
+    const read = async (offset, length) => {
+      if (![offset, length].every(Number.isSafeInteger) || offset < 0 || length < 0 || length > remaining || offset > size - length) {
+        throw new Error('archive range exceeds file or inspection budget')
+      }
+      remaining -= length
+      const bytes = Buffer.alloc(length)
+      for (let done = 0; done < length;) {
+        const { bytesRead } = await handle.read(bytes, done, length - done, offset + done)
+        if (!bytesRead) throw new Error('archive changed while reading')
+        done += bytesRead
+      }
+      return bytes
+    }
+    const result = await inspect({ size, read })
+    const after = await handle.stat({ bigint: true })
+    const entry = await lstat(file, { bigint: true })
+    if (after.size !== opened.size || after.mtimeNs !== opened.mtimeNs || after.ctimeNs !== opened.ctimeNs || after.nlink !== 1n || entry.isSymbolicLink() || entry.dev !== opened.dev || entry.ino !== opened.ino) {
+      throw new Error('archive identity or bytes changed during inspection')
+    }
+    return result
+  })
+}
+
+async function withVerifiedFile(file, options, read) {
   const targetPath = resolve(file)
   const canonicalPath = await realpath(targetPath)
   const authorize = async () => {
@@ -232,11 +271,7 @@ export async function readBounded(file, maxBytes, options = {}) {
     }
     await authorize()
 
-    const limit = Number.isFinite(Number(maxBytes)) ? Math.max(0, Math.floor(Number(maxBytes))) : 0
-    const buffer = Buffer.alloc(limit + 1)
-    const { bytesRead } = await handle.read(buffer, 0, buffer.length, 0)
-    const truncated = opened.size > BigInt(bytesRead) || bytesRead > limit
-    return { buffer: buffer.subarray(0, Math.min(bytesRead, limit)), truncated, size: Number(opened.size) }
+    return await read(handle, opened)
   } finally {
     await handle.close()
   }
