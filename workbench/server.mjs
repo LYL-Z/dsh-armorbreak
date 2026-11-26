@@ -197,7 +197,15 @@ export async function createWorkbenchServer({ root = DEFAULT_ROOT, host = '127.0
           runtimeLease?.call(true)
           return send(res, 200, JSON.stringify({ taskId: result.taskId, state: result.state, capability: result.capability, data: result.data, evidenceIds: result.evidenceIds, reportAvailable: Boolean(result.reportPath), durationMs: Math.round(performance.now() - started), hostModified: false }))
         } finally { busy = false }
-      } catch { runtimeLease?.call(false); return send(res, 400, JSON.stringify({ error: 'CORE_REQUEST_REJECTED', detail: '未能完成任务。请检查项目内的目标与文件类型，修正后重试。未授予额外权限。' })) }
+      } catch (error) {
+        runtimeLease?.call(false)
+        const rejected = { error: 'CORE_REQUEST_REJECTED', detail: '未能完成任务。请检查项目内的目标与文件类型，修正后重试。未授予额外权限。' }
+        // Fixed user-facing text only. Do not export path, digest or manifest
+        // fields from the underlying exception on the unauthenticated panel.
+        if (error?.code === 'PLUGIN_FILE_HASH_MISMATCH') rejected.detail = '插件文件与清单中的摘要不一致。请重新获取原始包，再运行完整性检查。'
+        if (error?.code === 'PLUGIN_PACKAGE_FILE_SET_MISMATCH') rejected.detail = '插件包缺少清单声明的文件，或包含额外文件。请重新解压原始包后再检查。'
+        return send(res, 400, JSON.stringify(rejected))
+      }
     }
     // This endpoint is reachable by ANY local HTTP client, including another
     // OS user. The token prevents cross-site requests; it authenticates no user.
