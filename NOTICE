@@ -1,14 +1,25 @@
-﻿ArmorBreak V2
+ArmorBreak (破甲)
 Copyright (c) 2026 LYL-Z
 
-This product includes the dsh-armorbreak Cordis bundle and preset.
+ArmorBreak's own source is distributed under the MIT License in LICENSE.
+Individual third-party notices and licenses continue to apply to their material.
 
-External tools are optional and are NOT bundled:
-- TShark (GPL-2.0-or-later)
-- Ghidra (Apache-2.0)
-- JADX (Apache-2.0)
-- Syft (Apache-2.0)
-- Semgrep (LGPL-2.1)
-- Trivy (Apache-2.0)
+Upstream research and attribution
 
-See docs/v2/release/sbom.spdx.json and docs/v2/release/license-audit.md.
+ArmorBreak studies dsh-purge, originally authored by 小杨 (YuJunZhiXue).
+The roots of the following source snapshots carry Copyright (c) 2026 小杨
+and an MIT license text:
+
+ - mmparko/dsh-purge (mirror), 033e6bd1e0f101352b39075ecd0d758ffef26b76
+   https://github.com/mmparko/dsh-purge/tree/033e6bd1e0f101352b39075ecd0d758ffef26b76
+ - kingcharleslzy-ai/dsh-purge (community fork), 411f98c676e5ff5f400df78316c9bd056416a46d
+   https://github.com/kingcharleslzy-ai/dsh-purge/tree/411f98c676e5ff5f400df78316c9bd056416a46d
+
+The mirror README also states commercial sale and resale restrictions.
+The community snapshot preserves upstream text and identifies third-party
+material attributed to Jueze-2019 and DeepSeek. Those notices belong to the
+corresponding source material. See THIRD_PARTY_NOTICES.txt for distribution
+scope and the repository's existing source disposition records for file review.
+
+ArmorBreak is maintained independently. DeepSeek Harness is an integration
+target. See THIRD_PARTY_NOTICES.txt for npm dependencies and external tools.

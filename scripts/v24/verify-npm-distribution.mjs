@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { checkDistributionAttribution, checkDistributionPaths } from './distribution-policy.mjs'
 
 export async function verifyNpmDistribution({ repositoryRoot, commit = 'HEAD', outputRoot, offline = false }) {
   const git = (...args) => execFileSync('git', args, { cwd: repositoryRoot, maxBuffer: 64 * 1024 * 1024 })
@@ -41,18 +42,15 @@ export async function verifyNpmDistribution({ repositoryRoot, commit = 'HEAD', o
     renameSync(join(outputRoot, packed.filename), artifact)
     report.artifact = { file: artifact.split(/[\\/]/).at(-1), bytes: readFileSync(artifact).length, sha256: createHash('sha256').update(readFileSync(artifact)).digest('hex') }
     report.packFiles = packed.files.map(file => file.path).sort()
+    checkDistributionPaths(report.packFiles)
     writeFileSync(join(consumer, 'package.json'), JSON.stringify({ name: 'isolated-armorbreak-consumer', private: true, type: 'module' }))
     run('npm-install', process.execPath, [npm, 'install', '--ignore-scripts', '--omit=dev', '--no-audit', '--no-fund', ...(offline ? ['--offline'] : []), '--registry', 'https://registry.npmjs.org', artifact])
     // First exercise the actual root import: this is the original R3-F-05 reproduction.
     run('root-import', process.execPath, ['--input-type=module', '-e', "await import('dsh-armorbreak'); console.log('ROOT_IMPORTED')"])
-    const required = ['packages/core/index.js','packages/cli/index.js','packages/mcp-server/index.js','packages/core/src/syntheticConfiguration.js','workbench/server.mjs','npm-shrinkwrap.json']
-    for (const path of required) if (!report.packFiles.includes(path)) throw new Error('DISTRIBUTION_MISSING: ' + path)
-    const allowedRoots = new Set(['lib','packages','plugins','skills','locale','workbench'])
-    const allowedFiles = new Set(['package.json','npm-shrinkwrap.json','index.js','tools.js','skills.js','client.js','cordis.patch.yml','icon.svg','README.md','README.zh-CN.md','CHANGELOG.md','LICENSE','SECURITY.md','CONTRIBUTING.md','docs/v24/distribution.md'])
+    const installed = join(consumer, 'node_modules/dsh-armorbreak')
+    report.attribution = checkDistributionAttribution({ source, installed, paths: report.packFiles, packVersion: packed.version })
     for (const path of report.packFiles) {
-      if (!allowedFiles.has(path) && !allowedRoots.has(path.split('/')[0])) throw new Error('UNRELATED_DISTRIBUTION_FILE: ' + path)
-      if (/(^|\/)(node_modules|tests?|fixtures?|evidence|acceptance|\.git|\.armorbreak)(\/|$)|(^|\/)\.env(?:\.|$)|\.(?:pem|key|p12|pfx|pyc)$/i.test(path)) throw new Error('SENSITIVE_DISTRIBUTION_PATH: ' + path)
-      const bytes = readFileSync(join(consumer, 'node_modules/dsh-armorbreak', path))
+      const bytes = readFileSync(join(installed, path))
       if (/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----\r?\n[A-Za-z0-9+/]/.test(bytes.toString('utf8'))) throw new Error('PRIVATE_KEY_IN_PACKAGE: ' + path)
     }
     const probe = join(consumer, 'installed-probe.mjs')

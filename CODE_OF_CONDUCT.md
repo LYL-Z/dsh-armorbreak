@@ -31,4 +31,7 @@ reviewed and investigated promptly and fairly. Maintainers are obligated to
 respect the privacy and security of the reporter.
 
 This Code of Conduct is adapted from the
-[Contributor Covenant](https://www.contributor-covenant.org), version 2.1.
+[Contributor Covenant](https://www.contributor-covenant.org/version/2/1/code_of_conduct/),
+version 2.1, by the Contributor Covenant contributors under
+[CC BY 4.0](LICENSES/CC-BY-4.0.txt). The ArmorBreak version is shortened
+and uses the project's reporting contact.

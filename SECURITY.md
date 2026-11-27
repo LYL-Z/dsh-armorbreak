@@ -4,13 +4,14 @@
 
 | Version | Supported |
 |---|---|
-| 2.2.x (Stable) | Security fixes or mitigations for confirmed vulnerabilities, subject to maintainer capacity; no fixed support end date |
+| 2.3.x (published Stable v2.3.1) | Security fixes or mitigations for confirmed vulnerabilities, subject to maintainer capacity |
+| 2.4 development and Preview | Reports welcome. Provide the exact tag or commit and the relevant adapter |
 | 1.0.x | ✅ security fixes (existing commitment unchanged) |
 | < 1.0.0 | ❌ (not published) |
 
 ### Support lifecycle
 
-- `2.2.x` is the current Stable maintenance line.
+- The current published Stable is [v2.3.1](https://github.com/LYL-Z/dsh-armorbreak/releases/tag/v2.3.1).
 - No fixed support end date is promised; this is not a permanent-maintenance commitment.
 - Confirmed security issues are handled according to severity, impact, technical feasibility and maintainer capacity.
 - The existing `1.0.x` security-fix commitment remains in force.
@@ -43,8 +44,8 @@ remain anonymous.
 
 ## In-scope assets and expected security properties
 
-This project is a **DeepSeek Harness plugin bundle + agent preset** that runs
-inside the Host process. In-scope weakness classes:
+The ArmorBreak Core and its CLI, MCP, Workbench and DeepSeek Harness adapter
+are in scope. Report which entry point and version were affected.
 
 - policy-engine bypasses (L0/L1/L2/L3 gates, approvals, path/network scope);
 - evidence/audit hash-chain integrity defects;
@@ -57,7 +58,11 @@ in external tools (Ghidra/JADX/etc.), or in target samples analyzed by the mode.
 
 ## Ethical-use boundary
 
-ArmorBreak is for **authorized** security research only. Reports or requests
-that involve unauthorized access, credential theft, stealth persistence,
-malware delivery, or destructive attacks will not be accepted as features.
-L3-class operations are denied by the policy engine and will stay that way.
+See [authorized use and product boundaries](ETHICAL_USE.md). The local web
+session is CSRF protection. OS identity and production approvals are outside
+the public Workbench interface.
+
+## 中文报告渠道
+
+请使用 GitHub 私密安全报告或上述维护者邮箱。提交版本、入口、影响以及
+经过脱敏的最小证据。普通安装帮助请参见 [SUPPORT.md](SUPPORT.md)。

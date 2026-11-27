@@ -1,5 +1,34 @@
 # CHANGELOG
 
+## Unreleased development
+
+- Harden Darwin legacy task migration and evidence writes with handle-relative
+  path checks, original-byte rollback and macOS Node 22/24 coverage.
+- Detect the installed DSH Desktop package from its bounded ASAR metadata.
+  Verify benign native tool dispatch and local-model return in an isolated
+  Windows DSH CLI profile.
+- Add actionable plugin integrity errors to Workbench.
+- Measure backup storage and verify copied snapshots and referenced objects
+  from CLI, MCP and Workbench. The checks compare against the snapshot's
+  declarations. Manifest authenticity and production recovery remain open.
+- Preserve project attribution in the packed app, check package licenses and
+  lock/version metadata, and include attribution in build evidence.
+
+## [2.4.0-preview.1](https://github.com/LYL-Z/dsh-armorbreak/releases/tag/v2.4.0-preview.1)
+
+- Publish a Windows portable experience for machines with Node.js 22+, and a
+  verified npm TGZ on GitHub Releases.
+- Provide the read-only Workbench with live Core tasks, local checks, evidence
+  and Markdown reports. Add synthetic configuration and plugin lifecycle
+  interfaces for trusted integration testing.
+- Ship checksums, SPDX SBOM, notices and hosted build attestations. See the
+  [versioned release notes](docs/releases/v2.4.0-preview.1.md) for exact scope.
+
+## [2.3.1](https://github.com/LYL-Z/dsh-armorbreak/releases/tag/v2.3.1) — Stable
+
+Published after the Windows release-gate repair. The [release record](docs/releases/v2.3.1.md)
+retains the verified scope and evidence. Candidate notes below are historical.
+
 ## 2.3.1 — Windows release-gate repair (candidate)
 
 - Split V2.2 task-read and report-read diagnostics; retain redacted Windows runner and ACL/path metadata on failed drills.

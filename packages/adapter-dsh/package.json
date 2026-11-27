@@ -2,6 +2,7 @@
   "name": "@armorbreak/adapter-dsh",
   "version": "0.1.0-p1",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "description": "Thin DSH/Cordis compatibility shim; legacy plugin remains authoritative",
   "exports": "./index.js"
