@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import { execFileSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import { link, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -62,4 +63,48 @@ test('backup usage denies mutation flags, external roots and linked objects', as
   assert.equal(denied.result.isError, true)
   assert.match(denied.result.content[0].text, /multiple hard links/)
   assert.equal(await readFile(outside, 'utf8'), 'private fixture')
+})
+
+test('verification measures an exact snapshot closure and its shared objects, but grants no restore', async t => {
+  const f = await fixture(t)
+  const id = '2026-11-26T120000Z-abcd', bytes = '1234'
+  const digest = createHash('sha256').update(bytes).digest('hex')
+  const object = Buffer.alloc(40 * 1024, 0x61), objectDigest = createHash('sha256').update(object).digest('hex')
+  const expected = { schema: 2, complete: true, id, sums: { 'data.json': digest }, blobs: { 'settings/large.txt': objectDigest }, home: 'PRIVATE_HOST_DIR' }
+  const manifest = join(f.complete, 'manifest.json'), blob = join(f.objects, objectDigest)
+  await writeFile(manifest, JSON.stringify(expected))
+  await writeFile(blob, object)
+  const verify = () => f.run(f.store, { verifySnapshot: id })
+  const { result } = await verify()
+  assert.equal(result.isError, false)
+  const value = JSON.parse(result.content[0].text)
+  assert.equal(value.data.status, 'DECLARED_CONTENT_MATCH')
+  assert.equal(value.data.snapshotFiles, 1)
+  assert.equal(value.data.referencedObjects, 1)
+  assert.equal(value.data.restoreVerified, false)
+  assert.equal(value.data.manifestAuthenticated, false)
+  assert.doesNotMatch(JSON.stringify(value) + await readFile(value.reportPath, 'utf8'), /PRIVATE_HOST_DIR|data\.json/)
+
+  const output = execFileSync(process.execPath, ['packages/cli/index.js','maintenance','verify-snapshot','--root',f.store,'--snapshot',id,'--json'], {
+    encoding: 'utf8', timeout: 30000, env: { ...process.env, ARMORBREAK_WORKSPACE: f.workspace, ARMORBREAK_STATE_ROOT: join(f.root, 'verify-cli-state') },
+  })
+  assert.deepEqual(JSON.parse(output).data, value.data)
+
+  const reject = async pattern => {
+    const { result } = await verify()
+    assert.equal(result.isError, true)
+    assert.match(result.content[0].text, pattern)
+  }
+  await writeFile(blob, 'changed')
+  await reject(/object content does not match/)
+  await writeFile(blob, object)
+  await writeFile(join(f.complete, 'extra.txt'), 'extra')
+  await reject(/files differ from the declared file set/)
+  await rm(join(f.complete, 'extra.txt'))
+  await writeFile(manifest, JSON.stringify({ ...expected, blobs: {'DATA.json': objectDigest} }))
+  await reject(/declared both inline and as an object/)
+  await writeFile(manifest, JSON.stringify({ ...expected, sums: { '../outside.txt': digest } }))
+  await reject(/invalid maintenance relative path/)
+  await writeFile(manifest, JSON.stringify(expected).replace('"sums":{', `"sums":{"data.json":"${digest}",`))
+  await reject(/invalid backup manifest JSON/)
 })
