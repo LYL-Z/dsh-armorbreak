@@ -12,7 +12,7 @@ Acceptance extracts the real ZIP to a new path containing spaces, Unicode and `&
 
 With Node 22+ and npm, install a verified candidate TGZ, then run `armorbreak start --workspace "/absolute/project/path"`. On Windows, quote paths such as `"D:\My Project"`. The default browser opens the loopback Workbench. No environment variables or model credentials are needed for its file/code/dependency checks. Run **运行安全示例** for real Core evidence and a downloadable report without reading project files. Current project tasks are separate from historical host acceptance. A missing target can be corrected and retried.
 
-The home page also offers **检查 DSH 安装目录**, **核对插件完整包** and **预览配置变更**. Select an explicit Desktop Resources directory, a package directory containing `armorbreak-plugin.json`, or an ArmorBreak JSON overlay request within the authorized workspace. These actions call the existing L0 Core analyzers; the package action always verifies the full local file closure. The result is a read-only observation, not live DSH connection, trusted plugin provenance/activation, or applied configuration. No caller-supplied approval or verification options are accepted.
+In **高级** mode, choose **检查 DSH 安装目录**, **核对插件完整包** or **预览配置变更**. Select a Desktop Resources directory, a directory containing `armorbreak-plugin.json`, or an ArmorBreak JSON overlay request within the authorized workspace. The three actions call read-only Core analyzers. The package action checks the full local file closure.
 
 `--no-open` prints the URL; `--port 0` chooses an available port; `--state-root <absolute-directory>` selects Core state. Ctrl+C stops the server. DSH/model connection is not inferred from a running Workbench. The panel is still CSRF-only, with no OS authentication, L2 writes, production keys or approval issuance. A graphical installer, real DSH onboarding and independent novice-user timing are not yet verified.
 
@@ -49,12 +49,48 @@ The package includes `npm-shrinkwrap.json`, with exact runtime versions and inte
 
 ## Supported entrypoints
 
-- `dsh-armorbreak`, `/tools`, `/skills`: Node plugin modules. Actual DSH registration and host compatibility remain independently unverified.
+- `dsh-armorbreak`, `/tools`, `/skills`: Node plugin modules. An isolated Windows DSH CLI profile exercised real tool registration and benign execution. The stock Agent loop, Desktop/Web integration and production Profile lifecycle remain unverified.
 - `/client`: the browser-side DSH module loader script; importing in a plain Node process without that browser API is unsupported. Packaging acceptance imports it with a simulated loader to verify registration, not actual DSH embedding.
 - `/core`, `/engine-node`, `/cli`, `/mcp`, `/workbench`: Node API imports.
 - `/configuration-lab`, `/plugin-lifecycle`, `/plugin-lab`: dedicated trusted-host composition APIs. Their availability does not authenticate a caller or permit real host writes.
 - `/package.json`, `/locale/*.json`, `/icon`: metadata/assets; JSON is loaded as JSON, SVG read as an asset rather than executed as JavaScript.
-- npm bin `armorbreak`: the native CLI; `armorbreak-mcp`: stdio MCP; `armorbreak-workbench`: loopback Workbench. Configure `ARMORBREAK_STATE_ROOT`, `ARMORBREAK_WORKSPACE` and the principal before CLI/MCP use. Workbench native mode requires `--workspace <absolute> --state-root <absolute>`; choose its port explicitly when needed.
+- npm bin `armorbreak` runs the CLI, `armorbreak-mcp` starts stdio MCP, and `armorbreak-workbench` starts the loopback Workbench. Scoped CLI/MCP calls require workspace and state configuration. The direct `armorbreak-workbench` entry accepts both `--workspace` and `--state-root` to enable Core access.
+
+### List the installed capabilities
+
+From the directory where you installed the package, choose your workspace
+and a writable state directory. With POSIX shell syntax:
+
+```sh
+export ARMORBREAK_WORKSPACE="$(pwd)"
+export ARMORBREAK_STATE_ROOT="$(pwd)/armorbreak-local-state"
+npx --no-install armorbreak capabilities --json
+```
+
+In PowerShell:
+
+```powershell
+$env:ARMORBREAK_WORKSPACE = $PWD.Path
+$env:ARMORBREAK_STATE_ROOT = Join-Path $PWD.Path 'armorbreak-local-state'
+npx --no-install armorbreak capabilities --json
+```
+
+### Side-by-side upgrade and switch back
+
+Install each verified TGZ in its own directory. Back up your workspace and
+state before switching builds. Stop the running Workbench, then start from
+the new installation with the same absolute data paths:
+
+```sh
+npx --no-install armorbreak start --workspace "/absolute/project" --state-root "/absolute/armorbreak-state"
+```
+
+Check a report before retiring the older installation. To switch back, stop
+the new process and start from the older install with the same paths. This
+procedure preserved task reports and evidence when tested between two
+development builds. Other release pairs and copying state to new absolute
+paths require their own acceptance. The Windows portable launcher uses its
+own `workspace` and `state` folders by default.
 
 Configuration `config stage/status` can run in the standalone CLI; `config apply/revert` require a trusted host-injected one-use approval provider and act only on fresh sealed synthetic labs. No terminal flag, MCP request or local panel issues approval. Package acceptance checks actual installed YAML conversion and approved synthetic apply/restore, preserving original bytes. It never writes to a real DSH installation.
 
