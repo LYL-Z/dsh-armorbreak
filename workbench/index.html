@@ -52,6 +52,9 @@
             <label for="product-target">项目内的文件或目录</label>
             <input id="product-target" required maxlength="2048" autocomplete="off" placeholder="例如：src 或 ." />
             <small>只读取当前工作区。输入 . 表示项目目录；文件检查需要具体文件名。</small>
+            <label id="product-snapshot-label" for="product-snapshot" hidden>快照编号（可选）</label>
+            <input id="product-snapshot" hidden disabled maxlength="80" autocomplete="off" spellcheck="false" aria-describedby="product-snapshot-help" />
+            <small id="product-snapshot-help" hidden>填写 backups 内的快照目录名以核对内容。留空则只检查占用。</small>
             <button id="product-run" class="primary" type="submit" disabled>开始检查</button>
           </form>
         </section>

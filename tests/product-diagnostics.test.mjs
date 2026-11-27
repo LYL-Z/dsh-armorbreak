@@ -74,3 +74,53 @@ test('HTTP Workbench diagnostics produce task evidence and report; caller cannot
   await writeFile(f.pluginFile,'inert sample\r\n')
   assert.equal((await request('run',{action:'plugin-closure',target:'plugin'})).status,200)
 })
+
+test('HTTP Workbench verifies a backup snapshot and gives actionable feedback without revealing file details', async t => {
+  const f = await fixture(t)
+  const snapshotId = '2026-11-26T120000Z-abcd'
+  const target = 'backup-copy'
+  const directory = join(f.workspace, target, 'backups', snapshotId)
+  const file = join(directory, 'private-fixture.txt')
+  const original = Buffer.from('inert backup bytes\r\n')
+  const digest = createHash('sha256').update(original).digest('hex')
+  await mkdir(directory, { recursive: true })
+  await writeFile(file, original)
+  await writeFile(join(directory, 'manifest.json'), JSON.stringify({
+    schema: 1, id: snapshotId, complete: true, sums: { 'private-fixture.txt': digest },
+  }))
+  const server = await createWorkbenchServer({ native: { workspaceId: f.workspace, stateRoot: join(f.root, 'backup-http-state') } })
+  t.after(() => server.close())
+  const session = await (await fetch(server.url + '/api/native/session')).json()
+  const headers = { 'content-type': 'application/json', 'x-armorbreak-session': session.csrf }
+  const run = input => fetch(server.url + '/api/product/run', { method: 'POST', headers, body: JSON.stringify(input) })
+  const request = { action: 'backup-usage', target, snapshotId }
+  for (const invalid of [{ ...request, action: 'host-health' }, { ...request, options: { verifySnapshot: false } }]) {
+    assert.equal((await run(invalid)).status, 400)
+  }
+  const invalidId = await run({ ...request, snapshotId: 'not-a-snapshot' })
+  assert.equal(invalidId.status, 400)
+  assert.match((await invalidId.json()).detail, /完整快照目录名/)
+  const missing = await run({ ...request, snapshotId: '2026-11-26T120001Z-abcd' })
+  assert.equal(missing.status, 400)
+  assert.match((await missing.json()).detail, /未找到该快照的清单/)
+  const success = async () => {
+    const response = await run(request)
+    assert.equal(response.status, 200)
+    const result = await response.json()
+    assert.equal(result.data.status, 'DECLARED_CONTENT_MATCH')
+    assert.equal(result.data.snapshotFiles, 1)
+    assert.equal(result.data.restoreVerified, false)
+    assert.equal(result.hostModified, false)
+    assert.ok(result.evidenceIds.length && result.reportAvailable)
+    assert.deepEqual(await readFile(file), original)
+  }
+  await success()
+  await writeFile(file, 'changed fixture')
+  const drift = await run(request)
+  assert.equal(drift.status, 400)
+  const failure = await drift.json()
+  assert.match(failure.detail, /快照内容与清单不一致/)
+  assert.doesNotMatch(JSON.stringify(failure), /private-fixture\.txt|changed fixture|[a-f0-9]{64}/)
+  await writeFile(file, original)
+  await success()
+})

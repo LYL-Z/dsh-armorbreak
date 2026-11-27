@@ -3,6 +3,7 @@ import { resolve, basename } from 'node:path'
 import { randomUUID } from 'node:crypto'
 import { PRODUCT_VERSION } from '../lib/core/productVersion.js'
 import { getWorkflow } from '../lib/core/workflows.js'
+import { isBackupSnapshotId } from '../lib/integrations/backupSnapshotVerification.js'
 const ACTIONS=Object.freeze([
  {id:'file-integrity',capability:'forensics.hash',title:'检查文件完整性',description:'计算文件摘要，检查文件大小与类型，生成可下载的报告。',targetKind:'file',placeholder:'例如：downloads/package.tgz'},
  {id:'project-review',capability:'sast.scan',title:'检查项目代码',description:'离线查找危险代码模式。结果是排查线索，需要结合代码确认。',targetKind:'directory',placeholder:'例如：src 或 .'},
@@ -13,7 +14,7 @@ const ACTIONS=Object.freeze([
  {id:'host-health',capability:'host.health',title:'检查 DSH 安装目录',description:'选择当前工作区内的 Desktop Resources 目录，只读识别磁盘包与版本，不代表宿主或模型已连接。',targetKind:'directory',targetLabel:'Resources 目录',explicitTarget:true,placeholder:'例如：DeepSeek Harness/resources'},
  {id:'plugin-closure',capability:'plugin.verify',title:'核对插件完整包',description:'选择含 armorbreak-plugin.json 的目录，校验声明的全部文件及额外文件；不安装、启用或认证来源。',targetKind:'directory',targetLabel:'插件包目录',explicitTarget:true,placeholder:'例如：my-plugin',runOptions:Object.freeze({closure:true})},
  {id:'configuration-preview',capability:'configuration.preview',title:'预览配置变更',description:'读取 ArmorBreak JSON 配置层叠请求，汇总变更和冲突，不展示配置值、不写入宿主。',targetKind:'file',targetLabel:'配置请求文件',explicitTarget:true,placeholder:'例如：overlay.json'},
- {id:'backup-usage',capability:'maintenance.backup_usage',title:'查看备份占用',description:'统计备份副本中的快照与对象，帮助判断存储占用。',targetKind:'directory',targetLabel:'备份副本目录',explicitTarget:true,placeholder:'例如：backup-copy'},
+ {id:'backup-usage',capability:'maintenance.backup_usage',title:'检查备份副本',description:'查看备份占用，也可以按快照编号核对文件内容。',targetKind:'directory',targetLabel:'备份副本目录',explicitTarget:true,placeholder:'例如：backup-copy',acceptsSnapshotId:true},
 ])
 function available(action,caps){return action.workflow?getWorkflow(action.workflow).steps.every(s=>caps.some(c=>c.id===s.capabilityId&&c.riskLevel==='L0')):caps.some(c=>c.id===action.capability&&c.riskLevel==='L0')}
 export function createProductApi({engine,ctx,exampleCtx,exampleFile}){
@@ -31,12 +32,18 @@ export function createProductApi({engine,ctx,exampleCtx,exampleFile}){
     unavailable:[{id:'host-install',title:'安装到 DSH 宿主',reason:'真实宿主适配与可信身份尚未验收'}, {id:'plugin-activation',title:'启用宿主插件',reason:'隔离文件事务不等于真实加载'}, {id:'configuration-write',title:'应用宿主配置',reason:'本地网页不签发写入批准'}]}
   },
   async run(input){
-   if(!input||Array.isArray(input)||Object.keys(input).some(k=>!['action','target'].includes(k))||typeof input.target!=='string'||!input.target.trim()||input.target.length>2048)throw new Error('PRODUCT_INVALID_REQUEST')
+   if(!input||Array.isArray(input)||Object.keys(input).some(k=>!['action','target','snapshotId'].includes(k))||typeof input.target!=='string'||!input.target.trim()||input.target.length>2048)throw new Error('PRODUCT_INVALID_REQUEST')
    const action=ACTIONS.find(a=>a.id===input.action);if(!action||!available(action,await engine.capabilities(ctx)))throw new Error('PRODUCT_ACTION_UNAVAILABLE')
+   const hasSnapshot = Object.hasOwn(input, 'snapshotId')
+   if (hasSnapshot && !action.acceptsSnapshotId) throw new Error('PRODUCT_INVALID_REQUEST')
+   if (hasSnapshot && !isBackupSnapshotId(input.snapshotId)) {
+    throw Object.assign(new Error('PRODUCT_INVALID_SNAPSHOT_ID'), { code: 'PRODUCT_INVALID_SNAPSHOT_ID' })
+   }
    const target=resolve(ctx.workspaceId,input.target)
    if(action.workflow)return engine.startWorkflow({...ctx,requestId:randomUUID(),traceId:randomUUID()},{workflow:action.workflow,target})
    // Core performs lexical AND canonical workspace/identity checks; no HTTP principal is accepted.
-   return engine.analyze({...ctx,requestId:randomUUID(),traceId:randomUUID()},{capability:action.capability,target,...(action.runOptions?{options:action.runOptions}:{})})
+   const options = hasSnapshot ? { verifySnapshot: input.snapshotId } : action.runOptions
+   return engine.analyze({...ctx,requestId:randomUUID(),traceId:randomUUID()},{capability:action.capability,target,...(options?{options}:{})})
   },
   async example(input){
    if(!exampleCtx||!input||Array.isArray(input)||Object.keys(input).length)throw new Error('PRODUCT_EXAMPLE_UNAVAILABLE')

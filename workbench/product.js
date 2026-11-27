@@ -14,6 +14,7 @@
     el('product-example').disabled = running || !catalog?.exampleAvailable
     el('product-run').disabled = running || !selected
     el('product-target').disabled=running
+    el('product-snapshot').disabled=running || !selected?.acceptsSnapshotId
     for(const button of el('product-actions').querySelectorAll('[data-action]'))button.disabled=running
   }
   function actions() {
@@ -28,6 +29,8 @@
       el('product-description').textContent = selected.description
       el('product-target').placeholder = selected.placeholder
       el('product-target').value = selected.targetKind==='directory'&&!selected.explicitTarget?'.':''
+      for (const id of ['product-snapshot-label','product-snapshot','product-snapshot-help']) el(id).hidden = !selected.acceptsSnapshotId
+      el('product-snapshot').value = ''
       actions();availability();el('product-target').focus()
     })
   }
@@ -53,6 +56,9 @@
     } catch { el('product-tasks').textContent='未能加载任务，请点击“刷新任务”重试。' }
   }
   function diagnosticSummary(data) {
+    if(data?.schema==='armorbreak.backup-snapshot-verification/v1'){
+      return '<h4>快照内容与清单一致</h4><p>已核对 '+escape(data.snapshotFiles)+' 个快照文件和 '+escape(data.referencedObjects)+' 个对象。清单来源与恢复能力仍待验证。</p>'
+    }
     if(data?.schema==='armorbreak.backup-usage/v1'){
       const bytes=new Intl.NumberFormat('zh-CN',{maximumFractionDigits:1,style:'unit',unit:'megabyte'}).format(data.bytes/1_000_000)
       return '<h4>备份占用</h4><p>'+escape(data.count)+' 份清单标明完成的快照，'+escape(data.objectFiles)+' 个对象文件，共 '+escape(bytes)+'（'+escape(data.bytes)+' 字节）。'+escape(data.unconfirmedSnapshots)+' 份快照缺少有效完成标记。此检查仅测量体积，恢复能力待验证。</p>'
@@ -77,7 +83,10 @@
     el('product-example').textContent=example?'正在检查…':'运行安全示例'
     el('product-run').textContent=example?'开始检查':'正在检查…'
     try {
-      const result=await request(example?'example':'run',example?{}:{action:selected.id,target:el('product-target').value})
+      const snapshotId=el('product-snapshot').value.trim()
+      const input=example?{}:{action:selected.id,target:el('product-target').value}
+      if (!example && selected.acceptsSnapshotId && snapshotId) input.snapshotId = snapshotId
+      const result=await request(example?'example':'run',input)
       const complete=result.state==='COMPLETED'
       el('product-feedback').textContent=complete?`检查完成，用时 ${result.durationMs} ms。已记录 ${result.evidenceIds.length} 条证据。`:`任务状态：${result.state}。请查看报告中的原因。`
       el('product-feedback').className=complete?'feedback success':'feedback error'

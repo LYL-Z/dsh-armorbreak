@@ -113,6 +113,12 @@ try {
  await writeFile(manifest,JSON.stringify({schema:2,id:snapshotId,complete:true,sums:{'document.txt':digest},blobs:{'object-only.txt':digest}}))
  const verification=cli('maintenance','verify-snapshot','--root',backupRoot,'--snapshot',snapshotId)
  assert.equal(verification.state,'COMPLETED');assert.equal(verification.data.status,'DECLARED_CONTENT_MATCH');assert.equal(verification.data.referencedObjects,1);assert.equal(verification.data.restoreVerified,false)
+ const installedBrowserApi=await fetch(server.url+'/api/product/run',{method:'POST',headers,body:JSON.stringify({action:'backup-usage',target:'backup-copy',snapshotId})})
+ assert.equal(installedBrowserApi.status,200)
+ const snapshotResult=await installedBrowserApi.json()
+ assert.equal(snapshotResult.data.status,'DECLARED_CONTENT_MATCH')
+ assert.equal(snapshotResult.data.restoreVerified,false)
+ assert.ok(snapshotResult.reportAvailable&&snapshotResult.evidenceIds.length)
 } finally {await server.close()}
 let pluginStore='NOT_DECLARED_IN_THIS_PACKAGE'
 if(pkg.exports['./isolated-plugin-store']){
