@@ -12,7 +12,7 @@ const runtimeRoots = new Set(['lib', 'packages', 'plugins', 'skills', 'locale', 
 const allowed = new Set([...attributionFiles, 'package.json', 'npm-shrinkwrap.json', 'index.js', 'tools.js',
   'skills.js', 'client.js', 'cordis.patch.yml', 'icon.svg', 'README.md', 'README.zh-CN.md',
   'CHANGELOG.md', 'SECURITY.md', 'CONTRIBUTING.md', 'AUTHORS.md', 'GOVERNANCE.md', 'SUPPORT.md',
-  'TRADEMARK.md', 'ETHICAL_USE.md', 'ROADMAP.md', 'docs/v24/distribution.md'])
+  'TRADEMARK.md', 'ETHICAL_USE.md', 'docs/v24/distribution.md'])
 const licenseSha = 'e53a4f3c04d8f629aba65a67842952bd42fe4dc3104526d643b5150df01d2da6'
 const hash = bytes => createHash('sha256').update(bytes).digest('hex')
 

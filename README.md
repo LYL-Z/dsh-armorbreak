@@ -34,7 +34,7 @@ Run `armorbreak capabilities --json` to see the capabilities registered by your 
 
 The local Workbench can run read-only tasks without model credentials. Its browser session uses CSRF protection. OS client authentication, production host writes and privileged approvals are unavailable through the panel. An isolated Windows DSH CLI test verified benign native tool execution and a local-model round trip. Desktop/Web integration and production recovery remain under development.
 
-- [Distribution and verification](docs/v24/distribution.md) · [Historical release evidence](docs/readme-audit/v2.2.0-release-facts.md)
+- [Distribution and verification](docs/v24/distribution.md) · [Historical release evidence](https://github.com/LYL-Z/dsh-armorbreak/blob/3919c686271a9b54ab937070e7b547935f4de0ba/docs/readme-audit/v2.2.0-release-facts.md)
 - [Get support](SUPPORT.md) · [Report a security issue](SECURITY.md) · [Authorized use](ETHICAL_USE.md)
-- [Contribute](CONTRIBUTING.md) · [Governance](GOVERNANCE.md) · [Roadmap](ROADMAP.md)
+- [Contribute](CONTRIBUTING.md) · [Governance](GOVERNANCE.md) · [Roadmap](https://github.com/LYL-Z/dsh-armorbreak/blob/main/docs/roadmap.md)
 - [MIT License](LICENSE) · [Attribution](NOTICE) · [Third-party notices](THIRD_PARTY_NOTICES.txt) · [Project identity](TRADEMARK.md)

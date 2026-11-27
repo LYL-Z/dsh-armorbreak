@@ -34,7 +34,7 @@ npx --no-install armorbreak start --workspace /absolute/project
 
 本地 Workbench 无需模型凭据即可运行只读任务。浏览器会话提供 CSRF 防护，面板尚未接入 OS 客户端身份、生产宿主写入或特权审批。Windows 上已用隔离 DSH CLI 验证无害的原生工具执行与本机模型结果回传。Desktop/Web 集成和生产恢复仍在开发。
 
-- [安装与校验](docs/v24/distribution.md) · [历史发行证据](docs/readme-audit/v2.2.0-release-facts.md)
+- [安装与校验](docs/v24/distribution.md) · [历史发行证据](https://github.com/LYL-Z/dsh-armorbreak/blob/3919c686271a9b54ab937070e7b547935f4de0ba/docs/readme-audit/v2.2.0-release-facts.md)
 - [获取帮助](SUPPORT.md) · [安全问题报告](SECURITY.md) · [授权使用](ETHICAL_USE.md)
-- [参与贡献](CONTRIBUTING.md) · [治理](GOVERNANCE.md) · [路线图](ROADMAP.md)
+- [参与贡献](CONTRIBUTING.md) · [治理](GOVERNANCE.md) · [路线图](https://github.com/LYL-Z/dsh-armorbreak/blob/main/docs/roadmap.md)
 - [MIT 许可](LICENSE) · [来源署名](NOTICE) · [第三方通知](THIRD_PARTY_NOTICES.txt) · [项目标识](TRADEMARK.md)
