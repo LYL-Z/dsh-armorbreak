@@ -418,16 +418,21 @@ export class ExecutionRunner {
         if (read.truncated) env.targetTruncated = true
         return read.buffer
       }
-      if (['host.health', 'host.diagnostics'].includes(capability.id)) {
-        env.inspectHostArchive = (absPath, inspect) => readBoundedRanges(absPath, 8 * 1024 * 1024 + 2 * 65536 + 16, {
+      if (['host.health', 'host.diagnostics', 'maintenance.backup_usage'].includes(capability.id)) {
+        const inspectScopedFile = (absPath, budget, inspect) => readBoundedRanges(absPath, budget, {
           authorize: async (file) => {
             if (controller.signal.aborted) throw new ExecutionError('CANCELLED', 'execution cancelled')
             if ((!isPathInside(root, file) && !isPathInside(realRoot, file)) || !isPathInside(realRoot, realpathOf(file))) {
-              throw new PolicyDeniedError('PATH_ESCAPE', 'host archive escapes the analyzed directory')
+              throw new PolicyDeniedError('PATH_ESCAPE', 'inspection path escapes the analyzed directory')
             }
             return ctx.scope.checkFile({ taskId: task.id, targetPath: file, workspaceRoot: task.workspace })
           },
         }, inspect)
+        if (capability.id === 'maintenance.backup_usage') {
+          env.measureBackupFile = absPath => inspectScopedFile(absPath, 0, ({ size }) => size)
+        } else {
+          env.inspectHostArchive = (absPath, inspect) => inspectScopedFile(absPath, 8 * 1024 * 1024 + 2 * 65536 + 16, inspect)
+        }
       }
     }
     return {

@@ -34,11 +34,11 @@ await mkdir(workspace)
 await writeFile(join(workspace, 'inert.txt'), 'package acceptance fixture\n')
 const env = { ...process.env, ARMORBREAK_WORKSPACE: workspace, ARMORBREAK_STATE_ROOT: stateRoot, ARMORBREAK_PRINCIPAL_ID: 'installed-test' }
 const cli = (...args) => JSON.parse(execFileSync(process.execPath, [join(root, pkg.bin.armorbreak), ...args, '--json'], { env, encoding: 'utf8', timeout: 30000 }))
-assert.equal(cli('capabilities').length, 61)
+assert.equal(cli('capabilities').length, 62)
 assert.equal(cli('doctor').version,pkg.version)
 const npm=process.env.ARMORBREAK_ACCEPTANCE_NPM_CLI
 assert.ok(npm)
-assert.equal(JSON.parse(execFileSync(process.execPath,[npm,'exec','--offline','--no','--','armorbreak','capabilities','--json'],{env,encoding:'utf8',timeout:30000})).length,61)
+assert.equal(JSON.parse(execFileSync(process.execPath,[npm,'exec','--offline','--no','--','armorbreak','capabilities','--json'],{env,encoding:'utf8',timeout:30000})).length,62)
 const hash = cli('analyze','--capability','forensics.hash','--target',join(workspace,'inert.txt')); assert.equal(hash.state, 'COMPLETED')
 const combined=cli('workflow','start','--workflow','ForensicFileReview','--target',join(workspace,'inert.txt'));assert.equal(combined.state,'COMPLETED');assert.equal(combined.data.steps.length,6);assert.ok(combined.data.steps.every(s=>s.status==='DONE'))
 const bundle = { schema: 'armorbreak.configuration-lab-request/v1', configuration: { schema: 'armorbreak.configuration-import/v1', format: 'yaml', source: '# installed YAML comment\r\nvalue: "old" # preserve this note\r\nfuture: false\r\n' }, overlays: [{ id: 'inert', values: { value: 'new' } }], conflictPolicy: 'last-wins' }
@@ -103,6 +103,8 @@ try {
  const plugin=await runDiagnostic('plugin-closure','diagnostic-plugin');assert.equal(plugin.verificationStatus,'LOCAL_PACKAGE_CLOSURE_VERIFIED');assert.equal(plugin.plugins[0].activationAuthorized,false)
  await writeFile(join(workspace,'diagnostic-overlay.json'),JSON.stringify({schema:'armorbreak.config-overlay/v1',base:{apiPin:'TEST_PRIVATE_VALUE'},overlays:[]}))
  const config=await runDiagnostic('configuration-preview','diagnostic-overlay.json');assert.equal(config.applied,false);assert.doesNotMatch(JSON.stringify(config),/apiPin|TEST_PRIVATE_VALUE/)
+ const backup=join(workspace,'backup-copy','backups','2026-11-26T120000Z-abcd');await mkdir(backup,{recursive:true});await writeFile(join(backup,'manifest.json'),'{"complete":true}')
+ const usage=await runDiagnostic('backup-usage','backup-copy');assert.equal(usage.count,1);assert.equal(usage.bytes,17);assert.equal(usage.restoreVerified,false)
 } finally {await server.close()}
 let pluginStore='NOT_DECLARED_IN_THIS_PACKAGE'
 if(pkg.exports['./isolated-plugin-store']){

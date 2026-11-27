@@ -53,6 +53,10 @@
     } catch { el('product-tasks').textContent='未能加载任务，请点击“刷新任务”重试。' }
   }
   function diagnosticSummary(data) {
+    if(data?.schema==='armorbreak.backup-usage/v1'){
+      const bytes=new Intl.NumberFormat('zh-CN',{maximumFractionDigits:1,style:'unit',unit:'megabyte'}).format(data.bytes/1_000_000)
+      return '<h4>备份占用</h4><p>'+escape(data.count)+' 份清单标明完成的快照，'+escape(data.objectFiles)+' 个对象文件，共 '+escape(bytes)+'（'+escape(data.bytes)+' 字节）。'+escape(data.unconfirmedSnapshots)+' 份快照缺少有效完成标记。此检查仅测量体积，恢复能力待验证。</p>'
+    }
     if(data?.schema==='armorbreak.host-health/v1'){
       const observed=data.observation==='DETECTED_ON_DISK'?'检测到磁盘包':'未确认磁盘包'
       return '<h4>宿主检查</h4><p>'+observed+' · 版本：'+escape(data.identity?.version??'未知')+'。未验证正在运行的宿主或模型连接。</p>'
