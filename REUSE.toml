@@ -8,6 +8,12 @@ SPDX-FileCopyrightText = "2026 LYL-Z"
 SPDX-License-Identifier = "MIT"
 
 [[annotations]]
+path = "docs/media/workbench-guided-v24.png"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 LYL-Z"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
 path = "CODE_OF_CONDUCT.md"
 precedence = "aggregate"
 SPDX-FileCopyrightText = ["Contributor Covenant contributors", "2026 LYL-Z (adaptation)"]

@@ -17,6 +17,8 @@ async function fixture(t){
 test('first real example produces current task, evidence and downloadable report without a host/model or project writes',async t=>{
  const f=await fixture(t),before=await readFile(join(f.workspace,'hello.txt')),catalog=await(await f.request('catalog')).json()
  assert.equal(catalog.hostConnection,'NOT_CONNECTED');assert.equal(catalog.authentication,'NONE');assert.equal(catalog.actions.length,10)
+ assert.deepEqual(catalog.actions.filter(action=>action.guided).map(action=>action.id),['file-integrity','project-review','dependency-review','backup-usage'])
+ assert.ok(catalog.actions.every(action=>action.permission==='L0_READ_ONLY'))
  const response=await f.request('example',{});assert.equal(response.status,200);const result=await response.json()
  assert.equal(result.state,'COMPLETED');assert.ok(result.data.digests.sha256&&result.taskId&&result.evidenceIds.length&&result.reportAvailable);assert.ok(result.durationMs>=0)
  const tasks=await(await f.request('tasks')).json();assert.ok(tasks.some(t=>t.taskId===result.taskId&&t.scope==='example'&&t.state==='COMPLETED'))

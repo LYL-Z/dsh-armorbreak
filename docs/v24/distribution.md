@@ -74,6 +74,14 @@ For a stable copy with ordinary files, use `armorbreak maintenance verify-snapsh
 
 In Workbench, select **检查备份副本**, enter the copy's path relative to your workspace, and paste the snapshot directory name from `backups` into **快照编号**. Leave the snapshot field blank to see a storage summary. Completed checks are available in the task history and Markdown report.
 
+Workbench starts in **新手** (guided) mode with the safe example, common
+file and project checks, backup checks, and task reports. Choose **高级**
+(advanced) to show the full catalog, raw result details and diagnostics.
+Both modes use the same read-only Core. Mode selection only changes the
+interface and can be remembered on reload for the same browser origin.
+
+### Synthetic recovery rehearsal
+
 Trusted Node hosts can rehearse recovery using `planSyntheticBackupRecovery`
 from `dsh-armorbreak/backup-recovery-lab`. Supply the snapshot ID, manifest
 JSON, inline and object buffers, matching per-file seed strings, operator
@@ -83,6 +91,15 @@ the snapshot against its manifest, and returns a plan. Apply and rollback
 each require a separate `allowed-once` approval provided by the trusted host.
 This API rehearses byte recovery in isolation. Host paths, live profiles
 and browser approvals are outside its contract.
+
+### Package evidence
+
+Actual npm validation checks the project LICENSE and NOTICE, REUSE metadata,
+third-party notices, private package declarations and the shrinkwrap.
+The build record contains attribution file SHA-256 values and declared
+internal package licenses. The SPDX SBOM includes the archive SHA-256,
+per-file hashes and the SPDX package verification code. These checks cover
+artifact content. File-specific rights for upstream material remain under review.
 
 The npm `files` allowlist contains the runtime directories and selected public metadata/documentation. Historical acceptance records, tests, binary fixtures, Git metadata, `.armorbreak` state, release scripts, private keys and development `node_modules` are not distributed. Acceptance audits the actual packed/installed members and key material, rather than a dry-run count alone.
 

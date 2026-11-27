@@ -2,7 +2,8 @@
 (() => {
   const el = id => document.getElementById(id)
   const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
-  let session, catalog, selected, running = false
+  let session, catalog, selected, running = false, advanced = false
+  const modeKey = 'armorbreak.workbench.mode'
   const headers = () => ({'content-type':'application/json','x-armorbreak-session':session.csrf})
   async function request(path, input) {
     const response = await fetch('/api/product/'+path, {headers:headers(), ...(input === undefined ? {} : {method:'POST',body:JSON.stringify(input)})})
@@ -15,22 +16,45 @@
     el('product-run').disabled = running || !selected
     el('product-target').disabled=running
     el('product-snapshot').disabled=running || !selected?.acceptsSnapshotId
+    el('workbench-mode').disabled=running
     for(const button of el('product-actions').querySelectorAll('[data-action]'))button.disabled=running
   }
+  function selectAction(action) {
+    selected = action
+    el('composer-title').textContent = selected?.title ?? '检查目标'
+    el('product-description').textContent = selected?.description ?? '选择一项检查，或运行上方示例。'
+    el('product-target').placeholder = selected?.placeholder ?? '例如：src 或 .'
+    el('product-target').value = selected?.targetKind==='directory'&&!selected.explicitTarget?'.':''
+    for (const id of ['product-snapshot-label','product-snapshot','product-snapshot-help']) el(id).hidden = !selected?.acceptsSnapshotId
+    el('product-snapshot').value = ''
+  }
+  function setMode(value) {
+    advanced = value === 'advanced'
+    el('workbench-mode').value = advanced ? 'advanced' : 'guided'
+    for (const item of document.querySelectorAll('[data-advanced]')) item.hidden = !advanced
+    if (document.querySelector('.tab.active')?.hidden) window.activateWorkbenchTab('home')
+    if (!advanced && selected && !selected.guided) selectAction(undefined)
+    if (catalog) actions()
+    availability()
+  }
+  window.initializeWorkbenchMode = () => {
+    let preference
+    try { preference = localStorage.getItem(modeKey) } catch {}
+    setMode(preference)
+  }
+  el('workbench-mode').addEventListener('change', event => {
+    if (running) return
+    setMode(event.target.value)
+    try { localStorage.setItem(modeKey, event.target.value) } catch {}
+  })
   function actions() {
     const query = el('product-search').value.trim().toLowerCase()
-    const visible = catalog.actions.filter(a => (a.title+' '+a.description).toLowerCase().includes(query))
+    const visible = catalog.actions.filter(a => (advanced || a.guided) && (a.title+' '+a.description).toLowerCase().includes(query))
     el('product-actions').innerHTML = visible.length ? visible.map(a => `<button type="button" class="action-option ${selected?.id===a.id?'selected':''}" data-action="${escape(a.id)}" aria-pressed="${selected?.id===a.id}"><strong>${escape(a.title)}</strong><span>${escape(a.description)}</span><small>只读 · ${escape(a.targetLabel??(a.targetKind==='file'?'单个文件':'项目目录'))}</small></button>`).join('') : '<p>没有匹配的功能。试试“文件”“代码”“宿主”“插件”或“配置”。</p>'
     for(const button of el('product-actions').querySelectorAll('[data-action]'))button.disabled=running
     for (const button of el('product-actions').querySelectorAll('[data-action]')) button.addEventListener('click', () => {
       if(running)return
-      selected = catalog.actions.find(a => a.id===button.dataset.action)
-      el('composer-title').textContent = selected.title
-      el('product-description').textContent = selected.description
-      el('product-target').placeholder = selected.placeholder
-      el('product-target').value = selected.targetKind==='directory'&&!selected.explicitTarget?'.':''
-      for (const id of ['product-snapshot-label','product-snapshot','product-snapshot-help']) el(id).hidden = !selected.acceptsSnapshotId
-      el('product-snapshot').value = ''
+      selectAction(catalog.actions.find(a => a.id===button.dataset.action))
       actions();availability();el('product-target').focus()
     })
   }
@@ -94,6 +118,9 @@
       const steps=result.data?.workflowId&&Array.isArray(result.data.steps)?result.data.steps:null
       const workflowSummary=steps?`<p>完成 ${steps.filter(s=>s.status==='DONE').length} / ${steps.length} 项分析；记录 ${escape(result.data.findings)} 条待核对发现。</p><ol>${steps.map(s=>`<li><strong>${escape(s.title)}</strong> · ${escape(s.status)}${s.summary?`<p>${escape(s.summary)}</p>`:''}</li>`).join('')}</ol>`:''
       el('product-result').innerHTML=`<h3>${complete?'结果已保存':'检查未完成'}</h3><p>${example?'分析的是内置文本，没有读取你的项目文件。':'项目输入未被修改。此结果只覆盖所选能力的实际检查范围。'}</p>${digest?`<dl><dt>SHA-256</dt><dd><code>${escape(digest)}</code></dd></dl>`:''}<p>任务 <code>${escape(result.taskId)}</code></p>${result.reportAvailable?`<div class="task-actions"><button type="button" data-report="${escape(result.taskId)}">查看报告</button><button type="button" data-download="${escape(result.taskId)}">下载 Markdown</button></div>`:''}<details><summary>查看原始结果</summary><pre>${escape(JSON.stringify(result.data,null,2))}</pre></details>`
+      const raw = el('product-result').querySelector('details')
+      raw.dataset.advanced = ''
+      raw.hidden = !advanced
       const diagnostic=diagnosticSummary(result.data)
       if(diagnostic)el('product-result').insertAdjacentHTML('beforeend',diagnostic)
       if(workflowSummary)el('product-result').insertAdjacentHTML('beforeend',workflowSummary)

@@ -85,7 +85,8 @@
     "SUPPORT.md",
     "TRADEMARK.md",
     "ETHICAL_USE.md",
-    "docs/v24/distribution.md"
+    "docs/v24/distribution.md",
+    "docs/media/workbench-guided-v24.png"
   ],
   "bin": {
     "armorbreak": "./packages/cli/index.js",
