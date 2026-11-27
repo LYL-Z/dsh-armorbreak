@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict'
 import childProcess from 'node:child_process'
+import { randomUUID } from 'node:crypto'
+import { once } from 'node:events'
 import fs, { linkSync, lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { syncBuiltinESMExports } from 'node:module'
+import { createServer } from 'node:net'
 import { join } from 'node:path'
 import test from 'node:test'
 import { Worker } from 'node:worker_threads'
@@ -161,7 +164,66 @@ test('safe evidence replacement does not follow a parent swap at the final repla
   }
 })
 
-test('safe evidence parent handle blocks or contains a concurrent rename during replacement', async () => {
+test('native evidence writer distinguishes helper timeout, startup failure, termination, refusal and invalid response', {
+  skip: !['win32', 'darwin'].includes(process.platform),
+}, () => {
+  const root = fixture()
+  const originalSpawnSync = childProcess.spawnSync
+  const cases = [
+    [{ error: { code: 'ETIMEDOUT' } }, /helper timed out/],
+    [{ error: { code: 'ENOENT' } }, /helper could not run \(ENOENT\)/],
+    [{ status: null, signal: 'SIGTERM' }, /helper exited on signal SIGTERM/],
+    [{ status: 1 }, /helper refused the write/],
+    [{ status: 0, stdout: 'unexpected response' }, /helper did not confirm the write/],
+  ]
+  try {
+    for (const [response, diagnostic] of cases) {
+      childProcess.spawnSync = () => response
+      syncBuiltinESMExports()
+      assert.throws(() => writeSafeRepoFile(root, 'docs/v2/acceptance/result.json', 'evidence'), (error) => {
+        assert.equal(error.code, 'EVIDENCE_PATH_UNSAFE')
+        assert.match(error.message, diagnostic)
+        return true
+      })
+      assert.deepEqual(readdirSync(join(root, 'docs/v2/acceptance')), [])
+    }
+  } finally {
+    childProcess.spawnSync = originalSpawnSync
+    syncBuiltinESMExports()
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+async function listenForNativeCheckpoint(token, notify) {
+  const sockets = new Set()
+  const server = createServer((socket) => {
+    sockets.add(socket)
+    socket.on('error', () => socket.destroy())
+    socket.on('close', () => sockets.delete(socket))
+    socket.setTimeout(15000, () => socket.destroy())
+    socket.setEncoding('utf8')
+
+    let notice = ''
+    socket.on('data', (chunk) => {
+      notice += chunk
+      if (notice.length > 512) return socket.destroy()
+      if (!notice.endsWith('\n')) return
+      if (!notice.startsWith(`${token} `)) return socket.destroy()
+      notify({ status: 'opened', temporaryName: notice.slice(token.length + 1, -1), release: () => socket.end('1') })
+    })
+  })
+  server.listen(0, '127.0.0.1')
+  await once(server, 'listening')
+  return {
+    port: server.address().port,
+    close: () => {
+      for (const socket of sockets) socket.destroy()
+      return new Promise((resolve) => server.close(resolve))
+    },
+  }
+}
+
+test('safe evidence parent handle blocks or contains a concurrent rename during replacement', { timeout: 75000 }, async () => {
   const root = fixture()
   const acceptance = join(root, 'docs/v2/acceptance')
   const held = join(root, 'docs/v2/acceptance-held')
@@ -170,38 +232,61 @@ test('safe evidence parent handle blocks or contains a concurrent rename during 
   mkdirSync(outside)
   writeFileSync(outsideTarget, 'SYNTHETIC-OUTSIDE-SENTINEL')
 
-  let attackAttempted = false
   let moved = false
   let linked = false
   let swapError = null
-  const trySwap = () => {
-    if (attackAttempted) return
-    const temporary = readdirSync(acceptance).find((name) => name.endsWith('.tmp'))
-    if (!temporary) return
-    attackAttempted = true
+  let notifyOpened
+  const opened = new Promise((resolve) => { notifyOpened = resolve })
+  let listener
+  let worker
+  const acknowledgement = new Int32Array(new SharedArrayBuffer(4))
+  const releaseWorker = () => {
+    Atomics.store(acknowledgement, 0, 1)
+    Atomics.notify(acknowledgement, 0)
+  }
+
+  try {
+    let nativeCheckpoint
+    if (['win32', 'darwin'].includes(process.platform)) {
+      const token = randomUUID()
+      listener = await listenForNativeCheckpoint(token, notifyOpened)
+      nativeCheckpoint = { port: listener.port, token }
+    }
+    worker = new Worker(new URL('./safe-evidence-write-worker.mjs', import.meta.url), {
+      workerData: {
+        root, relativePath: 'docs/v2/acceptance/result.json', bytes: 16 * 1024 * 1024,
+        nativeCheckpoint, acknowledgement: acknowledgement.buffer,
+      },
+    })
+    const finished = new Promise((resolve, reject) => {
+      worker.on('message', (event) => {
+        if (event.status === 'opened') notifyOpened({ ...event, release: releaseWorker })
+        else resolve(event)
+      })
+      worker.once('error', reject)
+      worker.once('exit', (code) => reject(new Error(`evidence writer worker exited ${code} without a result`)))
+    })
+    const phase = await Promise.race([opened, finished])
+    const phaseDiagnostic = phase.helperCheckpointFailed ? 'checkpoint handshake failed' : phase.message ?? phase.status
+    assert.equal(phase.status, 'opened', `writer ended before the temporary-file checkpoint (${phaseDiagnostic})`)
+    assert.match(phase.temporaryName, /^\.[^/\\]+\.tmp$/)
+    assert.ok(readdirSync(acceptance).includes(phase.temporaryName), 'the temporary file must exist when the concurrent rename attempt starts')
     try {
       renameSync(acceptance, held)
       moved = true
       symlinkSync(outside, acceptance, process.platform === 'win32' ? 'junction' : 'dir')
       linked = true
     } catch (error) { swapError = error }
-  }
-
-  const watcher = fs.watch(acceptance, trySwap)
-  const poll = setInterval(trySwap, 1)
-  const worker = new Worker(new URL('./safe-evidence-write-worker.mjs', import.meta.url), {
-    workerData: { root, relativePath: 'docs/v2/acceptance/result.json', bytes: 16 * 1024 * 1024 },
-  })
-  let result
-  try {
-    result = await new Promise((resolve, reject) => {
-      worker.once('message', resolve)
-      worker.once('error', reject)
-      worker.once('exit', (code) => { if (code !== 0) reject(new Error(`evidence writer worker exited ${code}`)) })
-    })
-    assert.equal(attackAttempted, true, 'the concurrent rename attempt must occur after the temp file is opened')
+    phase.release()
+    const result = await finished
+    assert.ok(!result.helperCheckpointFailed, `test checkpoint failed (${result.message})`)
+    if (result.status === 'refused') {
+      assert.equal(result.code, 'EVIDENCE_PATH_UNSAFE')
+      assert.match(result.message, nativeCheckpoint ? /helper refused the write/ : /output parent/)
+    }
     assert.equal(readFileSync(outsideTarget, 'utf8'), 'SYNTHETIC-OUTSIDE-SENTINEL')
     if (moved) {
+      assert.equal(linked, true, `the isolated replacement must succeed after the parent moves (${swapError?.code})`)
       const retained = readdirSync(held)
       assert.ok(!retained.includes('result.json'), 'a swapped parent must not receive the final output name')
       assert.ok(retained.every((name) => name.endsWith('.tmp')), `unexpected files remain after refused write: ${retained.join(', ')}`)
@@ -213,9 +298,9 @@ test('safe evidence parent handle blocks or contains a concurrent rename during 
       assert.ok(['written', 'refused'].includes(result.status))
     }
   } finally {
-    clearInterval(poll)
-    watcher.close()
-    await worker.terminate().catch(() => {})
+    releaseWorker()
+    await listener?.close()
+    await worker?.terminate()
     if (linked) rmSync(acceptance, { recursive: true, force: true })
     if (moved) renameSync(held, acceptance)
     rmSync(root, { recursive: true, force: true })
