@@ -29,7 +29,7 @@ export function buildPreviewMetadata({ validationRoot, outputRoot }) {
     return {fileName:'./'+path,SPDXID:'SPDXRef-File-'+(index+1),checksums:[
       {algorithm:'SHA1',checksumValue:createHash('sha1').update(actual).digest('hex')},
       {algorithm:'SHA256',checksumValue:digest(actual)},
-    ],licenseConcluded:'NOASSERTION',licenseInfoInFiles:['NOASSERTION'],fileCopyrightText:'NOASSERTION'}
+    ],licenseConcluded:'NOASSERTION',licenseInfoInFiles:['NOASSERTION'],copyrightText:'NOASSERTION'}
   })
   const dependencyNames=Object.keys(pkg.dependencies).sort(), lockNames=Object.keys(lock.packages).filter(n=>n).sort()
   if(JSON.stringify(lockNames)!==JSON.stringify(dependencyNames.map(n=>'node_modules/'+n))) throw new Error('PREVIEW_DEPENDENCY_CLOSURE_NOT_COVERED')

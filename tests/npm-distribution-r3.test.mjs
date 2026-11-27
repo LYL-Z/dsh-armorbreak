@@ -60,6 +60,7 @@ test('frozen actual npm pack installs and runs all declared runtime surfaces in 
     const fileHashes=await Promise.all(result.packFiles.map(async path=>createHash('sha1').update(await readFile(join(installed,path))).digest('hex')))
     assert.equal(sbom.packages[0].packageVerificationCode.packageVerificationCodeValue,createHash('sha1').update(fileHashes.sort().join('')).digest('hex'))
     assert.equal(sbom.packages[0].packageFileName,result.artifact.file)
+    assert.ok(sbom.files.every(file=>file.copyrightText==='NOASSERTION' && !Object.hasOwn(file,'fileCopyrightText')))
     assert.match(await readFile(join(outputRoot,'THIRD_PARTY_NOTICES.txt'),'utf8'),/TypeScript|Microsoft/)
     assert.match(await readFile(join(outputRoot,'THIRD_PARTY_NOTICES.txt'),'utf8'),/033e6bd1e0f101352b39075ecd0d758ffef26b76/)
     assert.throws(()=>buildPreviewMetadata({validationRoot,outputRoot}),/REFUSE_EXISTING_OUTPUT/)
