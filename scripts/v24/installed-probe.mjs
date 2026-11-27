@@ -165,4 +165,29 @@ if(pkg.exports['./isolated-plugin-store']){
   pluginStore='INSTALLED_PACKAGE_PHYSICAL_QUARANTINE_INSTALL_UPDATE_DISABLE_REENABLE_UNINSTALL_RESTORE'
  }finally{for(const store of stores)await rm(store.root,{recursive:true,force:true});await runtime.close?.()}
 }
-console.log(JSON.stringify({exports:imported,client:'MODULE_REGISTRATION_SIMULATED_DSH_NOT_TESTED',cli:'ACTUAL_CHILD_PROCESS',mcp:'ACTUAL_STDIO_CHILD_PROCESS',core:'ACTUAL_INSTALLED_RUNTIME',workbench:'ACTUAL_HTTP_OS_AUTHENTICATION_NONE',yaml:pkg.dependencies.yaml,configuration:'INSTALLED_APPROVED_SYNTHETIC_APPLY_AND_EXACT_RESTORE',pluginStore,privateKeyScan:'PASS',runtimeVersion:pkg.version}))
+let backupRecovery = 'NOT_DECLARED_IN_THIS_PACKAGE'
+if (pkg.exports['./backup-recovery-lab']) {
+  const { ArmorBreakRuntime } = await import('dsh-armorbreak/core')
+  const { planSyntheticBackupRecovery } = await import('dsh-armorbreak/backup-recovery-lab')
+  const runtime = new ArmorBreakRuntime({ stateRoot: join(process.cwd(), 'backup-test-state') })
+  const snapshotId = '2026-11-26T120000Z-abcd'
+  const original = Buffer.from([0, 255, 13, 10])
+  const digest = createHash('sha256').update(original).digest('hex')
+  const { lab, plan } = await planSyntheticBackupRecovery(runtime, {
+    operator: 'installed-probe', sessionId: 'installed-backup-test', snapshotId,
+    manifestJson: JSON.stringify({ schema: 2, id: snapshotId, complete: true, sums: {}, blobs: { 'test.txt': digest } }),
+    inline: {}, objects: { [digest]: original }, seeds: { 'test.txt': 'seed\r\n' },
+  })
+  try {
+    const provider = { request: async () => 'allowed-once' }
+    assert.equal((await lab.apply(plan.planId, provider)).state, 'COMMITTED')
+    assert.deepEqual(await readFile(join(lab.data, 'test.txt')), original)
+    assert.equal((await lab.rollback(plan.planId, provider)).state, 'ROLLED_BACK')
+    assert.equal(await readFile(join(lab.data, 'test.txt'), 'utf8'), 'seed\r\n')
+    backupRecovery = 'INSTALLED_APPROVED_SYNTHETIC_RESTORE_AND_EXACT_ROLLBACK'
+  } finally {
+    await rm(lab.root, { recursive: true, force: true })
+    await runtime.close?.()
+  }
+}
+console.log(JSON.stringify({exports:imported,client:'MODULE_REGISTRATION_SIMULATED_DSH_NOT_TESTED',cli:'ACTUAL_CHILD_PROCESS',mcp:'ACTUAL_STDIO_CHILD_PROCESS',core:'ACTUAL_INSTALLED_RUNTIME',workbench:'ACTUAL_HTTP_OS_AUTHENTICATION_NONE',yaml:pkg.dependencies.yaml,configuration:'INSTALLED_APPROVED_SYNTHETIC_APPLY_AND_EXACT_RESTORE',pluginStore,backupRecovery,privateKeyScan:'PASS',runtimeVersion:pkg.version}))
