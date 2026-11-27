@@ -80,6 +80,27 @@ file and project checks, backup checks, and task reports. Choose **高级**
 Both modes use the same read-only Core. Mode selection only changes the
 interface and can be remembered on reload for the same browser origin.
 
+### Synthetic recovery rehearsal
+
+Trusted Node hosts can rehearse recovery using `planSyntheticBackupRecovery`
+from `dsh-armorbreak/backup-recovery-lab`. Supply the snapshot ID, manifest
+JSON, inline and object buffers, matching per-file seed strings, operator
+and session ID. The lab accepts up to 16 flat lowercase `.txt` entries
+of at most 64 KiB per file. It creates a new temporary target, validates
+the snapshot against its manifest, and returns a plan. Apply and rollback
+each require a separate `allowed-once` approval provided by the trusted host.
+This API rehearses byte recovery in isolation. Host paths, live profiles
+and browser approvals are outside its contract.
+
+### Package evidence
+
+Actual npm validation checks the project LICENSE and NOTICE, REUSE metadata,
+third-party notices, private package declarations and the shrinkwrap.
+The build record contains attribution file SHA-256 values and declared
+internal package licenses. The SPDX SBOM includes the archive SHA-256,
+per-file hashes and the SPDX package verification code. These checks cover
+artifact content. File-specific rights for upstream material remain under review.
+
 The npm `files` allowlist contains the runtime directories and selected public metadata/documentation. Historical acceptance records, tests, binary fixtures, Git metadata, `.armorbreak` state, release scripts, private keys and development `node_modules` are not distributed. Acceptance audits the actual packed/installed members and key material, rather than a dry-run count alone.
 
 The existing `scripts/v2/build-portable-artifact.mjs` and `build-release.mjs` retain their historical development/release-test contracts. Their successful tests do not establish complete v2.4 npm distribution. They are not the v2.4 runtime TGZ admission path, and no legacy archive is promoted by this change. Formal v2.4 publication, production signing, redistribution rights and release readiness still require their separate, presently blocked gates. The npm candidate and this validation are not release assets.
