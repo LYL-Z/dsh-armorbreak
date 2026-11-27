@@ -55,6 +55,48 @@ test('canonical target scope refuses external directory links',async t=>{
  await symlink(outside,join(f.workspace,'alias'),process.platform==='win32'?'junction':'dir')
  assert.equal((await f.request('run',{action:'file-integrity',target:'alias/secret.txt'})).status,400)
 })
+test('configuration panel previews and retries a structured edit through Core with no public values or writes', async t => {
+ const f = await fixture(t), target = 'edit.json', file = join(f.workspace, target)
+ const action = 'configuration-preview', configurationMode = 'edit'
+ const edit = {
+  schema: 'armorbreak.configuration-edit-request/v1',
+  configuration: {
+   schema: 'armorbreak.configuration-import/v1',
+   format: 'yaml',
+   source: 'privateField: "private-old"\r\n',
+  },
+  operations: [{ op: 'replace', path: ['privateField'], expected: 'stale-private', value: 'private-new' }],
+ }
+ const catalog = await (await f.request('catalog')).json()
+ assert.equal(catalog.actions.find(a => a.id === action).acceptsConfigurationMode, true)
+ await writeFile(file, JSON.stringify(edit))
+ const stale = await f.request('run', { action, target, configurationMode })
+ assert.equal(stale.status, 400)
+ const error = await stale.json()
+ assert.match(error.detail, /预期旧值.*重试/)
+ assert.doesNotMatch(JSON.stringify(error), /private|CAPABILITY_FAILED/)
+ edit.operations[0].expected = 'private-old'
+ const original = Buffer.from(JSON.stringify(edit))
+ await writeFile(file, original)
+ const valid = await f.request('run', { action, target, configurationMode })
+ assert.equal(valid.status, 200)
+ const result = await valid.json()
+ assert.equal(result.state, 'COMPLETED')
+ assert.equal(result.data.status, 'PREVIEW_READY')
+ assert.deepEqual(result.data.operations, { add: 0, replace: 1, remove: 0 })
+ assert.equal(result.hostModified, false)
+ assert.ok(result.evidenceIds.length && result.reportAvailable)
+ const report = await (await f.request('report?taskId=' + result.taskId)).json()
+ assert.doesNotMatch(JSON.stringify([result, report]), /privateField|private-old|private-new|stale-private/)
+ assert.equal((await f.request('run', { action, target, configurationMode: 'apply' })).status, 400)
+ assert.equal((await f.request('run', { action, target, configurationMode, options: { apply: true } })).status, 400)
+ assert.equal((await f.request('run', { action: 'file-integrity', target, configurationMode })).status, 400)
+ const outside = join(f.root, 'outside.json')
+ await writeFile(outside, original)
+ assert.equal((await f.request('run', { action, target: outside, configurationMode })).status, 400)
+ assert.deepEqual(await readFile(file), original)
+ assert.deepEqual(await readFile(outside), original)
+})
 test('explicit workspace spelling remains usable through native HTTP on case-normalizing filesystems',async t=>{
  const f=await fixture(t),workspaceId=process.platform==='win32'?f.workspace.toLowerCase():f.workspace
  const server=await createWorkbenchServer({native:{workspaceId,stateRoot:join(f.root,'spelling-state')}});t.after(()=>server.close())

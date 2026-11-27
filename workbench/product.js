@@ -4,6 +4,8 @@
   const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
   let session, catalog, selected, running = false, advanced = false
   const modeKey = 'armorbreak.workbench.mode'
+  const configurationEdit = () => selected?.acceptsConfigurationMode && el('product-config-mode').value === 'edit'
+  const runLabel = () => configurationEdit() ? '预览编辑' : '开始检查'
   const headers = () => ({'content-type':'application/json','x-armorbreak-session':session.csrf})
   async function request(path, input) {
     const response = await fetch('/api/product/'+path, {headers:headers(), ...(input === undefined ? {} : {method:'POST',body:JSON.stringify(input)})})
@@ -15,6 +17,7 @@
     el('product-example').disabled = running || !catalog?.exampleAvailable
     el('product-run').disabled = running || !selected
     el('product-target').disabled=running
+    el('product-config-mode').disabled=running || !selected?.acceptsConfigurationMode
     el('product-snapshot').disabled=running || !selected?.acceptsSnapshotId
     el('workbench-mode').disabled=running
     for(const button of el('product-actions').querySelectorAll('[data-action]'))button.disabled=running
@@ -23,10 +26,23 @@
     selected = action
     el('composer-title').textContent = selected?.title ?? '检查目标'
     el('product-description').textContent = selected?.description ?? '选择一项检查，或运行上方示例。'
-    el('product-target').placeholder = selected?.placeholder ?? '例如：src 或 .'
+    el('product-target-label').textContent = selected?.targetLabel ?? '项目内的文件或目录'
+    el('product-target-help').textContent = selected?.acceptsConfigurationMode
+      ? '输入当前工作区内已存在的 JSON 请求文件路径。'
+      : '只读取当前工作区。输入 . 表示项目目录；文件检查需要具体文件名。'
     el('product-target').value = selected?.targetKind==='directory'&&!selected.explicitTarget?'.':''
+    for (const id of ['product-config-mode-label','product-config-mode','product-config-mode-help']) el(id).hidden = !selected?.acceptsConfigurationMode
+    el('product-config-mode').value = 'overlay'
+    updateConfigurationMode()
     for (const id of ['product-snapshot-label','product-snapshot','product-snapshot-help']) el(id).hidden = !selected?.acceptsSnapshotId
     el('product-snapshot').value = ''
+  }
+  function updateConfigurationMode() {
+    el('product-target').placeholder = configurationEdit() ? '例如：configuration-edit.json' : selected?.placeholder ?? '例如：src 或 .'
+    el('product-config-mode-help').textContent = configurationEdit()
+      ? '检查 JSON、YAML、Cordis 或 Purge 副本中的增删改。仅预览，不应用编辑。'
+      : '检查 Profile 和 Overlay 层叠后的变更及冲突。'
+    el('product-run').textContent = runLabel()
   }
   function setMode(value) {
     advanced = value === 'advanced'
@@ -97,6 +113,11 @@
     if(data?.schema==='armorbreak.config-preview/v2'){
       return '<h4>配置预览</h4><p>'+escape(data.changes?.length??0)+' 项变更，'+escape(data.conflicts?.length??0)+' 项冲突。只展示结构，未应用任何配置。</p>'
     }
+    if(data?.schema==='armorbreak.configuration-edit-preview/v1'){
+      const { add, replace, remove } = data.operations
+      const status = data.status === 'NO_CHANGES' ? '编辑后的内容与原配置相同。' : '编辑请求已通过校验。'
+      return `<h4>配置编辑预览</h4><p>${status}${escape(data.format)} · 新增 ${escape(add)} 项，替换 ${escape(replace)} 项，删除 ${escape(remove)} 项。配置值已隐藏，文件未修改。</p>`
+    }
     return ''
   }
   async function run(example) {
@@ -105,11 +126,12 @@
     el('product-feedback').className='feedback';el('product-feedback').textContent='Core 正在执行只读检查，完成后将在这里显示真实结果。'
     el('product-result').hidden=true
     el('product-example').textContent=example?'正在检查…':'运行安全示例'
-    el('product-run').textContent=example?'开始检查':'正在检查…'
+    el('product-run').textContent=example?runLabel():'正在检查…'
     try {
       const snapshotId=el('product-snapshot').value.trim()
       const input=example?{}:{action:selected.id,target:el('product-target').value}
       if (!example && selected.acceptsSnapshotId && snapshotId) input.snapshotId = snapshotId
+      if (!example && configurationEdit()) input.configurationMode = 'edit'
       const result=await request(example?'example':'run',input)
       const complete=result.state==='COMPLETED'
       el('product-feedback').textContent=complete?`检查完成，用时 ${result.durationMs} ms。已记录 ${result.evidenceIds.length} 条证据。`:`任务状态：${result.state}。请查看报告中的原因。`
@@ -126,7 +148,7 @@
       if(workflowSummary)el('product-result').insertAdjacentHTML('beforeend',workflowSummary)
       el('product-result').hidden=false;attachReports(el('product-result'));el('product-result').scrollIntoView({block:'start'});await tasks()
     } catch(error) { el('product-feedback').textContent=error.message;el('product-feedback').className='feedback error';el('product-feedback').scrollIntoView({block:'center'}) }
-    finally { running=false;availability();el('product-example').textContent='运行安全示例';el('product-run').textContent='开始检查' }
+    finally { running=false;availability();el('product-example').textContent='运行安全示例';el('product-run').textContent=runLabel() }
   }
   window.initializeProduct = async nativeSession => {
     session=nativeSession
@@ -139,6 +161,7 @@
     } catch {el('product-connection').textContent='未能读取可用功能，请刷新页面重试。'}
   }
   el('product-search').addEventListener('input',()=>{if(catalog)actions()})
+  el('product-config-mode').addEventListener('change',updateConfigurationMode)
   el('product-example').addEventListener('click',()=>run(true))
   el('product-form').addEventListener('submit',event=>{event.preventDefault();if(selected)run(false)})
   el('product-reload-tasks').addEventListener('click',tasks)
