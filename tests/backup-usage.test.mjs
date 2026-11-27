@@ -69,10 +69,11 @@ test('verification measures an exact snapshot closure and its shared objects, bu
   const f = await fixture(t)
   const id = '2026-11-26T120000Z-abcd', bytes = '1234'
   const digest = createHash('sha256').update(bytes).digest('hex')
-  const expected = { schema: 2, complete: true, id, sums: { 'data.json': digest }, blobs: { 'data.json': digest }, home: 'PRIVATE_HOST_DIR' }
-  const manifest = join(f.complete, 'manifest.json'), blob = join(f.objects, digest)
+  const object = Buffer.alloc(40 * 1024, 0x61), objectDigest = createHash('sha256').update(object).digest('hex')
+  const expected = { schema: 2, complete: true, id, sums: { 'data.json': digest }, blobs: { 'settings/large.txt': objectDigest }, home: 'PRIVATE_HOST_DIR' }
+  const manifest = join(f.complete, 'manifest.json'), blob = join(f.objects, objectDigest)
   await writeFile(manifest, JSON.stringify(expected))
-  await writeFile(blob, bytes)
+  await writeFile(blob, object)
   const verify = () => f.run(f.store, { verifySnapshot: id })
   const { result } = await verify()
   assert.equal(result.isError, false)
@@ -96,10 +97,12 @@ test('verification measures an exact snapshot closure and its shared objects, bu
   }
   await writeFile(blob, 'changed')
   await reject(/object content does not match/)
-  await writeFile(blob, bytes)
+  await writeFile(blob, object)
   await writeFile(join(f.complete, 'extra.txt'), 'extra')
   await reject(/files differ from the declared file set/)
   await rm(join(f.complete, 'extra.txt'))
+  await writeFile(manifest, JSON.stringify({ ...expected, blobs: {'DATA.json': objectDigest} }))
+  await reject(/declared both inline and as an object/)
   await writeFile(manifest, JSON.stringify({ ...expected, sums: { '../outside.txt': digest } }))
   await reject(/invalid maintenance relative path/)
   await writeFile(manifest, JSON.stringify(expected).replace('"sums":{', `"sums":{"data.json":"${digest}",`))

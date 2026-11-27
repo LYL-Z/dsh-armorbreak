@@ -110,7 +110,7 @@ try {
  await mkdir(join(backupRoot,'objects'))
  await writeFile(join(backup,'document.txt'),bytes)
  await writeFile(join(backupRoot,'objects',digest),bytes)
- await writeFile(manifest,JSON.stringify({schema:2,id:snapshotId,complete:true,sums:{'document.txt':digest},blobs:{'document.txt':digest}}))
+ await writeFile(manifest,JSON.stringify({schema:2,id:snapshotId,complete:true,sums:{'document.txt':digest},blobs:{'object-only.txt':digest}}))
  const verification=cli('maintenance','verify-snapshot','--root',backupRoot,'--snapshot',snapshotId)
  assert.equal(verification.state,'COMPLETED');assert.equal(verification.data.status,'DECLARED_CONTENT_MATCH');assert.equal(verification.data.referencedObjects,1);assert.equal(verification.data.restoreVerified,false)
 } finally {await server.close()}
