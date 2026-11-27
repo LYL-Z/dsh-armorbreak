@@ -27,6 +27,53 @@ fail closed. Errors do not include parser source excerpts. There is no host appl
 operation. Compatibility with real DSH loaders, profile registration, authorization
 for writes and production recovery remain unverified/unimplemented here.
 
+## Edit a configuration copy and rehearse changes
+
+Save an edit bundle in the authorized workspace. The bundle carries the original
+configuration text and an ordered list of operations. This bundle edits a YAML
+copy.
+
+```json
+{
+  "schema": "armorbreak.configuration-edit-request/v1",
+  "configuration": {
+    "schema": "armorbreak.configuration-import/v1",
+    "format": "yaml",
+    "source": "settings:\n  enabled: false\n  retired: 0\n"
+  },
+  "operations": [
+    {"op": "replace", "path": ["settings", "enabled"], "expected": false, "value": true},
+    {"op": "remove", "path": ["settings", "retired"], "expected": 0},
+    {"op": "add", "path": ["settings", "labels"], "value": ["local"]}
+  ]
+}
+```
+
+Run `armorbreak config edit --bundle <file> --json` for a Core preview. On MCP,
+call `armorbreak_analyze` with capability `configuration.preview`, the bundle as
+`target` and `options: {"mode":"edit"}`. The report gives the format, status and
+operation counts. The bundle, field names, values, paths within the configuration
+and content hashes stay out of the report.
+
+Map keys are strings. Array indices are numbers and are evaluated after prior
+operations. A map add requires an absent key. An array add inserts a new element
+at the index, including at the end. Replace and remove require the exact expected
+JSON value from the supplied copy. A mismatch or an invalid finished document
+rejects the entire batch. For Cordis, paths start at the composition array. For
+Purge, paths start with `metadata` or `composition`. JSON and YAML paths start
+at the root map. Changed YAML preserves compatible comments and scalar style.
+Deleted nodes may remove associated comments. An unchanged Purge file retains
+its original bytes even when the other file changes.
+
+The same bundle works with `armorbreak config stage --bundle <file> --json` to
+create a fresh isolated rehearsal. An unchanged result shows `NO_CHANGES` in
+the preview and creates no lab. In a trusted CLI host, `config apply` and
+`config revert` use that lab and plan and each require a separate one-time
+approval. The source bundle remains unchanged and successful rollback restores
+the exact original bytes of the lab files. The edit preconditions refer to the
+supplied copy. Live host apply, upstream preset equivalence and automatic
+production recovery remain unverified.
+
 ## Sources and dependency
 
 Behavior research only: mmparko/dsh-purge commit 033e6bd1e0f101352b39075ecd0d758ffef26b76,
