@@ -1,12 +1,13 @@
 # Contributing / 贡献指南
 
-Thanks for helping improve ArmorBreak. This project is intentionally **zero
-runtime dependencies** and ships as source that DeepSeek Harness loads directly.
+Use Node.js 22 or later. The repository pins TypeScript for source analysis
+and YAML for configuration parsing. Use `npm ci` to install the locked
+dependencies before testing.
 
 ## Ground rules
 
-1. **No runtime dependencies.** Only Node builtins (`node:*`) in `lib/`,
-   `tools.js`, `skills.js`, `index.js`, `client.js`. Tests use `node:test`.
+1. **Review new dependencies.** Record the purpose, exact version, license
+   and effect on each actual distribution. Tests use `node:test`.
 2. **No fake results.** Analyzers must not fabricate findings, test output, or
    compatibility claims. Missing tools are reported with install guidance.
 3. **Contract first.** New analysis capabilities implement the adapter contract
@@ -21,7 +22,9 @@ runtime dependencies** and ships as source that DeepSeek Harness loads directly.
 ## Development loop
 
 ```bash
-node --test                     # full suite (zero install)
+npm ci
+npm test
+npm run typecheck
 node --test --experimental-test-coverage
 node benchmarks/bench.mjs       # reproducible micro-benchmarks
 ```
@@ -53,6 +56,10 @@ $dsh = "$env:LOCALAPPDATA\Programs\DeepSeek Harness\resources\runtime\cli\bin\ds
 - PRs must state: problem, root cause, fix, verification commands and results,
   remaining limitations. "Works on my machine" is not verification.
 - Security fixes: follow [`SECURITY.md`](SECURITY.md) instead of a public PR.
+- Attribute third-party files or adapted material with links to the original
+  commit/path, applicable terms, authors and changes. Retain notices and mark
+  unresolved rights for maintainer review. A DCO sign-off can supplement this
+  record. See [governance](GOVERNANCE.md) for the current contribution process.
 
 ## Code style
 

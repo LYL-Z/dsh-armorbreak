@@ -1,0 +1,14 @@
+version = 1
+
+# Scoped to project-owned notices and package metadata reviewed for v2.4.
+[[annotations]]
+path = ["NOTICE", "THIRD_PARTY_NOTICES.txt", "package.json", "packages/*/package.json", "plugins/pi/package.json", "AUTHORS.md", "GOVERNANCE.md", "SUPPORT.md", "TRADEMARK.md", "ETHICAL_USE.md", "ROADMAP.md"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 LYL-Z"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "CODE_OF_CONDUCT.md"
+precedence = "aggregate"
+SPDX-FileCopyrightText = ["Contributor Covenant contributors", "2026 LYL-Z (adaptation)"]
+SPDX-License-Identifier = "CC-BY-4.0"

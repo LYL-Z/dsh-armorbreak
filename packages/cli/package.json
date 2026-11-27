@@ -2,6 +2,7 @@
   "name": "@armorbreak/cli",
   "version": "0.1.0-p2",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "bin": { "armorbreak": "./index.js" },
   "exports": "./index.js"
