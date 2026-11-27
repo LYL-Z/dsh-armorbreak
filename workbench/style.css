@@ -18,7 +18,9 @@ body { margin: 0; background: var(--canvas); color: var(--ink); }
 .eyebrow { margin: 0 0 8px; letter-spacing: .16em; font-size: 11px; color: #a8d8d1; font-weight: 700; }
 h1 { margin: 0; font-size: 34px; letter-spacing: -.03em; }
 .subtitle { margin: 8px 0 0; color: #c6ded9; }
-.top-actions { display: flex; align-items: center; gap: 10px; padding-top: 8px; }
+.top-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 8px; }
+.mode-control { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+#workbench-mode { width: auto; min-width: 5em; }
 .dot { width: 9px; height: 9px; border-radius: 50%; background: #f0b429; box-shadow: 0 0 0 4px rgba(240,180,41,.16); }
 .dot.ok { background: #49d39c; box-shadow: 0 0 0 4px rgba(73,211,156,.16); }
 button { border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 9px; padding: 9px 14px; font: inherit; cursor: pointer; }

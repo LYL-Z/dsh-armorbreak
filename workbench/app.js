@@ -125,15 +125,28 @@ async function diagnose(providerId) {
 
 $('refresh').addEventListener('click', () => load().catch((error) => { $('status-label').textContent = 'error'; $('status-dot').className = 'dot'; $('diag-output').textContent = String(error) }))
 $('diag-run').addEventListener('click', () => diagnose($('diag-provider').value))
+const tabs=[...document.querySelectorAll('.tab')]
 window.activateWorkbenchTab = name => {
+  if (!tabs.some(tab => !tab.hidden && tab.dataset.tab === name)) return
   document.querySelectorAll('.tab').forEach(item => {const active=item.dataset.tab===name;item.classList.toggle('active',active);item.setAttribute('aria-selected',String(active));item.tabIndex=active?0:-1})
   document.querySelectorAll('.panel').forEach(panel=>panel.classList.toggle('active',panel.id===`panel-${name}`))
 }
-const tabs=[...document.querySelectorAll('.tab')]
-for(const [i,tab] of tabs.entries()){
+for(const tab of tabs){
  tab.tabIndex=tab.classList.contains('active')?0:-1
  tab.addEventListener('click',()=>window.activateWorkbenchTab(tab.dataset.tab))
- tab.addEventListener('keydown',event=>{let index;if(event.key==='ArrowRight')index=(i+1)%tabs.length;else if(event.key==='ArrowLeft')index=(i+tabs.length-1)%tabs.length;else if(event.key==='Home')index=0;else if(event.key==='End')index=tabs.length-1;else return;event.preventDefault();window.activateWorkbenchTab(tabs[index].dataset.tab);tabs[index].focus()})
+ tab.addEventListener('keydown',event=>{
+  const visible=tabs.filter(item=>!item.hidden), current=visible.indexOf(tab)
+  let index
+  if(event.key==='ArrowRight')index=(current+1)%visible.length
+  else if(event.key==='ArrowLeft')index=(current+visible.length-1)%visible.length
+  else if(event.key==='Home')index=0
+  else if(event.key==='End')index=visible.length-1
+  else return
+  event.preventDefault()
+  window.activateWorkbenchTab(visible[index].dataset.tab)
+  visible[index].focus()
+ })
 }
+window.initializeWorkbenchMode()
 load().catch((error) => { $('status-label').textContent = 'error'; $('diag-output').textContent = String(error) })
 loadNative().then(()=>window.initializeProduct(nativeSession)).catch(() => { $('native-status').textContent = 'Native Core session unavailable'; $('native-run').disabled = true;$('product-connection').textContent='Core 连接失败，请检查启动窗口并刷新重试。' })

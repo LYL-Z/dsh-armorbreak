@@ -13,6 +13,12 @@
       <p class="subtitle">检查本地项目，查看结果，保留可追溯的报告。</p>
     </div>
     <div class="top-actions">
+      <label class="mode-control" for="workbench-mode">模式
+        <select id="workbench-mode">
+          <option value="guided">新手</option>
+          <option value="advanced">高级</option>
+        </select>
+      </label>
       <span id="status-dot" class="dot"></span>
       <span id="status-label">正在连接</span>
       <button id="refresh" type="button">刷新</button>
@@ -23,13 +29,13 @@
     <nav class="tabs" role="tablist" aria-label="工作台导航">
       <button class="tab active" data-tab="home" role="tab" aria-selected="true">开始使用</button>
       <button class="tab" data-tab="results" role="tab" aria-selected="false">任务与报告</button>
-      <button class="tab" data-tab="hosts" role="tab" aria-selected="false">历史兼容记录</button>
-      <button class="tab" data-tab="providers" role="tab" aria-selected="false">模型配置</button>
-      <button class="tab" data-tab="skills" role="tab" aria-selected="false">Skills</button>
-      <button class="tab" data-tab="tasks" role="tab" aria-selected="false">历史验收</button>
-      <button class="tab" data-tab="evidence" role="tab" aria-selected="false">历史证据</button>
-      <button class="tab" data-tab="diagnostics" role="tab" aria-selected="false">模型诊断</button>
-      <button class="tab" data-tab="native" role="tab" aria-selected="false">高级检查</button>
+      <button class="tab" data-tab="hosts" data-advanced hidden role="tab" aria-selected="false">历史兼容记录</button>
+      <button class="tab" data-tab="providers" data-advanced hidden role="tab" aria-selected="false">模型配置</button>
+      <button class="tab" data-tab="skills" data-advanced hidden role="tab" aria-selected="false">Skills</button>
+      <button class="tab" data-tab="tasks" data-advanced hidden role="tab" aria-selected="false">历史验收</button>
+      <button class="tab" data-tab="evidence" data-advanced hidden role="tab" aria-selected="false">历史证据</button>
+      <button class="tab" data-tab="diagnostics" data-advanced hidden role="tab" aria-selected="false">模型诊断</button>
+      <button class="tab" data-tab="native" data-advanced hidden role="tab" aria-selected="false">高级检查</button>
     </nav>
 
     <section id="panel-home" class="panel active" role="tabpanel">
