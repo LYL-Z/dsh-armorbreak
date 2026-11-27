@@ -21,6 +21,10 @@ npx --no-install armorbreak start --workspace /absolute/project
 
 ## 当前开发版本可以做什么
 
+![Workbench 新手模式，显示安全示例与常用检查](docs/media/workbench-guided-v24.png)
+
+上图为当前开发版首次启动的实际界面。新手模式集中显示常用检查，高级模式提供完整功能目录、诊断与原始结果。
+
 | 任务 | 结果 |
 | --- | --- |
 | 检查文件、源码或依赖声明 | 生成带证据的本地分析和 Markdown 报告 |

@@ -21,6 +21,10 @@ npx --no-install armorbreak start --workspace /absolute/project
 
 ## What current development builds can do
 
+![Workbench guided mode with the safe example and common checks](docs/media/workbench-guided-v24.png)
+
+The screenshot shows the current development build at first launch. Guided mode puts common checks first. Advanced mode opens the full catalog, diagnostics and raw results.
+
 | Task | Result |
 | --- | --- |
 | Inspect a file, codebase or dependency manifest | Local analysis with evidence and a Markdown report |
