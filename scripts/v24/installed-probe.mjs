@@ -105,6 +105,14 @@ try {
  const config=await runDiagnostic('configuration-preview','diagnostic-overlay.json');assert.equal(config.applied,false);assert.doesNotMatch(JSON.stringify(config),/apiPin|TEST_PRIVATE_VALUE/)
  const backup=join(workspace,'backup-copy','backups','2026-11-26T120000Z-abcd');await mkdir(backup,{recursive:true});await writeFile(join(backup,'manifest.json'),'{"complete":true}')
  const usage=await runDiagnostic('backup-usage','backup-copy');assert.equal(usage.count,1);assert.equal(usage.bytes,17);assert.equal(usage.restoreVerified,false)
+ const snapshotId='2026-11-26T120000Z-abcd',backupRoot=join(workspace,'backup-copy'),manifest=join(backup,'manifest.json')
+ const bytes='installed backup fixture',digest=createHash('sha256').update(bytes).digest('hex')
+ await mkdir(join(backupRoot,'objects'))
+ await writeFile(join(backup,'document.txt'),bytes)
+ await writeFile(join(backupRoot,'objects',digest),bytes)
+ await writeFile(manifest,JSON.stringify({schema:2,id:snapshotId,complete:true,sums:{'document.txt':digest},blobs:{'document.txt':digest}}))
+ const verification=cli('maintenance','verify-snapshot','--root',backupRoot,'--snapshot',snapshotId)
+ assert.equal(verification.state,'COMPLETED');assert.equal(verification.data.status,'DECLARED_CONTENT_MATCH');assert.equal(verification.data.referencedObjects,1);assert.equal(verification.data.restoreVerified,false)
 } finally {await server.close()}
 let pluginStore='NOT_DECLARED_IN_THIS_PACKAGE'
 if(pkg.exports['./isolated-plugin-store']){
