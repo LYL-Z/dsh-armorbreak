@@ -5,6 +5,7 @@
  * This exercises the exact code path the harness registry calls, without an LLM.
  */
 import assert from 'node:assert/strict'
+import { realpathSync } from 'node:fs'
 import { mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -124,7 +125,8 @@ test('armorbreak_analyze rejects unknown capabilities with an actionable message
 
 test('armorbreak_analyze closes a missing-file task and allows a fresh successful retry', async () => {
   const { defs, setWorkspace } = await loadTools()
-  const workspace = await mkdtemp(join(tmpdir(), 'abm-tool-ws-'))
+  // A missing child cannot be canonicalized. Start from the host's canonical parent.
+  const workspace = realpathSync.native(await mkdtemp(join(tmpdir(), 'abm-tool-ws-')))
   setWorkspace(workspace)
   const sample = join(workspace, 'missing.txt')
   const analyze = defs.get('armorbreak_analyze')
