@@ -2,6 +2,7 @@
   "name": "@armorbreak/pi-extension",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "description": "ArmorBreak Universal Core tools for the Pi coding agent",
   "keywords": ["pi-package", "armorbreak", "security"],

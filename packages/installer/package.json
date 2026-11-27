@@ -2,6 +2,7 @@
   "name": "@armorbreak/installer",
   "version": "0.1.0-p4",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "description": "Transactional JSON MCP config installer with dry-run, backup and rollback",
   "exports": {

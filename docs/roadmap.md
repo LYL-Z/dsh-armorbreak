@@ -1,4 +1,18 @@
-# 后续扩展路线图
+# Roadmap / 路线图
+
+- **Available in development.** A shared Core, CLI, MCP and local Workbench
+  with evidence and reports, configuration preview and copied backup checks.
+- **In progress.** Profile, plugin and maintenance lifecycle, backup recovery
+  with byte-level acceptance, advanced Workbench workflows, and real DSH
+  Desktop/Web integration.
+- **Stable gates.** File-specific rights review, supported platform and
+  installation acceptance, production identity and trusted approvals,
+  reproducible assets, attestations and independent download verification.
+
+近期重点为隔离恢复、真实宿主和 Workbench 体验。正式版以逐项验收为准。
+进度沿用三仓来源与能力台账，已发布内容以 [CHANGELOG](../CHANGELOG.md) 为准。
+
+下文保留早期研发记录。当前范围遵循 [授权使用政策](../ETHICAL_USE.md)。
 
 ## R1（下一个版本，最高价值）
 

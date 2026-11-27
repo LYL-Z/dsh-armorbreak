@@ -1,0 +1,36 @@
+ArmorBreak third-party materials
+
+Runtime npm dependencies
+
+TypeScript — Microsoft Corporation, Apache-2.0
+https://github.com/microsoft/TypeScript
+
+yaml — eemeli, ISC
+https://github.com/eemeli/yaml
+
+npm-shrinkwrap.json records the resolved packages, exact versions, integrity,
+and declared licenses. npm installs these packages separately from the
+ArmorBreak TGZ. The Windows development ZIP embeds the installed package
+directories, with their own license files and notices. The release build
+collects those installed texts, any TypeScript ThirdPartyNoticeText.txt,
+and the project NOTICE in the release's THIRD_PARTY_NOTICES.txt.
+
+Source references
+
+See NOTICE for both Purge snapshots and their authors. The original mirror
+has differing terms in LICENSE and README. The community fork preserves
+upstream notices and includes separately attributed material. Source
+attribution records provenance. Redistribution of disputed material remains
+pending file-specific review and rights evidence.
+
+External tools
+
+TShark, Ghidra, JADX, Syft, Semgrep, and Trivy are optional integrations.
+Install them separately under the terms of their respective projects.
+
+Community documentation
+
+CODE_OF_CONDUCT.md is a shortened adaptation of Contributor Covenant 2.1.
+The original community document is attributed to the Contributor Covenant
+contributors under CC-BY-4.0. See LICENSES/CC-BY-4.0.txt.
+https://www.contributor-covenant.org/version/2/1/code_of_conduct/
