@@ -42,6 +42,34 @@ precedence = "aggregate"
 SPDX-FileCopyrightText = "2026 LYL-Z"
 SPDX-License-Identifier = "MIT"
 
+# Reviewed first-party runtime and compatibility modules.
+[[annotations]]
+path = [
+    "lib/catalog/persistentPluginTrust.js",
+    "lib/catalog/rating.js",
+    "lib/connectivity/connectorHealth.js",
+    "lib/connectivity/layeredCache.js",
+    "lib/connectivity/networkState.js",
+    "lib/connectivity/versionedIndex.js",
+    "lib/core/dag.js",
+    "lib/core/isMainModule.js",
+    "lib/core/pathBoundary.js",
+    "lib/core/presentation.js",
+    "lib/core/productVersion.js",
+    "lib/core/taskQueue.js",
+    "lib/knowledge/index.js",
+    "lib/pack/bundleCompiler.js",
+    "lib/pack/corePack.js",
+    "lib/pack/offlinePack.js",
+    "lib/release/gray.js",
+    "lib/release/rollout.js",
+    "lib/schemas/v2/index.js",
+    "lib/workers/contentStore.js",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 LYL-Z"
+SPDX-License-Identifier = "MIT"
+
 [[annotations]]
 path = "CODE_OF_CONDUCT.md"
 precedence = "aggregate"
