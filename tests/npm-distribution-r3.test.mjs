@@ -11,6 +11,7 @@ import { buildWindowsExperience } from '../scripts/v24/build-windows-experience.
 import { verifyWindowsExperience } from '../scripts/v24/verify-windows-experience.mjs'
 import { execFileSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
+import { createHash } from 'node:crypto'
 
 test('frozen actual npm pack installs and runs all declared runtime surfaces in a fresh consumer', {timeout:120000}, async t => {
   const parent=await mkdtemp(join(tmpdir(),'ab-npm-r3-'));t.after(()=>rm(parent,{recursive:true,force:true}))
@@ -56,6 +57,9 @@ test('frozen actual npm pack installs and runs all declared runtime surfaces in 
     assert.equal(manifest.version,pkg.version);assert.equal(manifest.stableEligible,false);assert.equal(manifest.fullMigrationComplete,false)
     const sbom=JSON.parse(await readFile(join(outputRoot,'sbom.spdx.json'),'utf8'));assert.equal(sbom.packages.length,3)
     assert.ok(sbom.packages.some(p=>p.name==='yaml'&&p.versionInfo==='2.9.1'));assert.equal(sbom.files.length,result.packFiles.length)
+    const fileHashes=await Promise.all(result.packFiles.map(async path=>createHash('sha1').update(await readFile(join(installed,path))).digest('hex')))
+    assert.equal(sbom.packages[0].packageVerificationCode.packageVerificationCodeValue,createHash('sha1').update(fileHashes.sort().join('')).digest('hex'))
+    assert.equal(sbom.packages[0].packageFileName,result.artifact.file)
     assert.match(await readFile(join(outputRoot,'THIRD_PARTY_NOTICES.txt'),'utf8'),/TypeScript|Microsoft/)
     assert.match(await readFile(join(outputRoot,'THIRD_PARTY_NOTICES.txt'),'utf8'),/033e6bd1e0f101352b39075ecd0d758ffef26b76/)
     assert.throws(()=>buildPreviewMetadata({validationRoot,outputRoot}),/REFUSE_EXISTING_OUTPUT/)

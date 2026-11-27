@@ -26,7 +26,10 @@ export function buildPreviewMetadata({ validationRoot, outputRoot }) {
     if(!safe(path)) throw new Error('PREVIEW_FILE_PATH')
     const actual=readFileSync(join(root,path)), original=readFileSync(join(validationRoot,'frozen-source',path))
     if(!actual.equals(original)) throw new Error('PREVIEW_SOURCE_FILE_MISMATCH: '+path)
-    return {fileName:'./'+path,SPDXID:'SPDXRef-File-'+(index+1),checksums:[{algorithm:'SHA256',checksumValue:digest(actual)}],licenseConcluded:'NOASSERTION',licenseInfoInFiles:['NOASSERTION'],fileCopyrightText:'NOASSERTION'}
+    return {fileName:'./'+path,SPDXID:'SPDXRef-File-'+(index+1),checksums:[
+      {algorithm:'SHA1',checksumValue:createHash('sha1').update(actual).digest('hex')},
+      {algorithm:'SHA256',checksumValue:digest(actual)},
+    ],licenseConcluded:'NOASSERTION',licenseInfoInFiles:['NOASSERTION'],fileCopyrightText:'NOASSERTION'}
   })
   const dependencyNames=Object.keys(pkg.dependencies).sort(), lockNames=Object.keys(lock.packages).filter(n=>n).sort()
   if(JSON.stringify(lockNames)!==JSON.stringify(dependencyNames.map(n=>'node_modules/'+n))) throw new Error('PREVIEW_DEPENDENCY_CLOSURE_NOT_COVERED')
@@ -46,7 +49,14 @@ export function buildPreviewMetadata({ validationRoot, outputRoot }) {
   mkdirSync(outputRoot,{recursive:true})
   const write=(name,value)=>writeFileSync(join(outputRoot,name),typeof value==='string'?value:JSON.stringify(value,null,2)+'\n')
   const rootId='SPDXRef-Package-dsh-armorbreak', created=new Date(validation.sourceDate??Date.now()).toISOString()
-  const sbom={spdxVersion:'SPDX-2.3',dataLicense:'CC0-1.0',SPDXID:'SPDXRef-DOCUMENT',name:`${pkg.name}-${pkg.version}`,documentNamespace:`https://github.com/LYL-Z/dsh-armorbreak/sbom/${validation.commit}/${artifact.sha256}`,creationInfo:{created,creators:['Tool: scripts/v24/preview-metadata.mjs']},packages:[{name:pkg.name,versionInfo:pkg.version,SPDXID:rootId,downloadLocation:'NOASSERTION',filesAnalyzed:true,licenseDeclared:pkg.license,licenseConcluded:'NOASSERTION',checksums:[{algorithm:'SHA256',checksumValue:artifact.sha256}]},...dependencies],files,relationships:[{spdxElementId:'SPDXRef-DOCUMENT',relationshipType:'DESCRIBES',relatedSpdxElement:rootId},...files.map(f=>({spdxElementId:rootId,relationshipType:'CONTAINS',relatedSpdxElement:f.SPDXID})),...dependencies.map(d=>({spdxElementId:rootId,relationshipType:'DEPENDS_ON',relatedSpdxElement:d.SPDXID}))]}
+  // SPDX 2.3 prescribes SHA-1 for the package verification code.
+  // The actual artifact and every file retain SHA-256 integrity digests.
+  const packageVerificationCodeValue=createHash('sha1').update(files.map(file=>file.checksums[0].checksumValue).sort().join('')).digest('hex')
+  const project={name:pkg.name,versionInfo:pkg.version,SPDXID:rootId,packageFileName:artifact.file,
+    downloadLocation:'NOASSERTION',filesAnalyzed:true,packageVerificationCode:{packageVerificationCodeValue},
+    licenseDeclared:pkg.license,licenseConcluded:'NOASSERTION',copyrightText:'NOASSERTION',
+    licenseInfoFromFiles:['NOASSERTION'],checksums:[{algorithm:'SHA256',checksumValue:artifact.sha256}]}
+  const sbom={spdxVersion:'SPDX-2.3',dataLicense:'CC0-1.0',SPDXID:'SPDXRef-DOCUMENT',name:`${pkg.name}-${pkg.version}`,documentNamespace:`https://github.com/LYL-Z/dsh-armorbreak/sbom/${validation.commit}/${artifact.sha256}`,creationInfo:{created,creators:['Tool: scripts/v24/preview-metadata.mjs']},packages:[project,...dependencies],files,relationships:[{spdxElementId:'SPDXRef-DOCUMENT',relationshipType:'DESCRIBES',relatedSpdxElement:rootId},...files.map(f=>({spdxElementId:rootId,relationshipType:'CONTAINS',relatedSpdxElement:f.SPDXID})),...dependencies.map(d=>({spdxElementId:rootId,relationshipType:'DEPENDS_ON',relatedSpdxElement:d.SPDXID}))]}
   copyFileSync(artifactPath,join(outputRoot,artifact.file))
   write('THIRD_PARTY_NOTICES.txt',[
     readFileSync(join(root,'NOTICE'),'utf8'),
