@@ -114,7 +114,9 @@ export class SyntheticMaintenance {
       if (!Array.isArray(changes) || !changes.length || changes.length > 16 || new Set(changes.map(x => x.name)).size !== changes.length) throw new Error('LAB_PLAN_INVALID')
       const rows = []
       for (const change of changes) {
-        if (Object.keys(change).sort().join(',') !== 'content,name' || typeof change.content !== 'string' || Buffer.byteLength(change.content) > 65536) throw new Error('LAB_PLAN_INVALID')
+        if (Object.keys(change).sort().join(',') !== 'content,name' ||
+            (typeof change.content !== 'string' && !Buffer.isBuffer(change.content)) ||
+            Buffer.byteLength(change.content) > 65536) throw new Error('LAB_PLAN_INVALID')
         const before = await this.file(change.name, file => file.readFile())
         if (before.length > 65536) throw new Error('LAB_INPUT_EXCESSIVE')
         rows.push({ name: change.name, before: before.toString('base64'), after: Buffer.from(change.content).toString('base64') })

@@ -74,6 +74,16 @@ For a stable copy with ordinary files, use `armorbreak maintenance verify-snapsh
 
 In Workbench, select **检查备份副本**, enter the copy's path relative to your workspace, and paste the snapshot directory name from `backups` into **快照编号**. Leave the snapshot field blank to see a storage summary. Completed checks are available in the task history and Markdown report.
 
+Trusted Node hosts can rehearse recovery using `planSyntheticBackupRecovery`
+from `dsh-armorbreak/backup-recovery-lab`. Supply the snapshot ID, manifest
+JSON, inline and object buffers, matching per-file seed strings, operator
+and session ID. The lab accepts up to 16 flat lowercase `.txt` entries
+of at most 64 KiB per file. It creates a new temporary target, validates
+the snapshot against its manifest, and returns a plan. Apply and rollback
+each require a separate `allowed-once` approval provided by the trusted host.
+This API rehearses byte recovery in isolation. Host paths, live profiles
+and browser approvals are outside its contract.
+
 The npm `files` allowlist contains the runtime directories and selected public metadata/documentation. Historical acceptance records, tests, binary fixtures, Git metadata, `.armorbreak` state, release scripts, private keys and development `node_modules` are not distributed. Acceptance audits the actual packed/installed members and key material, rather than a dry-run count alone.
 
 The existing `scripts/v2/build-portable-artifact.mjs` and `build-release.mjs` retain their historical development/release-test contracts. Their successful tests do not establish complete v2.4 npm distribution. They are not the v2.4 runtime TGZ admission path, and no legacy archive is promoted by this change. Formal v2.4 publication, production signing, redistribution rights and release readiness still require their separate, presently blocked gates. The npm candidate and this validation are not release assets.

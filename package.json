@@ -45,6 +45,7 @@
     "./mcp": "./packages/mcp-server/index.js",
     "./workbench": "./workbench/server.mjs",
     "./configuration-lab": "./packages/core/src/syntheticConfiguration.js",
+    "./backup-recovery-lab": "./packages/core/src/syntheticBackupRecovery.js",
     "./plugin-lifecycle": "./lib/catalog/pluginLifecycle.js",
     "./plugin-trust-store": "./lib/catalog/persistentPluginTrust.js",
     "./plugin-lab": "./packages/core/src/syntheticPlugin.js",
