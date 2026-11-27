@@ -32,7 +32,7 @@ The screenshot shows the current development build at first launch. Guided mode 
 | Preview a configuration overlay | Redacted change and conflict summaries |
 | Check a plugin package or backup copy | Compare declared files and hashes, with details for supported errors |
 
-Run `armorbreak capabilities --json` to see the capabilities registered by your installed build, including their risk levels. Recent development builds also support snapshot verification against its own manifest and disk-only DSH package diagnostics. See the [changelog](CHANGELOG.md) for what is available at each version.
+See the [CLI catalog instructions](docs/v24/distribution.md#list-the-installed-capabilities) for the capabilities and risk levels in your installed build. Recent development builds also support snapshot verification against its own manifest and disk-only DSH package diagnostics. See the [changelog](CHANGELOG.md) for what is available at each version.
 
 ## Support and project policies
 

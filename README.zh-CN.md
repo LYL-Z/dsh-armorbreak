@@ -32,7 +32,7 @@ npx --no-install armorbreak start --workspace /absolute/project
 | 预览配置覆盖 | 汇总变更与冲突，隐藏敏感配置值 |
 | 检查插件包或备份副本 | 核对声明的文件与哈希，对支持的错误提供具体提示 |
 
-运行 `armorbreak capabilities --json` 可以查看已安装版本实际注册的能力和风险等级。近期开发构建还支持核对快照与其清单，以及只读识别磁盘上的 DSH 包。各版本包含的功能以[变更日志](CHANGELOG.md)为准。
+按 [CLI 能力目录说明](docs/v24/distribution.md#list-the-installed-capabilities)可以查看已安装版本实际注册的能力和风险等级。近期开发构建还支持核对快照与其清单，以及只读识别磁盘上的 DSH 包。各版本包含的功能以[变更日志](CHANGELOG.md)为准。
 
 ## 支持与项目政策
 
