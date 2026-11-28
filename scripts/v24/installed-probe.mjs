@@ -34,11 +34,11 @@ await mkdir(workspace)
 await writeFile(join(workspace, 'inert.txt'), 'package acceptance fixture\n')
 const env = { ...process.env, ARMORBREAK_WORKSPACE: workspace, ARMORBREAK_STATE_ROOT: stateRoot, ARMORBREAK_PRINCIPAL_ID: 'installed-test' }
 const cli = (...args) => JSON.parse(execFileSync(process.execPath, [join(root, pkg.bin.armorbreak), ...args, '--json'], { env, encoding: 'utf8', timeout: 30000 }))
-assert.equal(cli('capabilities').length, 62)
+assert.equal(cli('capabilities').length, 63)
 assert.equal(cli('doctor').version,pkg.version)
 const npm=process.env.ARMORBREAK_ACCEPTANCE_NPM_CLI
 assert.ok(npm)
-assert.equal(JSON.parse(execFileSync(process.execPath,[npm,'exec','--offline','--no','--','armorbreak','capabilities','--json'],{env,encoding:'utf8',timeout:30000})).length,62)
+assert.equal(JSON.parse(execFileSync(process.execPath,[npm,'exec','--offline','--no','--','armorbreak','capabilities','--json'],{env,encoding:'utf8',timeout:30000})).length,63)
 const hash = cli('analyze','--capability','forensics.hash','--target',join(workspace,'inert.txt')); assert.equal(hash.state, 'COMPLETED')
 const combined=cli('workflow','start','--workflow','ForensicFileReview','--target',join(workspace,'inert.txt'));assert.equal(combined.state,'COMPLETED');assert.equal(combined.data.steps.length,6);assert.ok(combined.data.steps.every(s=>s.status==='DONE'))
 const bundle = { schema: 'armorbreak.configuration-lab-request/v1', configuration: { schema: 'armorbreak.configuration-import/v1', format: 'yaml', source: '# installed YAML comment\r\nvalue: "old" # preserve this note\r\nfuture: false\r\n' }, overlays: [{ id: 'inert', values: { value: 'new' } }], conflictPolicy: 'last-wins' }
