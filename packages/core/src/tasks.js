@@ -113,8 +113,9 @@ export class TaskStore {
    *   operator?: string,
    *   principalId?: string|null,
    *   sessionId?: string|null,
-   *   steps?: Array<{id: string, title: string, capabilityId: string, options?: Record<string, unknown>}>,
+   *   steps?: Array<{id: string, title: string, capabilityId: string, options?: Record<string, unknown>, dependsOn?: string[], failurePolicy?: string|null, retryPolicy?: Record<string, unknown>|null, timeoutMs?: number|null}>,
    *   tags?: string[],
+   *   retryOf?: string,
    * }} input
    */
   async create(input) {
@@ -165,6 +166,7 @@ export class TaskStore {
       report: null,
       stats: { evidence: 0, findings: 0, stepsDone: 0, stepsFailed: 0 },
     }
+    if (typeof input.retryOf === 'string' && input.retryOf.trim()) task.retryOf = input.retryOf.trim().slice(0, 200)
     await ensureDir(this.taskDir(id))
     await this.save(task)
     await this.audit?.append({ action: 'task.create', taskId: id, title: task.title, workflowId: task.workflowId, target: task.targetPath })
@@ -296,6 +298,44 @@ export class TaskStore {
   }
 
   /**
+   * Start a new task from a terminal failure. The original task, its evidence
+   * and its terminal state stay unchanged. Approvals are not copied.
+   * @param {any} task
+   * @param {{operator?: string, principalId?: string|null, sessionId?: string|null}} [owner]
+   */
+  async createSuccessor(task, owner = {}) {
+    if (task.state !== 'FAILED' && task.state !== 'TIMED_OUT') {
+      throw new Error(`task ${task.id} is ${task.state}; only FAILED or TIMED_OUT tasks can start a successor`)
+    }
+    if (!Array.isArray(task.steps) || task.steps.length === 0) throw new Error(`task ${task.id} has no steps to retry`)
+    const tags = [...(Array.isArray(task.tags) ? task.tags : []).filter((tag) => !String(tag).startsWith('retry-of:')), `retry-of:${task.id}`]
+    const successor = await this.create({
+      title: `Retry ${task.title}`.slice(0, 300),
+      objective: task.objective,
+      workflowId: task.workflowId,
+      targetPath: task.targetPath,
+      targetKind: task.targetKind,
+      operator: owner.operator ?? task.operator,
+      principalId: owner.principalId ?? task.principalId,
+      sessionId: owner.sessionId ?? task.sessionId,
+      tags,
+      retryOf: task.id,
+      steps: task.steps.map((step) => ({
+        id: step.id,
+        title: step.title,
+        capabilityId: step.capabilityId,
+        options: step.options ?? {},
+        dependsOn: step.dependsOn,
+        failurePolicy: step.failurePolicy,
+        retryPolicy: step.retryPolicy,
+        timeoutMs: step.timeoutMs,
+      })),
+    })
+    await this.addNote(task, `successor ${successor.id} created; original terminal state ${task.state} unchanged`)
+    return successor
+  }
+
+  /**
    * Reset failed/skipped steps to PENDING for an explicit retry. Completed steps
    * are preserved so evidence is not recomputed.
    * @param {any} task
@@ -380,6 +420,7 @@ export class TaskStore {
       report: task.report,
       approvals: task.approvals,
     }
+    if (task.retryOf) summary.retryOf = task.retryOf
     if (opts.includeSteps) {
       summary.steps = task.steps.map((step) => ({
         id: step.id,

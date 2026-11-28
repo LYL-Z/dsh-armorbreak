@@ -71,12 +71,33 @@
     for (const b of container.querySelectorAll('[data-report]')) b.addEventListener('click',()=>report(b.dataset.report))
     for (const b of container.querySelectorAll('[data-download]')) b.addEventListener('click',()=>report(b.dataset.download,true))
   }
+  async function retryTask(taskId) {
+    if (running || !taskId) return
+    running = true
+    availability()
+    el('product-feedback').className = 'feedback'
+    el('product-feedback').textContent = '正在用原来的检查目标重新运行。失败记录会保留。'
+    try {
+      const result = await request('retry', { taskId })
+      const complete = result.state === 'COMPLETED'
+      el('product-feedback').textContent = complete ? `重新检查完成，用时 ${result.durationMs} ms。已记录 ${result.evidenceIds.length} 条证据。` : `重新检查后的状态：${result.state}。原失败记录未改写。`
+      el('product-feedback').className = complete ? 'feedback success' : 'feedback error'
+      await tasks()
+    } catch (error) {
+      el('product-feedback').textContent = error.message
+      el('product-feedback').className = 'feedback error'
+    } finally {
+      running = false
+      availability()
+    }
+  }
   async function tasks() {
     if (!session?.enabled) return
     try {
       const rows = await request('tasks')
-      el('product-tasks').innerHTML=rows.length?rows.map(t=>`<article class="live-task"><div><h3>${escape(catalog.actions.find(a=>(t.workflowId&&a.workflow===t.workflowId)||a.capability===t.capability)?.title??t.title)}</h3><p>${escape(t.scope==='example'?'内置示例':'当前项目')} · ${escape(t.state)} · ${escape(t.createdAt)}</p><small>${escape(t.taskId)}</small></div>${t.reportAvailable?`<div class="task-actions"><button type="button" data-report="${escape(t.taskId)}">查看报告</button><button type="button" data-download="${escape(t.taskId)}">下载 Markdown</button></div>`:''}</article>`).join(''):'还没有任务。运行首页示例，或选择一个项目检查。'
+      el('product-tasks').innerHTML=rows.length?rows.map(t=>`<article class="live-task"><div><h3>${escape(catalog.actions.find(a=>(t.workflowId&&a.workflow===t.workflowId)||a.capability===t.capability)?.title??t.title)}</h3><p>${escape(t.scope==='example'?'内置示例':'当前项目')} · ${escape(t.state)} · ${escape(t.createdAt)}</p><small>${escape(t.taskId)}${t.retryOf?` · 来自 ${escape(t.retryOf)}`:''}</small></div><div class="task-actions">${t.retryable?`<button type="button" data-retry="${escape(t.taskId)}">重新检查</button>`:''}${t.reportAvailable?`<button type="button" data-report="${escape(t.taskId)}">查看报告</button><button type="button" data-download="${escape(t.taskId)}">下载 Markdown</button>`:''}</div></article>`).join(''):'还没有任务。运行首页示例，或选择一个项目检查。'
       attachReports(el('product-tasks'))
+      for (const b of el('product-tasks').querySelectorAll('[data-retry]')) b.addEventListener('click',()=>retryTask(b.dataset.retry))
     } catch { el('product-tasks').textContent='未能加载任务，请点击“刷新任务”重试。' }
   }
   function diagnosticSummary(data) {

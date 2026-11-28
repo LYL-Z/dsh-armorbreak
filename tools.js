@@ -561,9 +561,9 @@ export function apply(ctx) {
       parameters: {
         type: 'object',
         properties: {
-          action: { type: 'string', enum: ['create', 'list', 'get', 'cancel', 'note', 'finalize'], description: 'Operation to perform.' },
+          action: { type: 'string', enum: ['create', 'list', 'get', 'cancel', 'note', 'finalize', 'retry'], description: 'Operation to perform. retry starts a new L0 task from a FAILED or TIMED_OUT task and leaves the original record unchanged.' },
           workspace: { type: 'string', description: 'Host-resolved session workspace. If supplied, it must match the current session directory.' },
-          taskId: { type: 'string', description: 'Exact task id for get/cancel/note/finalize.' },
+          taskId: { type: 'string', description: 'Exact task id for get/cancel/note/finalize/retry.' },
           title: { type: 'string', description: 'create: short human title for the objective.' },
           objective: { type: 'string', description: 'create: what question the task must answer and the expected output.' },
           targetPath: { type: 'string', description: 'create: absolute path of the artifact/directory to analyze.' },
@@ -573,7 +573,7 @@ export function apply(ctx) {
         required: ['action'],
         additionalProperties: false,
       },
-      async run(args) {
+      async run(args, exec) {
         const runtime = getRuntime()
         await runtime.init()
         const workspace = workspaceOf(runtime, args)
@@ -651,6 +651,42 @@ export function apply(ctx) {
           return {
             text: `任务 \`${finalized.id}\` 已收尾：**${finalized.state}**。${finalized.report ? `报告：\`${finalized.report.path}\`` : '（未生成报告）'}`,
             data: store.summary(finalized, { includeSteps: true }),
+          }
+        }
+        if (args.action === 'retry') {
+          for (const step of task.steps) {
+            const selected = runtime.registry.get(step.capabilityId)
+            if (!selected) throw new Error(`unknown capability "${step.capabilityId}"; call armorbreak_capabilities for available ids`)
+            if (selected.riskLevel !== 'L0') throw new Error(`${selected.riskLevel} retry requires platform approval; this tool will not start it`)
+          }
+          const owner = ownerOf(args)
+          const successor = await store.createSuccessor(task, { operator: owner.principalId, principalId: owner.principalId, sessionId: owner.sessionId })
+          const finalized = successor.steps.length === 1
+            ? await runtime.runner.runCapability({
+              task: successor,
+              capabilityId: successor.steps[0].capabilityId,
+              targetPath: successor.targetPath,
+              options: successor.steps[0].options ?? {},
+              stepId: successor.steps[0].id,
+              requestApproval: approvalBridge(ctx, exec),
+              signal: exec?.signal,
+            }).then(async (result) => {
+              const settled = successor.steps.some((item) => item.status === 'PENDING' || item.status === 'RUNNING')
+                ? successor
+                : await runtime.runner.finalizeTask(successor, { generateReport: true })
+              return { settled, result }
+            }).catch(async (error) => {
+              const settled = !successor.steps.some((item) => item.status === 'PENDING' || item.status === 'RUNNING')
+              if (settled && successor.steps.some((item) => item.status === 'FAILED')) {
+                try { await runtime.runner.finalizeTask(successor, { generateReport: false }) } catch { /* keep the execution error */ }
+              }
+              throw error
+            })
+            : { settled: await runtime.runner.runWorkflow(successor, { requestApproval: approvalBridge(ctx, exec), signal: exec?.signal, generateReport: true }), result: null }
+          const done = finalized.settled
+          return {
+            text: `已从 \`${task.id}\`（${task.state}）启动新任务 \`${done.id}\` → **${done.state}**。原任务记录未改写。`,
+            data: { ...store.summary(done, { includeSteps: true }), retryOf: task.id, targetSha256: finalized.result?.targetSha256 ?? null },
           }
         }
         throw new Error(`unsupported action "${args.action}"`)

@@ -150,6 +150,26 @@ test('armorbreak_analyze closes a missing-file task and allows a fresh successfu
   assert.ok(completed.data.task.report.path.endsWith('.md'))
 })
 
+test('armorbreak_task retry keeps the failed record and completes a new L0 task', async () => {
+  const { defs, setWorkspace } = await loadTools()
+  const workspace = realpathSync.native(await mkdtemp(join(tmpdir(), 'abm-tool-ws-')))
+  setWorkspace(workspace)
+  const sample = join(workspace, 'retry-sample.txt')
+  const analyze = defs.get('armorbreak_analyze')
+  const tasks = defs.get('armorbreak_task')
+  await assert.rejects(() => analyze.execute({ capability: 'forensics.hash', target: sample, workspace }, mockExec()), /target file not found/)
+  const failedId = (await tasks.execute({ action: 'list', workspace }, mockExec())).data.tasks[0].id
+  await writeFile(sample, 'restored for explicit retry\n')
+  const retried = await tasks.execute({ action: 'retry', workspace, taskId: failedId }, mockExec())
+  assert.equal(retried.data.state, 'COMPLETED')
+  assert.equal(retried.data.retryOf, failedId)
+  assert.notEqual(retried.data.id, failedId)
+  const original = await tasks.execute({ action: 'get', workspace, taskId: failedId }, mockExec())
+  assert.equal(original.data.state, 'FAILED')
+  assert.equal(original.data.steps[0].status, 'FAILED')
+  await assert.rejects(() => tasks.execute({ action: 'retry', workspace, taskId: retried.data.id }, mockExec()), /only FAILED or TIMED_OUT/)
+})
+
 test('armorbreak_analyze runs a real L0 capability and produces a report', async (t) => {
   const { defs, setWorkspace } = await loadTools()
   const workspace = await mkdtemp(join(tmpdir(), 'abm-tool-ws-'))
