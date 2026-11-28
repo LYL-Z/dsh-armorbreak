@@ -205,6 +205,7 @@ export async function createWorkbenchServer({ root = DEFAULT_ROOT, host = '127.0
         if (error?.code === 'PLUGIN_FILE_HASH_MISMATCH') rejected.detail = '插件文件与清单中的摘要不一致。请重新获取原始包，再运行完整性检查。'
         if (error?.code === 'PLUGIN_PACKAGE_FILE_SET_MISMATCH') rejected.detail = '插件包缺少清单声明的文件，或包含额外文件。请重新解压原始包后再检查。'
         if (error?.code === 'PRODUCT_INVALID_SNAPSHOT_ID') rejected.detail = '请复制 backups 内的完整快照目录名，然后重试。'
+        if (error?.code === 'PRODUCT_CONFIGURATION_EDIT_CHECK_FAILED') rejected.detail = '无法预览编辑。请检查 JSON 请求格式、操作路径和预期旧值，修正文件后重试。'
         if (error?.code === 'BACKUP_SNAPSHOT_MANIFEST_MISSING') rejected.detail = '未找到该快照的清单。请核对备份副本目录和快照编号。'
         if (error?.code === 'BACKUP_SNAPSHOT_CONTENT_MISMATCH') rejected.detail = '快照内容与清单不一致。请保留当前副本，换一份可信备份重新核对。'
         return send(res, 400, JSON.stringify(rejected))

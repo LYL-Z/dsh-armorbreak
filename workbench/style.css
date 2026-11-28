@@ -53,6 +53,7 @@ main { padding: 0 44px 40px; max-width: 1440px; margin: 0 auto; }
 .task-composer { background: var(--panel); padding: 24px; border-radius: 14px; border: 1px solid var(--line); align-self: start; }
 #product-form { display: grid; gap: 12px; margin-top: 24px; }
 #product-form small { color: var(--muted); line-height: 1.6; }
+#product-config-mode { width: 100%; min-width: 0; }
 #product-form button { justify-self: start; margin-top: 8px; }
 .feedback { min-height: 28px; line-height: 1.6; }
 .feedback.error { color: var(--bad); }

@@ -55,6 +55,12 @@ call `armorbreak_analyze` with capability `configuration.preview`, the bundle as
 operation counts. The bundle, field names, values, paths within the configuration
 and content hashes stay out of the report.
 
+In Workbench, open the project in advanced mode, choose **预览配置变更** and set
+**配置预览方式** to **结构化编辑**. Enter the existing bundle path inside the
+workspace and choose **预览编辑**. If validation fails, correct the bundle and
+submit it again. Successful previews offer a Markdown report and leave the
+original file untouched.
+
 Map keys are strings. Array indices are numbers and are evaluated after prior
 operations. A map add requires an absent key. An array add inserts a new element
 at the index, including at the end. Replace and remove require the exact expected
