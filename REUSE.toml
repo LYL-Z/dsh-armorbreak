@@ -108,3 +108,36 @@ path = [
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2026 LYL-Z"
 SPDX-License-Identifier = "MIT"
+
+# Reviewed first-party assessment, binary, configuration, CTF, diagnostics, and forensics sources.
+[[annotations]]
+path = [
+    "lib/analyzers/assessment/manifest.js",
+    "lib/analyzers/binary/behavior.js",
+    "lib/analyzers/binary/elf.js",
+    "lib/analyzers/binary/entropy.js",
+    "lib/analyzers/binary/ghidra.js",
+    "lib/analyzers/binary/identify.js",
+    "lib/analyzers/binary/macho.js",
+    "lib/analyzers/binary/manifest.js",
+    "lib/analyzers/binary/pe.js",
+    "lib/analyzers/binary/programIr.js",
+    "lib/analyzers/binary/strings.js",
+    "lib/analyzers/binary/structure.js",
+    "lib/analyzers/binary/util.js",
+    "lib/analyzers/configuration-import/manifest.js",
+    "lib/analyzers/configuration/manifest.js",
+    "lib/analyzers/ctf/common.js",
+    "lib/analyzers/ctf/crypto-basics.js",
+    "lib/analyzers/ctf/encoding.js",
+    "lib/analyzers/ctf/filetype.js",
+    "lib/analyzers/ctf/flagscan.js",
+    "lib/analyzers/ctf/hash_id.js",
+    "lib/analyzers/ctf/manifest.js",
+    "lib/analyzers/diagnostics/manifest.js",
+    "lib/analyzers/forensics/filetype.js",
+    "lib/analyzers/forensics/formats.js",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 LYL-Z"
+SPDX-License-Identifier = "MIT"
