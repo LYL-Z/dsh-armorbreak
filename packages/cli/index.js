@@ -65,7 +65,7 @@ export async function runCli(argv = process.argv.slice(2), dependencies = {}) {
     return server
   }
   if (command === 'help' || options.help) {
-    print('armorbreak start [--workspace <project-directory>] [--no-open]|doctor|host inspect --home <absolute-path> --profile <name>|host diagnose --target <file> --spec <file>|host layout --resources <absolute-resources-directory>|config preview|config convert|config stage --bundle <file>|config status --lab <absolute-path>|config apply|config revert (trusted host only; fresh synthetic labs)|capabilities|analyze|task|workflow|approval|install approve|agent|report|mcp [--json]', false)
+    print('armorbreak start [--workspace <project-directory>] [--no-open]|doctor|host inspect --home <absolute-path> --profile <name>|host diagnose --target <file> --spec <file>|host layout --resources <absolute-resources-directory>|config preview|config convert|config stage --bundle <file>|config status --lab <absolute-path>|config apply|config revert (trusted host only; fresh synthetic labs)|capabilities|analyze|task status|task list|task cancel|task retry|workflow|approval|install approve|agent|report|mcp [--json]', false)
     return
   }
   if (command === 'host' && positional[0] === 'inspect') {
@@ -220,7 +220,8 @@ export async function runCli(argv = process.argv.slice(2), dependencies = {}) {
     if (command === 'task') {
       if (positional[0] === 'list') return print(await engine.listTasks(ctx), options.json)
       if (positional[0] === 'cancel' && positional[1]) return print(await engine.cancelTask(ctx, positional[1]), options.json)
-      if (positional[0] !== 'status' || !positional[1]) throw new Error('task status <task-id>, task list, or task cancel <task-id> is required')
+      if (positional[0] === 'retry' && positional[1]) return print(await engine.retryTask(ctx, positional[1]), options.json)
+      if (positional[0] !== 'status' || !positional[1]) throw new Error('task status <task-id>, task list, task cancel <task-id>, or task retry <task-id> is required')
       return print(await engine.getTask(ctx, positional[1]), options.json)
     }
     if (command === 'workflow') {

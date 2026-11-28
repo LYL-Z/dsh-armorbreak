@@ -51,8 +51,13 @@ export function createProductApi({engine,ctx,exampleCtx,exampleFile}){
   },
   async tasks(){
    const rows=[]
-   for(const entry of contexts())for(const task of await engine.listTasks(entry.ctx))rows.push({taskId:task.id,state:task.state,title:task.title,workflowId:task.workflowId??null,capability:task.steps?.[0]?.capabilityId??null,createdAt:task.createdAt,scope:entry.scope,reportAvailable:Boolean(task.report?.path)})
+   for(const entry of contexts())for(const task of await engine.listTasks(entry.ctx))rows.push({taskId:task.id,state:task.state,title:task.title,workflowId:task.workflowId??null,capability:task.steps?.[0]?.capabilityId??null,createdAt:task.createdAt,scope:entry.scope,reportAvailable:Boolean(task.report?.path),retryable:task.state==='FAILED'||task.state==='TIMED_OUT',retryOf:task.retryOf??null})
    return rows.sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt))).slice(0,20)
+  },
+  async retry(input){
+   if(!input||Array.isArray(input)||Object.keys(input).some(k=>k!=='taskId'))throw new Error('PRODUCT_INVALID_REQUEST')
+   const entry=await owned(input.taskId)
+   return engine.retryTask({...entry.ctx,requestId:randomUUID(),traceId:randomUUID()},input.taskId)
   },
   async report(taskId){const entry=await owned(taskId),report=await engine.getReport(entry.ctx,taskId);return {taskId,sha256:report.sha256,markdown:report.markdown}},
   async evidence(taskId){const entry=await owned(taskId);return engine.getEvidence(entry.ctx,taskId)},

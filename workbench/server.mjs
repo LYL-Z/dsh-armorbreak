@@ -188,12 +188,12 @@ export async function createWorkbenchServer({ root = DEFAULT_ROOT, host = '127.0
         if (req.method === 'GET' && url.pathname === '/api/product/tasks') return send(res, 200, JSON.stringify(await product.tasks()))
         if (req.method === 'GET' && url.pathname === '/api/product/report') return send(res, 200, JSON.stringify(await product.report(url.searchParams.get('taskId'))))
         if (req.method === 'GET' && url.pathname === '/api/product/evidence') return send(res, 200, JSON.stringify(await product.evidence(url.searchParams.get('taskId'))))
-        if (req.method !== 'POST' || !['/api/product/run','/api/product/example'].includes(url.pathname) || req.headers['content-type'] !== 'application/json') return send(res, 400, JSON.stringify({ error: 'invalid product request' }))
+        if (req.method !== 'POST' || !['/api/product/run','/api/product/example','/api/product/retry'].includes(url.pathname) || req.headers['content-type'] !== 'application/json') return send(res, 400, JSON.stringify({ error: 'invalid product request' }))
         if (busy) return send(res, 429, JSON.stringify({ error: 'CORE_BUSY', detail: '已有任务正在运行，请完成后重试。' }))
         busy = true
         try {
           const input = await boundedJson(req), started = performance.now()
-          const result = await (url.pathname.endsWith('/example') ? product.example(input) : product.run(input))
+          const result = url.pathname.endsWith('/retry') ? await product.retry(input) : url.pathname.endsWith('/example') ? await product.example(input) : await product.run(input)
           runtimeLease?.call(true)
           return send(res, 200, JSON.stringify({ taskId: result.taskId, state: result.state, capability: result.capability, data: result.data, evidenceIds: result.evidenceIds, reportAvailable: Boolean(result.reportPath), durationMs: Math.round(performance.now() - started), hostModified: false }))
         } finally { busy = false }

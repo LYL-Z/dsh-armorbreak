@@ -413,6 +413,87 @@ export class TrustedEngine {
     })
   }
 
+  /**
+   * Run a new L0 task from a FAILED or TIMED_OUT task. The original terminal
+   * record stays in place. L1/L2 are refused here because this entry cannot
+   * approve them.
+   */
+  async retryTask(ctx, taskId) {
+    const principal = this.authenticate(ctx)
+    const store = this.runtime.workspace(ctx.workspaceId).taskStore
+    let task
+    try { task = await store.get(String(taskId)) } catch { throw new EngineError('POLICY_DENIED', 'task is outside the authorized workspace') }
+    if (!taskOwnedBy(task, principal, sessionOf(ctx)) || !samePath(task.workspace, ctx.workspaceId)) throw new EngineError('POLICY_DENIED', 'task is outside the authorized principal, session, or workspace')
+    if (!['FAILED', 'TIMED_OUT'].includes(task.state)) throw new EngineError('INVALID_REQUEST', `only FAILED or TIMED_OUT tasks can start a successor; task is ${task.state}`)
+    if (!Array.isArray(task.steps) || task.steps.length === 0) throw new EngineError('INVALID_REQUEST', 'task has no steps to retry')
+    for (const step of task.steps) {
+      const selected = this.runtime.registry.get(step.capabilityId)
+      if (!selected) throw new EngineError('UNKNOWN_CAPABILITY', `unknown capability: ${step.capabilityId}`)
+      if (selected.riskLevel !== 'L0') throw new EngineError('APPROVAL_REQUIRED', `${selected.riskLevel} retry requires a trusted approval; this entry cannot self-approve`)
+    }
+    if (task.targetPath && !pathWithin(ctx.workspaceId, task.targetPath)) throw new EngineError('TARGET_OUT_OF_SCOPE', 'target is outside the authorized workspace')
+    const payload = { retryOf: task.id }
+    const replay = this.checkIdempotency(principal, ctx, payload)
+    if (replay) return replay
+    const promise = this.executeRetry(ctx, principal, store, task)
+    this.idempotency.set(`${principal.id}:${sessionOf(ctx) ?? ''}:${ctx.workspaceId}:${ctx.requestId}`, { digest: hash(payload), promise })
+    return promise
+  }
+
+  async executeRetry(ctx, principal, store, task) {
+    const successor = await store.createSuccessor(task, { operator: principal.id, principalId: principal.id, sessionId: sessionOf(ctx) })
+    const run = async () => {
+      if (successor.steps.length === 1) {
+        const step = successor.steps[0]
+        const result = await this.runtime.runner.runCapability({
+          task: successor,
+          capabilityId: step.capabilityId,
+          targetPath: successor.targetPath,
+          options: step.options ?? {},
+          stepId: step.id,
+          requestApproval: async () => false,
+          signal: ctx.cancellation ?? ctx.signal,
+        })
+        const finalized = successor.steps.some((item) => item.status === 'PENDING' || item.status === 'RUNNING')
+          ? successor
+          : await this.runtime.runner.finalizeTask(successor, { generateReport: true })
+        return { result, finalized }
+      }
+      const finalized = await this.runtime.runner.runWorkflow(successor, {
+        requestApproval: async () => false,
+        signal: ctx.cancellation ?? ctx.signal,
+        generateReport: true,
+      })
+      return { result: null, finalized }
+    }
+    try {
+      const { result, finalized } = await run()
+      const evidence = await this.getEvidence(ctx, finalized.id)
+      return {
+        taskId: finalized.id,
+        retryOf: task.id,
+        state: finalized.state,
+        capability: finalized.steps.length === 1 ? finalized.steps[0].capabilityId : null,
+        riskLevel: 'L0',
+        target: result?.target ?? finalized.targetPath,
+        targetSha256: result?.targetSha256 ?? null,
+        evidenceIds: result?.evidenceIds ?? evidence.evidence.map((item) => item.id),
+        reportPath: finalized.report?.path ?? null,
+        data: result?.data ?? { steps: finalized.steps.map((step) => ({ id: step.id, title: step.title, capability: step.capabilityId, status: step.status, summary: step.summary ?? null })) },
+        originalState: task.state,
+      }
+    } catch (error) {
+      if (error?.code === 'CANCELLED') await store.cancel(successor, 'retry cancelled')
+      else {
+        const settled = !successor.steps.some((item) => item.status === 'PENDING' || item.status === 'RUNNING')
+        if (settled && successor.steps.some((item) => item.status === 'FAILED') && !['FAILED', 'REJECTED', 'CANCELLED', 'TIMED_OUT', 'PARTIAL_SUCCESS', 'COMPLETED'].includes(successor.state)) {
+          await this.runtime.runner.finalizeTask(successor, { generateReport: false })
+        }
+      }
+      throw error
+    }
+  }
+
   async health(ctx) {
     this.authenticate(ctx)
     return this.runtime.stateSummary(ctx.workspaceId)
@@ -421,7 +502,7 @@ export class TrustedEngine {
 
 export async function createEngine(options) {
   const engine = await new TrustedEngine(options).init()
-  const methods = ['createTask', 'getTask', 'listTasks', 'cancelTask', 'getEvidence', 'getReport', 'recordEnvelope', 'analyze', 'capabilities', 'health', 'listWorkflows', 'startWorkflow', 'verifyApproval']
+  const methods = ['createTask', 'getTask', 'listTasks', 'cancelTask', 'getEvidence', 'getReport', 'recordEnvelope', 'analyze', 'retryTask', 'capabilities', 'health', 'listWorkflows', 'startWorkflow', 'verifyApproval']
   for (const name of methods) {
     const original = engine[name].bind(engine)
     engine[name] = (ctx, ...args) => engine.bounded(ctx, () => original(ctx, ...args))
