@@ -7,9 +7,9 @@ process binds the preflight identities. No path-only fallback is permitted.
 import json
 import os
 import secrets
-import select
 import stat
 import sys
+import time
 from contextlib import ExitStack
 
 MAX_BYTES = 64 * 1024 * 1024
@@ -134,36 +134,89 @@ def replace_evidence(request, payload):
                 os.unlink(temporary, dir_fd=parent)
 
 
-def read_declared_payload(length):
-    """Read exactly the declared payload without waiting for stdin to close.
+def frame_grace_seconds():
+    raw = os.environ.get('ARMORBREAK_EVIDENCE_FRAME_GRACE_MS', '50')
+    try:
+        milliseconds = float(raw)
+    except ValueError:
+        milliseconds = 50
+    if milliseconds < 0 or milliseconds > 2000:
+        milliseconds = 50
+    return milliseconds / 1000
 
-    A following extra byte is a protocol violation. Polling avoids blocking when
-    the parent has written the declared bytes but has not closed the pipe yet.
-    """
+
+def read_exact(raw, size):
+    """Read at most `size` bytes from an unbuffered stream. No lookahead."""
     payload = bytearray()
-    while len(payload) < length:
-        chunk = sys.stdin.buffer.read(length - len(payload))
+    while len(payload) < size:
+        chunk = raw.read(size - len(payload))
         if not chunk:
             break
         payload.extend(chunk)
-    require(len(payload) == length, 'incomplete payload')
-    try:
-        readable, _, _ = select.select([sys.stdin], [], [], 0)
-    except (OSError, ValueError):
-        readable = []
-    if readable:
-        require(sys.stdin.buffer.read(1) == b'', 'trailing payload bytes')
     return bytes(payload)
 
 
-def main():
+def read_header_line(raw):
+    # One byte at a time so the payload is never pulled into a user-space buffer
+    # ahead of the length prefix. BufferedReader.read(n) can hide a trailing byte
+    # from a later select() on the same pipe.
+    header = bytearray()
+    while len(header) <= MAX_HEADER and not header.endswith(b'\n'):
+        byte = raw.read(1)
+        if not byte:
+            break
+        header.extend(byte)
+    return bytes(header)
+
+
+def read_trailer(raw, grace):
+    """Return b'' for EOF or a still-open pipe, or the first extra byte.
+
+    The raw stream has no user-space buffer, so a non-blocking read sees bytes
+    already accepted by the kernel. A short grace period catches a trailer that
+    arrives after the declared payload without waiting for the process timeout.
+    """
+    fd = raw.fileno()
+    was_blocking = os.get_blocking(fd)
+    os.set_blocking(fd, False)
     try:
-        header = sys.stdin.buffer.readline(MAX_HEADER + 1)
-        require(len(header) <= MAX_HEADER and header.endswith(b'\n'), 'invalid request header')
-        request = json.loads(header)
-        length = request['length']
-        require(type(length) is int and 0 <= length <= MAX_BYTES, 'invalid request length')
-        payload = read_declared_payload(length)
+        deadline = time.monotonic() + grace
+        while True:
+            try:
+                extra = raw.read(1)
+            except BlockingIOError:
+                extra = None
+            if extra is None:
+                if time.monotonic() >= deadline:
+                    return b''
+                time.sleep(0.005)
+                continue
+            return extra
+    finally:
+        os.set_blocking(fd, was_blocking)
+
+
+def read_frame(raw):
+    header = read_header_line(raw)
+    require(header and len(header) <= MAX_HEADER and header.endswith(b'\n'), 'invalid request header')
+    request = json.loads(header)
+    length = request['length']
+    require(type(length) is int and 0 <= length <= MAX_BYTES, 'invalid request length')
+    payload = read_exact(raw, length)
+    require(len(payload) == length, 'incomplete payload')
+    extra = read_trailer(raw, frame_grace_seconds())
+    require(extra == b'', 'trailing payload bytes')
+    return request, payload
+
+
+def main():
+    raw = sys.stdin.buffer.detach()
+    try:
+        request, payload = read_frame(raw)
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        print(f'SAFE_POSIX_EVIDENCE_FRAME_REFUSED {error}', file=sys.stderr)
+        return 1
+    try:
         replace_evidence(request, payload)
         print('SAFE_POSIX_EVIDENCE_WRITE_OK')
     except (OSError, ValueError, KeyError, TypeError):

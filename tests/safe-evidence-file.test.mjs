@@ -225,27 +225,55 @@ async function listenForNativeCheckpoint(token, notify) {
   }
 }
 
-test('darwin evidence helper finishes a declared payload while stdin stays open', async () => {
+test('darwin evidence frame rejects truncation, trailing bytes and an open stdin without hanging', async () => {
   const helper = fileURLToPath(new URL('../lib/release/safe-evidence-write-posix.py', import.meta.url))
   const python = process.platform === 'win32' ? 'python' : 'python3'
-  const header = Buffer.from(JSON.stringify({
+  const headerFor = length => Buffer.from(JSON.stringify({
     root: '/tmp/armorbreak-evidence-root',
     relativePath: 'docs/v2/acceptance/result.json',
     mode: 0o644,
-    length: 4,
+    length,
     directories: [['1', '1'], ['1', '1'], ['1', '1'], ['1', '1']],
     original: null,
   }) + '\n')
-  const child = spawn(python, ['-I', helper], { stdio: ['pipe', 'pipe', 'pipe'] })
-  const finished = once(child, 'exit')
-  child.stdin.write(Buffer.concat([header, Buffer.from('test')]))
-  const exit = await Promise.race([
-    finished,
-    new Promise((_, reject) => setTimeout(() => reject(new Error('helper blocked while stdin remained open')), 2000)),
-  ])
-  child.kill()
-  assert.notEqual(exit[0], null)
-  if (process.platform !== 'win32') assert.notEqual(exit[0], 0)
+  const run = (bytes, { close = false, env = {}, delayByte = null, delayMs = 0 } = {}) => new Promise((resolve, reject) => {
+    const child = spawn(python, ['-I', helper], { stdio: ['pipe', 'pipe', 'pipe'], env: { ...process.env, ...env } })
+    const stdout = []
+    const stderr = []
+    child.stdout.on('data', chunk => stdout.push(chunk))
+    child.stderr.on('data', chunk => stderr.push(chunk))
+    const timer = setTimeout(() => { child.kill(); reject(new Error('helper blocked beyond the frame deadline')) }, 2000)
+    child.once('exit', code => {
+      clearTimeout(timer)
+      resolve({ code, stdout: Buffer.concat(stdout).toString('utf8'), stderr: Buffer.concat(stderr).toString('utf8') })
+    })
+    child.stdin.write(bytes)
+    if (delayByte !== null) setTimeout(() => child.stdin.write(delayByte), delayMs)
+    if (close) child.stdin.end()
+  })
+
+  const open = await run(Buffer.concat([headerFor(4), Buffer.from('test')]), { env: { ARMORBREAK_EVIDENCE_FRAME_GRACE_MS: '40' } })
+  assert.equal(open.code, 1)
+  assert.match(open.stderr, /SAFE_POSIX_EVIDENCE_WRITE_REFUSED/)
+  assert.doesNotMatch(open.stderr, /FRAME_REFUSED/)
+
+  const empty = await run(Buffer.alloc(0), { close: true })
+  assert.equal(empty.code, 1)
+  assert.match(empty.stderr, /invalid request header/)
+
+  const truncated = await run(Buffer.concat([headerFor(4), Buffer.from('te')]), { close: true })
+  assert.equal(truncated.code, 1)
+  assert.match(truncated.stderr, /incomplete payload/)
+
+  const extra = await run(Buffer.concat([headerFor(4), Buffer.from('testX')]), { env: { ARMORBREAK_EVIDENCE_FRAME_GRACE_MS: '40' } })
+  assert.equal(extra.code, 1)
+  assert.match(extra.stderr, /trailing payload bytes/)
+
+  const delayed = await run(Buffer.concat([headerFor(4), Buffer.from('test')]), {
+    delayByte: Buffer.from('X'), delayMs: 30, env: { ARMORBREAK_EVIDENCE_FRAME_GRACE_MS: '250' },
+  })
+  assert.equal(delayed.code, 1)
+  assert.match(delayed.stderr, /trailing payload bytes/)
 })
 
 test('safe evidence parent handle blocks or contains a concurrent rename during replacement', { timeout: 75000 }, async () => {

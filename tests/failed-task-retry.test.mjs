@@ -50,6 +50,31 @@ test('failed L0 task retry preserves the original record and completes after the
   await engine.close()
 })
 
+test('concurrent retries keep the failed record and use distinct successors', async () => {
+  const stateRoot = await mkdtemp(join(tmpdir(), 'abm-retry-race-state-'))
+  const workspace = await realpath(await mkdtemp(join(tmpdir(), 'abm-retry-race-ws-')))
+  const principal = { id: 'alice', kind: 'local-user', workspaces: [workspace] }
+  const engine = await createEngine({ stateRoot, principals: [principal] })
+  const sample = join(workspace, 'sample.txt')
+  const ctx = { principal, workspaceId: workspace, requestId: 'race-fail', traceId: 'trace-race' }
+  await assert.rejects(() => engine.analyze(ctx, { capability: 'forensics.hash', target: sample }), /target file not found|TARGET_NOT_FOUND/)
+  const failed = (await engine.listTasks(ctx))[0]
+  await writeFile(sample, 'concurrent synthetic input\n')
+  const [first, second] = await Promise.all([
+    engine.retryTask({ ...ctx, requestId: 'race-1' }, failed.id),
+    engine.retryTask({ ...ctx, requestId: 'race-2' }, failed.id),
+  ])
+  assert.equal(first.state, 'COMPLETED')
+  assert.equal(second.state, 'COMPLETED')
+  assert.notEqual(first.taskId, second.taskId)
+  assert.equal(first.retryOf, failed.id)
+  assert.equal(second.retryOf, failed.id)
+  const original = await engine.getTask(ctx, failed.id)
+  assert.equal(original.state, 'FAILED')
+  assert.equal(original.steps[0].status, 'FAILED')
+  await engine.close()
+})
+
 test('L1 retry is refused before a successor task exists', async () => {
   const stateRoot = await mkdtemp(join(tmpdir(), 'abm-retry-l1-state-'))
   const workspace = await realpath(await mkdtemp(join(tmpdir(), 'abm-retry-l1-ws-')))
