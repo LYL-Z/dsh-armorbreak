@@ -26,7 +26,7 @@ test('base CLI capabilities do not eagerly import optional configuration YAML ru
   })
   assert.equal(child.status, 0, child.stderr)
   assert.doesNotMatch(child.stderr, /YAML_EAGER_IMPORT_FORBIDDEN/)
-  assert.equal(JSON.parse(child.stdout).length, 62)
+  assert.equal(JSON.parse(child.stdout).length, 63)
 })
 
 for (const format of ['json','yaml','cordis','purge-preset']) test(`${format}: profile preview -> approved synthetic apply -> raw-byte restore`, async t => {
