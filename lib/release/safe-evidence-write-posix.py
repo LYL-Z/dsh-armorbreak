@@ -9,6 +9,7 @@ import os
 import secrets
 import stat
 import sys
+import threading
 import time
 from contextlib import ExitStack
 
@@ -169,13 +170,16 @@ def read_header_line(raw):
     return bytes(header)
 
 
-def read_trailer(raw, grace):
-    """Return b'' for EOF or a still-open pipe, or the first extra byte.
+def _nonblocking_available():
+    # os.get_blocking is Unix-only. Windows CPython raises AttributeError, and the
+    # frame tests still execute this helper there. A threaded read is the portable
+    # grace-period implementation; Darwin keeps the non-blocking path.
+    if os.environ.get('ARMORBREAK_EVIDENCE_FRAME_IO') == 'thread':
+        return False
+    return hasattr(os, 'get_blocking') and hasattr(os, 'set_blocking')
 
-    The raw stream has no user-space buffer, so a non-blocking read sees bytes
-    already accepted by the kernel. A short grace period catches a trailer that
-    arrives after the declared payload without waiting for the process timeout.
-    """
+
+def _read_trailer_nonblocking(raw, grace):
     fd = raw.fileno()
     was_blocking = os.get_blocking(fd)
     os.set_blocking(fd, False)
@@ -194,6 +198,36 @@ def read_trailer(raw, grace):
             return extra
     finally:
         os.set_blocking(fd, was_blocking)
+
+
+def _read_trailer_threaded(raw, grace):
+    box = {}
+
+    def _read():
+        try:
+            box['extra'] = raw.read(1)
+        except OSError as error:
+            box['error'] = error
+
+    worker = threading.Thread(target=_read, daemon=True)
+    worker.start()
+    worker.join(grace)
+    if 'error' in box:
+        raise box['error']
+    # Still blocked: the pipe stayed open and no trailer arrived within grace.
+    # The daemon read ends when this process exits; the declared frame is complete.
+    return box.get('extra', b'')
+
+
+def read_trailer(raw, grace):
+    """Return b'' for EOF or a still-open pipe, or the first extra byte.
+
+    Bytes are read from the raw stream, which has no user-space buffer, so a
+    trailing byte already accepted by the kernel cannot hide from the check.
+    """
+    if _nonblocking_available():
+        return _read_trailer_nonblocking(raw, grace)
+    return _read_trailer_threaded(raw, grace)
 
 
 def read_frame(raw):

@@ -274,6 +274,15 @@ test('darwin evidence frame rejects truncation, trailing bytes and an open stdin
   })
   assert.equal(delayed.code, 1)
   assert.match(delayed.stderr, /trailing payload bytes/)
+
+  const threaded = { ARMORBREAK_EVIDENCE_FRAME_IO: 'thread', ARMORBREAK_EVIDENCE_FRAME_GRACE_MS: '40' }
+  const threadedOpen = await run(Buffer.concat([headerFor(4), Buffer.from('test')]), { env: threaded })
+  assert.equal(threadedOpen.code, 1)
+  assert.match(threadedOpen.stderr, /SAFE_POSIX_EVIDENCE_WRITE_REFUSED/)
+  assert.doesNotMatch(threadedOpen.stderr, /get_blocking|FRAME_REFUSED/)
+  const threadedExtra = await run(Buffer.concat([headerFor(4), Buffer.from('testX')]), { env: threaded })
+  assert.equal(threadedExtra.code, 1)
+  assert.match(threadedExtra.stderr, /trailing payload bytes/)
 })
 
 test('safe evidence parent handle blocks or contains a concurrent rename during replacement', { timeout: 75000 }, async () => {
