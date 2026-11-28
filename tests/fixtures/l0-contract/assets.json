@@ -1,0 +1,9 @@
+{
+  "schema": "armorbreak.offline-assets/v1",
+  "segments": ["192.0.2.0/24"],
+  "observations": [
+    { "type": "dns", "sourceId": "import_1", "domain": "Example.test.", "ip": "192.0.2.5" },
+    { "type": "service", "sourceId": "import_1", "ip": "192.0.2.5", "port": 443, "transport": "tcp" },
+    { "type": "certificate", "sourceId": "import_1", "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "sans": ["example.test", "other.test"] }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "schema": "armorbreak.plugin-catalog/v1",
+  "plugins": [{
+    "id": "inert",
+    "version": "1.0.0",
+    "source": { "repository": "https://github.com/example/inert", "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
+    "license": "MIT",
+    "dependencies": [],
+    "permissions": ["workspace.read"],
+    "platforms": ["win32", "linux", "darwin"],
+    "channel": "stable",
+    "enabled": false,
+    "files": [{ "path": "inert.txt", "sha256": "63b44a52b031279e9965c94789ed23b889f7315b4037f8e17ba309b9baff1bd4" }]
+  }]
+}

@@ -1,0 +1,6 @@
+{
+  "schema": "armorbreak.config-overlay/v1",
+  "base": { "enabled": false },
+  "overlays": [{ "id": "layer1", "values": { "enabled": true } }],
+  "conflictPolicy": "last-wins"
+}
