@@ -5,6 +5,7 @@
  * This exercises the exact code path the harness registry calls, without an LLM.
  */
 import assert from 'node:assert/strict'
+import { realpathSync } from 'node:fs'
 import { mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -120,6 +121,33 @@ test('armorbreak_analyze rejects unknown capabilities with an actionable message
     () => defs.get('armorbreak_analyze').execute({ capability: 'does.not_exist', workspace }, mockExec()),
     /unknown capability/,
   )
+})
+
+test('armorbreak_analyze closes a missing-file task and allows a fresh successful retry', async () => {
+  const { defs, setWorkspace } = await loadTools()
+  // A missing child cannot be canonicalized. Start from the host's canonical parent.
+  const workspace = realpathSync.native(await mkdtemp(join(tmpdir(), 'abm-tool-ws-')))
+  setWorkspace(workspace)
+  const sample = join(workspace, 'missing.txt')
+  const analyze = defs.get('armorbreak_analyze')
+  const tasks = defs.get('armorbreak_task')
+  const args = { capability: 'forensics.hash', target: sample, workspace }
+
+  await assert.rejects(() => analyze.execute(args, mockExec()), /target file not found/)
+  const listed = await tasks.execute({ action: 'list', workspace }, mockExec())
+  assert.equal(listed.data.tasks.length, 1)
+  const taskId = listed.data.tasks[0].id
+  const failed = await tasks.execute({ action: 'get', taskId, workspace }, mockExec())
+  assert.equal(failed.data.state, 'FAILED')
+  assert.equal(failed.data.steps[0].status, 'FAILED')
+  assert.match(failed.data.steps[0].error, /TARGET_NOT_FOUND/)
+  assert.equal(failed.data.report, null)
+
+  await writeFile(sample, 'restored synthetic input\n')
+  const completed = await analyze.execute(args, mockExec())
+  assert.equal(completed.data.task.state, 'COMPLETED')
+  assert.notEqual(completed.data.task.id, taskId)
+  assert.ok(completed.data.task.report.path.endsWith('.md'))
 })
 
 test('armorbreak_analyze runs a real L0 capability and produces a report', async (t) => {
