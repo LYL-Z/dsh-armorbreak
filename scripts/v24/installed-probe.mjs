@@ -56,6 +56,35 @@ try {
   assert.equal((await hostCli(['revert','--lab',staged.lab,'--plan',staged.planId])).state,'ROLLED_BACK')
   assert.deepEqual(await readFile(join(staged.lab,'data/config.txt')),Buffer.from(bundle.configuration.source))
 } finally { await rm(staged.lab,{recursive:true,force:true}) }
+const editBundle = {
+  schema: 'armorbreak.configuration-edit-request/v1',
+  configuration: bundle.configuration,
+  operations: [
+    { op: 'replace', path: ['value'], expected: 'old', value: 'edited' },
+    { op: 'remove', path: ['future'], expected: false },
+    { op: 'add', path: ['labels'], value: ['inert'] },
+  ],
+}
+const editPath = join(workspace, 'edit.json')
+await writeFile(editPath, JSON.stringify(editBundle))
+const editPreview = cli('config', 'edit', '--bundle', editPath)
+assert.equal(editPreview.state, 'COMPLETED')
+assert.deepEqual(editPreview.data.operations, { add: 1, replace: 1, remove: 1 })
+assert.equal(editPreview.targetSha256, null)
+const stagedEdit = await hostCli(['stage', '--bundle', editPath])
+try {
+  const plan = ['--lab', stagedEdit.lab, '--plan', stagedEdit.planId]
+  const config = join(stagedEdit.lab, 'data', 'config.txt')
+  assert.equal((await hostCli(['apply', ...plan])).state, 'COMMITTED')
+  const edited = await readFile(config, 'utf8')
+  assert.match(edited, /value: "edited" # preserve this note\r\n/)
+  assert.match(edited, /labels:\r\n\s+- inert/)
+  assert.doesNotMatch(edited, /future:/)
+  assert.equal((await hostCli(['revert', ...plan])).state, 'ROLLED_BACK')
+  assert.deepEqual(await readFile(config), Buffer.from(editBundle.configuration.source))
+} finally {
+  await rm(stagedEdit.lab, { recursive: true, force: true })
+}
 // Actual stdio child process, not an in-process protocol mock.
 const child=spawn(process.execPath,[npm,'exec','--offline','--no','--','armorbreak-mcp'],{env,stdio:['pipe','pipe','pipe']})
 let err='',nextId=0;child.stderr.on('data',b=>err+=b)
@@ -190,4 +219,4 @@ if (pkg.exports['./backup-recovery-lab']) {
     await runtime.close?.()
   }
 }
-console.log(JSON.stringify({exports:imported,client:'MODULE_REGISTRATION_SIMULATED_DSH_NOT_TESTED',cli:'ACTUAL_CHILD_PROCESS',mcp:'ACTUAL_STDIO_CHILD_PROCESS',core:'ACTUAL_INSTALLED_RUNTIME',workbench:'ACTUAL_HTTP_OS_AUTHENTICATION_NONE',yaml:pkg.dependencies.yaml,configuration:'INSTALLED_APPROVED_SYNTHETIC_APPLY_AND_EXACT_RESTORE',pluginStore,backupRecovery,privateKeyScan:'PASS',runtimeVersion:pkg.version}))
+console.log(JSON.stringify({exports:imported,client:'MODULE_REGISTRATION_SIMULATED_DSH_NOT_TESTED',cli:'ACTUAL_CHILD_PROCESS',mcp:'ACTUAL_STDIO_CHILD_PROCESS',core:'ACTUAL_INSTALLED_RUNTIME',workbench:'ACTUAL_HTTP_OS_AUTHENTICATION_NONE',yaml:pkg.dependencies.yaml,configuration:'INSTALLED_APPROVED_SYNTHETIC_APPLY_AND_EXACT_RESTORE',configurationEdit:'INSTALLED_REDACTED_PREVIEW_APPROVED_YAML_EDIT_AND_EXACT_ROLLBACK',pluginStore,backupRecovery,privateKeyScan:'PASS',runtimeVersion:pkg.version}))

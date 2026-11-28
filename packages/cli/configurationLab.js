@@ -2,7 +2,8 @@
 import { randomUUID } from 'node:crypto'
 import { isAbsolute, resolve } from 'node:path'
 import { readBounded } from '../core/src/util.js'
-import { planSyntheticConfiguration } from '../core/src/syntheticConfiguration.js'
+import { CONFIG_EDIT_SCHEMA, parseConfigurationEdit } from '../../lib/integrations/configEdit.js'
+import { planSyntheticConfiguration, planSyntheticConfigurationEdit } from '../core/src/syntheticConfiguration.js'
 import { reopenSyntheticMaintenance } from '../core/src/syntheticMaintenance.js'
 import { requestTrustedHostApproval } from './approvalPrompt.js'
 
@@ -17,9 +18,16 @@ export async function configurationLabCommand({ runtime, workspace, operator, op
     if (read.truncated) throw new Error('CONFIG_LAB_INPUT_LIMIT')
     let input
     try { input = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(read.buffer)) } catch { throw new Error('CONFIG_LAB_INVALID_JSON') }
-    if (!input || Array.isArray(input) || typeof input !== 'object' || Object.keys(input).some(key => !['schema','configuration','profiles','selectedProfile','overlays','conflictPolicy'].includes(key)) || input.schema !== 'armorbreak.configuration-lab-request/v1') throw new Error('CONFIG_LAB_REQUEST_INVALID')
-    const { schema, ...request } = input
-    const { lab, plan, preview } = await planSyntheticConfiguration(runtime, { ...request, operator, sessionId })
+    const context = { operator, sessionId }
+    let staged
+    if (input?.schema === CONFIG_EDIT_SCHEMA) {
+      staged = await planSyntheticConfigurationEdit(runtime, parseConfigurationEdit(read.buffer), context)
+    } else {
+      if (!input || Array.isArray(input) || typeof input !== 'object' || Object.keys(input).some(key => !['schema','configuration','profiles','selectedProfile','overlays','conflictPolicy'].includes(key)) || input.schema !== 'armorbreak.configuration-lab-request/v1') throw new Error('CONFIG_LAB_REQUEST_INVALID')
+      const { schema, ...request } = input
+      staged = await planSyntheticConfiguration(runtime, { ...request, ...context })
+    }
+    const { lab, plan, preview } = staged
     return { ...plan, lab: lab.root, preview, sessionBinding: 'HOST_SESSION_REQUIRED_FOR_APPLY', hostModified: false }
   }
   if (!['apply','revert','status'].includes(operation) || !isAbsolute(options.lab ?? '')) throw new Error('CONFIG_LAB_OPERATION_INVALID')

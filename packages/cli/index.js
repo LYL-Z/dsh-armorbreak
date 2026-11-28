@@ -65,7 +65,7 @@ export async function runCli(argv = process.argv.slice(2), dependencies = {}) {
     return server
   }
   if (command === 'help' || options.help) {
-    print('armorbreak start [--workspace <project-directory>] [--no-open]|doctor|host inspect --home <absolute-path> --profile <name>|host diagnose --target <file> --spec <file>|host layout --resources <absolute-resources-directory>|config preview|config convert|config stage --bundle <file>|config status --lab <absolute-path>|config apply|config revert (trusted host only; fresh synthetic labs)|capabilities|analyze|task|workflow|approval|install approve|agent|report|mcp [--json]', false)
+    print('armorbreak start [--workspace <project-directory>] [--no-open]|doctor|host inspect --home <absolute-path> --profile <name>|host diagnose --target <file> --spec <file>|host layout --resources <absolute-resources-directory>|config preview|config convert|config edit --bundle <file>|config stage --bundle <file>|config status --lab <absolute-path>|config apply|config revert (trusted host only; fresh synthetic labs)|capabilities|analyze|task|workflow|approval|install approve|agent|report|mcp [--json]', false)
     return
   }
   if (command === 'host' && positional[0] === 'inspect') {
@@ -99,6 +99,14 @@ export async function runCli(argv = process.argv.slice(2), dependencies = {}) {
     if (command === 'maintenance' && positional[0] === 'verify-snapshot') return print(await engine.analyze(ctx, { capability: 'maintenance.backup_usage', target: options.root, options: { verifySnapshot: options.snapshot } }), options.json)
     if (command === 'config' && positional[0] === 'preview') return print(await engine.analyze(ctx, { capability: 'configuration.preview', target: options.bundle }), options.json)
     if (command === 'config' && positional[0] === 'convert') return print(await engine.analyze(ctx, { capability: 'configuration.convert', target: options.bundle }), options.json)
+    if (command === 'config' && positional[0] === 'edit') {
+      if (positional.length !== 1 || typeof options.bundle !== 'string' || Object.keys(options).some(key => !['bundle', 'json'].includes(key))) {
+        throw new Error('config edit requires --bundle <file> and accepts --json')
+      }
+      const result = await engine.analyze(ctx, { capability: 'configuration.preview', target: options.bundle, options: { mode: 'edit' } })
+      const { status, operations } = result.data
+      return print(options.json ? result : `Configuration edit ${status} (${operations.add} add, ${operations.replace} replace, ${operations.remove} remove)`, options.json)
+    }
     if (command === 'config' && ['stage','apply','revert','status'].includes(positional[0])) {
       const { configurationLabCommand } = await import('./configurationLab.js')
       return print(await configurationLabCommand({ runtime: engine.runtime, workspace: cfg.workspaceId, operator: cfg.principal.id, operation: positional[0], options, dependencies }), options.json)
