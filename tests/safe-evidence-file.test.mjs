@@ -4,7 +4,9 @@ import { randomUUID } from 'node:crypto'
 import { once } from 'node:events'
 import fs, { linkSync, lstatSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { syncBuiltinESMExports } from 'node:module'
+import { spawn } from 'node:child_process'
 import { createServer } from 'node:net'
+import { fileURLToPath } from 'node:url'
 import { join } from 'node:path'
 import test from 'node:test'
 import { Worker } from 'node:worker_threads'
@@ -222,6 +224,29 @@ async function listenForNativeCheckpoint(token, notify) {
     },
   }
 }
+
+test('darwin evidence helper finishes a declared payload while stdin stays open', async () => {
+  const helper = fileURLToPath(new URL('../lib/release/safe-evidence-write-posix.py', import.meta.url))
+  const python = process.platform === 'win32' ? 'python' : 'python3'
+  const header = Buffer.from(JSON.stringify({
+    root: '/tmp/armorbreak-evidence-root',
+    relativePath: 'docs/v2/acceptance/result.json',
+    mode: 0o644,
+    length: 4,
+    directories: [['1', '1'], ['1', '1'], ['1', '1'], ['1', '1']],
+    original: null,
+  }) + '\n')
+  const child = spawn(python, ['-I', helper], { stdio: ['pipe', 'pipe', 'pipe'] })
+  const finished = once(child, 'exit')
+  child.stdin.write(Buffer.concat([header, Buffer.from('test')]))
+  const exit = await Promise.race([
+    finished,
+    new Promise((_, reject) => setTimeout(() => reject(new Error('helper blocked while stdin remained open')), 2000)),
+  ])
+  child.kill()
+  assert.notEqual(exit[0], null)
+  if (process.platform !== 'win32') assert.notEqual(exit[0], 0)
+})
 
 test('safe evidence parent handle blocks or contains a concurrent rename during replacement', { timeout: 75000 }, async () => {
   const root = fixture()

@@ -7,6 +7,7 @@ process binds the preflight identities. No path-only fallback is permitted.
 import json
 import os
 import secrets
+import select
 import stat
 import sys
 from contextlib import ExitStack
@@ -133,6 +134,28 @@ def replace_evidence(request, payload):
                 os.unlink(temporary, dir_fd=parent)
 
 
+def read_declared_payload(length):
+    """Read exactly the declared payload without waiting for stdin to close.
+
+    A following extra byte is a protocol violation. Polling avoids blocking when
+    the parent has written the declared bytes but has not closed the pipe yet.
+    """
+    payload = bytearray()
+    while len(payload) < length:
+        chunk = sys.stdin.buffer.read(length - len(payload))
+        if not chunk:
+            break
+        payload.extend(chunk)
+    require(len(payload) == length, 'incomplete payload')
+    try:
+        readable, _, _ = select.select([sys.stdin], [], [], 0)
+    except (OSError, ValueError):
+        readable = []
+    if readable:
+        require(sys.stdin.buffer.read(1) == b'', 'trailing payload bytes')
+    return bytes(payload)
+
+
 def main():
     try:
         header = sys.stdin.buffer.readline(MAX_HEADER + 1)
@@ -140,7 +163,7 @@ def main():
         request = json.loads(header)
         length = request['length']
         require(type(length) is int and 0 <= length <= MAX_BYTES, 'invalid request length')
-        payload = sys.stdin.buffer.read(length + 1)
+        payload = read_declared_payload(length)
         replace_evidence(request, payload)
         print('SAFE_POSIX_EVIDENCE_WRITE_OK')
     except (OSError, ValueError, KeyError, TypeError):
