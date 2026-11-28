@@ -75,3 +75,36 @@ path = "CODE_OF_CONDUCT.md"
 precedence = "aggregate"
 SPDX-FileCopyrightText = ["Contributor Covenant contributors", "2026 LYL-Z (adaptation)"]
 SPDX-License-Identifier = "CC-BY-4.0"
+
+# Reviewed first-party AISEC, Android analyzer, and artifact intake sources.
+[[annotations]]
+path = [
+    "lib/aisec/agentDojo.js",
+    "lib/aisec/campaign.js",
+    "lib/aisec/composite.js",
+    "lib/aisec/evaluationStore.js",
+    "lib/aisec/evaluator.js",
+    "lib/aisec/garakAdapter.js",
+    "lib/aisec/inspectAdapter.js",
+    "lib/aisec/jailbreakDataset.js",
+    "lib/aisec/judge.js",
+    "lib/aisec/multimodal.js",
+    "lib/aisec/pyritAdapter.js",
+    "lib/aisec/ragGuard.js",
+    "lib/aisec/report.js",
+    "lib/aisec/reportDashboard.js",
+    "lib/aisec/schema.js",
+    "lib/aisec/workerSupervisor.js",
+    "lib/analyzers/android/axml.js",
+    "lib/analyzers/android/dex.js",
+    "lib/analyzers/android/jadx.js",
+    "lib/analyzers/android/manifest.js",
+    "lib/analyzers/android/signature.js",
+    "lib/analyzers/android/util.js",
+    "lib/analyzers/android/zip.js",
+    "lib/analyzers/artifact/intake.js",
+    "lib/analyzers/artifact/manifest.js",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 LYL-Z"
+SPDX-License-Identifier = "MIT"
