@@ -13,6 +13,35 @@ precedence = "aggregate"
 SPDX-FileCopyrightText = "2026 LYL-Z"
 SPDX-License-Identifier = "MIT"
 
+# Reviewed first-party distribution code and acceptance tests.
+[[annotations]]
+path = [
+    "scripts/v24/build-windows-experience.mjs",
+    "scripts/v24/compare-preview-builds.mjs",
+    "scripts/v24/distribution-policy.mjs",
+    "scripts/v24/preview-metadata.mjs",
+    "scripts/v24/preview-release-preflight.mjs",
+    "scripts/v24/publish-preview.mjs",
+    "scripts/v24/verify-npm-distribution.mjs",
+    "scripts/v24/verify-windows-experience.mjs",
+    "scripts/v24/windows-experience-archive.py",
+    "tests/npm-distribution-r3.test.mjs",
+    "tests/product-version.test.mjs",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 LYL-Z"
+SPDX-License-Identifier = "MIT"
+
+# Reviewed first-party recovery rehearsal and its in-memory test data.
+[[annotations]]
+path = [
+    "packages/core/src/syntheticBackupRecovery.js",
+    "tests/synthetic-backup-recovery.test.mjs",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 LYL-Z"
+SPDX-License-Identifier = "MIT"
+
 [[annotations]]
 path = "CODE_OF_CONDUCT.md"
 precedence = "aggregate"
