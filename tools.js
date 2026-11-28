@@ -701,17 +701,29 @@ export function apply(ctx) {
             steps: [{ id: 'analyze', title: capability.title, capabilityId, options: args.options ?? {} }],
           })
         }
+        const step = task.steps.find((item) => item.status === 'PENDING')
+        const allStepsSettled = () => !task.steps.some((item) => item.status === 'PENDING' || item.status === 'RUNNING')
         const result = await runtime.runner.runCapability({
           task,
           capabilityId,
           targetPath: args.target ? String(args.target) : task.targetPath,
           options: args.options && typeof args.options === 'object' ? args.options : {},
-          stepId: task.steps.find((step) => step.status === 'PENDING')?.id ?? null,
+          stepId: step?.id ?? null,
           requestApproval: approvalBridge(ctx, exec),
           signal: exec.signal,
+        }).catch(async (error) => {
+          const stepFailed = task.steps.some((item) => item.id === step?.id && item.status === 'FAILED')
+          if (stepFailed && allStepsSettled()) {
+            try {
+              await runtime.runner.finalizeTask(task, { generateReport: false })
+            } catch {
+              ctx.logger?.warn?.(`Could not finalize failed ArmorBreak task ${task.id}`)
+            }
+          }
+          throw error
         })
         let finalized = task
-        if (!task.steps.some((step) => step.status === 'PENDING' || step.status === 'RUNNING')) {
+        if (allStepsSettled()) {
           finalized = await runtime.runner.finalizeTask(task, { generateReport: true })
         }
         const lines = [
