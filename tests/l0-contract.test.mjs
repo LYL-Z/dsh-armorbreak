@@ -145,7 +145,13 @@ const CASES = [
   },
   {
     id: 'host.health',
-    async stage(workspace) { return stage(workspace, 'host') },
+    async stage(workspace) {
+      const resources = join(workspace, 'resources')
+      const dest = join(resources, 'app', 'dsh', 'node_modules', '@deepseek-ai', 'dsh-desktop-host', 'package.json')
+      await mkdir(dirname(dest), { recursive: true })
+      await cp(join(FIXTURES, 'host-package.json'), dest)
+      return resources
+    },
     expect(result) {
       assert.equal(result.data.observation, 'DETECTED_ON_DISK')
       assert.equal(result.data.identity.version, '1.2.3')
