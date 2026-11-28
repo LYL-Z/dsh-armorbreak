@@ -79,6 +79,14 @@ test('YAML and Cordis edits preserve compatible comments, and an untouched prese
   const preset = prepareConfigurationEdit(input('purge-preset', source, operations)).candidate
   assert.equal(preset.preset, source.preset)
   assert.equal(preset.agent, cordis.candidate)
+
+  const list = 'items:\n  - alpha # first\n  - beta # second\n'
+  const inserted = prepareConfigurationEdit(input('yaml', list, [{ op: 'add', path: ['items', 0], value: 'head' }])).candidate
+  assert.match(inserted, /items:\n  - head\n  - alpha # first\n  - beta # second\n/)
+  assert.doesNotMatch(inserted, /head # first/)
+  const deleted = prepareConfigurationEdit(input('yaml', list, [{ op: 'remove', path: ['items', 0], expected: 'alpha' }])).candidate
+  assert.match(deleted, /- beta # second\n/)
+  assert.doesNotMatch(deleted, /first/)
 })
 
 async function readTree(root) {
